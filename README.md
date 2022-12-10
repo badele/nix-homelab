@@ -1,0 +1,2 @@
+# nix-homelab
+NixOS homelab
