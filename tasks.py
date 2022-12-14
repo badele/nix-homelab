@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 from invoke import task,run
 
 import subprocess
+import re
 import sys
 import os
 import json
+from xml.dom.minidom import parseString
+import xml.dom.minidom
 import random
 import string
 import shutil
@@ -131,7 +135,9 @@ def doc_generate(c):
     """
     generate homelab doc
     """
-    _doc_generate()
+
+    _doc_update_main_project_page()
+    _doc_update_hosts_pages()
 
 ##############################################################################
 # Functions
@@ -300,21 +306,155 @@ def _deploy_nixos(hosts: List[DeployHost]) -> None:
             flake_path += "#" + flake_attr
         target_host = h.meta.get("target_host", "localhost")
         cmd = f"nixos-rebuild switch --fast --option accept-flake-config true --build-host localhost --target-host {target_host} --flake {flake_path} --option keep-going true"
-        ret = h.run(cmd, check=False)
-        # re-retry switch if the first time fails
-        if ret.returncode != 0:
-            ret = h.run(cmd)
+        h.run(cmd)
 
     g.run_function(deploy)
 
 
+# Replace the content marker
+def _replace_content(content: str, marker: str, newcontent) -> str:
+    newcontent = f'''[comment]: (>>{marker})
+
+{newcontent}
+
+[comment]: (<<{marker})'''
+
+    result = re.sub(rf'\[comment\]: \(\>\>{marker}\).*\[comment\]\: \(\<\<{marker}\)',newcontent, content,  flags=re.DOTALL | re.M)
+    
+    return result
+
+
+# Update the main README.md project page
+def _doc_update_main_project_page() -> None:
+
+    with open('homelab.json', 'r') as f:
+        jinfo = json.load(f)
+        hosts = jinfo['hosts']
+
+    # Header table
+    table = '''<table>
+    <tr>
+        <th>Logo</th>
+        <th>Name</th>
+        <th>IP</th>
+        <th>Description</th>
+    </tr>'''
+
+    # Hosts loop
+    for hn in hosts:
+            table += f'''<tr>
+        <td><a href="./docs/hosts/{hn}.md"><img width="32" src="{hosts[hn]["icon"]}"></a></td>
+        <td><a href="./docs/hosts/{hn}.md">{hn}</a></td>
+        <td>{hosts[hn]["ipv4"]}</td>
+        <td>{hosts[hn]["description"]}</td>
+    </tr>'''
+
+    table += "</table>"
+
+    # Read readme.md content
+    with open('README.md', 'r') as f:
+        content = f.read().rstrip()
+
+    # Replace content
+    newcontent = _replace_content(content,"HOSTS",table)
+    
+    # Write new content
+    with open('README.md', 'w') as f:
+        f.write(newcontent)
+
+
+def _doc_update_hosts_pages() -> None:
+    with open('homelab.json', 'r') as f:
+        jinfo = json.load(f)
+        hosts = jinfo['hosts']
+
+        for hn in hosts:
+            
+            # Readme name
+            rname = f'docs/hosts/{hn}.md'
+
+            # Clone template if doc not exists
+            if not os.path.exists(rname):
+                shutil.copyfile('docs/hosts/host.tpl', rname)
+
+            # Read readme.md content
+            with open(rname, 'r') as f:
+                content = f.read().rstrip()
+
+                # Get discovery
+                hinfo = ""
+                if not os.system(f"ping -c 1 -w 1 {hosts[hn]['ipv4']}"):
+                    for dn in hosts[hn]["discovery"]:
+                        match dn:
+                            case "Hardwares":
+                                h = DeployHost(hosts[hn]['ipv4'], user="root")
+                                res = h.run("nix-shell -p 'inxi.override { withRecommends = true; }' --run 'sudo inxi -F -i --slots -xxx -c0 -Z -i -m --wrap-max 200 --filter'",stdout=subprocess.PIPE)
+                                output = f'''```
+{res.stdout}
+```
+'''
+                            case "Topologie":
+                                h = DeployHost(hosts[hn]['ipv4'], user="root")
+                                res = h.run(f"nix-shell -p hwloc --run 'sudo lstopo -f /tmp/{hn}.lstopo.svg'")
+                                run(f"scp root@{hosts[hn]['ipv4']}:/tmp/{hn}.lstopo.svg ./docs/hosts/{hn}.lstopo.svg")
+                                output = f'''
+![hardware topology]({hn}.lstopo.svg)
+'''
+
+                            case "Services":
+                                h = DeployHost(hosts[hn]['ipv4'], user="root")
+                                res = run(f"nix-shell -p nmap --run 'sudo nmap --version-intensity 0 -sV {hosts[hn]['ipv4']} -oX -'")
+                                dom = parseString(res.stdout)
+
+                                output = '''| Port | Service | Product | Extra info |
+| ------ | ------ |------ |------ |
+'''
+
+                                for p in dom.getElementsByTagName('port'):
+                                    proto = p.getAttribute("protocol")
+                                    port = p.getAttribute("portid")
+                                    
+                                    svc = p.getElementsByTagName("service")[0]
+                                    name = svc.getAttribute("name")
+                                    product = svc.getAttribute("product")
+                                    extrainfo = svc.getAttribute("extrainfo")
+                                    
+                                    output += f"|{port}|{name}|{product}|{extrainfo}|\n"
+                                output += "\n"
+
+                        hinfo += f'''
+### {dn}
+
+{output}
+    '''
+                # Replace content
+                newcontent = _replace_content(content,"HOSTINFOS",hinfo)
+
+            # Write new content
+            with open(rname, 'w') as f:
+                f.write(newcontent)
+
+
 def _doc_generate() -> None:
-    with open('hosts/infos.json', 'r') as f:
+    with open('homelab.json', 'r') as f:
         hosts = json.load(f)
 
-        result=[]
         for hn in hosts:
-            if os.system(f"ping -c 1 -w 1 {hosts[hn]['ipv4']}"):
-                result.append(hn)
+            # Can ping (no get an error)
+            if not os.system(f"ping -c 1 -w 1 {hosts[hn]['ipv4']}"):
+                h = DeployHost(hosts[hn]['ipv4'], user="root")
+                res = h.run("nix-shell -p inxi --run 'inxi -FA'")
+                lines = res.stdout.splitlines()
+                print(lines)
+                with open(f"docs/hosts/{hn}.md", "w") as file:
+                    file.write(res.stdout)
 
-    print(result)
+                
+                # [
+                #     line for line in res.stdout.splitlines() if "Sensor Reading" in line
+                # ][0]
+                # reading = reading.strip().split(":")[1].strip().split(" ")[0]
+                # total += int(reading)
+                # print(f"  {reading} Watts")
+                # print("")
+

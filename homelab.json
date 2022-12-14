@@ -1,0 +1,57 @@
+{
+    "hosts": {
+        "box": {
+            "icon": "https://logos-marques.com/wp-content/uploads/2022/03/SFR-Logo-1994.png",
+            "ipv4": "192.168.0.1",
+            "description": "SFR internet box",
+            "discovery": [
+                "Services"
+            ]
+        },
+        "router-ext": {
+            "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
+            "ipv4": "192.168.0.10",
+            "description": "External home mikrotik router",
+            "discovery": [
+                "Services"
+            ]
+        },
+        "router-int": {
+            "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
+            "ipv4": "192.168.254.254",
+            "description": "Internal home mikrotik router",
+            "discovery": [
+                "Services"
+            ]
+        },
+        "latino": {
+            "icon": "https://styles.redditmedia.com/t5_6sciw0/styles/communityIcon_h3cvittvupi91.png",
+            "ipv4": "192.168.254.152",
+            "description": "Dell Latitude E5540 Latop",
+            "discovery": [
+                "Services",
+                "Topologie",
+                "Hardwares"
+            ]
+        },
+        "rpi40": {
+            "icon": "https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Raspberry_Pi_logo.svg/32px-Raspberry_Pi_logo.svg.png",
+            "ipv4": "192.168.0.17",
+            "alias": "nfs",
+            "description": "The Raspberry PI 4 storage server",
+            "discovery": [
+                "Services",
+                "Topologie",
+                "Hardwares"
+            ]
+        },
+        "bootstore": {
+            "icon": "https://simpleicons.org/icons/databricks.svg",
+            "ipv4": "192.168.0.99",
+            "description": "HP Proliant Microserver N40L storage server",
+            "discovery": [
+                "Services"
+            ]
+        }
+    }
+}
