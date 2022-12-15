@@ -131,12 +131,30 @@ def init_nix_serve(c,hosts=""):
 
 
 @task
-def doc_generate(c):
+def doc_generate_all_pages(c):
     """
-    generate homelab doc
+    generate all homelab documentation
     """
 
     _doc_update_main_project_page()
+    _doc_update_hosts_pages()
+
+
+@task
+def doc_generate_main_page(c):
+    """
+    generate main homelab page
+    """
+
+    _doc_update_main_project_page()
+
+
+@task
+def doc_generate_hosts_pageà(c):
+    """
+    generate all homelab hosts page
+    """
+
     _doc_update_hosts_pages()
 
 ##############################################################################
@@ -355,9 +373,17 @@ def _doc_update_main_project_page() -> None:
     with open('README.md', 'r') as f:
         content = f.read().rstrip()
 
+    res = run(f"nix-shell -p tree --run 'tree --noreport'")
+    folders = f'''```
+{res.stdout}
+```
+'''
+
     # Replace content
     newcontent = _replace_content(content,"HOSTS",table)
-    
+    newcontent = _replace_content(newcontent,"FOLDERS",folders)
+
+
     # Write new content
     with open('README.md', 'w') as f:
         f.write(newcontent)
