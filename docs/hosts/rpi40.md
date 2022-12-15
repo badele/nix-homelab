@@ -126,27 +126,12 @@ export DIR_NIXSERVE=/persist/host/data/nix-serve
 mkdir -p $DIR_NIXSERVE && cd $DIR_NIXSERVE  
 nix-store --generate-binary-cache-key rpi40.adele.local cache-priv-key.pem cache-pub-key.pem
 
-# install
-inv install-nixos --hosts <nixos-livecd-ip> --flakeattr <hostname>
-
 # Update RPI and configure USB boot
 inv firmware-rpi-update --hosts <nixos-livecd-ip>
 
+# install
+inv install-nixos --hosts <nixos-livecd-ip> --flakeattr <hostname>
 
-# Get configuration
-cd /tmp
-nix develop
-git clone https://github.com/badele/nix-config.git
-cd nix-config
-
-# [Optional] Copy your previous borg backups at /tmp/persist
-
-# Install bootstrap
-make bootstrap HOSTNAME=<hostname> 
-make nixos-install TMPDIR=/mnt/data/tmp USERNAME=<username> HOSTNAME=<hostname>
-reboot
-make nixos-update HOSTNAME=<hostname>
-make home-update USERNAME=<username> HOSTNAME=<hostname>
 ```
 
 ## Second install
