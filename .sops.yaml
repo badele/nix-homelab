@@ -6,7 +6,8 @@ keys:
   - &hosts: # nix-shell -p ssh-to-age --run 'cat hosts/<hostname>/ssh_host_ed25519_key.pub | ssh-to-age'
     - &rpi40 age152ud7upe5xylsvf7kkfpdz6x99r6hcmkam8gwntfdv0px70f0u0sqzc8qe 
     - &latino age12lhx7ktnd4fvqjeq06h0z25n0s0a3r0ap6thzsxwuxvglqsjufls8mhk9u
-    - &bootstore age13rk87hygt7yc2p5tdwklt0yegh96cr6xs7cd0nluna5camscleaqztv47z
+    - &sam age1x363tjjzx6j77j3m4zynkjgyj38qcyf4wah5mc8mtjt5yt6zvgxqr3z7px
+    - &bootstore age1ejza6f2xzycq7jj2eu8fyg5vjdctljttm67mfteyd4k7wzvdyc8s7sc8jh
 
 creation_rules:
   - path_regex: hosts/secrets.yml$
@@ -14,18 +15,28 @@ creation_rules:
       - age:
           - *badele
           - *rpi40
+          - *sam
+
   - path_regex: hosts/rpi40/secrets.yml$
     key_groups:
       - age:
           - *badele
           - *rpi40
+
   - path_regex: hosts/bootstore/secrets.yml$
     key_groups:
       - age:
           - *badele
           - *bootstore
+
   - path_regex: hosts/latino.yml$
     key_groups:
       - age:
           - *badele
           - *latino
+
+  - path_regex: hosts/sam.yml$
+    key_groups:
+      - age:
+          - *badele
+          - *sam

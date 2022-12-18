@@ -4,6 +4,22 @@
 }:
 let
   hostOptions = with lib; {
+    icon = mkOption {
+      type = types.str;
+      default = null;
+      description = ''
+        host icon
+      '';
+    };
+
+    description = mkOption {
+      type = types.str;
+      default = null;
+      description = ''
+        host description
+      '';
+    };
+
     ipv4 = mkOption {
       type = types.str;
       description = ''
@@ -15,9 +31,20 @@ let
       type = types.nullOr types.str;
       default = null;
       description = ''
-        alias for this hosts
+        alias for this host
       '';
     };
+
+    discovery = mkOption {
+      type = types.listOf types.str;
+      default = null;
+      description = ''
+        discovery mode
+      '';
+    };
+
+
+
 
   };
 in
@@ -33,12 +60,14 @@ in
       description = "The host that is described by this configuration";
     };
   };
+
   config = {
     warnings =
       lib.optional (!(config.networking.homelab.hosts ? ${config.networking.hostName}))
         "no network configuration for ${config.networking.hostName} found in ${./hosts.nix}";
 
-    # Read from ./hosts/infos.json
-    networking.homelab.hosts = (builtins.fromJSON (builtins.readFile ../../hosts/infos.json));
+    # Read from ../../homelab.json
+    # TODO: verify if this file build too many derivations
+    networking.homelab.hosts = (builtins.fromJSON (builtins.readFile ../../homelab.json)).hosts;
   };
 }

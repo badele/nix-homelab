@@ -6,12 +6,12 @@ in
   nix = {
     settings = {
       substituters = [
-        "http://rpi40.${domain}:5000"
+        "http://bootstore.${domain}:5000"
         "https://hyprland.cachix.org"
         "https://nix-community.cachix.org"
       ];
       trusted-public-keys = [
-        "rpi40.${domain}:kBGDGXPpTSWea8WiyePNQxOOT1mP8zDh31ijszk3z5g="
+        "bootstore.${domain}:nJYY2ypfR1pveSZnBuBjMb0oyCGFfjbnsMp1isRS9sg="
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];

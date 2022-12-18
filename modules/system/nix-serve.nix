@@ -5,18 +5,33 @@
 #
 # curl http://nix-server:5000/nix-cache-info
 { outputs, lib, config, ... }:
+let
+  domain = config.networking.domain;
+in
 {
   # Configure sops secret 
   sops.secrets.nixserve-private-key = { };
 
+  # Active nix-serve
   networking.firewall.allowedTCPPorts = [ 5000 ];
   services.nix-serve = {
     enable = true;
     secretKeyFile = config.sops.secrets.nixserve-private-key.path;
   };
 
-  systemd.tmpfiles.rules = [
-    #    "d /data/nfs/borgbackup/rpi40 0755 root root - -"
-  ];
-
+  # Install nginx server for human readable files
+  services.nginx = {
+    enable = true;
+    virtualHosts = {
+      "binarycache.${domain}" = {
+        serverAliases = [ "binarycache" ];
+        locations."/".extraConfig = ''
+          proxy_pass http://localhost:${toString config.services.nix-serve.port};
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        '';
+      };
+    };
+  };
 }

@@ -11,7 +11,7 @@ let
     ;
   nixosSystem = nixpkgs.lib.makeOverridable nixpkgs.lib.nixosSystem;
 
-  commonModules = [
+  minimalModules = [
     { _module.args.inputs = self.inputs; }
     { _module.args.self = self; }
     ./modules/users.nix
@@ -53,13 +53,13 @@ let
   ];
 
   termNodeModules =
-    commonModules
+    minimalModules
     ++ [
     ];
 
 
   dekstopNodeModules =
-    commonModules
+    minimalModules
     ++ [
     ];
 in
@@ -77,19 +77,28 @@ in
     bootstore = nixosSystem {
       system = "x86_64-linux";
       modules =
-        dekstopNodeModules
+        termNodeModules
         ++ [
           ./hosts/bootstore
         ];
     };
 
-    latino = nixosSystem {
-      system = "x86_64-linux";
+    # latino = nixosSystem {
+    #   system = "x86_64-linux";
+    #   modules =
+    #     dekstopNodeModules
+    #     ++ [
+    #       ./hosts/latino.nix
+    #       hardware.nixosModules.dell-latitude-5520
+    #     ];
+    # };
+
+    sam = nixosSystem {
+      system = "i386-linux";
       modules =
-        dekstopNodeModules
+        minimalModules
         ++ [
-          ./hosts/latino.nix
-          hardware.nixosModules.dell-latitude-5520
+          ./hosts/sam
         ];
     };
   };

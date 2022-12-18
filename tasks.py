@@ -65,27 +65,23 @@ def ssh_init_host_key(c, hosts, hostnames):
 
 
 @task
-def disk_format(c, hosts, disks, password=""):
+def disk_format(c, hosts, disk, mirror="", mode="GPT", password=""):
     """
-    Format disks with zfs => inv format-disks --hosts new-hostname --disks /dev/sda (mirrored if multiples disks)
+    Format disks with zfs => inv disk-format --hosts new-hostname --disks /dev/sda [--mirror /dev/sdb]
     """
 
-    DISKS= disks.split(',')
-    MIRROR=len(DISKS)>1
-
-    if not MIRROR:
-        for h in get_hosts(hosts):
-            _format_disks(h, DISKS[0],password)
-            _disk_mount(h,password)
+    for h in get_hosts(hosts):
+        _format_disks(h, disk, mirror, mode, password)
+        _disk_mount(h, mirror != "", password)
 
 
 @task
-def disk_mount(c, hosts,password=""):
+def disk_mount(c, hosts, mirror="", password=""):
     """
     Mount disks from the installer => inv mount-disks --hosts new-hostname
     """
     for h in get_hosts(hosts):
-        _disk_mount(h,password)
+        _disk_mount(h, mirror, password)
 
 
 @task
@@ -96,11 +92,22 @@ def sync_homelab(c, hosts):
     for h in get_hosts(hosts):
         _sync_homelab({h.host})
 
+@task
+def nixos_generate_config(c, hosts, hostnames, confname):
+    """
+    Generate hardware configuration for the host
+    """
+
+    h = get_hosts(hosts)
+    hn = hostnames.split(',')
+
+    for idx in range(len(h)):
+        _nixos_generate_config(h[idx], hn[idx], confname)
 
 @task
-def install_nixos(c, hosts, flakeattr):
+def nixos_install(c, hosts, flakeattr):
     """
-    install nixos => inv install-nixos --hosts 192.168.0.1 --flakeattr bootstore
+    install nixos => inv nixos-install --hosts 192.168.0.1 --flakeattr bootstore
     """
     for h in get_hosts(hosts):
         # Sync project
@@ -110,7 +117,7 @@ def install_nixos(c, hosts, flakeattr):
         # Install nixos
         info("Install NixOS")
         h.run(
-            f"cd /tmp/homelab && nix --extra-experimental-features 'nix-command flakes' shell nixpkgs#git -c nixos-install --flake .#{flakeattr} && sync"
+            f"cd /mnt/nix-homelab && nix --extra-experimental-features 'nix-command flakes' shell nixpkgs#git -c nixos-install --verbose --flake .#{flakeattr} && sync"
         )
 
 @task
@@ -122,12 +129,16 @@ def deploy(c, hosts=""):
 
 
 @task 
-def init_nix_serve(c,hosts=""):
+def init_nix_serve(c,hosts, hostnames):
     """
     Init nix-server private & public key on /persist/host/data/nix-serve
     """
-    for h in get_hosts(hosts):
-        _init_nix_serve(h)
+
+    h = get_hosts(hosts)
+    hn = hostnames.split(',')
+
+    for idx in range(len(h)):
+        _init_nix_serve(h[idx], hn[idx])
 
 
 @task
@@ -150,7 +161,7 @@ def doc_generate_main_page(c):
 
 
 @task
-def doc_generate_hosts_pageà(c):
+def doc_generate_hosts_pages(c):
     """
     generate all homelab hosts page
     """
@@ -162,18 +173,19 @@ def doc_generate_hosts_pageà(c):
 ##############################################################################
 
 
-def sfdisk_json(host: DeployHost, dev: str) -> List[Any]:
-    out = host.run(f"sfdisk --json {dev}", stdout=subprocess.PIPE)
-    data = json.loads(out.stdout)
-    return data["partitiontable"]["partitions"]
-
-def _format_disks(host: DeployHost, device: str, zfspassphrase: str) -> None:
-    # format disk with as follow:
-    # - partition 1 will be the boot partition
-    # - partition 2 takes up the rest of the space and is for the system
+def _format_disks(host: DeployHost, disk: str,mirror: str, mode: str, zfspassphrase: str) -> None:
+    # format disk in hybrid mode (GPT and MBR) with as follow :
+    # - partition 1 MBR/EFI boot partition
+    # - partition 2 swap partition for system with few RAM
+    # - partition 3 zfs partition
 
     # Umount all /mnt
     host.run(f"umount -R /mnt",check=False)
+
+    # swapoff
+    host.run(f'swapoff {disk}2',check=False)
+    if mirror:
+        host.run(f'swapoff {mirror}2',check=False)
 
     # Check previous zfs volumes
     r = host.run(f"zpool list | grep 'zroot'",check=False)
@@ -183,28 +195,43 @@ def _format_disks(host: DeployHost, device: str, zfspassphrase: str) -> None:
         zpool destroy zroot
         """)
 
-    # Wipe
-    host.run(f"sgdisk -Z '{device}'") 
+    # Wipe & Partitioning
+    host.run(f"sgdisk -Z -n 1:2048:+1G -n 2:+0:+8G -N 3 -t 1:ef00 -t 2:8200 -t 3:8304 {disk}")
 
-    # Partitioning
-    host.run(f"sgdisk -Z -n 1:2048:+1G -N 2 -t 1:ef00 -t 2:8304 {device}")
-    partitions = sfdisk_json(host, device)
-    boot = partitions[0]["node"]
-    uuid = partitions[1]["uuid"].lower()
-    root_part = f"/dev/disk/by-partuuid/{uuid}"
+    # For legacy bios
+    if mode=="MBR":
+        host.run(f"sgdisk -m 1:2:3 {disk}")
 
+
+    # Clone partition [If mirror mode]
+    if mirror:
+        host.run(f'sfdisk --dump {disk} | sfdisk {mirror}')
+
+    zdisks = f"{disk}3 {mirror}3".strip()
     # Create ZFS pool
-    host.run(
-        f"zpool create -f -o ashift=12 -O mountpoint=none zroot {root_part}"
-    )
+    if mirror:
+        host.run(f"zpool create -f -o ashift=12 -O mountpoint=none zroot mirror {zdisks}")
+    else:
+        host.run(f"zpool create -f -o ashift=12 -O mountpoint=none zroot {zdisks}")
 
-    host.run(f"partprobe")
-    host.run(f"mkfs.vfat {boot} -n NIXOS_BOOT")
+    # Format boot
+    host.run(f"""
+    mkfs.vfat {disk}1 -n BOOT_1ST
+    test -n "{mirror}" && mkfs.vfat {mirror}1 -n BOOT_2ND
+    """)
+
+    # swap
+    host.run(f"""
+    mkswap {disk}2 -L SWAP_1ST
+    mkswap {mirror}2 -L SWAP_2ND
+    """)
+
 
     # public volumes
     host.run("""
     zfs create -o mountpoint=none -o canmount=off zroot/public
     zfs create -o mountpoint=legacy -o canmount=on -o atime=off zroot/public/nix
+    zfs create -o mountpoint=legacy -o canmount=on -o atime=off zroot/public/nix-homelab
     """)
 
     # private volumes(encrypted)
@@ -226,9 +253,11 @@ def _format_disks(host: DeployHost, device: str, zfspassphrase: str) -> None:
     host.run(f'zfs get encryption')
 
 
-def _disk_mount(host: DeployHost,zfspassphrase: str) -> None:
-    # Re-import zpool informations
+def _disk_mount(host: DeployHost,mirror: bool, zfspassphrase: str) -> None:
+    # Umount all volumes
     host.run(f"umount -R /mnt",check=False)
+
+    # Re-import zpool informations
     host.run(f"zpool import -af")
 
     zfspool = "public"
@@ -239,14 +268,23 @@ def _disk_mount(host: DeployHost,zfspassphrase: str) -> None:
     # Import volumes
     host.run(f"""  
     mount -t zfs zroot/{zfspool}/root /mnt
-    mkdir -p /mnt/{{boot,nix,data,persist/host,persist/user}}
-    mount '/dev/disk/by-label/NIXOS_BOOT' /mnt/boot
+    mkdir -p /mnt/{{boot,boot-fallback,nix,nix-homelab,data,persist/host,persist/user}}
+    mount /dev/disk/by-label/BOOT_1ST /mnt/boot
+    test -n "{mirror}" && mount /dev/disk/by-label/BOOT_2ND /mnt/boot-fallback
     mount -t zfs zroot/public/nix /mnt/nix
+    mount -t zfs zroot/public/nix-homelab /mnt/nix-homelab
     mount -t zfs zroot/{zfspool}/data /mnt/data
     mount -t zfs zroot/{zfspool}/persist/host /mnt/persist/host
     mount -t zfs zroot/{zfspool}/persist/user /mnt/persist/user
     """)
 
+    # Mount swap
+    host.run(f"""
+swapon /dev/disk/by-label/SWAP_1ST
+test -n "{mirror}" && swapon /dev/disk/by-label/SWAP_2ND
+mount -o remount,nr_inodes=0,size=6G /nix/.rw-store
+swapon --show
+""",check=False)
 
 def _firmware_rpi_update(host: DeployHost) -> None:
     ## USB boot configuration
@@ -291,19 +329,30 @@ def _ssh_init_host_key(host: DeployHost, hostname: str) -> None:
     scp root@{host.host}:/tmp/ssh-to-age.txt ./hosts/{hostname}
     """)
 
+def _nixos_generate_config(host: DeployHost, hostname: str, confname: str, ) -> None:
+    
+    confpath = f'modules/hardware/{confname}.nix'
+    if not os.path.exists(confpath):
+        host.run("""
+        nixos-generate-config --dir /tmp/hw --root /mnt
+        """)
 
+        info(f"copy hardware-configuration.nix to {confpath}")
+        run(f"""
+        scp root@{host.host}:/tmp/hw/hardware-configuration.nix {confpath}
+        """)
+
+# Remove .git (for ignoring dirty message), no git add needed :)
 def _sync_homelab(host: DeployHost) -> None:
-    host.run("mkdir -p /tmp/homelab")
-    run(f"rsync -ar . root@{host.host}:/tmp/homelab/")    
+    run(f"rsync --delete {' --exclude '.join([''] + RSYNC_EXCLUDES)} -ar . root@{host.host}:/mnt/nix-homelab/")    
 
 
-def _init_nix_serve(host: DeployHost) -> None:
-    host.run("""
+def _init_nix_serve(host: DeployHost, hostname: str) -> None:
+    host.run(f"""
 export DIR_NIXSERVE=/persist/host/data/nix-serve
 mkdir -p $DIR_NIXSERVE && cd $DIR_NIXSERVE  
-nix-store --generate-binary-cache-key rpi40.adele.local cache-priv-key.pem cache-pub-key.pem
+nix-store --generate-binary-cache-key {hostname}.adele.lan cache-priv-key.pem cache-pub-key.pem
 """)
-
 
 
 def _deploy_nixos(hosts: List[DeployHost]) -> None:
@@ -313,17 +362,20 @@ def _deploy_nixos(hosts: List[DeployHost]) -> None:
     g = DeployGroup(hosts)
 
     def deploy(h: DeployHost) -> None:
-        config_dir = h.meta.get("config_dir", "/etc/nixos")
+        with open('homelab.json', 'r') as f:
+            jinfo = json.load(f)
+            hosts = jinfo['hosts']
+
+            # Search host by ip
+            for hostname in hosts:
+                if 'ipv4' in hosts[hostname] and  hosts[hostname]['ipv4'] == h.host:
+                    break
+
         h.run_local(
-            f"rsync {' --exclude '.join([''] + RSYNC_EXCLUDES)} -vaF --delete -e ssh . {h.user}@{h.host}:{config_dir}"
+            f"rsync --delete {' --exclude '.join([''] + RSYNC_EXCLUDES)} -ar . {h.user}@{h.host}:/nix-homelab/"
         )
 
-        flake_path = config_dir
-        flake_attr = h.meta.get("flake_attr")
-        if flake_attr:
-            flake_path += "#" + flake_attr
-        target_host = h.meta.get("target_host", "localhost")
-        cmd = f"nixos-rebuild switch --fast --option accept-flake-config true --build-host localhost --target-host {target_host} --flake {flake_path} --option keep-going true"
+        cmd = f"cd /nix-homelab && nixos-rebuild switch --fast --option accept-flake-config true --option keep-going true --flake .#{hostname}"
         h.run(cmd)
 
     g.run_function(deploy)
@@ -414,7 +466,7 @@ def _doc_update_hosts_pages() -> None:
                         match dn:
                             case "Hardwares":
                                 h = DeployHost(hosts[hn]['ipv4'], user="root")
-                                res = h.run("nix-shell -p 'inxi.override { withRecommends = true; }' --run 'sudo inxi -F -i --slots -xxx -c0 -Z -i -m --wrap-max 200 --filter'",stdout=subprocess.PIPE)
+                                res = h.run("nix-shell -p 'inxi.override { withRecommends = true; }' --run 'sudo inxi -F -i --slots -xxx -c0 -i -m --wrap-max 200 --filter'",stdout=subprocess.PIPE)
                                 output = f'''```
 {res.stdout}
 ```
@@ -459,28 +511,3 @@ def _doc_update_hosts_pages() -> None:
             # Write new content
             with open(rname, 'w') as f:
                 f.write(newcontent)
-
-
-def _doc_generate() -> None:
-    with open('homelab.json', 'r') as f:
-        hosts = json.load(f)
-
-        for hn in hosts:
-            # Can ping (no get an error)
-            if not os.system(f"ping -c 1 -w 1 {hosts[hn]['ipv4']}"):
-                h = DeployHost(hosts[hn]['ipv4'], user="root")
-                res = h.run("nix-shell -p inxi --run 'inxi -FA'")
-                lines = res.stdout.splitlines()
-                print(lines)
-                with open(f"docs/hosts/{hn}.md", "w") as file:
-                    file.write(res.stdout)
-
-                
-                # [
-                #     line for line in res.stdout.splitlines() if "Sensor Reading" in line
-                # ][0]
-                # reading = reading.strip().split(":")[1].strip().split(" ")[0]
-                # total += int(reading)
-                # print(f"  {reading} Watts")
-                # print("")
-

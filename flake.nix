@@ -1,10 +1,16 @@
 {
-  description = "NixOS configuration with flakes";
+  description = "Nixos homelab configuration with flakes";
 
   nixConfig = {
-    extra-substituers = [ "https://nix-community.cachix.org" ];
+    extra-substituers = [
+      "http://bootstore.adele.lan:5000"
+      "https://nix-community.cachix.org"
+    ];
     extra-trusted-public-keys =
-      [ "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" ];
+      [
+        "bootstore.adele.lan:+2EnxpRxBCNd5V/2PNoobcq7fW+oXpZ0IhRwL+X2WHI="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
   };
 
   # nix flake update --recreate-lock-file

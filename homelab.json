@@ -1,4 +1,5 @@
 {
+    "domain": "adele.lan",
     "hosts": {
         "box": {
             "icon": "https://logos-marques.com/wp-content/uploads/2022/03/SFR-Logo-1994.png",
@@ -24,6 +25,16 @@
                 "Services"
             ]
         },
+        "sam": {
+            "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Xfce_logo-footprint.svg/32px-Xfce_logo-footprint.svg.png",
+            "ipv4": "192.168.0.18",
+            "description": "Samsung N110 Latop",
+            "discovery": [
+                "Services",
+                "Topologie",
+                "Hardwares"
+            ]
+        },
         "latino": {
             "icon": "https://styles.redditmedia.com/t5_6sciw0/styles/communityIcon_h3cvittvupi91.png",
             "ipv4": "192.168.254.152",
@@ -37,7 +48,6 @@
         "rpi40": {
             "icon": "https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Raspberry_Pi_logo.svg/32px-Raspberry_Pi_logo.svg.png",
             "ipv4": "192.168.0.17",
-            "alias": "nfs",
             "description": "The Raspberry PI 4 storage server",
             "discovery": [
                 "Services",
@@ -47,10 +57,13 @@
         },
         "bootstore": {
             "icon": "https://simpleicons.org/icons/databricks.svg",
-            "ipv4": "192.168.0.99",
+            "ipv4": "192.168.0.29",
+            "alias": "nfs",
             "description": "HP Proliant Microserver N40L storage server",
             "discovery": [
-                "Services"
+                "Services",
+                "Topologie",
+                "Hardwares"
             ]
         }
     }
