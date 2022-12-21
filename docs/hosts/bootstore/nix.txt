@@ -1,0 +1,7 @@
+ - system: `"x86_64-linux"`
+ - host os: `Linux 5.15.82, NixOS, 23.05 (Stoat), 23.05.20221208.2787fc7`
+ - multi-user?: `yes`
+ - sandbox: `yes`
+ - version: `nix-env (Nix) 2.12.0`
+ - nixpkgs: `/nix/store/f97znrjbr0rm0i013hwyx0akq5vb5kll-2i8zqmz2cqa0grjagw94z7g47199db9k-source`
+

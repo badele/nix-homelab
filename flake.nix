@@ -61,13 +61,14 @@
           ./configurations.nix
         ];
         perSystem = { system, self', inputs', pkgs, ... }: {
-          devShells.default = pkgs.mkShellNoCC {
+          devShells.default = with pkgs; mkShellNoCC {
             buildInputs = [
-              pkgs.python3.pkgs.invoke
-              pkgs.python3.pkgs.deploykit
-              pkgs.age
-              pkgs.sops
-            ] ++ pkgs.lib.optional (pkgs.stdenv.isLinux) pkgs.mkpasswd;
+              python3.pkgs.invoke
+              python3.pkgs.deploykit
+              python3.pkgs.xmltodict
+              age
+              sops
+            ] ++ lib.optional (stdenv.isLinux) mkpasswd;
           };
         };
         flake = {

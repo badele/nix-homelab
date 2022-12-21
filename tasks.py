@@ -8,6 +8,7 @@ import re
 import sys
 import os
 import json
+import xmltodict
 from xml.dom.minidom import parseString
 import xml.dom.minidom
 import random
@@ -147,8 +148,8 @@ def doc_generate_all_pages(c):
     generate all homelab documentation
     """
 
-    _doc_update_main_project_page()
     _doc_update_hosts_pages()
+    _doc_update_main_project_page()
 
 
 @task
@@ -167,6 +168,14 @@ def doc_generate_hosts_pages(c):
     """
 
     _doc_update_hosts_pages()
+
+@task
+def scan_all_hosts(c):
+    """
+    Retrieve all hosts system infromations
+    """ 
+    _scan_all_hosts()
+
 
 ##############################################################################
 # Functions
@@ -355,6 +364,72 @@ nix-store --generate-binary-cache-key {hostname}.adele.lan cache-priv-key.pem ca
 """)
 
 
+def _host_hardware_discovery(h: DeployHost) -> None:
+    with open('homelab.json', 'r') as fr:
+        jinfo = json.load(fr)
+        hosts = jinfo['hosts']
+
+        # Create 
+        hn = h.meta.get("hostname")
+        run(f"mkdir -p docs/hosts/{hn}")
+        
+        if not os.system(f"ping -c 1 -w 1 {h.host}"):
+            if hn and h.meta.get("isnix"):
+                
+                h.run("""
+                rm -rf /tmp/hw
+                mkdir -p /tmp/hw
+                """,
+                check=False)
+
+            for dn in hosts[hn]["discovery"]:
+                match dn:
+                    case "Nix":
+                        h = DeployHost(hosts[hn]['ipv4'], user="root")
+                        h.run(f"nix-info -m > /tmp/hw/{dn}.txt")
+                        run(f'scp root@{h.host}:/tmp/hw/{dn}.txt docs/hosts/{hn}/{dn.lower()}.txt')
+                    case "Hardwares":
+                        h = DeployHost(hosts[hn]['ipv4'], user="root")
+                        h.run(f"nix-shell -p 'inxi.override {{ withRecommends = true; }}' --run 'sudo inxi -F -a -i --slots -xxx -c0 -i -m --filter' > /tmp/hw/{dn}.txt")
+                        run(f'scp root@{h.host}:/tmp/hw/{dn}.txt docs/hosts/{hn}/{dn.lower()}.txt')
+                    case "CPU":
+                        h = DeployHost(hosts[hn]['ipv4'], user="root")
+                        h.run(f"LC_ALL=C lscpu > /tmp/hw/{dn}.txt")
+                        run(f'scp root@{h.host}:/tmp/hw/{dn}.txt docs/hosts/{hn}/{dn.lower()}.txt')
+                    case "HW-Topologie":
+                        h = DeployHost(hosts[hn]['ipv4'], user="root")
+                        res = h.run(f"nix-shell -p hwloc --run 'sudo lstopo -f /tmp/hw/{hn}.lstopo.svg'")
+                        run(f"scp root@{hosts[hn]['ipv4']}:/tmp/hw/{hn}.lstopo.svg docs/hosts/{hn}/{dn.lower()}.svg")
+                    case "Services":
+                        h = DeployHost(hosts[hn]['ipv4'], user="root")
+                        res = run(f"nix-shell -p nmap --run 'sudo nmap --version-intensity 0 -sV {hosts[hn]['ipv4']} -oX -'")
+                        
+                        dom = parseString(res.stdout)
+
+                        xpars = xmltodict.parse(res.stdout)
+                        ports = xpars['nmaprun']['host']['ports']['port']
+
+                        if isinstance(ports,dict):
+                            ports = [ports]
+
+                        # Remove sensible or unimportant values
+                        for idx in range(len(ports)):
+                            # State
+                            if 'state' in ports[idx]:
+                                del ports[idx]['state']
+                            
+                            # service elements
+                            if 'service' in ports[idx] :
+                                for value in ['@version', '@servicefp','@method', '@conf', 'cpe']:
+                                    if value in ports[idx]['service']:
+                                        del ports[idx]['service'][value]
+
+                        jcontent = json.dumps(ports)
+
+                        with open(f"docs/hosts/{hn}/{dn.lower()}.json", 'w') as fw:
+                            fw.write(jcontent)
+
+
 def _deploy_nixos(hosts: List[DeployHost]) -> None:
     """
     Deploy to all hosts in parallel
@@ -367,16 +442,23 @@ def _deploy_nixos(hosts: List[DeployHost]) -> None:
             hosts = jinfo['hosts']
 
             # Search host by ip
-            for hostname in hosts:
-                if 'ipv4' in hosts[hostname] and  hosts[hostname]['ipv4'] == h.host:
+            hostname = None
+            for hn in hosts:
+                if 'ipv4' in hosts[hn] and  hosts[hn]['ipv4'] == h.host:
+                    hostname = hn
                     break
 
         h.run_local(
             f"rsync --delete {' --exclude '.join([''] + RSYNC_EXCLUDES)} -ar . {h.user}@{h.host}:/nix-homelab/"
         )
 
-        cmd = f"cd /nix-homelab && nixos-rebuild switch --fast --option accept-flake-config true --option keep-going true --flake .#{hostname}"
-        h.run(cmd)
+        if hostname:
+            cmd = f"cd /nix-homelab && nixos-rebuild switch --fast --option accept-flake-config true --option keep-going true --flake .#{hostname}"
+            h.run(cmd)
+
+            h.meta['hostname'] = hostname
+            h.meta['isnix'] = True
+            _host_hardware_discovery(h)
 
     g.run_function(deploy)
 
@@ -402,28 +484,39 @@ def _doc_update_main_project_page() -> None:
         hosts = jinfo['hosts']
 
     # Header table
-    table = '''<table>
+    table = '''<font size="10px"><table>
     <tr>
         <th>Logo</th>
         <th>Name</th>
-        <th>IP</th>
+        <th>Arch</th>
+        <th>OS</th>
+        <th>CPU</th>
+        <th>Memory</th>
+        <th>Disk</th>
         <th>Description</th>
     </tr>'''
 
     # Hosts loop
     for hn in hosts:
+        with open(f'docs/hosts/{hn}/summaries.json', 'r') as fs:
+            sinfo = json.load(fs)
+
             table += f'''<tr>
         <td><a href="./docs/hosts/{hn}.md"><img width="32" src="{hosts[hn]["icon"]}"></a></td>
-        <td><a href="./docs/hosts/{hn}.md">{hn}</a></td>
-        <td>{hosts[hn]["ipv4"]}</td>
+        <td><a href="./docs/hosts/{hn}.md">{hn}</a>&nbsp;({hosts[hn]["ipv4"]})</td>
+        <td>{sinfo["cpu"]["arch"]}</td>
+        <td>{hosts[hn]["os"]}</td>
+        <td>{sinfo["cpu"]["nb"]}</td>
+        <td>{sinfo["memory"]}</td>
+        <td>{sinfo["disk"]}</td>
         <td>{hosts[hn]["description"]}</td>
     </tr>'''
 
-    table += "</table>"
+    table += "</table></font>"
 
     # Read readme.md content
-    with open('README.md', 'r') as f:
-        content = f.read().rstrip()
+    with open('README.md', 'r') as fr:
+        content = fr.read().rstrip()
 
     res = run(f"nix-shell -p tree --run 'tree --noreport'")
     folders = f'''```
@@ -435,19 +528,36 @@ def _doc_update_main_project_page() -> None:
     newcontent = _replace_content(content,"HOSTS",table)
     newcontent = _replace_content(newcontent,"FOLDERS",folders)
 
-
     # Write new content
-    with open('README.md', 'w') as f:
-        f.write(newcontent)
+    with open('README.md', 'w') as fw:
+        fw.write(newcontent)
 
 
-def _doc_update_hosts_pages() -> None:
-    with open('homelab.json', 'r') as f:
-        jinfo = json.load(f)
+def _scan_all_hosts() -> None:
+    with open('homelab.json', 'r') as fh:
+        jinfo = json.load(fh)
         hosts = jinfo['hosts']
 
         for hn in hosts:
-            
+            isnix=not (len(hosts[hn]['discovery'])==1 and 'Services' in hosts[hn]['discovery'])
+            h = DeployHost(
+                hosts[hn]['ipv4'], 
+                user="root",
+                meta=dict(
+                    hostname=hn,
+                    isnix=isnix
+                    ),
+            )
+
+            _host_hardware_discovery(h)
+
+
+def _doc_update_hosts_pages() -> None:
+    with open('homelab.json', 'r') as fh:
+        jinfo = json.load(fh)
+        hosts = jinfo['hosts']
+
+        for hn in hosts:
             # Readme name
             rname = f'docs/hosts/{hn}.md'
 
@@ -456,51 +566,120 @@ def _doc_update_hosts_pages() -> None:
                 shutil.copyfile('docs/hosts/host.tpl', rname)
 
             # Read readme.md content
-            with open(rname, 'r') as f:
-                content = f.read().rstrip()
+            with open(rname, 'r') as fr:
+                content = fr.read().rstrip()
 
-                # Get discovery
                 hinfo = ""
-                if not os.system(f"ping -c 1 -w 1 {hosts[hn]['ipv4']}"):
-                    for dn in hosts[hn]["discovery"]:
-                        match dn:
-                            case "Hardwares":
-                                h = DeployHost(hosts[hn]['ipv4'], user="root")
-                                res = h.run("nix-shell -p 'inxi.override { withRecommends = true; }' --run 'sudo inxi -F -i --slots -xxx -c0 -i -m --wrap-max 200 --filter'",stdout=subprocess.PIPE)
-                                output = f'''```
-{res.stdout}
+                sinfo = {
+                    "memory": "",
+                    "disk": "",
+                    "kernel": "",
+                    "cpu": {
+                        "arch": "",
+                        "model": "",
+                        "nb": "",
+                        "bits": 0,
+                        "bogomips": 0
+                    }
+                }
+                for dn in hosts[hn]["discovery"]:
+                    match dn:
+                        case "CPU":
+                            filename = f'docs/hosts/{hn}/{dn.lower()}.txt'
+                            if os.path.exists(filename):
+                                with open(filename, 'r') as fr:
+                                    cpu_content = fr.read().strip()
+
+                                    # CPU architecture
+                                    m = re.search('Architecture:\s+(.*)',cpu_content,flags=re.M)
+                                    if m:
+                                        sinfo['cpu']['arch'] = m.group(1)
+                                    
+                                    
+                                    # CPU model
+                                    m = re.search('Model name:\s+(.*)',cpu_content,flags=re.M)
+                                    if m:
+                                        sinfo['cpu']['model'] = m.group(1)
+
+                                    # CPU number
+                                    m = re.search('CPU\(s\):\s+([0-9]+)',cpu_content,flags=re.M)
+                                    if m:
+                                        sinfo['cpu']['nb'] = m.group(1)
+
+                                    # CPU cores
+                                    m = re.search('BogoMIPS:\s+([0-9]+)',cpu_content,flags=re.M)
+                                    if m:
+                                        sinfo['cpu']['bogomips'] = round(int(m.group(1)))
+                                        
+                                    
+
+                        case "Hardwares":
+                            filename = f'docs/hosts/{hn}/{dn.lower()}.txt'
+                            if os.path.exists(filename):
+                                with open(filename, 'r') as fr:
+                                    hw_content = fr.read().strip().replace('\\','~')
+
+                                    # Memory
+                                    m = re.search('Memory:.*RAM: total: .*?([0-9]\.[0-9]+) GiB',hw_content,flags=re.M)
+                                    if m:
+                                        sinfo['memory'] = f'{round(float(m.group(1)))} Go'
+
+                                    # Disk
+                                    m = re.search('total: raw: ([0-9]+\.[0-9]+ \w?iB)',hw_content,flags=re.M)
+                                    if m:
+                                        sinfo['disk'] = m.group(1)
+                                    
+                                    # CPU bits
+                                    m = re.search('CPU: .*?bits: (.*?) \w+:',hw_content,flags=re.M)
+                                    if m:
+                                        sinfo['cpu']['bits'] = m.group(1)
+
+                                    # Kernel
+                                    m = re.search('System: .*?Kernel: ([0-9]+\.[0-9]+\.[0-9]+)',hw_content,flags=re.M)
+                                    if m:
+                                        sinfo['kernel'] = m.group(1)
+                                    
+
+                                    output = f'''```
+{hw_content}
 ```
 '''
-                            case "Topologie":
-                                h = DeployHost(hosts[hn]['ipv4'], user="root")
-                                res = h.run(f"nix-shell -p hwloc --run 'sudo lstopo -f /tmp/{hn}.lstopo.svg'")
-                                run(f"scp root@{hosts[hn]['ipv4']}:/tmp/{hn}.lstopo.svg ./docs/hosts/{hn}.lstopo.svg")
-                                output = f'''
-![hardware topology]({hn}.lstopo.svg)
-'''
+                        case "HW-Topologie":
+                            output = f"<< output {dn} >>"
+#                                 h = DeployHost(hosts[hn]['ipv4'], user="root")
+#                                 res = h.run(f"nix-shell -p hwloc --run 'sudo lstopo -f /tmp/{hn}.lstopo.svg'")
+#                                 run(f"scp root@{hosts[hn]['ipv4']}:/tmp/{hn}.lstopo.svg ./docs/hosts/{hn}.lstopo.svg")
+#                                 output = f'''
+# ![hardware topology]({hn}.lstopo.svg)
+# '''
 
-                            case "Services":
-                                h = DeployHost(hosts[hn]['ipv4'], user="root")
-                                res = run(f"nix-shell -p nmap --run 'sudo nmap --version-intensity 0 -sV {hosts[hn]['ipv4']} -oX -'")
-                                dom = parseString(res.stdout)
+                        case "Services":
+                            output = f"<< output {dn} >>"
 
-                                output = '''| Port | Service | Product | Extra info |
-| ------ | ------ |------ |------ |
-'''
+#                                 h = DeployHost(hosts[hn]['ipv4'], user="root")
+#                                 res = run(f"nix-shell -p nmap --run 'sudo nmap --version-intensity 0 -sV {hosts[hn]['ipv4']} -oX -'")
+#                                 dom = parseString(res.stdout)
 
-                                for p in dom.getElementsByTagName('port'):
-                                    proto = p.getAttribute("protocol")
-                                    port = p.getAttribute("portid")
+#                                 output = '''| Port | Service | Product | Extra info |
+# | ------ | ------ |------ |------ |
+# '''
+
+#                                 for p in dom.getElementsByTagName('port'):
+#                                     proto = p.getAttribute("protocol")
+#                                     port = p.getAttribute("portid")
                                     
-                                    svc = p.getElementsByTagName("service")[0]
-                                    name = svc.getAttribute("name")
-                                    product = svc.getAttribute("product")
-                                    extrainfo = svc.getAttribute("extrainfo")
+#                                     svc = p.getElementsByTagName("service")[0]
+#                                     name = svc.getAttribute("name")
+#                                     product = svc.getAttribute("product")
+#                                     extrainfo = svc.getAttribute("extrainfo")
                                     
-                                    output += f"|{port}|{name}|{product}|{extrainfo}|\n"
-                                output += "\n"
+#                                     output += f"|{port}|{name}|{product}|{extrainfo}|\n"
+#                                 output += "\n"
 
-                        hinfo += f'''
+                with open(f'docs/hosts/{hn}/summaries.json', 'w') as fw:
+                    fw.write(json.dumps(sinfo))
+
+                hinfo += f'''
 ### {dn}
 
 {output}
@@ -509,5 +688,5 @@ def _doc_update_hosts_pages() -> None:
                 newcontent = _replace_content(content,"HOSTINFOS",hinfo)
 
             # Write new content
-            with open(rname, 'w') as f:
-                f.write(newcontent)
+            with open(rname, 'w') as fw:
+                fw.write(newcontent)

@@ -1,0 +1,1 @@
+[{"@protocol": "tcp", "@portid": "80", "service": {"@name": "tcpwrapped"}}, {"@protocol": "tcp", "@portid": "1900", "service": {"@name": "upnp"}}]
