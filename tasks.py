@@ -41,7 +41,14 @@ OSSCAN = {
                 "Hardwares",
                 "CPU",
                 "Nix"
-            ]
+            ],
+    'MikroTik': [
+                "Services",
+    ],
+    'Sagem': [
+                "Services",
+    ]
+
 }
 
 def get_hosts(hosts: str) -> List[DeployHost]:
@@ -60,13 +67,11 @@ def get_deploylist_from_homelab(hosts: str) -> List[DeployHost]:
 
         deploylist = []
         for hn in hostnames:
-            isnix=not (len(hostslist[hn]['discovery'])==1 and 'Services' in hostslist[hn]['discovery'])
             dh = DeployHost(
                 hostslist[hn]['ipv4'], 
                 user="root",
                 meta=dict(
                     hostname=hn,
-                    isnix=isnix,
                     os=hostslist[hn]['os']
                     )
             )
@@ -420,7 +425,7 @@ def _host_hardware_discovery(h: DeployHost) -> None:
         run(f"mkdir -p docs/hosts/{hn}")
         
         if not os.system(f"ping -c 1 -w 1 {h.host}"):
-            if hn and h.meta.get("isnix"):
+            if hn and h.meta.get("os") in ["NixOS", "Nix"]:
                 
                 h.run("""
                 rm -rf /tmp/hw
@@ -428,7 +433,7 @@ def _host_hardware_discovery(h: DeployHost) -> None:
                 """,
                 check=False)
 
-            for dn in hosts[hn]["discovery"]:
+            for dn in OSSCAN[hosts[hn]["os"]]:
                 
                 # For non NixOS installation
                 # TODO: find beautifull solution (.bash_profile & co)
@@ -616,7 +621,7 @@ def _doc_update_hosts_pages() -> None:
                         "bogomips": 0
                     }
                 }
-                for dn in hosts[hn]["discovery"]:
+                for dn in OSSCAN[hosts[hn]["os"]]:
                     output = ""
                     match dn:
                         case "CPU":
@@ -660,7 +665,7 @@ def _doc_update_hosts_pages() -> None:
                                         sinfo['memory'] = f'{math.floor(float(m.group(1))*1.073741824)} Go'
 
                                     # Disk
-                                    m = re.search('total: raw: ([0-9]+\.[0-9]+ \w?iB)',hw_content,flags=re.M)
+                                    m = re.search('Local Storage:.*?total.*?: ([0-9]+\.[0-9]+ \w?iB)',hw_content,flags=re.M)
                                     if m:
                                         sinfo['disk'] = m.group(1)
                                     

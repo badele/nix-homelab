@@ -14,7 +14,7 @@
             "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
             "ipv4": "192.168.0.10",
             "description": "External home mikrotik router",
-            "os": "RouterOS",
+            "os": "MikroTik",
             "discovery": [
                 "Services"
             ]
@@ -23,76 +23,38 @@
             "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
             "ipv4": "192.168.254.254",
             "description": "Internal home mikrotik router",
-            "os": "RouterOS",
-            "discovery": [
-                "Services"
-            ]
+            "os": "MikroTik"
         },
         "sam": {
             "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Xfce_logo-footprint.svg/32px-Xfce_logo-footprint.svg.png",
             "ipv4": "192.168.0.18",
             "description": "Samsung N110 Latop",
-            "os": "NixOs",
-            "discovery": [
-                "Services",
-                "Topologie",
-                "Hardwares",
-                "CPU",
-                "Nix"
-            ]
+            "os": "NixOS"
         },
         "latino": {
             "icon": "https://styles.redditmedia.com/t5_6sciw0/styles/communityIcon_h3cvittvupi91.png",
             "ipv4": "192.168.254.152",
             "description": "Dell Latitude E5540 Latop",
-            "os": "NixOs",
-            "discovery": [
-                "Services",
-                "Topologie",
-                "Hardwares",
-                "CPU",
-                "Nix"
-            ]
+            "os": "NixOS"
         },
         "rpi40": {
             "icon": "https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Raspberry_Pi_logo.svg/32px-Raspberry_Pi_logo.svg.png",
             "ipv4": "192.168.0.17",
             "description": "The Raspberry PI 4 storage server",
-            "os": "NixOs",
-            "discovery": [
-                "Services",
-                "Topologie",
-                "Hardwares",
-                "CPU",
-                "Nix"
-            ]
+            "os": "NixOS"
         },
         "bootstore": {
             "icon": "https://simpleicons.org/icons/databricks.svg",
             "ipv4": "192.168.0.29",
             "alias": "nfs",
             "description": "HP Proliant Microserver N40L storage server",
-            "os": "NixOs",
-            "discovery": [
-                "Services",
-                "Topologie",
-                "Hardwares",
-                "CPU",
-                "Nix"
-            ]
+            "os": "NixOS"
         },
         "badwork": {
             "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png",
             "ipv4": "192.168.254.177",
             "description": "A work thinkpad",
-            "os": "Nix",
-            "discovery": [
-                "Services",
-                "Topologie",
-                "Hardwares",
-                "CPU",
-                "Nix"
-            ]
+            "os": "Nix"
         }
     }
 }
