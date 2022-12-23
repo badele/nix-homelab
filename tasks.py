@@ -686,7 +686,7 @@ def _doc_update_hosts_pages() -> None:
 '''
                         case "Topologie":
                                  output = f'''
-![hardware topology](hosts/{hn}/topologie.svg)
+![hardware topology](https://raw.githubusercontent.com/badele/nix-homelab/master/docs/hosts/{hn}/topologie.svg)
  '''
 
                         case "Services":
