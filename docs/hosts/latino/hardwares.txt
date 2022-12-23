@@ -2,13 +2,13 @@ System:    Kernel: 5.15.78 x86_64 bits: 64 compiler: gcc v: 11.3.0
            parameters: initrd=\efi\nixos\5yzc4622rdcw9pfmg6zqjxanvpjr72an-initrd-linux-5.15.78-initrd.efi 
            init=/nix/store/b4m6k9hf1rmqva6nxlkhi0qrqnw50hgf-nixos-system-latino-22.11.20221115.85d6b39/init 
            nohibernate loglevel=4 
-           Console: tty pts/0 Distro: NixOS 22.11 (Raccoon) 
+           Console: tty pts/1 Distro: NixOS 22.11 (Raccoon) 
 Machine:   Type: Laptop System: Dell product: Latitude E5540 v: 00 serial: <filter> Chassis: 
            type: 9 serial: <filter> 
            Mobo: Dell model: 0H3FM5 v: A00 serial: <filter> UEFI: Dell v: A15 date: 09/27/2016 
 Battery:   ID-1: BAT0 charge: 25.3 Wh (100.0%) condition: 25.3/66.6 Wh (38.0%) volts: 12.7 
            min: 11.1 model: SMP DELL WGCW633 type: Li-ion serial: <filter> status: Full 
-Memory:    RAM: total: 7.68 GiB used: 7.2 GiB (93.8%) 
+Memory:    RAM: total: 7.68 GiB used: 7.3 GiB (95.0%) 
            Array-1: capacity: 16 GiB slots: 2 EC: None max-module-size: 8 GiB note: est. 
            Device-1: DIMM A size: 4 GiB speed: 1600 MT/s type: DDR3 detail: synchronous 
            bus-width: 64 bits total: 64 bits manufacturer: Samsung part-no: M471B5173QH0-YK0 
@@ -25,8 +25,8 @@ CPU:       Info: Dual Core model: Intel Core i5-4300U socket: rPGA988B bits: 64 
            arch: Haswell family: 6 model-id: 45 (69) stepping: 1 microcode: 26 cache: L1: 128 KiB 
            L2: 3 MiB L3: 3 MiB 
            flags: avx avx2 lm nx pae sse sse2 sse3 sse4_1 sse4_2 ssse3 vmx bogomips: 19954 
-           Speed: 1950 MHz min/max: 800/2900 MHz base/boost: 1900/1900 volts: 1.2 V 
-           ext-clock: 100 MHz Core speeds (MHz): 1: 1950 2: 1911 3: 2148 4: 2696 
+           Speed: 2304 MHz min/max: 800/2900 MHz base/boost: 1900/1900 volts: 1.2 V 
+           ext-clock: 100 MHz Core speeds (MHz): 1: 2304 2: 1932 3: 2521 4: 2045 
            Vulnerabilities: Type: itlb_multihit status: KVM: VMX disabled 
            Type: l1tf mitigation: PTE Inversion; VMX: conditional cache flushes, SMT vulnerable 
            Type: mds mitigation: Clear CPU buffers; SMT vulnerable 
@@ -43,7 +43,7 @@ CPU:       Info: Dual Core model: Intel Core i5-4300U socket: rPGA988B bits: 64 
 Graphics:  Device-1: Intel Haswell-ULT Integrated Graphics vendor: Dell driver: i915 v: kernel 
            bus-ID: 00:02.0 chip-ID: 8086:0a16 class-ID: 0300 
            Device-2: Microdia Laptop_Integrated_Webcam_HD type: USB driver: uvcvideo 
-           bus-ID: 1-1.6:4 chip-ID: 0c45:649d class-ID: 0e02 
+           bus-ID: 1-1.6:3 chip-ID: 0c45:649d class-ID: 0e02 
            Display: server: No display server data found. Headless machine? tty: 190x48 
            Message: Advanced graphics data unavailable in console for root. 
 Audio:     Device-1: Intel Haswell-ULT HD Audio vendor: Dell driver: snd_hda_intel v: kernel 
@@ -64,28 +64,28 @@ Network:   Device-1: Intel Ethernet I218-LM vendor: Dell driver: e1000e v: kerne
            IP v4: <filter> scope: global broadcast: <filter> 
            WAN IP: <filter> 
 Bluetooth: Device-1: Intel Bluetooth wireless interface type: USB driver: btusb v: 0.8 
-           bus-ID: 1-1.8.2:6 chip-ID: 8087:07dc class-ID: e001 
+           bus-ID: 1-1.8.2:5 chip-ID: 8087:07dc class-ID: e001 
            Report: rfkill ID: hci0 rfk-id: 4 state: down bt-service: not found rfk-block: 
            hardware: no software: no address: see --recommends 
 RAID:      Hardware-1: Intel 82801 Mobile SATA Controller [RAID mode] driver: ahci v: 3.0 
            port: f060 bus-ID: 00:1f.2 chip-ID: 8086.282a rev: 04 class-ID: 0104 
-           Device-1: latino type: zfs status: ONLINE level: linear size: 464 GiB free: 434 GiB 
-           allocated: 30.1 GiB 
+           Device-1: latino type: zfs status: ONLINE level: linear size: 464 GiB free: 427 GiB 
+           allocated: 36.8 GiB 
            Components: Online: N/A 
-Drives:    Local Storage: total: raw: 465.76 GiB usable: 929.76 GiB used: 30.66 GiB (3.3%) 
+Drives:    Local Storage: total: raw: 465.76 GiB usable: 929.76 GiB used: 37.36 GiB (4.0%) 
            ID-1: /dev/sda maj-min: 8:0 vendor: Samsung model: SSD 850 EVO 500GB family: based SSDs 
            size: 465.76 GiB block-size: physical: 512 B logical: 512 B sata: 3.1 speed: 6.0 Gb/s 
-           rotation: SSD serial: <filter> rev: 2B6Q temp: 40 C scheme: GPT 
-           SMART: yes state: enabled health: PASSED on: 365d 21h cycles: 1351 written: 8.38 TiB 
-Partition: ID-1: / raw-size: N/A size: 433.88 GiB used: 14.35 GiB (3.3%) fs: zfs 
+           rotation: SSD serial: <filter> rev: 2B6Q temp: 43 C scheme: GPT 
+           SMART: yes state: enabled health: PASSED on: 367d 15h cycles: 1352 written: 8.46 TiB 
+Partition: ID-1: / raw-size: N/A size: 431.46 GiB used: 18.65 GiB (4.3%) fs: zfs 
            logical: latino/private/root 
            ID-2: /boot raw-size: 512 MiB size: 511 MiB (99.80%) used: 31.5 MiB (6.2%) fs: vfat 
            block-size: 512 B dev: /dev/sda1 maj-min: 8:1 
 Swap:      Alert: No swap data was found. 
-Sensors:   System Temperatures: cpu: 61.0 C mobo: 41.0 C sodimm: SODIMM C 
-           Fan Speeds (RPM): cpu: 3207 
-Info:      Processes: 263 
-           Uptime: 19:42:51  up 1 day  0:46,  1 user,  load average: 1.77, 1.89, 2.11 wakeups: 1 
+Sensors:   System Temperatures: cpu: 66.0 C mobo: 43.0 C sodimm: SODIMM C 
+           Fan Speeds (RPM): cpu: 3495 
+Info:      Processes: 262 
+           Uptime: 22:30:04  up 1 day 13:36,  1 user,  load average: 3.73, 2.69, 2.50 wakeups: 1 
            Init: systemd v: 251 target: multi-user.target tool: systemctl Compilers: gcc: 11.3.0 
            Packages: 1195 nix-default: 271 lib: 1 nix-sys: 653 lib: 150 nix-usr: 271 lib: 28 
            Client: Sudo v: 1.9.12p1 inxi: 3.3.04 

@@ -1,0 +1,112 @@
+System:    Kernel: 5.19.13-arch1-1 x86_64 bits: 64 compiler: gcc v: 12.2.0 
+           parameters: BOOT_IMAGE=/@/boot/vmlinuz-linux 
+           root=UUID=c60d23ea-1602-4e39-adef-f21de83544d1 rw rootflags=subvol=@ 
+           cryptdevice=UUID=0d7bb4e8-30b5-433f-abd3-8fe131771b25:archroot 
+           Console: N/A DM: LightDM 1.32.0 Distro: Arch Linux 
+Machine:   Type: Laptop System: LENOVO product: 20UDCTO1WW v: ThinkPad T14 Gen 1 serial: <filter> 
+           Chassis: type: 10 serial: <filter> 
+           Mobo: LENOVO model: 20UDCTO1WW v: SDK0J40700 WIN serial: <filter> UEFI: LENOVO 
+           v: R1BET72W(1.41 ) date: 06/27/2022 
+Battery:   ID-1: BAT0 charge: 50.3 Wh (97.7%) condition: 51.5/50.5 Wh (101.9%) volts: 12.5 
+           min: 11.6 model: LGC 5B10W139 type: Li-poly serial: <filter> status: Discharging 
+           cycles: 168 
+Memory:    RAM: total: 30.59 GiB used: 1.23 GiB (4.0%) 
+           Array-1: capacity: 64 GiB slots: 2 EC: None max-module-size: 32 GiB note: est. 
+           Device-1: DIMM 0 size: 16 GiB speed: 3200 MT/s type: DDR4 
+           detail: synchronous unbuffered (unregistered) bus-width: 64 bits total: 64 bits 
+           manufacturer: Samsung part-no: M471A2G44AM0-CWE serial: N/A 
+           Device-2: DIMM 0 size: 16 GiB speed: 3200 MT/s type: DDR4 
+           detail: synchronous unbuffered (unregistered) bus-width: 64 bits total: 64 bits 
+           manufacturer: Hynix part-no: HMA82GS6DJR8N-XN serial: <filter> 
+PCI Slots: Slot: 1 type: x1 PCI Express x1 PCI-E x1 (J3600) status: Available length: Short 
+           Slot: 2 type: x1 PCI Express x1 PCI-E x8 (J3605) status: Available length: Short 
+           Slot: 3 type: x1 PCI Express x1 M.2 PCI-E Connector (J3700) status: Available 
+           length: Short 
+           Slot: 4 type: x1 PCI Express x1 M.2 WWAN Connector (J3702) status: Available 
+           length: Long 
+           Slot: 5 type: x1 PCI Express x1 M.2 WLAN/BT Connector (J3703) status: Available 
+           length: Long 
+           Slot: 6 type: x1 PCI Express x1 PCIE SD_Card (J4000) status: Available length: Long 
+CPU:       Info: 6-Core model: AMD Ryzen 5 PRO 4650U with Radeon Graphics socket: FP6 bits: 64 
+           type: MT MCP arch: Zen 2 family: 17 (23) model-id: 60 (96) stepping: 1 
+           microcode: 8600106 cache: L1: 384 KiB L2: 3 MiB L3: 8 MiB 
+           flags: avx avx2 lm nx pae sse sse2 sse3 sse4_1 sse4_2 sse4a ssse3 svm bogomips: 50321 
+           Speed: 2100 MHz min/max: 1400/2100 MHz base/boost: 2100/4000 boost: enabled 
+           volts: 1.2 V ext-clock: 100 MHz Core speeds (MHz): 1: 1397 2: 1397 3: 1400 4: 1397 
+           5: 1397 6: 1397 7: 1397 8: 1379 9: 1397 10: 1400 11: 1397 12: 1397 
+           Vulnerabilities: Type: itlb_multihit status: Not affected 
+           Type: l1tf status: Not affected 
+           Type: mds status: Not affected 
+           Type: meltdown status: Not affected 
+           Type: mmio_stale_data status: Not affected 
+           Type: retbleed mitigation: untrained return thunk; SMT enabled with STIBP protection 
+           Type: spec_store_bypass mitigation: Speculative Store Bypass disabled via prctl 
+           Type: spectre_v1 mitigation: usercopy/swapgs barriers and __user pointer sanitization 
+           Type: spectre_v2 mitigation: Retpolines, IBPB: conditional, STIBP: always-on, RSB 
+           filling, PBRSB-eIBRS: Not affected 
+           Type: srbds status: Not affected 
+           Type: tsx_async_abort status: Not affected 
+Graphics:  Device-1: AMD Renoir vendor: Lenovo driver: amdgpu v: kernel bus-ID: 07:00.0 
+           chip-ID: 1002:1636 class-ID: 0300 
+           Device-2: IMC Networks Integrated Camera type: USB driver: uvcvideo bus-ID: 2-2:2 
+           chip-ID: 13d3:5415 class-ID: 0e02 
+           Display: server: X.org 1.21.1.4 compositor: picom v: git-7e568 driver: 
+           loaded: modesetting unloaded: vesa alternate: ati,fbdev tty: N/A 
+           Message: Advanced graphics data unavailable in console for root. 
+Audio:     Device-1: AMD Renoir Radeon High Definition Audio vendor: Lenovo driver: snd_hda_intel 
+           v: kernel bus-ID: 07:00.1 chip-ID: 1002:1637 class-ID: 0403 
+           Device-2: AMD ACP/ACP3X/ACP6x Audio Coprocessor vendor: Lenovo driver: snd_rn_pci_acp3x 
+           v: kernel 
+           alternate: snd_pci_acp3x,snd_pci_acp5x,snd_pci_acp6x,snd_acp_pci,snd_sof_amd_renoir 
+           bus-ID: 07:00.5 chip-ID: 1022:15e2 class-ID: 0480 
+           Device-3: AMD Family 17h/19h HD Audio vendor: Lenovo driver: snd_hda_intel v: kernel 
+           bus-ID: 07:00.6 chip-ID: 1022:15e3 class-ID: 0403 
+           Sound Server-1: ALSA v: k5.19.13-arch1-1 running: yes 
+           Sound Server-2: sndio v: N/A running: no 
+           Sound Server-3: JACK v: 1.9.21 running: no 
+           Sound Server-4: PulseAudio v: 16.1 running: yes 
+           Sound Server-5: PipeWire v: 0.3.59 running: no 
+Network:   Device-1: Realtek RTL8111/8168/8411 PCI Express Gigabit Ethernet vendor: Lenovo 
+           driver: r8169 v: kernel port: 3400 bus-ID: 02:00.0 chip-ID: 10ec:8168 class-ID: 0200 
+           IF: enp2s0f0 state: down mac: <filter> 
+           Device-2: Intel Wi-Fi 6 AX200 driver: iwlwifi v: kernel port: 3000 bus-ID: 03:00.0 
+           chip-ID: 8086:2723 class-ID: 0280 
+           IF: wlp3s0 state: up mac: <filter> 
+           IP v4: <filter> type: dynamic noprefixroute scope: global broadcast: <filter> 
+           Device-3: Realtek RTL8111/8168/8411 PCI Express Gigabit Ethernet vendor: Lenovo 
+           driver: r8169 v: kernel port: 2000 bus-ID: 05:00.0 chip-ID: 10ec:8168 class-ID: 0200 
+           IF: enp5s0 state: down mac: <filter> 
+           IF-ID-1: docker0 state: up speed: 10000 Mbps duplex: unknown mac: <filter> 
+           IP v4: <filter> scope: global broadcast: <filter> 
+           IP v6: <filter> scope: link 
+           IF-ID-2: tailscale0 state: unknown speed: -1 duplex: full mac: N/A 
+           IP v4: <filter> scope: global 
+           IP v6: <filter> scope: global 
+           IP v6: <filter> virtual: stable-privacy scope: link 
+           IF-ID-3: veth19a2615 state: up speed: 10000 Mbps duplex: full mac: <filter> 
+           IF-ID-4: veth611e2ce state: up speed: 10000 Mbps duplex: full mac: <filter> 
+           WAN IP: <filter> 
+Bluetooth: Device-1: Intel AX200 Bluetooth type: USB driver: btusb v: 0.8 bus-ID: 6-4:2 
+           chip-ID: 8087:0029 class-ID: e001 
+           Report: rfkill ID: hci0 rfk-id: 2 state: down bt-service: disabled rfk-block: 
+           hardware: no software: no address: see --recommends 
+Drives:    Local Storage: total: 953.87 GiB used: 535.26 GiB (56.1%) 
+           ID-1: /dev/nvme0n1 maj-min: 259:0 vendor: SK Hynix model: HFS001TD9TNI-L2B0B 
+           size: 953.87 GiB block-size: physical: 512 B logical: 512 B speed: 31.6 Gb/s lanes: 4 
+           rotation: SSD serial: <filter> rev: 11720C10 temp: 24 Celsius C scheme: GPT 
+           SMART: yes health: PASSED on: 336d 14h cycles: 787 read-units: 14,657,733 [7.50 TB] 
+           written-units: 66,879,589 [34.2 TB] 
+Partition: ID-1: / raw-size: 953.36 GiB size: 953.36 GiB (100.00%) used: 535.24 GiB (56.1%) 
+           fs: btrfs block-size: 4096 B dev: /dev/dm-0 maj-min: 254:0 mapped: archroot 
+           ID-2: /boot/efi raw-size: 512 MiB size: 511 MiB (99.80%) used: 17.5 MiB (3.4%) fs: vfat 
+           block-size: 512 B dev: /dev/nvme0n1p1 maj-min: 259:1 
+           ID-3: /home raw-size: 953.36 GiB size: 953.36 GiB (100.00%) used: 535.24 GiB (56.1%) 
+           fs: btrfs block-size: 4096 B dev: /dev/dm-0 maj-min: 254:0 mapped: archroot 
+           ID-4: /var raw-size: 953.36 GiB size: 953.36 GiB (100.00%) used: 535.24 GiB (56.1%) 
+           fs: btrfs block-size: 4096 B dev: /dev/dm-0 maj-min: 254:0 mapped: archroot 
+Swap:      Alert: No swap data was found. 
+Sensors:   System Temperatures: cpu: 28.0 C mobo: 0 C gpu: amdgpu temp: 27.0 C 
+           Fan Speeds (RPM): fan-1: 0 fan-2: 0 
+Info:      Processes: 337 Uptime: N/A wakeups: 4 Init: systemd v: 251 tool: systemctl Compilers: 
+           gcc: 12.2.0 clang: 14.0.6 Packages: 1464 nix-default: 46 nix-sys: 0 nix-usr: 46 lib: 9 
+           pacman: 1372 lib: 273 Client: Sudo v: 1.9.11p3 inxi: 3.3.04 

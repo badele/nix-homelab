@@ -80,6 +80,19 @@
                 "CPU",
                 "Nix"
             ]
+        },
+        "badwork": {
+            "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png",
+            "ipv4": "192.168.254.177",
+            "description": "A work thinkpad",
+            "os": "Nix",
+            "discovery": [
+                "Services",
+                "Topologie",
+                "Hardwares",
+                "CPU",
+                "Nix"
+            ]
         }
     }
 }

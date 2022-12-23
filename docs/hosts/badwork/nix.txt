@@ -1,0 +1,8 @@
+ - system: `"x86_64-linux"`
+ - host os: `Linux 5.19.13-arch1-1, Arch Linux, noversion, rolling`
+ - multi-user?: `yes`
+ - sandbox: `yes`
+ - version: `nix-env (Nix) 2.12.0`
+ - channels(root): `"nixpkgs"`
+ - nixpkgs: `/root/.nix-defexpr/channels/nixpkgs`
+
