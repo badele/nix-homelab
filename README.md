@@ -5,10 +5,15 @@
 
 Practically all hosts from this home lab installed by Nix system. 
 
-All the configuration is stored on `homelab.json`, from this file:
-- Generate documentation automatically
-- Install automatically services
+All the configuration is stored on `homelab.json`, from the json file, you can do:
+- Define network CIDR
+- Define hosts
+- Define the modules installed for selected hosts
+- Define services descriptions
 
+Also, from the `homelab.json` you can do:
+- Generate documentation automatically
+- Install automatically modules
 
 ## Hosts
 
@@ -114,18 +119,18 @@ This list generated with `inv docs.all-pages` command
 [comment]: (<<HOSTS)
 
 
-## Services
+## Modules
 
-Services list used in this home lab
+Modules list used in this home lab
 
 This list generated with `inv docs.all-pages` command
 
-[comment]: (>>SERVICES)
+[comment]: (>>MODULES)
 
 <table>
     <tr>
         <th>Logo</th>
-        <th>Service</th>
+        <th>Module</th>
         <th>Hosts</th>
         <th>Description</th>
     </tr><tr>
@@ -150,7 +155,7 @@ This list generated with `inv docs.all-pages` command
         <td>For caching the nix build results</td>
         </table>
 
-[comment]: (<<SERVICES)
+[comment]: (<<MODULES)
 
 
 ## Commons scratch installation
@@ -222,6 +227,7 @@ Available tasks:
   docs.main-page    generate main homelab page
   hosts.build       Build for <hostnames>
   hosts.deploy      Deploy to <hostnames> server
+  init.nix-serve    Init <hostname> nix-server private & public key
   service.build     Build for all hosts contains the service
   service.deploy    Deploy for all hosts contains the service
   wireguard.keys    Generate wireguard private key for <hostname>

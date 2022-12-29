@@ -1,5 +1,5 @@
 {
-    "domain": "adele.lan",
+    "domain": "h",
     "networks": {
         "box": {
             "net": "192.168.0.0",
@@ -18,7 +18,7 @@
             "mask": 24
         }
     },
-    "services": {
+    "modules": {
         "coredns": {
             "icon": "https://raw.githubusercontent.com/coredns/logo/master/Icon/CoreDNS_Colour_Icon.png",
             "description": "A Go DNS server, it used for serving local hosts and alias"
@@ -55,7 +55,7 @@
             "wg": "10.123.21.254",
             "description": "Internal home mikrotik router",
             "os": "MikroTik",
-            "services": [
+            "modules": [
                 "wireguard"
             ]
         },
@@ -76,7 +76,7 @@
             "ipv4": "192.168.0.17",
             "description": "The Raspberry PI 4 storage server",
             "os": "NixOS",
-            "services": [
+            "modules": [
                 "coredns"
             ]
         },
@@ -86,7 +86,7 @@
             "alias": "nfs grafana",
             "description": "HP Proliant Microserver N40L storage server",
             "os": "NixOS",
-            "services": [
+            "modules": [
                 "coredns",
                 "nfs",
                 "nix-serve"
@@ -104,7 +104,7 @@
             "wg": "10.123.21.1",
             "description": "Bruno's phone",
             "os": "Android",
-            "services": [
+            "modules": [
                 "wireguard"
             ]
         }

@@ -2,9 +2,24 @@
 # -*- coding: utf-8 -*-
 
 from invoke import run
+from deploykit import DeployHost, DeployGroup
 
 import json
 import re
+
+##############################################################################
+# Run
+##############################################################################
+
+
+def _init_nix_serve(host: DeployHost, hostname: str) -> None:
+    # TODO: use domain from homelab.json file
+    host.run(f"""
+export DIR_NIXSERVE=/persist/host/data/nix-serve
+mkdir -p $DIR_NIXSERVE && cd $DIR_NIXSERVE  
+nix-store --generate-binary-cache-key {hostname}.h cache-priv-key.pem cache-pub-key.pem
+""")
+
 
 
 def generateCommandsList() -> str:
@@ -15,6 +30,11 @@ def generateCommandsList() -> str:
 '''
 
     return commands
+
+
+##############################################################################
+# Functions
+##############################################################################
 
 
 def generateHostsList() -> str:
@@ -56,58 +76,54 @@ def generateHostsList() -> str:
     return hosts_table
 
 
-def getUsedServicesList():
+def getUsedModulesList():
     filename = f'homelab.json'
-    allservices = {}
+    allmodules = {}
     with open(filename, 'r') as fr:
         jinfo = json.load(fr)
         hostslist = jinfo['hosts']
 
         for hn in hostslist:
-            if 'services' in hostslist[hn]:
-                for svc in hostslist[hn]['services']:
-                    if svc not in allservices:
-                        allservices[svc] = []
-                    allservices[svc].append(hn)
+            if 'modules' in hostslist[hn]:
+                for svc in hostslist[hn]['modules']:
+                    if svc not in allmodules:
+                        allmodules[svc] = []
+                    allmodules[svc].append(hn)
 
-    return allservices
+    return allmodules
 
 
-def generateUsedServices() -> str:
+def generateUsedModules() -> str:
     # Get hosts infos
     with open('homelab.json', 'r') as fhl:
         jhl = json.load(fhl)
-        services = jhl['services']
+        modules = jhl['modules']
 
-    # # Get used services list
-    # with open('docs/hosts/services.json', 'r') as fsvc:
-    #     susvc = json.load(fsvc)
+    allmodules = getUsedModulesList()
 
-    allservices = getUsedServicesList()
-
-    services_table = '''<table>
+    modules_table = '''<table>
     <tr>
         <th>Logo</th>
-        <th>Service</th>
+        <th>Module</th>
         <th>Hosts</th>
         <th>Description</th>
     </tr>'''
 
-    for sname in allservices:
+    for mname in allmodules:
         hosts_list = []
-        for h in allservices[sname]:
+        for h in allmodules[mname]:
             hosts_list.append(h)
 
-        services_table += f'''<tr>
-        <td><a href="./docs/{sname}.md"><img width="32" src="{services[sname]["icon"]}"></a></td>
-        <td><a href="./docs/{sname}.md">{sname}</a></td>
+        modules_table += f'''<tr>
+        <td><a href="./docs/{mname}.md"><img width="32" src="{modules[mname]["icon"]}"></a></td>
+        <td><a href="./docs/{mname}.md">{mname}</a></td>
         <td>{", ".join(hosts_list)}</td>
-        <td>{services[sname]['description']}</td>
+        <td>{modules[mname]['description']}</td>
         '''
 
-    services_table += "</table>"
+    modules_table += "</table>"
 
-    return services_table
+    return modules_table
 
 # Replace the content marker
 def _replace_content(content: str, marker: str, newcontent) -> str:
@@ -130,12 +146,12 @@ def _doc_update_main_project_page() -> None:
 
     # Get generated contents
     hosts_table = generateHostsList() 
-    services_table = generateUsedServices()
+    modules_table = generateUsedModules()
     commands = generateCommandsList()
 
     # Replace content
     newcontent = _replace_content(content,"HOSTS",hosts_table)
-    newcontent = _replace_content(newcontent,"SERVICES",services_table)
+    newcontent = _replace_content(newcontent,"MODULES",modules_table)
     newcontent = _replace_content(newcontent,"COMMANDS",commands)
 
     # Write new content

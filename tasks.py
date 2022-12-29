@@ -275,17 +275,20 @@ service.add_task(service_deploy)
 service.add_task(service_build)
 
 
-@task 
+@task(name="nix-serve")
 def init_nix_serve(c,hosts, hostnames):
     """
-    Init nix-server private & public key on /persist/host/data/nix-serve
+    Init <hostname> nix-server private & public key
     """
 
     h = get_hosts(hosts)
     hn = hostnames.split(',')
 
     for idx in range(len(h)):
-        _init_nix_serve(h[idx], hn[idx])
+        taskslib._init_nix_serve(h[idx], hn[idx])
+
+init = Collection('init')
+init.add_task(init_nix_serve)
 
 
 @task(name="all_pages")
@@ -521,14 +524,6 @@ def _nixos_generate_config(host: DeployHost, hostname: str, confname: str, ) -> 
 # Remove .git (for ignoring dirty message), no git add needed :)
 def _sync_homelab(host: DeployHost) -> None:
     run(f"rsync --delete {' --exclude '.join([''] + RSYNC_EXCLUDES)} -ar . root@{host.host}:/mnt/nix-homelab/")    
-
-
-def _init_nix_serve(host: DeployHost, hostname: str) -> None:
-    host.run(f"""
-export DIR_NIXSERVE=/persist/host/data/nix-serve
-mkdir -p $DIR_NIXSERVE && cd $DIR_NIXSERVE  
-nix-store --generate-binary-cache-key {hostname}.adele.lan cache-priv-key.pem cache-pub-key.pem
-""")
 
 
 def _host_hardware_discovery(h: DeployHost) -> None:
@@ -841,10 +836,6 @@ def _doc_update_hosts_pages() -> None:
             with open(rname, 'w') as fw:
                 fw.write(newcontent)
 
-        with open('docs/hosts/services.json','w') as fsw:
-            fsw.write(json.dumps(allservices,indent=4))
-
-
 ##############################################################################
 # Menu commands
 ##############################################################################
@@ -852,5 +843,6 @@ def _doc_update_hosts_pages() -> None:
 ns = Collection()
 ns.add_collection(wg)
 ns.add_collection(docs)
+ns.add_collection(init)
 ns.add_collection(hosts)
 ns.add_collection(service)
