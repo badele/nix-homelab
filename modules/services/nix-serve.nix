@@ -7,13 +7,19 @@
 { outputs, lib, config, ... }:
 let
   domain = config.networking.domain;
+  svcName = "nix-serve";
+  svcEnabled = lib.elem svcName config.networking.homelab.currentHost.services;
 in
+lib.mkIf (svcEnabled)
 {
   # Configure sops secret 
   sops.secrets.nixserve-private-key = { };
 
-  # Active nix-serve
-  networking.firewall.allowedTCPPorts = [ 5000 ];
+  networking.firewall.allowedTCPPorts = [
+    5000
+    80
+  ];
+
   services.nix-serve = {
     enable = true;
     secretKeyFile = config.sops.secrets.nixserve-private-key.path;

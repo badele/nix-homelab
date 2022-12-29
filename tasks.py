@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from invoke import task,run
+from invoke import task, run, Collection
 
+import taskslib
 import subprocess
 import math
 import re
@@ -29,27 +30,33 @@ RSYNC_EXCLUDES = [".git"]
 
 OSSCAN = {
     'NixOS': [
-                "Services",
                 "Topologie",
                 "Hardwares",
+                "Services",
+                "Scan",
                 "CPU",
                 "Nix"
             ],
     'Nix': [
-                "Services",
                 "Topologie",
                 "Hardwares",
+                "Services",
+                "Scan",
                 "CPU",
                 "Nix"
             ],
     'MikroTik': [
-                "Services",
+                "Scan",
     ],
     'Sagem': [
-                "Services",
+                "Scan",
+    ],
+    'Android': [
+                "Scan",
     ]
 
 }
+
 
 def get_hosts(hosts: str) -> List[DeployHost]:
     return [DeployHost(h, user="root") for h in hosts.split(",")]
@@ -80,6 +87,28 @@ def get_deploylist_from_homelab(hosts: str) -> List[DeployHost]:
     return deploylist
 
 
+def get_deploylist_from_service(service: str) -> List[DeployHost]:
+    with open('homelab.json', 'r') as fh:
+        jinfo = json.load(fh)
+        hostslist = jinfo['hosts']
+        hostnames = hostslist.keys()
+        
+        deploylist = []
+        for hn in hostnames:
+            if 'services' in hostslist[hn] and service in hostslist[hn]['services']:
+                dh = DeployHost(
+                    hostslist[hn]['ipv4'], 
+                    user="root",
+                    meta=dict(
+                        hostname=hn,
+                        os=hostslist[hn]['os']
+                        )
+                )
+                deploylist.append(dh)
+
+    return deploylist    
+
+
 def color_text(code: int, file: IO[Any] = sys.stdout) -> Callable[[str], None]:
     def wrapper(text: str) -> None:
         if sys.stderr.isatty():
@@ -103,10 +132,11 @@ def firmware_rpi_update(c, hosts):
     for h in get_hosts(hosts):
         _firmware_rpi_update(h)
 
+
 @task
 def ssh_init_host_key(c, hosts, hostnames):
     """
-    Init ssh host key from nixos installation cd => inv ssh-init-host-key --hosts 192.168.0.1 --hostnames bootstore
+    Init ssh host key from nixos installation 
     """
     h = get_hosts(hosts)
     hn = hostnames.split(',')
@@ -115,10 +145,33 @@ def ssh_init_host_key(c, hosts, hostnames):
         _ssh_init_host_key(h[idx], hn[idx])
 
 
+@task(name='keys')
+def wireguard_keys(c,hostname):
+    """
+    Generate wireguard private key for <hostname>
+    """
+
+    _wireguard_keys(hostname)
+
+
+@task(name='gen-pub')
+def wireguard_gen_public_key(c,private=""):
+    """
+    Generate wireguard public key
+
+    If the private key is not provided, it is recovered from hosts/secrets.yml
+    """
+
+    _wireguard_genpub(private)
+
+wg = Collection('wireguard')
+wg.add_task(wireguard_keys)
+
+
 @task
 def disk_format(c, hosts, disk, mirror="", mode="GPT", password=""):
     """
-    Format disks with zfs => inv disk-format --hosts new-hostname --disks /dev/sda [--mirror /dev/sdb]
+    Format disks with zfs
     """
 
     for h in get_hosts(hosts):
@@ -129,7 +182,7 @@ def disk_format(c, hosts, disk, mirror="", mode="GPT", password=""):
 @task
 def disk_mount(c, hosts, mirror="", password=""):
     """
-    Mount disks from the installer => inv mount-disks --hosts new-hostname
+    Mount disks from the installer
     """
     for h in get_hosts(hosts):
         _disk_mount(h, mirror, password)
@@ -138,7 +191,7 @@ def disk_mount(c, hosts, mirror="", password=""):
 @task
 def sync_homelab(c, hosts):
     """
-    rsync currently local homelab project to future nixos installation => inv rsync-homelab --hosts 192.168.0.1
+    rsync currently local homelab project to future nixos installation
     """
     for h in get_hosts(hosts):
         _sync_homelab({h.host})
@@ -158,7 +211,7 @@ def nixos_generate_config(c, hosts, hostnames, confname):
 @task
 def nixos_install(c, hosts, flakeattr):
     """
-    install nixos => inv nixos-install --hosts 192.168.0.1 --flakeattr bootstore
+    install nixos
     """
     for h in get_hosts(hosts):
         # Sync project
@@ -171,12 +224,55 @@ def nixos_install(c, hosts, flakeattr):
             f"cd /mnt/nix-homelab && nix --extra-experimental-features 'nix-command flakes' shell nixpkgs#git -c nixos-install --verbose --flake .#{flakeattr} && sync"
         )
 
-@task
-def deploy(c, hosts=""):
+@task(name="deploy")
+def hosts_deploy(c, hostnames="",discovery=True):
     """
-    Deploy to all servers =>inv deploy --hosts <hostip/hostname> 
+    Deploy to <hostnames> server
+
+    if <hostnames> is empty, deploy to all nix homelab server
     """
-    _deploy_nixos(get_hosts(hosts))        
+    deploylist = get_deploylist_from_homelab(hostnames)
+    _deploy_nixos(deploylist, discovery)        
+
+
+@task(name="build")
+def hosts_build(c, hostnames=""):
+    """
+    Build for <hostnames>
+
+    if <hostnames> is empty, build for all nix homelab attribute
+    """
+    deploylist = get_deploylist_from_homelab(hostnames)
+    _build_nixos(deploylist)        
+
+
+hosts = Collection('hosts')
+hosts.add_task(hosts_deploy)
+hosts.add_task(hosts_build)
+
+
+@task(name="deploy")
+def service_deploy(c, service, discovery=True):
+    """
+    Deploy for all hosts contains the service
+    """
+
+    deploylist = get_deploylist_from_service(service)
+    _deploy_nixos(deploylist, discovery)        
+
+
+@task(name="build")
+def service_build(c, service):
+    """
+    Build for all hosts contains the service
+    """
+    deploylist = get_deploylist_from_service(service)
+    _build_nixos(deploylist)        
+
+
+service = Collection('service')
+service.add_task(service_deploy)
+service.add_task(service_build)
 
 
 @task 
@@ -192,32 +288,39 @@ def init_nix_serve(c,hosts, hostnames):
         _init_nix_serve(h[idx], hn[idx])
 
 
-@task
+@task(name="all_pages")
 def doc_generate_all_pages(c):
     """
     generate all homelab documentation
     """
 
     _doc_update_hosts_pages()
-    _doc_update_main_project_page()
+    taskslib._doc_update_main_project_page()
 
 
-@task
+@task(name="main_page")
 def doc_generate_main_page(c):
     """
     generate main homelab page
     """
 
-    _doc_update_main_project_page()
+    taskslib._doc_update_main_project_page()
 
 
-@task
+@task(name="host_pages")
 def doc_generate_hosts_pages(c):
     """
     generate all homelab hosts page
     """
 
     _doc_update_hosts_pages()
+
+
+docs = Collection('docs')
+docs.add_task(doc_generate_all_pages)
+docs.add_task(doc_generate_main_page)
+docs.add_task(doc_generate_hosts_pages)
+
 
 @task
 def scan_all_hosts(c,hosts=""):
@@ -389,6 +492,19 @@ def _ssh_init_host_key(host: DeployHost, hostname: str) -> None:
     scp root@{host.host}:/tmp/ssh-to-age.txt ./hosts/{hostname}
     """)
 
+def _wireguard_keys(hostname:str) -> None:
+    # Private key
+    res = run(f"""
+    mkdir -p ./hosts/{hostname}
+    wg genkey
+    """,hide=True)
+    private = res.stdout.strip()
+
+    # pub key
+    res = run(f"echo '{private}' | wg pubkey > ./hosts/{hostname}/wireguard.pub",hide=True)
+
+    info(f"wireguard-priv-key: {private}")
+
 def _nixos_generate_config(host: DeployHost, hostname: str, confname: str, ) -> None:
     
     confpath = f'modules/hardware/{confname}.nix'
@@ -451,7 +567,7 @@ def _host_hardware_discovery(h: DeployHost) -> None:
                     case "Topologie":
                         res = h.run(f"{PREFIX_COMMAND} nix-shell -p hwloc --run 'sudo lstopo -f /tmp/hw/{hn}.lstopo.svg'")
                         run(f"scp root@{hosts[hn]['ipv4']}:/tmp/hw/{hn}.lstopo.svg docs/hosts/{hn}/{dn.lower()}.svg")
-                    case "Services":
+                    case "Scan":
                         res = run(f"{PREFIX_COMMAND} nix-shell -p nmap --run 'sudo nmap --version-intensity 0 -sV {hosts[hn]['ipv4']} -oX -'")
                         
                         dom = parseString(res.stdout)
@@ -475,14 +591,15 @@ def _host_hardware_discovery(h: DeployHost) -> None:
                                         if value in ports[idx]['service']:
                                             del ports[idx]['service'][value]
 
-                            jcontent = json.dumps(ports)
+                            jcontent = json.dumps(ports,indent=4)
 
                             with open(f"docs/hosts/{hn}/{dn.lower()}.json", 'w') as fw:
                                 fw.write(jcontent)
                         except KeyError:
                             pass
 
-def _deploy_nixos(hosts: List[DeployHost]) -> None:
+
+def _deploy_nixos(hosts: List[DeployHost], discovery: bool) -> None:
     """
     Deploy to all hosts in parallel
     """
@@ -505,84 +622,47 @@ def _deploy_nixos(hosts: List[DeployHost]) -> None:
         )
 
         if hostname:
-            cmd = f"cd /nix-homelab && nixos-rebuild switch --fast --option accept-flake-config true --option keep-going true --flake .#{hostname}"
+            cmd = f"cd /nix-homelab && nixos-rebuild -v switch --fast --option accept-flake-config true --option keep-going true --flake .#{hostname}"
             h.run(cmd)
 
-            h.meta['hostname'] = hostname
-            h.meta['isnix'] = True
-            _host_hardware_discovery(h)
+            if discovery:
+                h.meta['hostname'] = hostname
+                _host_hardware_discovery(h)
 
     g.run_function(deploy)
 
 
-# Replace the content marker
-def _replace_content(content: str, marker: str, newcontent) -> str:
-    newcontent = f'''[comment]: (>>{marker})
+def _build_nixos(hosts: List[DeployHost]) -> None:
+    """
+    Build for all hosts in parallel
+    """
+    g = DeployGroup(hosts)
 
-{newcontent}
+    def deploy(h: DeployHost) -> None:
+        with open('homelab.json', 'r') as f:
+            jinfo = json.load(f)
+            hosts = jinfo['hosts']
 
-[comment]: (<<{marker})'''
+            # Search host by ip
+            hostname = None
+            for hn in hosts:
+                if 'ipv4' in hosts[hn] and  hosts[hn]['ipv4'] == h.host:
+                    hostname = hn
+                    break
 
-    result = re.sub(rf'\[comment\]: \(\>\>{marker}\).*\[comment\]\: \(\<\<{marker}\)',newcontent, content,  flags=re.DOTALL | re.M)
-    
-    return result
+        h.run_local(
+            f"rsync --delete {' --exclude '.join([''] + RSYNC_EXCLUDES)} -ar . {h.user}@{h.host}:/nix-homelab/"
+        )
 
+        if hostname:
+            cmd = f"cd /nix-homelab && nixos-rebuild build --fast --option accept-flake-config true --option keep-going true --flake .#{hostname}"
+            h.run(cmd)
 
-# Update the main README.md project page
-def _doc_update_main_project_page() -> None:
+            h.meta['hostname'] = hostname
+            _host_hardware_discovery(h)
 
-    with open('homelab.json', 'r') as f:
-        jinfo = json.load(f)
-        hosts = jinfo['hosts']
+    g.run_function(deploy)
 
-    # Header table
-    table = '''<table>
-    <tr>
-        <th>Logo</th>
-        <th>Name</th>
-        <th>Arch</th>
-        <th>OS</th>
-        <th>CPU</th>
-        <th>Memory</th>
-        <th>Disk</th>
-        <th>Description</th>
-    </tr>'''
-
-    # Hosts loop
-    for hn in hosts:
-        with open(f'docs/hosts/{hn}/summaries.json', 'r') as fs:
-            sinfo = json.load(fs)
-
-            table += f'''<tr>
-        <td><a href="./docs/hosts/{hn}.md"><img width="32" src="{hosts[hn]["icon"]}"></a></td>
-        <td><a href="./docs/hosts/{hn}.md">{hn}</a>&nbsp;({hosts[hn]["ipv4"]})</td>
-        <td>{sinfo["cpu"]["arch"]}</td>
-        <td>{hosts[hn]["os"]}</td>
-        <td>{sinfo["cpu"]["nb"]}</td>
-        <td>{sinfo["memory"]}</td>
-        <td>{sinfo["disk"]}</td>
-        <td>{hosts[hn]["description"]}</td>
-    </tr>'''
-
-    table += "</table>"
-
-    # Read readme.md content
-    with open('README.md', 'r') as fr:
-        content = fr.read().rstrip()
-
-    res = run(f"nix-shell -p tree --run 'tree --noreport'")
-    folders = f'''```
-{res.stdout}
-```
-'''
-
-    # Replace content
-    newcontent = _replace_content(content,"HOSTS",table)
-    newcontent = _replace_content(newcontent,"FOLDERS",folders)
-
-    # Write new content
-    with open('README.md', 'w') as fw:
-        fw.write(newcontent)
 
 
 def _scan_all_hosts(deploylist:List[DeployHost]) -> None:
@@ -596,8 +676,10 @@ def _doc_update_hosts_pages() -> None:
         jinfo = json.load(fh)
         hosts = jinfo['hosts']
 
+        allservices = {}
         for hn in hosts:
             # Readme name
+            os.makedirs(f'docs/hosts/{hn}',exist_ok=True)
             rname = f'docs/hosts/{hn}.md'
 
             # Clone template if doc not exists
@@ -689,7 +771,7 @@ def _doc_update_hosts_pages() -> None:
 ![hardware topology](https://raw.githubusercontent.com/badele/nix-homelab/master/docs/hosts/{hn}/topologie.svg)
  '''
 
-                        case "Services":
+                        case "Scan":
                             filename = f'docs/hosts/{hn}/{dn.lower()}.json'
 
                             if os.path.exists(filename):
@@ -713,6 +795,35 @@ def _doc_update_hosts_pages() -> None:
                                         output += f"|{port}|{name}|{product}|{extrainfo}|\n"
                                     output += "\n"
 
+                        case "Services":
+                            filename = f'homelab.json'
+                            services = {}
+                            with open(filename, 'r') as fr:
+                                jinfo = json.load(fr)
+                                hostslist = jinfo['hosts']
+
+                                if 'services' in hostslist[hn]:
+                                    sinfo['services'] = hostslist[hn]['services']
+                                    for svc in hostslist[hn]['services']:
+                                        if svc not in allservices:
+                                            allservices[svc] = []
+                                        allservices[svc].append(hn)
+
+                                output = '''| Port | Service | Product | Extra info |
+| ------ | ------ |------ |------ |
+'''
+
+                                for svc in services:
+                                    proto = svc["@protocol"]
+                                    port = svc["@portid"]
+                                    
+                                    name = svc["service"].get("@name","")
+                                    product = svc["service"].get("@product","")
+                                    extrainfo = svc["service"].get("@extrainfo","")
+                                
+                                    output += f"|{port}|{name}|{product}|{extrainfo}|\n"
+                                output += "\n"
+
                     if output != "":
                         hinfo += f'''
 ### {dn}
@@ -721,11 +832,25 @@ def _doc_update_hosts_pages() -> None:
         '''
 
                 with open(f'docs/hosts/{hn}/summaries.json', 'w') as fw:
-                    fw.write(json.dumps(sinfo))
+                    fw.write(json.dumps(sinfo,indent=4))
 
                 # Replace content
-                newcontent = _replace_content(content,"HOSTINFOS",hinfo)
+                newcontent = taskslib._replace_content(content,"HOSTINFOS",hinfo)
 
             # Write new content
             with open(rname, 'w') as fw:
                 fw.write(newcontent)
+
+        with open('docs/hosts/services.json','w') as fsw:
+            fsw.write(json.dumps(allservices,indent=4))
+
+
+##############################################################################
+# Menu commands
+##############################################################################
+
+ns = Collection()
+ns.add_collection(wg)
+ns.add_collection(docs)
+ns.add_collection(hosts)
+ns.add_collection(service)

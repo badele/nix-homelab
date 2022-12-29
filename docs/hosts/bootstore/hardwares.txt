@@ -6,7 +6,7 @@ System:    Kernel: 5.15.82 x86_64 bits: 64 compiler: gcc v: 11.3.0
 Machine:   Type: Desktop System: HP product: ProLiant MicroServer v: N/A serial: <filter> Chassis: 
            type: 7 serial: N/A 
            Mobo: N/A model: N/A serial: N/A BIOS: HP v: O41 date: 07/29/2011 
-Memory:    RAM: total: 7.65 GiB used: 2.11 GiB (27.6%) 
+Memory:    RAM: total: 7.65 GiB used: 4.57 GiB (59.7%) 
            Array-1: capacity: 8 GiB slots: 2 EC: Single-bit ECC max-module-size: 4 GiB note: est. 
            Device-1: DIMM0 size: 4 GiB speed: 1333 MT/s type: Other detail: synchronous 
            bus-width: 64 bits total: 72 bits manufacturer: N/A part-no: N/A serial: N/A 
@@ -44,36 +44,36 @@ Network:   Device-1: Broadcom NetXtreme BCM5723 Gigabit Ethernet PCIe
            IP v4: <filter> type: dynamic noprefixroute scope: global broadcast: <filter> 
            WAN IP: <filter> 
 RAID:      Device-1: zroot type: zfs status: ONLINE level: mirror-0 size: 1.8 TiB free: 1.79 TiB 
-           allocated: 3.4 GiB 
+           allocated: 4.43 GiB 
            Components: Online: N/A 
-Drives:    Local Storage: total: raw: 3.64 TiB usable: 5.44 TiB used: 3.51 GiB (0.1%) 
+Drives:    Local Storage: total: raw: 3.64 TiB usable: 5.44 TiB used: 4.48 GiB (0.1%) 
            ID-1: /dev/sda maj-min: 8:0 vendor: Seagate model: ST2000DM001-1ER164 
            family: Barracuda 7200.14 (AF) size: 1.82 TiB block-size: physical: 4096 B 
            logical: 512 B sata: 3.1 speed: 3.0 Gb/s rotation: 7200 rpm serial: <filter> rev: CC25 
            temp: 29 C scheme: MBR 
-           SMART: yes state: enabled health: PASSED on: 2y 136d 11h cycles: 53 read: 67.24 TiB 
-           written: 19.37 TiB Pre-Fail: attribute: Spin_Retry_Count value: 100 worst: 100 
+           SMART: yes state: enabled health: PASSED on: 2y 142d 7h cycles: 53 read: 67.24 TiB 
+           written: 19.41 TiB Pre-Fail: attribute: Spin_Retry_Count value: 100 worst: 100 
            threshold: 97 
            ID-2: /dev/sdb maj-min: 8:16 vendor: Seagate model: ST2000DM008-2FR102 
            family: BarraCuda 3.5 (SMR) size: 1.82 TiB block-size: physical: 4096 B logical: 512 B 
            sata: 3.1 speed: 3.0 Gb/s rotation: 7200 rpm serial: <filter> rev: 0001 temp: 31 C 
            scheme: MBR 
-           SMART: yes state: enabled health: PASSED on: 212h+11m+27.732s cycles: 13 read: 7.56 GiB 
-           written: 47.53 GiB Pre-Fail: attribute: Spin_Retry_Count value: 100 worst: 100 
-           threshold: 97 
-Partition: ID-1: / raw-size: N/A size: 1.74 TiB used: 64.1 MiB (0.0%) fs: zfs 
+           SMART: yes state: enabled health: PASSED on: 352h+14m+37.741s cycles: 13 
+           read: 11.46 GiB written: 92.95 GiB Pre-Fail: attribute: Spin_Retry_Count value: 100 
+           worst: 100 threshold: 97 
+Partition: ID-1: / raw-size: N/A size: 1.74 TiB used: 114.9 MiB (0.0%) fs: zfs 
            logical: zroot/public/root 
-           ID-2: /boot raw-size: 1024 MiB size: 1022 MiB (99.80%) used: 57.1 MiB (5.6%) fs: vfat 
+           ID-2: /boot raw-size: 1024 MiB size: 1022 MiB (99.80%) used: 57.2 MiB (5.6%) fs: vfat 
            block-size: 512 B dev: /dev/sda1 maj-min: 8:1 
 Swap:      Kernel: swappiness: 60 (default) cache-pressure: 100 (default) 
            ID-1: swap-1 type: partition size: 8 GiB used: 0 KiB (0.0%) priority: -2 dev: /dev/sdb2 
            maj-min: 8:18 
            ID-2: swap-2 type: partition size: 8 GiB used: 0 KiB (0.0%) priority: -3 dev: /dev/sda2 
            maj-min: 8:2 
-Sensors:   System Temperatures: cpu: 39.0 C mobo: N/A 
+Sensors:   System Temperatures: cpu: 38.5 C mobo: N/A 
            Fan Speeds (RPM): N/A 
-Info:      Processes: 170 
-           Uptime: 21:32:04  up 5 days  9:51,  0 users,  load average: 0.33, 0.10, 0.03 wakeups: 0 
+Info:      Processes: 178 
+           Uptime: 17:34:48  up 11 days  5:53,  1 user,  load average: 0.67, 0.35, 0.20 wakeups: 0 
            Init: systemd v: 252 target: multi-user.target tool: systemctl Compilers: gcc: 11.3.0 
-           Packages: nix-default: 0 nix-sys: 318 lib: 51 nix-usr: 0 Client: Sudo v: 1.9.12p1 
+           Packages: nix-default: 0 nix-sys: 321 lib: 51 nix-usr: 0 Client: Sudo v: 1.9.12p1 
            inxi: 3.3.04 

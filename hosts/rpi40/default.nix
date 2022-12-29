@@ -4,8 +4,6 @@
 }: {
   imports = [
     ../../modules/hardware/rpi4-usb-boot.nix
-    ../../modules/system/nix-serve.nix
-    ../../modules/system/nfs/server.nix
   ];
 
   networking.hostName = "rpi40";

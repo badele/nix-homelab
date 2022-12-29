@@ -30,8 +30,15 @@
     };
 
     # flake part
-    flake-parts.url = "github:hercules-ci/flake-parts";
-    flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+
+    dns = {
+      url = "github:kirelagin/dns.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     sops-nix = {
       url = "github:mic92/sops-nix";
@@ -68,6 +75,7 @@
               python3.pkgs.xmltodict
               age
               sops
+              wireguard-tools
             ] ++ lib.optional (stdenv.isLinux) mkpasswd;
           };
         };

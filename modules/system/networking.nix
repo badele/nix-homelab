@@ -1,16 +1,12 @@
 { outputs, lib, config, ... }:
-let
-  domain = config.networking.domain;
-in
 {
   networking = {
-    domain = "adele.lan";
+    domain = config.networking.homelab.domain;
     enableIPv6 = false;
-
 
     # add an entry to /etc/hosts for each host
     extraHosts = lib.concatStringsSep "\n" (lib.mapAttrsToList
-      (name: host: ''${host.ipv4} ${lib.optionalString (host.alias != null) "${host.alias}"} ${name}'')
+      (hostkey: hostinfo: ''${hostinfo.ipv4} ${lib.optionalString (hostinfo.alias != null) "${hostinfo.alias}"} ${hostkey}'')
       config.networking.homelab.hosts);
 
     # For ZFS

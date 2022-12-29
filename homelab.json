@@ -1,29 +1,63 @@
 {
     "domain": "adele.lan",
+    "networks": {
+        "box": {
+            "net": "192.168.0.0",
+            "mask": 24
+        },
+        "home": {
+            "net": "192.168.254.0",
+            "mask": 24
+        },
+        "vpn-server": {
+            "net": "10.123.45.0",
+            "mask": 24
+        },
+        "vpn-client": {
+            "net": "10.123.21.0",
+            "mask": 24
+        }
+    },
+    "services": {
+        "coredns": {
+            "icon": "https://raw.githubusercontent.com/coredns/logo/master/Icon/CoreDNS_Colour_Icon.png",
+            "description": "A Go DNS server, it used for serving local hosts and alias"
+        },
+        "nfs": {
+            "icon": "https://logo-marque.com/wp-content/uploads/2021/09/Need-For-Speed-Logo-2019-2020.jpg",
+            "description":"A Linux NFS server, it used for backuping a servers and Latops"
+        },
+        "nix-serve": {
+            "icon": "https://camo.githubusercontent.com/33a99d1ffcc8b23014fd5f6dd6bfad0f8923d44d61bdd2aad05f010ed8d14cb4/68747470733a2f2f6e69786f732e6f72672f6c6f676f2f6e69786f732d6c6f676f2d6f6e6c792d68697265732e706e67",
+            "description":"For caching the nix build results"
+        },
+        "wireguard": {
+            "icon": "https://cdn.icon-icons.com/icons2/2699/PNG/512/wireguard_logo_icon_168760.png",
+            "description":"An VPN client/server alternative to IPSec and OpenVPN"
+        }
+    },
     "hosts": {
         "box": {
             "icon": "https://logos-marques.com/wp-content/uploads/2022/03/SFR-Logo-1994.png",
             "ipv4": "192.168.0.1",
             "description": "SFR internet box",
-            "os": "Sagem",
-            "discovery": [
-                "Services"
-            ]
+            "os": "Sagem"
         },
         "router-ext": {
             "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
             "ipv4": "192.168.0.10",
             "description": "External home mikrotik router",
-            "os": "MikroTik",
-            "discovery": [
-                "Services"
-            ]
+            "os": "MikroTik"
         },
         "router-int": {
             "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
             "ipv4": "192.168.254.254",
+            "wg": "10.123.21.254",
             "description": "Internal home mikrotik router",
-            "os": "MikroTik"
+            "os": "MikroTik",
+            "services": [
+                "wireguard"
+            ]
         },
         "sam": {
             "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Xfce_logo-footprint.svg/32px-Xfce_logo-footprint.svg.png",
@@ -41,20 +75,38 @@
             "icon": "https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Raspberry_Pi_logo.svg/32px-Raspberry_Pi_logo.svg.png",
             "ipv4": "192.168.0.17",
             "description": "The Raspberry PI 4 storage server",
-            "os": "NixOS"
+            "os": "NixOS",
+            "services": [
+                "coredns"
+            ]
         },
         "bootstore": {
             "icon": "https://simpleicons.org/icons/databricks.svg",
             "ipv4": "192.168.0.29",
-            "alias": "nfs",
+            "alias": "nfs grafana",
             "description": "HP Proliant Microserver N40L storage server",
-            "os": "NixOS"
+            "os": "NixOS",
+            "services": [
+                "coredns",
+                "nfs",
+                "nix-serve"
+            ]
         },
         "badwork": {
             "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png",
             "ipv4": "192.168.254.177",
             "description": "A work thinkpad",
             "os": "Nix"
+        },
+        "brdroid": {
+            "icon": "https://cdn-icons-png.flaticon.com/512/38/38002.png",
+            "ipv4": "192.168.254.120",
+            "wg": "10.123.21.1",
+            "description": "Bruno's phone",
+            "os": "Android",
+            "services": [
+                "wireguard"
+            ]
         }
     }
 }

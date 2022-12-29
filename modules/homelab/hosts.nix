@@ -3,9 +3,9 @@
 , ...
 }:
 let
-  hostOptions = with lib; {
+  hostOptions = with lib; with types; {
     icon = mkOption {
-      type = types.str;
+      type = str;
       default = null;
       description = ''
         host icon
@@ -13,7 +13,7 @@ let
     };
 
     description = mkOption {
-      type = types.str;
+      type = str;
       default = null;
       description = ''
         host description
@@ -21,30 +21,43 @@ let
     };
 
     ipv4 = mkOption {
-      type = types.str;
+      type = str;
       description = ''
         own ipv4 address
       '';
     };
 
+    wg = mkOption {
+      type = nullOr str;
+      default = null;
+      description = ''
+        wireguard ipv4 address
+      '';
+    };
+
     alias = mkOption {
-      type = types.nullOr types.str;
+      type = nullOr str;
       default = null;
       description = ''
         alias for this host
       '';
     };
 
-    discovery = mkOption {
-      type = types.listOf types.str;
+    os = mkOption {
+      type = str;
       default = null;
       description = ''
-        discovery mode
+        OS
       '';
     };
 
-
-
+    services = mkOption {
+      type = nullOr (listOf str);
+      default = null;
+      description = ''
+        alias for this host
+      '';
+    };
 
   };
 in

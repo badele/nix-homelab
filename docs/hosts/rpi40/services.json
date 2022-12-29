@@ -1,1 +1,1 @@
-[{"@protocol": "tcp", "@portid": "22", "service": {"@name": "ssh", "@product": "OpenSSH", "@extrainfo": "protocol 2.0"}}, {"@protocol": "tcp", "@portid": "5000", "service": {"@name": "upnp"}}]
+[{"@protocol": "tcp", "@portid": "22", "service": {"@name": "ssh", "@product": "OpenSSH", "@extrainfo": "protocol 2.0"}}, {"@protocol": "tcp", "@portid": "80", "service": {"@name": "http", "@product": "nginx"}}, {"@protocol": "tcp", "@portid": "5000", "service": {"@name": "upnp"}}]

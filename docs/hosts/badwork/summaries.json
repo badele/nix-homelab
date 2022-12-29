@@ -1,1 +1,12 @@
-{"memory": "32 Go", "disk": "953.87 GiB", "kernel": "5.19.13", "cpu": {"arch": "x86_64", "model": "AMD Ryzen 5 PRO 4650U with Radeon Graphics", "nb": "12", "bits": 0, "bogomips": 4193}}
+{
+    "memory": "32 Go",
+    "disk": "953.87 GiB",
+    "kernel": "5.19.13",
+    "cpu": {
+        "arch": "x86_64",
+        "model": "AMD Ryzen 5 PRO 4650U with Radeon Graphics",
+        "nb": "12",
+        "bits": 0,
+        "bogomips": 4193
+    }
+}

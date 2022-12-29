@@ -7,7 +7,6 @@ let
     nixpkgs
     nur
     sops-nix
-
     ;
   nixosSystem = nixpkgs.lib.makeOverridable nixpkgs.lib.nixosSystem;
 
@@ -15,7 +14,7 @@ let
     { _module.args.inputs = self.inputs; }
     { _module.args.self = self; }
     ./modules/users.nix
-    ./modules/system/hosts.nix
+    ./modules/homelab
     ./modules/system/networking.nix
     ./modules/system/nix.nix
     ./modules/system/sshd.nix

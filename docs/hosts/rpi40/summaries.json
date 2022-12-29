@@ -1,1 +1,12 @@
-{"memory": "8 Go", "disk": "495.48 GiB", "kernel": "5.15.74", "cpu": {"arch": "aarch64", "model": "Cortex-A72", "nb": "4", "bits": "64", "bogomips": 108}}
+{
+    "memory": "8 Go",
+    "disk": "495.48 GiB",
+    "kernel": "5.15.74",
+    "cpu": {
+        "arch": "aarch64",
+        "model": "Cortex-A72",
+        "nb": "4",
+        "bits": "64",
+        "bogomips": 108
+    }
+}

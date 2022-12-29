@@ -3,6 +3,11 @@
 , pkgs
 , ...
 }:
+let
+  svcName = "nfs";
+  svcEnabled = lib.elem svcName config.networking.homelab.currentHost.services;
+in
+lib.mkIf (svcEnabled)
 {
   # Active the nfs server
   services.nfs.server.enable = true;
