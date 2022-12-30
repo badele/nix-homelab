@@ -87,7 +87,7 @@ def get_deploylist_from_homelab(hosts: str) -> List[DeployHost]:
     return deploylist
 
 
-def get_deploylist_from_service(service: str) -> List[DeployHost]:
+def get_deploylist_from_module(module: str) -> List[DeployHost]:
     with open('homelab.json', 'r') as fh:
         jinfo = json.load(fh)
         hostslist = jinfo['hosts']
@@ -95,7 +95,7 @@ def get_deploylist_from_service(service: str) -> List[DeployHost]:
         
         deploylist = []
         for hn in hostnames:
-            if 'services' in hostslist[hn] and service in hostslist[hn]['services']:
+            if 'modules' in hostslist[hn] and module in hostslist[hn]['modules']:
                 dh = DeployHost(
                     hostslist[hn]['ipv4'], 
                     user="root",
@@ -225,54 +225,54 @@ def nixos_install(c, hosts, flakeattr):
         )
 
 @task(name="deploy")
-def hosts_deploy(c, hostnames="",discovery=True):
+def nix_deploy(c, hostnames="",discovery=True):
     """
     Deploy to <hostnames> server
 
     if <hostnames> is empty, deploy to all nix homelab server
     """
     deploylist = get_deploylist_from_homelab(hostnames)
-    _deploy_nixos(deploylist, discovery)        
+    _nix_deploy(deploylist, discovery)        
 
 
 @task(name="build")
-def hosts_build(c, hostnames=""):
+def nix_build(c, hostnames=""):
     """
     Build for <hostnames>
 
     if <hostnames> is empty, build for all nix homelab attribute
     """
     deploylist = get_deploylist_from_homelab(hostnames)
-    _build_nixos(deploylist)        
+    _nix_build(deploylist)        
 
 
-hosts = Collection('hosts')
-hosts.add_task(hosts_deploy)
-hosts.add_task(hosts_build)
+nix = Collection('nix')
+nix.add_task(nix_deploy)
+nix.add_task(nix_build)
 
 
 @task(name="deploy")
-def service_deploy(c, service, discovery=True):
+def module_deploy(c, module, discovery=True):
     """
-    Deploy for all hosts contains the service
+    Deploy for all hosts contains the module
     """
 
-    deploylist = get_deploylist_from_service(service)
-    _deploy_nixos(deploylist, discovery)        
+    deploylist = get_deploylist_from_module(module)
+    _nix_deploy(deploylist, discovery)        
 
 
 @task(name="build")
-def service_build(c, service):
+def module_build(c, module):
     """
-    Build for all hosts contains the service
+    Build for all hosts contains the module
     """
-    deploylist = get_deploylist_from_service(service)
-    _build_nixos(deploylist)        
+    deploylist = get_deploylist_from_module(module)
+    _nix_build(deploylist)        
 
 
-service = Collection('service')
-service.add_task(service_deploy)
-service.add_task(service_build)
+module = Collection('module')
+module.add_task(module_deploy)
+module.add_task(module_build)
 
 
 @task(name="nix-serve")
@@ -594,7 +594,7 @@ def _host_hardware_discovery(h: DeployHost) -> None:
                             pass
 
 
-def _deploy_nixos(hosts: List[DeployHost], discovery: bool) -> None:
+def _nix_deploy(hosts: List[DeployHost], discovery: bool) -> None:
     """
     Deploy to all hosts in parallel
     """
@@ -627,7 +627,7 @@ def _deploy_nixos(hosts: List[DeployHost], discovery: bool) -> None:
     g.run_function(deploy)
 
 
-def _build_nixos(hosts: List[DeployHost]) -> None:
+def _nix_build(hosts: List[DeployHost]) -> None:
     """
     Build for all hosts in parallel
     """
@@ -842,7 +842,7 @@ def _doc_update_hosts_pages() -> None:
 
 ns = Collection()
 ns.add_collection(wg)
+ns.add_collection(nix)
 ns.add_collection(docs)
 ns.add_collection(init)
-ns.add_collection(hosts)
-ns.add_collection(service)
+ns.add_collection(module)

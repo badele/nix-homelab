@@ -51,11 +51,11 @@ let
       '';
     };
 
-    services = mkOption {
+    modules = mkOption {
       type = nullOr (listOf str);
       default = null;
       description = ''
-        alias for this host
+        module names to be install
       '';
     };
 

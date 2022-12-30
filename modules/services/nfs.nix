@@ -4,10 +4,10 @@
 , ...
 }:
 let
-  svcName = "nfs";
-  svcEnabled = lib.elem svcName config.networking.homelab.currentHost.services;
+  modName = "nfs";
+  modEnabled = lib.elem modName config.networking.homelab.currentHost.modules;
 in
-lib.mkIf (svcEnabled)
+lib.mkIf (modEnabled)
 {
   # Active the nfs server
   services.nfs.server.enable = true;

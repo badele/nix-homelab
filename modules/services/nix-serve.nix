@@ -7,10 +7,10 @@
 { outputs, lib, config, ... }:
 let
   domain = config.networking.domain;
-  svcName = "nix-serve";
-  svcEnabled = lib.elem svcName config.networking.homelab.currentHost.services;
+  modName = "nix-serve";
+  modEnabled = lib.elem modName config.networking.homelab.currentHost.modules;
 in
-lib.mkIf (svcEnabled)
+lib.mkIf (modEnabled)
 {
   # Configure sops secret 
   sops.secrets.nixserve-private-key = { };

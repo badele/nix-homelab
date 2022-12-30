@@ -1,8 +1,8 @@
 { inputs, lib, config, pkgs, ... }:
 let
 
-  svcName = "dns";
-  svcEnabled = builtins.elem svcName config.networking.homelab.currentHost.services;
+  modName = "coredns";
+  modEnabled = builtins.elem modName config.networking.homelab.currentHost.modules;
   myhost = config.networking.homelab.currentHost;
   domain = config.networking.homelab.domain;
 
@@ -37,7 +37,7 @@ let
     };
 
 in
-lib.mkIf (svcEnabled)
+lib.mkIf (modEnabled)
 {
   environment.etc."coredns/db.${domain}".text = inputs.dns.lib.toString "${domain}" adele-lan-zone;
 

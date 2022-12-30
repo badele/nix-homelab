@@ -24,7 +24,7 @@ in
 {
   options = with lib; {
     networking.homelab.networks = mkOption {
-      type = with types; attrsOf (str);
+      type = with types; attrsOf (submodule [{ options = netOptions; }]);
       description = "Networks";
     };
   };
