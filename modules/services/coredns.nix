@@ -3,19 +3,65 @@ let
 
   modName = "coredns";
   modEnabled = builtins.elem modName config.networking.homelab.currentHost.modules;
+  cfghosts = config.networking.homelab.hosts;
   myhost = config.networking.homelab.currentHost;
   domain = config.networking.homelab.domain;
 
-  # Function compute DNS IP host
-  hostlist = lib.mapAttrs
-    (hostkey: hostinfo:
-      {
-        A = [ "${hostinfo.ipv4}" ];
-      }
+  # Function
+  # Get Hosts IP
+  hostsIps = lib.mapAttrsToList
+    (
+      name: host:
+        {
+          "${name}" = "${host.ipv4}";
+        }
     )
-    config.networking.homelab.hosts;
+    cfghosts;
 
-  adele-lan-zone = with inputs.dns.lib.combinators;
+  # Function
+  # Get Alias IP
+  aliasIps = lib.flatten
+    (
+
+      lib.mapAttrsToList
+        (
+          name: host:
+            let
+              alias = lib.optionals (host.alias != null) host.alias;
+            in
+            map
+              (entry: {
+                "${entry}" = "${host.ipv4}";
+              })
+              alias
+        )
+
+        cfghosts
+    );
+
+  # Merge host and alias
+  allDnsEntries = hostsIps ++ aliasIps;
+
+  # Group IP by same alias name
+  groupByEntries = lib.foldAttrs
+    (
+      name: ip:
+        [ name ] ++ ip
+    )
+    [ ];
+
+  # Function compute DNS IP host
+  convertToDNSEntry = lib.mapAttrs
+    (
+      name: ips:
+        {
+          "A" = ips;
+        }
+    );
+
+  dnsConverted = convertToDNSEntry (groupByEntries allDnsEntries);
+
+  lan-zone = with inputs.dns.lib.combinators;
     {
       SOA = {
         nameServer = "ns1";
@@ -29,7 +75,7 @@ let
       ];
 
       # Merge dict with // operator
-      subdomains = hostlist // rec {
+      subdomains = dnsConverted // rec {
         ns1 = {
           A = [ "${myhost.ipv4}" ];
         };
@@ -39,7 +85,8 @@ let
 in
 lib.mkIf (modEnabled)
 {
-  environment.etc."coredns/db.${domain}".text = inputs.dns.lib.toString "${domain}" adele-lan-zone;
+
+  environment.etc."coredns/db.${domain}".text = inputs.dns.lib.toString "${domain}" lan-zone;
 
   services.coredns.enable = true;
   networking.firewall.allowedTCPPorts = [ 53 ];

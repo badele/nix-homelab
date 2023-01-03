@@ -36,7 +36,7 @@ let
     };
 
     alias = mkOption {
-      type = nullOr str;
+      type = nullOr (listOf str);
       default = null;
       description = ''
         alias for this host

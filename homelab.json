@@ -74,6 +74,9 @@
         "rpi40": {
             "icon": "https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Raspberry_Pi_logo.svg/32px-Raspberry_Pi_logo.svg.png",
             "ipv4": "192.168.0.17",
+            "alias": [
+                "dns"
+            ],
             "description": "The Raspberry PI 4 storage server",
             "os": "NixOS",
             "modules": [
@@ -83,7 +86,12 @@
         "bootstore": {
             "icon": "https://simpleicons.org/icons/databricks.svg",
             "ipv4": "192.168.0.29",
-            "alias": "nfs grafana",
+            "alias": [
+                "dns",
+                "nfs",
+                "nixcache",
+                "grafana"
+            ],
             "description": "HP Proliant Microserver N40L storage server",
             "os": "NixOS",
             "modules": [
