@@ -4,7 +4,7 @@
 }:
 {
   options = with lib; {
-    networking.homelab.domain = mkOption {
+    homelab.domain = mkOption {
       type = types.str;
       default = null;
       description = "Domain";
@@ -14,6 +14,6 @@
   config = {
     # Read from ../../homelab.json
     # TODO: verify if this file build too many dependencies derivations
-    networking.homelab.domain = (builtins.fromJSON (builtins.readFile ../../homelab.json)).domain;
+    homelab.domain = (builtins.fromJSON (builtins.readFile ../../homelab.json)).domain;
   };
 }

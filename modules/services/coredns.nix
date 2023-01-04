@@ -2,10 +2,10 @@
 let
 
   modName = "coredns";
-  modEnabled = builtins.elem modName config.networking.homelab.currentHost.modules;
-  cfghosts = config.networking.homelab.hosts;
-  myhost = config.networking.homelab.currentHost;
-  domain = config.networking.homelab.domain;
+  modEnabled = builtins.elem modName config.homelab.currentHost.modules;
+  cfghosts = config.homelab.hosts;
+  myhost = config.homelab.currentHost;
+  domain = config.homelab.domain;
   ttl = 180;
 
   # Function

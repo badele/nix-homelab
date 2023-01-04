@@ -6,11 +6,11 @@
 # curl http://nix-server:5000/nix-cache-info
 { outputs, lib, config, ... }:
 let
-  alias = "nixcache";
-  aliasdefined = builtins.elem modName config.networking.homelab.currentHost.alias;
   domain = config.networking.domain;
   modName = "nix-serve";
-  modEnabled = lib.elem modName config.networking.homelab.currentHost.modules;
+  alias = "nixcache";
+  aliasdefined = builtins.elem modName config.homelab.currentHost.alias;
+  modEnabled = lib.elem modName config.homelab.currentHost.modules;
 in
 lib.mkIf (modEnabled)
 {

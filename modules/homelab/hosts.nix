@@ -63,24 +63,24 @@ let
 in
 {
   options = with lib; {
-    networking.homelab.hosts = mkOption {
+    homelab.hosts = mkOption {
       type = with types; attrsOf (submodule [{ options = hostOptions; }]);
       description = "A host in my homelab";
     };
-    networking.homelab.currentHost = mkOption {
+    homelab.currentHost = mkOption {
       type = with types; submodule [{ options = hostOptions; }];
-      default = config.networking.homelab.hosts.${config.networking.hostName};
+      default = config.homelab.hosts.${config.networking.hostName};
       description = "The host that is described by this configuration";
     };
   };
 
   config = {
     warnings =
-      lib.optional (!(config.networking.homelab.hosts ? ${config.networking.hostName}))
+      lib.optional (!(config.homelab.hosts ? ${config.networking.hostName}))
         "no network configuration for ${config.networking.hostName} found in ${./hosts.nix}";
 
     # Read from ../../homelab.json
     # TODO: verify if this file build too many derivations
-    networking.homelab.hosts = (builtins.fromJSON (builtins.readFile ../../homelab.json)).hosts;
+    homelab.hosts = (builtins.fromJSON (builtins.readFile ../../homelab.json)).hosts;
   };
 }
