@@ -6,6 +6,7 @@ let
   cfghosts = config.networking.homelab.hosts;
   myhost = config.networking.homelab.currentHost;
   domain = config.networking.homelab.domain;
+  ttl = 180;
 
   # Function
   # Get Hosts IP
@@ -13,9 +14,11 @@ let
     (
       name: host:
         {
-          "${name}" = "${host.ipv4}";
+          name = name;
+          ip = host.ipv4;
         }
     )
+
     cfghosts;
 
   # Function
@@ -31,7 +34,8 @@ let
             in
             map
               (entry: {
-                "${entry}" = "${host.ipv4}";
+                name = entry;
+                ip = host.ipv4;
               })
               alias
         )
@@ -39,55 +43,32 @@ let
         cfghosts
     );
 
-  # Merge host and alias
-  allDnsEntries = hostsIps ++ aliasIps;
+  fileZone = pkgs.writeText "h.zone" ''
+    $ORIGIN ${domain}.
+    @       IN SOA ns nomail (
+            1         ; Version number
+            60        ; Zone refresh interval
+            30        ; Zone update retry timeout
+            180       ; Zone TTL
+            3600)     ; Negative response TTL
+  
+    h. IN NS ns.h.
 
-  # Group IP by same alias name
-  groupByEntries = lib.foldAttrs
-    (
-      name: ip:
-        [ name ] ++ ip
-    )
-    [ ];
+    ns ${toString ttl} IN A ${myhost.ipv4}
 
-  # Function compute DNS IP host
-  convertToDNSEntry = lib.mapAttrs
-    (
-      name: ips:
-        {
-          "A" = ips;
-        }
-    );
+    ; hosts
+    ${lib.concatMapStringsSep "\n" (host: 
+        "${host.name}.${domain}. ${toString ttl} IN A ${host.ip}")
+      hostsIps}
 
-  dnsConverted = convertToDNSEntry (groupByEntries allDnsEntries);
-
-  lan-zone = with inputs.dns.lib.combinators;
-    {
-      SOA = {
-        nameServer = "ns1";
-        adminEmail = "brunoadele@gmail.com";
-        serial = 2022122803;
-        ttl = 300;
-      };
-
-      NS = [
-        "ns1.${domain}."
-      ];
-
-      # Merge dict with // operator
-      subdomains = dnsConverted // rec {
-        ns1 = {
-          A = [ "${myhost.ipv4}" ];
-        };
-      };
-    };
-
+    ; alias
+    ${lib.concatMapStringsSep "\n" (host: 
+        "${host.name}.${domain}. ${toString ttl} IN A ${host.ip}")
+      aliasIps}
+  '';
 in
 lib.mkIf (modEnabled)
 {
-
-  environment.etc."coredns/db.${domain}".text = inputs.dns.lib.toString "${domain}" lan-zone;
-
   services.coredns.enable = true;
   networking.firewall.allowedTCPPorts = [ 53 ];
   networking.firewall.allowedUDPPorts = [ 53 ];
@@ -99,9 +80,8 @@ lib.mkIf (modEnabled)
           log
         }
 
-
       ${domain} {
-          file /etc/coredns/db.${domain}
+          file ${fileZone}
           log
         }
     '';

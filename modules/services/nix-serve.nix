@@ -6,6 +6,8 @@
 # curl http://nix-server:5000/nix-cache-info
 { outputs, lib, config, ... }:
 let
+  alias = "nixcache";
+  aliasdefined = builtins.elem modName config.networking.homelab.currentHost.alias;
   domain = config.networking.domain;
   modName = "nix-serve";
   modEnabled = lib.elem modName config.networking.homelab.currentHost.modules;
@@ -25,12 +27,16 @@ lib.mkIf (modEnabled)
     secretKeyFile = config.sops.secrets.nixserve-private-key.path;
   };
 
+  # Check if host alias is defined in homelab.json alias section
+  warnings =
+    lib.optional aliasdefined "No `${alias}` alias defined in alias section hosts.alias in `homelab.json`";
+
   # Install nginx server for human readable files
   services.nginx = {
     enable = true;
     virtualHosts = {
-      "binarycache.${domain}" = {
-        serverAliases = [ "binarycache" ];
+      "nixcache.${domain}" = {
+        serverAliases = [ "nixcache" ];
         locations."/".extraConfig = ''
           proxy_pass http://localhost:${toString config.services.nix-serve.port};
           proxy_set_header Host $host;
