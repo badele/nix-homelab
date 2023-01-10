@@ -1,9 +1,11 @@
 { lib, config, ... }:
 let
   modName = "loki";
+  modEnabled = builtins.elem modName config.homelab.currentHost.modules;
   port_loki = 3030;
   cert = (import ../../../modules/system/homelab-cert.nix { inherit lib; }).environment.etc."homelab/wildcard-domain.crt.pem".source;
 in
+lib.mkIf (modEnabled)
 {
   networking.firewall.allowedTCPPorts = [
     port_loki

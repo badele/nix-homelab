@@ -7,7 +7,8 @@
   imports = [
     ./coredns.nix
     ./grafana
-    ./loki
+    ./loki/loki.nix
+    ./loki/promtail.nix
     ./prometheus
     ./nfs.nix
     ./nix-serve.nix

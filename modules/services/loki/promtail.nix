@@ -1,9 +1,11 @@
 { lib, config, ... }:
 let
-  modName = "promtail";
+  modName = "loki";
+  modEnabled = builtins.elem modName config.homelab.currentHost.modules;
   port_promtail = 3031;
   cert = (import ../../../modules/system/homelab-cert.nix { inherit lib; }).environment.etc."homelab/wildcard-domain.crt.pem".source;
 in
+lib.mkIf (modEnabled)
 {
 
   networking.firewall.allowedTCPPorts = [
@@ -40,7 +42,7 @@ in
   };
 
   services.nginx.enable = true;
-  services.nginx.virtualHosts."${modName}.${config.homelab.domain}" = {
+  services.nginx.virtualHosts."promtail.${config.homelab.domain}" = {
     addSSL = true;
     sslCertificate = cert;
     sslCertificateKey = config.sops.secrets."wildcard-domain.key.pem".path;
