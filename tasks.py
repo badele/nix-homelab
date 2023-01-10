@@ -133,7 +133,6 @@ def firmware_rpi_update(c, hosts):
         _firmware_rpi_update(h)
 
 
-@task
 def ssh_init_host_key(c, hosts, hostnames):
     """
     Init ssh host key from nixos installation 
@@ -224,15 +223,22 @@ def nixos_install(c, hosts, flakeattr):
             f"cd /mnt/nix-homelab && nix --extra-experimental-features 'nix-command flakes' shell nixpkgs#git -c nixos-install --verbose --flake .#{flakeattr} && sync"
         )
 
-@task(name="deploy")
-def nix_deploy(c, hostnames="",discovery=True):
+@task(
+name="deploy",
+help={
+    'discovery': "get host information after deployment",
+    'cache' : "Use binary cache from flake extra-substituers section"
+    }
+)
+def nix_deploy(c, hostnames="",discovery=True, cache=True, keeperror=True):
     """
     Deploy to <hostnames> server
 
     if <hostnames> is empty, deploy to all nix homelab server
+
     """
     deploylist = get_deploylist_from_homelab(hostnames)
-    _nix_deploy(deploylist, discovery)        
+    _nix_deploy(deploylist, discovery, cache, keeperror)        
 
 
 @task(name="build")
@@ -278,7 +284,7 @@ module.add_task(module_build)
 @task(name="nix-serve")
 def init_nix_serve(c,hosts, hostnames):
     """
-    Init <hostname> nix-server private & public key
+    Init nix binary cache server <hostname> nix-serve private & public key
     """
 
     h = get_hosts(hosts)
@@ -287,8 +293,16 @@ def init_nix_serve(c,hosts, hostnames):
     for idx in range(len(h)):
         taskslib._init_nix_serve(h[idx], hn[idx])
 
+@task(name="domain-cert")
+def cert_init_cert_domain(c):
+    """
+    Init domain certificate
+    """
+    taskslib._cert_init_cert_domain()
+
 init = Collection('init')
 init.add_task(init_nix_serve)
+init.add_task(cert_init_cert_domain)
 
 
 @task(name="all_pages")
@@ -495,6 +509,7 @@ def _ssh_init_host_key(host: DeployHost, hostname: str) -> None:
     scp root@{host.host}:/tmp/ssh-to-age.txt ./hosts/{hostname}
     """)
 
+
 def _wireguard_keys(hostname:str) -> None:
     # Private key
     res = run(f"""
@@ -594,13 +609,14 @@ def _host_hardware_discovery(h: DeployHost) -> None:
                             pass
 
 
-def _nix_deploy(hosts: List[DeployHost], discovery: bool) -> None:
+def _nix_deploy(hosts: List[DeployHost], discovery: bool, cache: bool, keeperror: bool) -> None:
     """
     Deploy to all hosts in parallel
     """
     g = DeployGroup(hosts)
 
     def deploy(h: DeployHost) -> None:
+        
         with open('homelab.json', 'r') as f:
             jinfo = json.load(f)
             hosts = jinfo['hosts']
@@ -617,7 +633,15 @@ def _nix_deploy(hosts: List[DeployHost], discovery: bool) -> None:
         )
 
         if hostname:
-            cmd = f"cd /nix-homelab && nixos-rebuild -v switch --fast --option accept-flake-config true --option keep-going true --flake .#{hostname}"
+            cache_opts = ""
+            if not cache:
+                cacheopts = "--fallback --option binary-caches https://cache.nixos.org/"
+
+            keeperror_opts = ""
+            # if keeperror:
+            #     keeperror_opts = "--option keep-going true"
+
+            cmd = f"cd /nix-homelab && nixos-rebuild -v switch {cacheopts} {keeperror_opts} --fast --option accept-flake-config true --flake .#{hostname}"
             h.run(cmd)
 
             if discovery:

@@ -3,14 +3,15 @@
 # mkdir -p $DIR_NIXSERVE && cd $DIR_NIXSERVE  
 # nix-store --generate-binary-cache-key $(hostname).$(hostname -d) cache-priv-key.pem cache-pub-key.pem
 #
-# curl http://nix-server:5000/nix-cache-info
+# curl https://nixcache.h:5000/nix-cache-info
 { outputs, lib, config, ... }:
 let
-  domain = config.networking.domain;
   modName = "nix-serve";
-  alias = "nixcache";
-  aliasdefined = builtins.elem modName config.homelab.currentHost.alias;
   modEnabled = lib.elem modName config.homelab.currentHost.modules;
+  alias = "nixcache";
+  aliasdefined = !(builtins.elem alias config.homelab.currentHost.alias);
+  cert = (import ../../modules/system/homelab-cert.nix { inherit lib; }).environment.etc."homelab/wildcard-domain.crt.pem".source;
+  port_nixserve = 5000;
 in
 lib.mkIf (modEnabled)
 {
@@ -18,7 +19,7 @@ lib.mkIf (modEnabled)
   sops.secrets.nixserve-private-key = { };
 
   networking.firewall.allowedTCPPorts = [
-    5000
+    port_nixserve
     80
   ];
 
@@ -29,21 +30,21 @@ lib.mkIf (modEnabled)
 
   # Check if host alias is defined in homelab.json alias section
   warnings =
-    lib.optional aliasdefined "No `${alias}` alias defined in alias section hosts.alias in `homelab.json`";
+    lib.optional aliasdefined "No `${alias}` alias defined in alias section ${config.networking.hostName}.alias [ ${toString config.homelab.currentHost.alias} ] in `homelab.json` file";
 
-  # Install nginx server for human readable files
-  services.nginx = {
-    enable = true;
-    virtualHosts = {
-      "nixcache.${domain}" = {
-        serverAliases = [ "nixcache" ];
-        locations."/".extraConfig = ''
-          proxy_pass http://localhost:${toString config.services.nix-serve.port};
-          proxy_set_header Host $host;
-          proxy_set_header X-Real-IP $remote_addr;
-          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        '';
-      };
+  services.nginx.enable = true;
+  services.nginx.virtualHosts."${alias}.${config.homelab.domain}" = {
+    addSSL = true;
+    sslCertificate = cert;
+    sslCertificateKey = config.sops.secrets."wildcard-domain.key.pem".path;
+
+    locations."/" = {
+      extraConfig = ''
+        proxy_pass http://127.0.0.1:${toString port_nixserve};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      '';
     };
   };
 }

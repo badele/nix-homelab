@@ -153,10 +153,24 @@ This list generated with `inv docs.all-pages` command
         <td><a href="./docs/nix-serve.md">nix-serve</a></td>
         <td>bootstore</td>
         <td>For caching the nix build results</td>
+        <tr>
+        <td><a href="./docs/grafana.md"><img width="32" src="https://patch.pulseway.com/Images/features/patch/3pp-logos/Grafana.png"></a></td>
+        <td><a href="./docs/grafana.md">grafana</a></td>
+        <td>bootstore</td>
+        <td>Multi-platform open source analytics and interactive visualization web application</td>
+        <tr>
+        <td><a href="./docs/loki.md"><img width="32" src="https://grafana.com/static/img/logos/logo-loki.svg"></a></td>
+        <td><a href="./docs/loki.md">loki</a></td>
+        <td>bootstore</td>
+        <td>Scalable log aggregation system</td>
         </table>
 
 [comment]: (<<MODULES)
 
+## Homelab initialisation
+```
+inv init.domain-cert
+```
 
 ## Commons scratch installation
 
@@ -222,15 +236,17 @@ This list generated with `inv docs.all-pages` command
 ```
 Available tasks:
 
-  docs.all-pages    generate all homelab documentation
-  docs.host-pages   generate all homelab hosts page
-  docs.main-page    generate main homelab page
-  hosts.build       Build for <hostnames>
-  hosts.deploy      Deploy to <hostnames> server
-  init.nix-serve    Init <hostname> nix-server private & public key
-  service.build     Build for all hosts contains the service
-  service.deploy    Deploy for all hosts contains the service
-  wireguard.keys    Generate wireguard private key for <hostname>
+  docs.all-pages     generate all homelab documentation
+  docs.host-pages    generate all homelab hosts page
+  docs.main-page     generate main homelab page
+  init.domain-cert   Init domain certificate
+  init.nix-serve     Init nix binary cache server <hostname> nix-serve private
+                     & public key
+  module.build       Build for all hosts contains the module
+  module.deploy      Deploy for all hosts contains the module
+  nix.build          Build for <hostnames>
+  nix.deploy         Deploy to <hostnames> server
+  wireguard.keys     Generate wireguard private key for <hostname>
 
 
 ```

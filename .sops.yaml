@@ -3,7 +3,7 @@ keys:
   - &users: # nix-shell -p age --run 'age-keygen'
     - &badele age15js628ku59g94njn0vup20r4xx34guesgsj5dqsken5hma2zqg2szjed66
   # Hosts
-  - &hosts: # nix-shell -p ssh-to-age --run 'cat hosts/<hostname>/ssh_host_ed25519_key.pub | ssh-to-age'
+  - &hosts: # inv ssh-init-host-key
     - &rpi40 age152ud7upe5xylsvf7kkfpdz6x99r6hcmkam8gwntfdv0px70f0u0sqzc8qe 
     - &latino age12lhx7ktnd4fvqjeq06h0z25n0s0a3r0ap6thzsxwuxvglqsjufls8mhk9u
     - &sam age1x363tjjzx6j77j3m4zynkjgyj38qcyf4wah5mc8mtjt5yt6zvgxqr3z7px
@@ -14,6 +14,7 @@ creation_rules:
     key_groups:
       - age:
           - *badele
+          - *bootstore
           - *rpi40
           - *sam
 

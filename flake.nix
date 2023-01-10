@@ -50,13 +50,13 @@
   };
 
   outputs =
-    { self
+    inputs@{ self
     , nixpkgs
     , flake-parts
     , ...
-    } @ inputs:
-    (flake-parts.lib.evalFlakeModule
-      { inherit self; }
+    }:
+    flake-parts.lib.mkFlake
+      { inherit inputs; }
       {
         systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
         imports = [
@@ -71,6 +71,7 @@
               age
               sops
               wireguard-tools
+              openssl_3_0.bin
             ] ++ lib.optional (stdenv.isLinux) mkpasswd;
           };
         };
@@ -79,6 +80,5 @@
             devShells = self.devShells.x86_64-linux.default;
           };
         };
-      }).config.flake;
-
+      };
 }

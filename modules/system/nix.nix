@@ -6,12 +6,12 @@ in
   nix = {
     settings = {
       substituters = [
-        "http://bootstore.${domain}:5000"
+        "http://nixcache.${domain}:5000"
         "https://hyprland.cachix.org"
         "https://nix-community.cachix.org"
       ];
       trusted-public-keys = [
-        "bootstore.${domain}:nJYY2ypfR1pveSZnBuBjMb0oyCGFfjbnsMp1isRS9sg="
+        "nixcache.${domain}:nJYY2ypfR1pveSZnBuBjMb0oyCGFfjbnsMp1isRS9sg="
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];

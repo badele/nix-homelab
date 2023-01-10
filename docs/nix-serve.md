@@ -13,6 +13,13 @@ inv init.nix-serve --hostnames <hostname>
 inv nix.deploy --hostnames <hostname>
 ```
 
+Testing the nix cache server
+
+```
+curl -sLv https://nixcache.h/nix-cache-info
+nix verify --store https://nixcache.h:5000 --trusted-public-keys 'nixcache.h:+2EnxpRxBCNd5V/2PNoobcq7fW+oXpZ0IhRwL+X2WHI=' /nix/store
+```
+
 ## Utilization
 
 Edit `flake.nix` file
@@ -20,12 +27,12 @@ Edit `flake.nix` file
 ```
   nixConfig = {
     extra-substituers = [
-      "http://bootstore.h:5000"
+      "http://nixcache.h:5000"
       "https://nix-community.cachix.org"
     ];
     extra-trusted-public-keys =
       [
-        "bootstore.h:+2EnxpRxBCNd5V/2PNoobcq7fW+oXpZ0IhRwL+X2WHI="
+        "nixcache.h:+2EnxpRxBCNd5V/2PNoobcq7fW+oXpZ0IhRwL+X2WHI="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
   };

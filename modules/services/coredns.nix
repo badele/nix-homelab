@@ -1,6 +1,5 @@
-{ inputs, lib, config, pkgs, ... }:
+{ lib, config, pkgs, ... }:
 let
-
   modName = "coredns";
   modEnabled = builtins.elem modName config.homelab.currentHost.modules;
   cfghosts = config.homelab.hosts;
@@ -76,12 +75,14 @@ lib.mkIf (modEnabled)
     ''
       . {
           forward . 1.1.1.1 1.0.0.1 8.8.8.8 8.8.4.4
+          prometheus ${myhost.ipv4}:9153
           cache
           log
         }
 
       ${domain} {
           file ${fileZone}
+          prometheus ${myhost.ipv4}:9153
           log
         }
     '';

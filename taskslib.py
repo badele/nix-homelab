@@ -4,8 +4,25 @@
 from invoke import run
 from deploykit import DeployHost, DeployGroup
 
+import sys
 import json
 import re
+from typing import IO, Any, Callable, List, Dict, Optional, Text
+
+
+def color_text(code: int, file: IO[Any] = sys.stdout) -> Callable[[str], None]:
+    def wrapper(text: str) -> None:
+        if sys.stderr.isatty():
+            print(f"\x1b[{code}m{text}\x1b[0m", file=file)
+        else:
+            print(text, file=file)
+
+    return wrapper
+
+
+warn = color_text(31, file=sys.stderr)
+info = color_text(32)
+
 
 ##############################################################################
 # Run
@@ -20,6 +37,26 @@ mkdir -p $DIR_NIXSERVE && cd $DIR_NIXSERVE
 nix-store --generate-binary-cache-key {hostname}.h cache-priv-key.pem cache-pub-key.pem
 """)
 
+
+def _cert_init_cert_domain() -> None:
+    # openssl_3_0.bin
+    # openssl req -new -newkey rsa:4096 -days 36500 -nodes -x509 -keyout server.key -out server.crt -subj "/CN=h"
+    with open('homelab.json', 'r') as fr:
+        jinfo = json.load(fr)
+        domain = jinfo['domain']
+
+    res = run(f"openssl req -new -newkey rsa:4096 -days 36500 -nodes -x509 -keyout /tmp/wildcard-domain.key.pem -out hosts/wildcard-domain.crt.pem -subj '/CN=*.{domain}'")
+    res = run(f"cat /tmp/wildcard-domain.key.pem",hide=True)
+
+    indent = "  "
+    indented = indent + res.stdout.replace('\n', '\n' + indent)
+
+    info(f"""
+Please add this content to hosts/secrets.yml
+
+wildcard-domain.key.pem: |
+{indented}
+""")
 
 
 def generateCommandsList() -> str:
