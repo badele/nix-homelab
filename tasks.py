@@ -227,7 +227,8 @@ def nixos_install(c, hosts, flakeattr):
 name="deploy",
 help={
     'discovery': "get host information after deployment",
-    'cache' : "Use binary cache from flake extra-substituers section"
+    'cache' : "Use binary cache from flake extra-substituers section",
+    'keeperror' : "Continue, if error"
     }
 )
 def nix_deploy(c, hostnames="",discovery=True, cache=True, keeperror=True):
@@ -238,18 +239,18 @@ def nix_deploy(c, hostnames="",discovery=True, cache=True, keeperror=True):
 
     """
     deploylist = get_deploylist_from_homelab(hostnames)
-    _nix_deploy(deploylist, discovery, cache, keeperror)        
+    _nix_deploy(deploylist, discovery, cache, keeperror)
 
 
 @task(name="build")
-def nix_build(c, hostnames=""):
+def nix_build(c, hostnames="", cache=True, keeperror=True):
     """
     Build for <hostnames>
 
     if <hostnames> is empty, build for all nix homelab attribute
     """
     deploylist = get_deploylist_from_homelab(hostnames)
-    _nix_build(deploylist)        
+    _nix_build(deploylist, cache, keeperror)
 
 
 nix = Collection('nix')
@@ -257,23 +258,30 @@ nix.add_task(nix_deploy)
 nix.add_task(nix_build)
 
 
-@task(name="deploy")
-def module_deploy(c, module, discovery=True):
+@task(
+    name="deploy",
+help={
+    'discovery': "get host information after deployment",
+    'cache' : "Use binary cache from flake extra-substituers section",
+    'keeperror' : "Continue, if error"
+    }
+)
+def module_deploy(c, module, discovery=True, cache=True, keeperror=True):
     """
     Deploy for all hosts contains the module
     """
 
     deploylist = get_deploylist_from_module(module)
-    _nix_deploy(deploylist, discovery)        
+    _nix_deploy(deploylist, discovery, cache, keeperror)
 
 
 @task(name="build")
-def module_build(c, module):
+def module_build(c, module, cache=True, keeperror=True):
     """
     Build for all hosts contains the module
     """
     deploylist = get_deploylist_from_module(module)
-    _nix_build(deploylist)        
+    _nix_build(deploylist, cache, keeperror)
 
 
 module = Collection('module')
@@ -633,13 +641,13 @@ def _nix_deploy(hosts: List[DeployHost], discovery: bool, cache: bool, keeperror
         )
 
         if hostname:
-            cache_opts = ""
+            cacheopts = ""
             if not cache:
                 cacheopts = "--fallback --option binary-caches https://cache.nixos.org/"
 
             keeperror_opts = ""
-            # if keeperror:
-            #     keeperror_opts = "--option keep-going true"
+            if keeperror:
+                keeperror_opts = "--option keep-going true"
 
             cmd = f"cd /nix-homelab && nixos-rebuild -v switch {cacheopts} {keeperror_opts} --fast --option accept-flake-config true --flake .#{hostname}"
             h.run(cmd)
@@ -651,7 +659,7 @@ def _nix_deploy(hosts: List[DeployHost], discovery: bool, cache: bool, keeperror
     g.run_function(deploy)
 
 
-def _nix_build(hosts: List[DeployHost]) -> None:
+def _nix_build(hosts: List[DeployHost], cache: bool, keeperror: bool) -> None:
     """
     Build for all hosts in parallel
     """
@@ -674,11 +682,10 @@ def _nix_build(hosts: List[DeployHost]) -> None:
         )
 
         if hostname:
-            cmd = f"cd /nix-homelab && nixos-rebuild build --fast --option accept-flake-config true --option keep-going true --flake .#{hostname}"
+            cmd = f"cd /nix-homelab && nixos-rebuild build {cacheopts} {keeperror_opts} --fast --option accept-flake-config true --option keep-going true --flake .#{hostname}"
             h.run(cmd)
 
             h.meta['hostname'] = hostname
-            _host_hardware_discovery(h)
 
     g.run_function(deploy)
 

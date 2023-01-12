@@ -1,11 +1,8 @@
-[ ] Filtrer le contenu json des nmap
-[ ] Utiliser les fonctions python au lieu d'utiliser run()
-
 # nix-homelab
 
 Practically all hosts from this home lab installed by Nix system. 
 
-All the configuration is stored on `homelab.json`, from the json file, you can do:
+All the configuration is stored on `homelab.json`  file, you can do:
 - Define network CIDR
 - Define hosts
 - Define the modules installed for selected hosts
@@ -121,7 +118,7 @@ This list generated with `inv docs.all-pages` command
 
 ## Modules
 
-Modules list used in this home lab
+The main modules used in this home lab
 
 This list generated with `inv docs.all-pages` command
 
@@ -144,6 +141,21 @@ This list generated with `inv docs.all-pages` command
         <td>rpi40, bootstore</td>
         <td>A Go DNS server, it used for serving local hosts and alias</td>
         <tr>
+        <td><a href="./docs/ntp.md"><img width="32" src="https://freesvg.org/img/ftntp-client.png"></a></td>
+        <td><a href="./docs/ntp.md">ntp</a></td>
+        <td>rpi40, bootstore</td>
+        <td>Network Time Protocol</td>
+        <tr>
+        <td><a href="./docs/grafana.md"><img width="32" src="https://patch.pulseway.com/Images/features/patch/3pp-logos/Grafana.png"></a></td>
+        <td><a href="./docs/grafana.md">grafana</a></td>
+        <td>bootstore</td>
+        <td>The open and composable observability and data visualization platform</td>
+        <tr>
+        <td><a href="./docs/loki.md"><img width="32" src="https://grafana.com/static/img/logos/logo-loki.svg"></a></td>
+        <td><a href="./docs/loki.md">loki</a></td>
+        <td>bootstore</td>
+        <td>Scalable log aggregation system</td>
+        <tr>
         <td><a href="./docs/nfs.md"><img width="32" src="https://logo-marque.com/wp-content/uploads/2021/09/Need-For-Speed-Logo-2019-2020.jpg"></a></td>
         <td><a href="./docs/nfs.md">nfs</a></td>
         <td>bootstore</td>
@@ -154,15 +166,10 @@ This list generated with `inv docs.all-pages` command
         <td>bootstore</td>
         <td>For caching the nix build results</td>
         <tr>
-        <td><a href="./docs/grafana.md"><img width="32" src="https://patch.pulseway.com/Images/features/patch/3pp-logos/Grafana.png"></a></td>
-        <td><a href="./docs/grafana.md">grafana</a></td>
+        <td><a href="./docs/prometheus.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Prometheus_software_logo.svg/2066px-Prometheus_software_logo.svg.png"></a></td>
+        <td><a href="./docs/prometheus.md">prometheus</a></td>
         <td>bootstore</td>
-        <td>Multi-platform open source analytics and interactive visualization web application</td>
-        <tr>
-        <td><a href="./docs/loki.md"><img width="32" src="https://grafana.com/static/img/logos/logo-loki.svg"></a></td>
-        <td><a href="./docs/loki.md">loki</a></td>
-        <td>bootstore</td>
-        <td>Scalable log aggregation system</td>
+        <td>Monitoring system and time series database</td>
         </table>
 
 [comment]: (<<MODULES)

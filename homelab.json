@@ -23,6 +23,10 @@
             "icon": "https://raw.githubusercontent.com/coredns/logo/master/Icon/CoreDNS_Colour_Icon.png",
             "description": "A Go DNS server, it used for serving local hosts and alias"
         },
+        "ntp": {
+            "icon": "https://freesvg.org/img/ftntp-client.png",
+            "description": "Network Time Protocol"
+        },
         "nfs": {
             "icon": "https://logo-marque.com/wp-content/uploads/2021/09/Need-For-Speed-Logo-2019-2020.jpg",
             "description": "A Linux NFS server, it used for backuping a servers and Latops"
@@ -87,12 +91,14 @@
             "icon": "https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Raspberry_Pi_logo.svg/32px-Raspberry_Pi_logo.svg.png",
             "ipv4": "192.168.0.17",
             "alias": [
-                "dns"
+                "dns",
+                "ntp"
             ],
             "description": "The Raspberry PI 4 storage server",
             "os": "NixOS",
             "modules": [
-                "coredns"
+                "coredns",
+                "ntp"
             ]
         },
         "bootstore": {
@@ -104,6 +110,7 @@
                 "loki",
                 "nfs",
                 "nixcache",
+                "ntp",
                 "prometheus",
                 "promtail"
             ],
@@ -115,6 +122,7 @@
                 "loki",
                 "nfs",
                 "nix-serve",
+                "ntp",
                 "prometheus"
             ]
         },

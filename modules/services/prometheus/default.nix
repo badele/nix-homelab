@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 let
   modName = "prometheus";
   modEnabled = builtins.elem modName config.homelab.currentHost.modules;
@@ -38,7 +38,7 @@ lib.mkIf (modEnabled)
         static_configs = [
           {
             targets = [
-              "bootstore:9100"
+              "bootstore:${toString config.services.prometheus.exporters.node.port}"
             ];
             labels = {
               alias = "bootstore";
@@ -46,13 +46,44 @@ lib.mkIf (modEnabled)
           }
           {
             targets = [
-              "rpi40:9100"
+              "rpi40:${toString config.services.prometheus.exporters.node.port}"
             ];
             labels = {
               alias = "rpi40";
             };
           }
         ];
+      }
+      {
+        job_name = "mikrotik";
+        scrape_interval = "120s";
+        scrape_timeout = "90s";
+        metrics_path = "/snmp";
+        params = {
+          module = [ "mikrotik" ];
+        };
+        relabel_configs = [
+          {
+            "source_labels" = [ "__address__" ];
+            "target_label" = "__param_target";
+          }
+          {
+            "source_labels" = [ "__param_target" ];
+            "target_label" = "instance";
+          }
+          {
+            "target_label" = "__address__";
+            "replacement" = "127.0.0.1:${toString config.services.prometheus.exporters.snmp.port}";
+          }
+        ];
+        static_configs = [
+          {
+            targets = [
+              "192.168.0.10"
+            ];
+          }
+        ];
+
       }
       {
         job_name = "coredns";

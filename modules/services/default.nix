@@ -12,6 +12,7 @@
     ./prometheus
     ./nfs.nix
     ./nix-serve.nix
+    ./ntp.nix
   ];
 }
 

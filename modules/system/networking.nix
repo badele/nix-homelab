@@ -1,5 +1,6 @@
 { lib, config, ... }:
 let
+  domain = config.homelab.domain;
   aliasIps = lib.flatten
     (
 
@@ -27,11 +28,16 @@ in
     # add an entry to /etc/hosts for each host
     extraHosts = ''
       # Hosts
-        ${lib.concatStringsSep "\n"
+      ${lib.concatStringsSep "\n"
           (lib.mapAttrsToList
             (hostname: hostinfo:
-              ''${hostinfo.ipv4} ${hostname}.${config.homelab.domain} ${hostname}'')
+              ''${hostinfo.ipv4} ${hostname}.${domain} ${hostname}'')
             config.homelab.hosts)}
+
+      # Alias
+      ${lib.concatMapStringsSep "\n" (host: 
+          "${host.ip} ${host.name}.${domain} ${host.name}" )
+        aliasIps}
     '';
 
     # For ZFS
