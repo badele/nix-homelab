@@ -50,7 +50,12 @@
         "prometheus": {
             "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Prometheus_software_logo.svg/2066px-Prometheus_software_logo.svg.png",
             "description": "Monitoring system and time series database"
+        },
+        "smokeping":         {
+            "icon": "https://img.freepik.com/vecteurs-premium/cardiogramme-cardiaque-isole-blanc_97886-1185.jpg?w=2000",
+            "description": "Latency measurement tool"
         }
+
     },
     "hosts": {
         "box": {
@@ -103,6 +108,8 @@
         },
         "bootstore": {
             "icon": "https://simpleicons.org/icons/databricks.svg",
+            "description": "HP Proliant Microserver N40L storage server",
+            "os": "NixOS",
             "ipv4": "192.168.0.29",
             "alias": [
                 "dns",
@@ -112,10 +119,9 @@
                 "nixcache",
                 "ntp",
                 "prometheus",
-                "promtail"
+                "promtail",
+                "smokeping"
             ],
-            "description": "HP Proliant Microserver N40L storage server",
-            "os": "NixOS",
             "modules": [
                 "coredns",
                 "grafana",
@@ -123,7 +129,8 @@
                 "nfs",
                 "nix-serve",
                 "ntp",
-                "prometheus"
+                "prometheus",
+                "smokeping"
             ]
         },
         "badwork": {
