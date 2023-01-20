@@ -6,6 +6,7 @@
 {
   imports = [
     ./coredns.nix
+    ./dashy.nix
     ./grafana
     ./loki/loki.nix
     ./loki/promtail.nix

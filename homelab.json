@@ -51,11 +51,14 @@
             "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Prometheus_software_logo.svg/2066px-Prometheus_software_logo.svg.png",
             "description": "Monitoring system and time series database"
         },
-        "smokeping":         {
+        "smokeping": {
             "icon": "https://img.freepik.com/vecteurs-premium/cardiogramme-cardiaque-isole-blanc_97886-1185.jpg?w=2000",
             "description": "Latency measurement tool"
+        },
+        "dashy": {
+            "icon": "https://dashy.to/img/dashy.png",
+            "description": "The Ultimate Homepage for your Homelab"
         }
-
     },
     "hosts": {
         "box": {
@@ -120,10 +123,12 @@
                 "ntp",
                 "prometheus",
                 "promtail",
-                "smokeping"
+                "smokeping",
+                "homelab"
             ],
             "modules": [
                 "coredns",
+                "dashy",
                 "grafana",
                 "loki",
                 "nfs",

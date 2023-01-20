@@ -74,17 +74,42 @@ lib.mkIf (modEnabled)
       menu = DNS
       title = DNS Latency Probes
 
-      ++ all-dns
-      menu = all-dns
-      title = All DNS comparison
-      host = /DNS/numericable1 /DNS/numericable2 /DNS/cloudflare0 /DNS/cloudflare1 /DNS/cisco222 /DNS/cisco220 /DNS/quad9 /DNS/quad112 /DNS/google8 /DNS/google4
-
       ++ dns-${config.networking.hostName}
       menu = ${config.networking.hostName}
       title = ${config.networking.hostName} DNS performance
       server = ${config.networking.hostName}
       host = ${config.networking.hostName}
 
+      ++ all-dns
+      menu = all-dns
+      title = All DNS comparison
+      host = /DNS/numericable1 /DNS/cloudflare0 /DNS/cisco222 /DNS/quad9 /DNS/google8
+
+      ++ all-numericable
+      menu = all-numericable
+      title = All numericable DNS
+      host = /DNS/numericable1 /DNS/numericable2 
+
+      ++ all-cloudflare
+      menu = all-cloudflare
+      title = All cloudflare DNS
+      host = /DNS/cloudflare0 /DNS/cloudflare1
+
+      ++ all-cisco
+      menu = all-cisco
+      title = All cisco DNS
+      host = /DNS/cisco222 /DNS/cisco220
+
+      ++ all-quad9
+      menu = all-quad9
+      title = All quad9 DNS
+      host = /DNS/quad9 /DNS/quad112
+
+      ++ all-google
+      menu = all-google
+      title = All google DNS
+      host = /DNS/google8 /DNS/google4
+   
       ++ numericable1
       menu = numericable1
       title = numericable ns1.numericable.net DNS performance

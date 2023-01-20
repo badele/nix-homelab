@@ -78,6 +78,7 @@ in
       modules =
         termNodeModules
         ++ [
+          ./modules/nixos/dashy.nix
           ./hosts/bootstore
         ];
     };

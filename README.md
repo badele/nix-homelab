@@ -268,3 +268,4 @@ A big thank to the contributors of OpenSource projects in particular :
 - [doctor-cluster-config](https://github.com/TUM-DSE/doctor-cluster-config) from German TUM School of Computation
 - [Mic92](https://github.com/Mic92/dotfiles) and for his some nix contributions
 - [Misterio77](https://github.com/Misterio77/nix-config) and for his some nix contributions
+- [longerHV] (https://github.com/LongerHV/nixos-configuration) configuration file
