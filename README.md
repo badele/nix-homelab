@@ -5,12 +5,12 @@ Practically all hosts from this home lab installed by Nix system.
 All the configuration is stored on `homelab.json`  file, you can do:
 - Define network CIDR
 - Define hosts
-- Define the modules installed for selected hosts
+- Define the roles installed for selected hosts
 - Define services descriptions
 
 Also, from the `homelab.json` you can do:
 - Generate documentation automatically
-- Install automatically modules
+- Install automatically roles
 
 ## Hosts
 
@@ -116,13 +116,13 @@ This list generated with `inv docs.all-pages` command
 [comment]: (<<HOSTS)
 
 
-## Modules
+## Roles
 
-The main modules used in this home lab
+The main roles used in this home lab
 
 This list generated with `inv docs.all-pages` command
 
-[comment]: (>>MODULES)
+[comment]: (>>ROLES)
 
 <table>
     <tr>
@@ -146,10 +146,15 @@ This list generated with `inv docs.all-pages` command
         <td>rpi40, bootstore</td>
         <td>Network Time Protocol</td>
         <tr>
+        <td><a href="./docs/dashy.md"><img width="32" src="https://dashy.to/img/dashy.png"></a></td>
+        <td><a href="./docs/dashy.md">dashy</a></td>
+        <td>bootstore</td>
+        <td>The Ultimate Homepage for your Homelab [service port 8081]</td>
+        <tr>
         <td><a href="./docs/grafana.md"><img width="32" src="https://patch.pulseway.com/Images/features/patch/3pp-logos/Grafana.png"></a></td>
         <td><a href="./docs/grafana.md">grafana</a></td>
         <td>bootstore</td>
-        <td>The open and composable observability and data visualization platform</td>
+        <td>The open and composable observability and data visualization platform [service port 3000]</td>
         <tr>
         <td><a href="./docs/loki.md"><img width="32" src="https://grafana.com/static/img/logos/logo-loki.svg"></a></td>
         <td><a href="./docs/loki.md">loki</a></td>
@@ -170,9 +175,24 @@ This list generated with `inv docs.all-pages` command
         <td><a href="./docs/prometheus.md">prometheus</a></td>
         <td>bootstore</td>
         <td>Monitoring system and time series database</td>
+        <tr>
+        <td><a href="./docs/smokeping.md"><img width="32" src="https://img.freepik.com/vecteurs-premium/cardiogramme-cardiaque-isole-blanc_97886-1185.jpg?w=2000"></a></td>
+        <td><a href="./docs/smokeping.md">smokeping</a></td>
+        <td>bootstore</td>
+        <td>Latency measurement tool</td>
+        <tr>
+        <td><a href="./docs/statping.md"><img width="32" src="https://avatars.githubusercontent.com/u/61949049?s=32&v=4"></a></td>
+        <td><a href="./docs/statping.md">statping</a></td>
+        <td>bootstore</td>
+        <td>A Status Page for monitoring your websites and applications with beautiful graphs [service port 8082]</td>
+        <tr>
+        <td><a href="./docs/uptime.md"><img width="32" src="https://cf.appdrag.com/dashboard-openvm-clo-b2d42c/uploads/Uptime-kuma-7fPG.png"></a></td>
+        <td><a href="./docs/uptime.md">uptime</a></td>
+        <td>bootstore</td>
+        <td>A Status Page [service port 8083]</td>
         </table>
 
-[comment]: (<<MODULES)
+[comment]: (<<ROLES)
 
 ## Homelab initialisation
 ```
@@ -249,10 +269,10 @@ Available tasks:
   init.domain-cert   Init domain certificate
   init.nix-serve     Init nix binary cache server <hostname> nix-serve private
                      & public key
-  module.build       Build for all hosts contains the module
-  module.deploy      Deploy for all hosts contains the module
   nix.build          Build for <hostnames>
   nix.deploy         Deploy to <hostnames> server
+  role.build         Build for all hosts contains the role
+  role.deploy        Deploy for all hosts contains the role
   wireguard.keys     Generate wireguard private key for <hostname>
 
 
@@ -268,4 +288,4 @@ A big thank to the contributors of OpenSource projects in particular :
 - [doctor-cluster-config](https://github.com/TUM-DSE/doctor-cluster-config) from German TUM School of Computation
 - [Mic92](https://github.com/Mic92/dotfiles) and for his some nix contributions
 - [Misterio77](https://github.com/Misterio77/nix-config) and for his some nix contributions
-- [longerHV] (https://github.com/LongerHV/nixos-configuration) configuration file
+- [longerHV](https://github.com/LongerHV/nixos-configuration) nix configuration file

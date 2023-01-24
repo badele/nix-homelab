@@ -3,31 +3,27 @@
 with lib;
 
 let
-  cfg = config.services.dashy;
+  cfg = config.services.uptime;
   aliasdefined = !(builtins.elem cfg.alias config.homelab.currentHost.alias);
   cert = (import ../../nixos/modules/system/homelab-cert.nix { inherit lib; }).environment.etc."homelab/wildcard-domain.crt.pem".source;
-
-  configFile = pkgs.runCommand "conf.yml"
-    {
-      buildInputs = [ pkgs.yj ];
-      preferLocalBuild = true;
-    } ''
-    yj -jy < ${pkgs.writeText "config.json" (builtins.toJSON cfg.settings)} > $out
-  '';
 in
 {
-  options.services.dashy = {
-    enable = mkEnableOption "dashy";
+  options.services.uptime = {
+    enable = mkEnableOption "uptime";
     imageTag = mkOption {
       type = types.str;
     };
     alias = mkOption {
       type = types.str;
-      default = "home";
+      default = "uptime";
+    };
+    dns = mkOption {
+      type = types.str;
+      default = config.homelab.currentHost.ipv4;
     };
     port = mkOption {
       type = types.int;
-      default = 8081;
+      default = 8083;
     };
     settings = mkOption {
       type = types.attrs;
@@ -35,7 +31,7 @@ in
     extraOptions = mkOption { };
   };
 
-  # docker-dashy.service
+  # docker-uptime.service
   config = mkIf cfg.enable {
 
     # Check if host alias is defined in homelab.json alias section
@@ -47,18 +43,14 @@ in
       80
     ];
 
-    # Dashy docker service
+    # uptime docker service
     virtualisation.oci-containers.containers = {
-      dashy = {
-        image = "lissy93/dashy:${cfg.imageTag}";
+      uptime = {
+        image = "louislam/uptime-kuma:${cfg.imageTag}";
         inherit (cfg) extraOptions;
         environment = {
           TZ = "${config.time.timeZone}";
-          PORT = "${toString cfg.port}";
         };
-        volumes = [
-          "${configFile}:/app/public/conf.yml"
-        ];
       };
     };
 
@@ -72,12 +64,14 @@ in
       locations."/" = {
         extraConfig = ''
           proxy_pass http://127.0.0.1:${toString cfg.port};
-          proxy_set_header Host $host;
-          proxy_set_header X-Real-IP $remote_addr;
-          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header   X-Real-IP $remote_addr;
+          proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header   Host $host;
+          proxy_http_version 1.1;
+          proxy_set_header   Upgrade $http_upgrade;
+          proxy_set_header   Connection "upgrade";
         '';
       };
     };
   };
-
 }

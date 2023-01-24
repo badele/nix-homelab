@@ -113,32 +113,32 @@ def generateHostsList() -> str:
     return hosts_table
 
 
-def getUsedModulesList():
+def getUsedRolesList():
     filename = f'homelab.json'
-    allmodules = {}
+    allroles = {}
     with open(filename, 'r') as fr:
         jinfo = json.load(fr)
         hostslist = jinfo['hosts']
 
         for hn in hostslist:
-            if 'modules' in hostslist[hn]:
-                for svc in hostslist[hn]['modules']:
-                    if svc not in allmodules:
-                        allmodules[svc] = []
-                    allmodules[svc].append(hn)
+            if 'roles' in hostslist[hn]:
+                for svc in hostslist[hn]['roles']:
+                    if svc not in allroles:
+                        allroles[svc] = []
+                    allroles[svc].append(hn)
 
-    return allmodules
+    return allroles
 
 
-def generateUsedModules() -> str:
+def generateUsedRoles() -> str:
     # Get hosts infos
     with open('homelab.json', 'r') as fhl:
         jhl = json.load(fhl)
-        modules = jhl['modules']
+        roles = jhl['roles']
 
-    allmodules = getUsedModulesList()
+    allroles = getUsedRolesList()
 
-    modules_table = '''<table>
+    roles_table = '''<table>
     <tr>
         <th>Logo</th>
         <th>Module</th>
@@ -146,21 +146,21 @@ def generateUsedModules() -> str:
         <th>Description</th>
     </tr>'''
 
-    for mname in allmodules:
+    for mname in allroles:
         hosts_list = []
-        for h in allmodules[mname]:
+        for h in allroles[mname]:
             hosts_list.append(h)
 
-        modules_table += f'''<tr>
-        <td><a href="./docs/{mname}.md"><img width="32" src="{modules[mname]["icon"]}"></a></td>
+        roles_table += f'''<tr>
+        <td><a href="./docs/{mname}.md"><img width="32" src="{roles[mname]["icon"]}"></a></td>
         <td><a href="./docs/{mname}.md">{mname}</a></td>
         <td>{", ".join(hosts_list)}</td>
-        <td>{modules[mname]['description']}</td>
+        <td>{roles[mname]['description']}</td>
         '''
 
-    modules_table += "</table>"
+    roles_table += "</table>"
 
-    return modules_table
+    return roles_table
 
 # Replace the content marker
 def _replace_content(content: str, marker: str, newcontent) -> str:
@@ -183,12 +183,12 @@ def _doc_update_main_project_page() -> None:
 
     # Get generated contents
     hosts_table = generateHostsList() 
-    modules_table = generateUsedModules()
+    roles_table = generateUsedRoles()
     commands = generateCommandsList()
 
     # Replace content
     newcontent = _replace_content(content,"HOSTS",hosts_table)
-    newcontent = _replace_content(newcontent,"MODULES",modules_table)
+    newcontent = _replace_content(newcontent,"ROLES",roles_table)
     newcontent = _replace_content(newcontent,"COMMANDS",commands)
 
     # Write new content

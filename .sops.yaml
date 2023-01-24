@@ -10,7 +10,7 @@ keys:
     - &bootstore age1ejza6f2xzycq7jj2eu8fyg5vjdctljttm67mfteyd4k7wzvdyc8s7sc8jh
 
 creation_rules:
-  - path_regex: hosts/secrets.yml$
+  - path_regex: nixos/hosts/secrets.yml$
     key_groups:
       - age:
           - *badele
@@ -18,25 +18,25 @@ creation_rules:
           - *rpi40
           - *sam
 
-  - path_regex: hosts/rpi40/secrets.yml$
+  - path_regex: nixos/hosts/rpi40/secrets.yml$
     key_groups:
       - age:
           - *badele
           - *rpi40
 
-  - path_regex: hosts/bootstore/secrets.yml$
+  - path_regex: nixos/hosts/bootstore/secrets.yml$
     key_groups:
       - age:
           - *badele
           - *bootstore
 
-  - path_regex: hosts/latino.yml$
+  - path_regex: nixos/hosts/latino.yml$
     key_groups:
       - age:
           - *badele
           - *latino
 
-  - path_regex: hosts/sam.yml$
+  - path_regex: nixos/hosts/sam.yml$
     key_groups:
       - age:
           - *badele

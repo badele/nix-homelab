@@ -13,12 +13,12 @@ let
   minimalModules = [
     { _module.args.inputs = self.inputs; }
     { _module.args.self = self; }
-    ./modules/users.nix
-    ./modules/homelab
-    ./modules/system/networking.nix
-    ./modules/system/nix.nix
-    ./modules/system/sshd.nix
-    ./modules/system/zfs.nix
+    ./nixos/modules/users.nix
+    ./nixos/modules/homelab
+    ./nixos/modules/system/networking.nix
+    ./nixos/modules/system/nix.nix
+    ./nixos/modules/system/sshd.nix
+    ./nixos/modules/system/zfs.nix
 
 
     sops-nix.nixosModules.sops
@@ -36,7 +36,7 @@ let
       sops.secrets.root-password-hash.neededForUsers = true;
       sops.defaultSopsFile =
         let
-          sopsFile = ./. + "/hosts/${config.networking.hostName}/secrets.yml";
+          sopsFile = ./. + "/nixos/hosts/${config.networking.hostName}/secrets.yml";
         in
         if builtins.pathExists sopsFile
         then sopsFile
@@ -69,7 +69,7 @@ in
       modules =
         dekstopNodeModules
         ++ [
-          ./hosts/rpi40
+          ./nixos/hosts/rpi40
         ];
     };
 
@@ -79,7 +79,7 @@ in
         termNodeModules
         ++ [
           ./modules/nixos/dashy.nix
-          ./hosts/bootstore
+          ./nixos/hosts/bootstore
         ];
     };
 
@@ -98,7 +98,7 @@ in
       modules =
         minimalModules
         ++ [
-          ./hosts/sam
+          ./nixos/hosts/sam
         ];
     };
   };

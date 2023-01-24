@@ -18,7 +18,7 @@
             "mask": 24
         }
     },
-    "modules": {
+    "roles": {
         "coredns": {
             "icon": "https://raw.githubusercontent.com/coredns/logo/master/Icon/CoreDNS_Colour_Icon.png",
             "description": "A Go DNS server, it used for serving local hosts and alias"
@@ -41,7 +41,7 @@
         },
         "grafana": {
             "icon": "https://patch.pulseway.com/Images/features/patch/3pp-logos/Grafana.png",
-            "description": "The open and composable observability and data visualization platform"
+            "description": "The open and composable observability and data visualization platform [service port 3000]"
         },
         "loki": {
             "icon": "https://grafana.com/static/img/logos/logo-loki.svg",
@@ -57,7 +57,15 @@
         },
         "dashy": {
             "icon": "https://dashy.to/img/dashy.png",
-            "description": "The Ultimate Homepage for your Homelab"
+            "description": "The Ultimate Homepage for your Homelab [service port 8081]"
+        },
+        "statping": {
+            "icon": "https://avatars.githubusercontent.com/u/61949049?s=32&v=4",
+            "description": "A Status Page for monitoring your websites and applications with beautiful graphs [service port 8082]"
+        },
+        "uptime": {
+            "icon": "https://cf.appdrag.com/dashboard-openvm-clo-b2d42c/uploads/Uptime-kuma-7fPG.png",
+            "description": "A Status Page [service port 8083]"
         }
     },
     "hosts": {
@@ -79,7 +87,7 @@
             "wg": "10.123.21.254",
             "description": "Internal home mikrotik router",
             "os": "MikroTik",
-            "modules": [
+            "roles": [
                 "wireguard"
             ]
         },
@@ -104,7 +112,7 @@
             ],
             "description": "The Raspberry PI 4 storage server",
             "os": "NixOS",
-            "modules": [
+            "roles": [
                 "coredns",
                 "ntp"
             ]
@@ -124,9 +132,11 @@
                 "prometheus",
                 "promtail",
                 "smokeping",
-                "homelab"
+                "statping",
+                "uptime",
+                "home"
             ],
-            "modules": [
+            "roles": [
                 "coredns",
                 "dashy",
                 "grafana",
@@ -135,7 +145,9 @@
                 "nix-serve",
                 "ntp",
                 "prometheus",
-                "smokeping"
+                "smokeping",
+                "statping",
+                "uptime"
             ]
         },
         "badwork": {
@@ -150,7 +162,7 @@
             "wg": "10.123.21.1",
             "description": "Bruno's phone",
             "os": "Android",
-            "modules": [
+            "roles": [
                 "wireguard"
             ]
         }

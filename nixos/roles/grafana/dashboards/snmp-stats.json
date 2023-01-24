@@ -1,0 +1,956 @@
+{
+    "annotations": {
+        "list": [
+            {
+                "builtIn": 1,
+                "datasource": {
+                    "type": "datasource",
+                    "uid": "grafana"
+                },
+                "enable": true,
+                "hide": true,
+                "iconColor": "rgba(0, 211, 255, 1)",
+                "name": "Annotations & Alerts",
+                "target": {
+                    "limit": 100,
+                    "matchAny": false,
+                    "tags": [],
+                    "type": "dashboard"
+                },
+                "type": "dashboard"
+            }
+        ]
+    },
+    "description": "For snmp_exporter IF-MIB",
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "gnetId": 11169,
+    "graphTooltip": 1,
+    "id": 56,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "decimals": 1,
+                    "mappings": [
+                        {
+                            "options": {
+                                "match": "null",
+                                "result": {
+                                    "text": "N/A"
+                                }
+                            },
+                            "type": "special"
+                        }
+                    ],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "ms"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 3,
+                "w": 8,
+                "x": 0,
+                "y": 0
+            },
+            "id": 25,
+            "links": [],
+            "maxDataPoints": 100,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "textMode": "auto"
+            },
+            "pluginVersion": "9.3.1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "sysUpTime{job=\"$Job\"} * 10",
+                    "legendFormat": "In",
+                    "refId": "A"
+                }
+            ],
+            "title": "Uptime",
+            "type": "stat"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "decimals": 2,
+                    "mappings": [
+                        {
+                            "options": {
+                                "match": "null",
+                                "result": {
+                                    "text": "N/A"
+                                }
+                            },
+                            "type": "special"
+                        }
+                    ],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "Bps"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 3,
+                "w": 8,
+                "x": 8,
+                "y": 0
+            },
+            "id": 23,
+            "interval": "",
+            "links": [],
+            "maxDataPoints": 100,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "textMode": "auto"
+            },
+            "pluginVersion": "9.3.1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "max(irate(ifHCOutOctets{job=\"$Job\"}[5m]))",
+                    "instant": false,
+                    "legendFormat": "Out",
+                    "refId": "A"
+                }
+            ],
+            "title": "Max Out (Current)",
+            "type": "stat"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "decimals": 2,
+                    "mappings": [
+                        {
+                            "options": {
+                                "match": "null",
+                                "result": {
+                                    "text": "N/A"
+                                }
+                            },
+                            "type": "special"
+                        }
+                    ],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "Bps"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 3,
+                "w": 8,
+                "x": 16,
+                "y": 0
+            },
+            "id": 24,
+            "links": [],
+            "maxDataPoints": 100,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "textMode": "auto"
+            },
+            "pluginVersion": "9.3.1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "max(irate(ifHCInOctets{job=\"$Job\"}[5m]))",
+                    "legendFormat": "In",
+                    "refId": "A"
+                }
+            ],
+            "title": "Max In (Current)",
+            "type": "stat"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "decimals": 2,
+                    "mappings": [
+                        {
+                            "options": {
+                                "match": "null",
+                                "result": {
+                                    "text": "N/A"
+                                }
+                            },
+                            "type": "special"
+                        }
+                    ],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "decbytes"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 3,
+                "w": 8,
+                "x": 8,
+                "y": 3
+            },
+            "id": 29,
+            "links": [],
+            "maxDataPoints": 100,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "textMode": "auto"
+            },
+            "pluginVersion": "9.3.1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "max(delta(ifHCOutOctets{job=\"$Job\"}[$__range]))",
+                    "legendFormat": "Out",
+                    "refId": "A"
+                }
+            ],
+            "title": "Total Out",
+            "type": "stat"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "decimals": 2,
+                    "mappings": [
+                        {
+                            "options": {
+                                "match": "null",
+                                "result": {
+                                    "text": "N/A"
+                                }
+                            },
+                            "type": "special"
+                        }
+                    ],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "decbytes"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 3,
+                "w": 8,
+                "x": 16,
+                "y": 3
+            },
+            "id": 28,
+            "links": [],
+            "maxDataPoints": 100,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "textMode": "auto"
+            },
+            "pluginVersion": "9.3.1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "max(delta(ifHCInOctets{job=\"$Job\"}[$__range]))",
+                    "instant": false,
+                    "legendFormat": "In",
+                    "refId": "A"
+                }
+            ],
+            "title": "Total In",
+            "type": "stat"
+        },
+        {
+            "columns": [],
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fontSize": "100%",
+            "gridPos": {
+                "h": 10,
+                "w": 24,
+                "x": 0,
+                "y": 6
+            },
+            "id": 26,
+            "scroll": true,
+            "showHeader": true,
+            "sort": {
+                "col": 9,
+                "desc": true
+            },
+            "styles": [
+                {
+                    "alias": "Out",
+                    "align": "auto",
+                    "colorMode": "row",
+                    "colors": [
+                        "rgba(245, 54, 54, 0.9)",
+                        "rgba(0, 0, 0, 0)",
+                        "rgba(55, 135, 45, 0.34)"
+                    ],
+                    "dateFormat": "YYYY-MM-DD HH:mm:ss",
+                    "decimals": 2,
+                    "mappingType": 1,
+                    "pattern": "Value #A",
+                    "thresholds": [
+                        "0",
+                        "1"
+                    ],
+                    "type": "number",
+                    "unit": "Bps"
+                },
+                {
+                    "alias": "In",
+                    "align": "auto",
+                    "colors": [
+                        "rgba(245, 54, 54, 0.9)",
+                        "rgba(237, 129, 40, 0.89)",
+                        "rgba(50, 172, 45, 0.97)"
+                    ],
+                    "dateFormat": "YYYY-MM-DD HH:mm:ss",
+                    "decimals": 2,
+                    "link": false,
+                    "mappingType": 1,
+                    "pattern": "Value #B",
+                    "thresholds": [],
+                    "type": "number",
+                    "unit": "Bps"
+                },
+                {
+                    "alias": "Name",
+                    "align": "auto",
+                    "colors": [
+                        "rgba(245, 54, 54, 0.9)",
+                        "rgba(237, 129, 40, 0.89)",
+                        "rgba(50, 172, 45, 0.97)"
+                    ],
+                    "dateFormat": "YYYY-MM-DD HH:mm:ss",
+                    "decimals": 2,
+                    "mappingType": 1,
+                    "pattern": "ifName",
+                    "thresholds": [],
+                    "type": "string",
+                    "unit": "short"
+                },
+                {
+                    "alias": "Alias",
+                    "align": "auto",
+                    "colors": [
+                        "rgba(245, 54, 54, 0.9)",
+                        "rgba(237, 129, 40, 0.89)",
+                        "rgba(50, 172, 45, 0.97)"
+                    ],
+                    "dateFormat": "YYYY-MM-DD HH:mm:ss",
+                    "decimals": 2,
+                    "mappingType": 1,
+                    "pattern": "ifAlias",
+                    "thresholds": [],
+                    "type": "string",
+                    "unit": "short"
+                },
+                {
+                    "alias": "Total out",
+                    "align": "auto",
+                    "colors": [
+                        "rgba(245, 54, 54, 0.9)",
+                        "rgba(237, 129, 40, 0.89)",
+                        "rgba(50, 172, 45, 0.97)"
+                    ],
+                    "dateFormat": "YYYY-MM-DD HH:mm:ss",
+                    "decimals": 2,
+                    "mappingType": 1,
+                    "pattern": "Value #C",
+                    "thresholds": [],
+                    "type": "number",
+                    "unit": "decbytes"
+                },
+                {
+                    "alias": "Total in",
+                    "align": "auto",
+                    "colors": [
+                        "rgba(245, 54, 54, 0.9)",
+                        "rgba(237, 129, 40, 0.89)",
+                        "rgba(50, 172, 45, 0.97)"
+                    ],
+                    "dateFormat": "YYYY-MM-DD HH:mm:ss",
+                    "decimals": 2,
+                    "mappingType": 1,
+                    "pattern": "Value #D",
+                    "thresholds": [],
+                    "type": "number",
+                    "unit": "decbytes"
+                },
+                {
+                    "alias": "Bandwidth",
+                    "align": "auto",
+                    "colors": [
+                        "rgba(245, 54, 54, 0.9)",
+                        "rgba(237, 129, 40, 0.89)",
+                        "rgba(50, 172, 45, 0.97)"
+                    ],
+                    "dateFormat": "YYYY-MM-DD HH:mm:ss",
+                    "decimals": 0,
+                    "mappingType": 1,
+                    "pattern": "Value #E",
+                    "thresholds": [],
+                    "type": "number",
+                    "unit": "Mbits"
+                },
+                {
+                    "alias": "",
+                    "align": "auto",
+                    "colors": [
+                        "rgba(245, 54, 54, 0.9)",
+                        "rgba(237, 129, 40, 0.89)",
+                        "rgba(50, 172, 45, 0.97)"
+                    ],
+                    "dateFormat": "YYYY-MM-DD HH:mm:ss",
+                    "decimals": 2,
+                    "mappingType": 1,
+                    "pattern": "/.*/",
+                    "thresholds": [],
+                    "type": "hidden",
+                    "unit": "short"
+                }
+            ],
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "irate(ifHCOutOctets{job=\"$Job\"}[5m])",
+                    "format": "table",
+                    "instant": true,
+                    "legendFormat": "out",
+                    "refId": "A"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "irate(ifHCInOctets{job=\"$Job\"}[5m])",
+                    "format": "table",
+                    "instant": true,
+                    "legendFormat": "in",
+                    "refId": "B"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "delta(ifHCOutOctets{job=\"$Job\"}[$__range])",
+                    "format": "table",
+                    "instant": true,
+                    "legendFormat": "total out",
+                    "refId": "C"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "delta(ifHCInOctets{job=\"$Job\"}[$__range])",
+                    "format": "table",
+                    "instant": true,
+                    "legendFormat": "total in",
+                    "refId": "D"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "ifHighSpeed{job=\"$Job\"}",
+                    "format": "table",
+                    "instant": true,
+                    "legendFormat": "high speed",
+                    "refId": "E"
+                }
+            ],
+            "title": "Status",
+            "transform": "table",
+            "type": "table-old"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "description": "Max: 10MB  \nRed Status: 9MB",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "decimals": 2,
+                    "mappings": [],
+                    "max": 10000000,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "semi-dark-green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 9000000
+                            }
+                        ]
+                    },
+                    "unit": "Bps"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 9,
+                "w": 12,
+                "x": 0,
+                "y": 16
+            },
+            "id": 31,
+            "options": {
+                "displayMode": "lcd",
+                "minVizHeight": 10,
+                "minVizWidth": 0,
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "last"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true
+            },
+            "pluginVersion": "9.3.1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "irate(ifHCOutOctets{job=\"$Job\"}[5m])",
+                    "intervalFactor": 1,
+                    "legendFormat": "{{ifName}} ({{ifAlias}})",
+                    "refId": "B"
+                }
+            ],
+            "title": "Out (Current)",
+            "type": "bargauge"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "description": "Max: 10MB  \nRed Status: 9MB",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "decimals": 2,
+                    "mappings": [],
+                    "max": 10000000,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "semi-dark-blue",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 9000000
+                            }
+                        ]
+                    },
+                    "unit": "Bps"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 9,
+                "w": 12,
+                "x": 12,
+                "y": 16
+            },
+            "id": 32,
+            "options": {
+                "displayMode": "lcd",
+                "minVizHeight": 10,
+                "minVizWidth": 0,
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "last"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true
+            },
+            "pluginVersion": "9.3.1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "irate(ifHCOutOctets{job=\"$Job\"}[5m])",
+                    "intervalFactor": 1,
+                    "legendFormat": "{{ifName}} ({{ifAlias}})",
+                    "refId": "B"
+                }
+            ],
+            "title": "In (Current)",
+            "type": "bargauge"
+        },
+        {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "links": []
+                },
+                "overrides": []
+            },
+            "fill": 1,
+            "fillGradient": 2,
+            "gridPos": {
+                "h": 10,
+                "w": 24,
+                "x": 0,
+                "y": 25
+            },
+            "hiddenSeries": false,
+            "id": 21,
+            "legend": {
+                "alignAsTable": true,
+                "avg": true,
+                "current": true,
+                "hideEmpty": false,
+                "hideZero": true,
+                "max": true,
+                "min": true,
+                "rightSide": true,
+                "show": true,
+                "total": false,
+                "values": true
+            },
+            "lines": true,
+            "linewidth": 1,
+            "nullPointMode": "null",
+            "options": {
+                "alertThreshold": true
+            },
+            "percentage": false,
+            "pluginVersion": "9.3.1",
+            "pointradius": 2,
+            "points": false,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "irate(ifHCOutOctets{job=\"$Job\"}[5m])",
+                    "instant": false,
+                    "intervalFactor": 1,
+                    "legendFormat": "Out: {{ifName}} ({{ifAlias}})",
+                    "refId": "A"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "-irate(ifHCInOctets{job=\"$Job\"}[5m])",
+                    "intervalFactor": 1,
+                    "legendFormat": "In: {{ifName}} ({{ifAlias}})",
+                    "refId": "B"
+                }
+            ],
+            "thresholds": [],
+            "timeRegions": [],
+            "title": "Out / In",
+            "tooltip": {
+                "shared": true,
+                "sort": 2,
+                "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+                "mode": "time",
+                "show": true,
+                "values": []
+            },
+            "yaxes": [
+                {
+                    "format": "decbytes",
+                    "logBase": 1,
+                    "show": true
+                },
+                {
+                    "format": "short",
+                    "logBase": 1,
+                    "show": false
+                }
+            ],
+            "yaxis": {
+                "align": false
+            }
+        }
+    ],
+    "refresh": "10s",
+    "schemaVersion": 37,
+    "style": "dark",
+    "tags": [
+        "Prometheus",
+        "snmp_exporter"
+    ],
+    "templating": {
+        "list": [
+            {
+                "current": {
+                    "selected": false,
+                    "text": "mikrotik",
+                    "value": "mikrotik"
+                },
+                "datasource": {
+                    "type": "prometheus",
+                    "uid": "PBFA97CFB590B2093"
+                },
+                "definition": "label_values(ifHCInOctets,  job)",
+                "hide": 0,
+                "includeAll": false,
+                "multi": false,
+                "name": "Job",
+                "options": [],
+                "query": {
+                    "query": "label_values(ifHCInOctets,  job)",
+                    "refId": "Prometheus-Job-Variable-Query"
+                },
+                "refresh": 1,
+                "regex": "",
+                "skipUrlSync": false,
+                "sort": 0,
+                "tagValuesQuery": "",
+                "tagsQuery": "",
+                "type": "query",
+                "useTags": false
+            },
+            {
+                "datasource": {
+                    "type": "prometheus",
+                    "uid": "PBFA97CFB590B2093"
+                },
+                "filters": [],
+                "hide": 0,
+                "name": "Filters",
+                "skipUrlSync": false,
+                "type": "adhoc"
+            }
+        ]
+    },
+    "time": {
+        "from": "now-1h",
+        "to": "now"
+    },
+    "timepicker": {
+        "refresh_intervals": [
+            "5s",
+            "10s",
+            "30s",
+            "1m",
+            "5m",
+            "15m",
+            "30m",
+            "1h",
+            "2h",
+            "1d"
+        ]
+    },
+    "timezone": "",
+    "title": "SNMP Stats",
+    "uid": "7qKD6I1Wk",
+    "version": 1,
+    "weekStart": ""
+}
