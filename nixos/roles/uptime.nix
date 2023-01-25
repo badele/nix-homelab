@@ -13,9 +13,10 @@ in
   services.uptime = {
     enable = roleEnabled;
     imageTag = "1.19.6";
+    port = 8083;
     extraOptions = [
       "-p"
-      "8083:3001"
+      "${toString cfg.port}:3001"
       "--dns"
       "${cfg.dns}"
       "-v"

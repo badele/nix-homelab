@@ -54,7 +54,6 @@ in
         inherit (cfg) extraOptions;
         environment = {
           TZ = "${config.time.timeZone}";
-          PORT = "${toString cfg.port}";
         };
         volumes = [
           "${configFile}:/app/public/conf.yml"

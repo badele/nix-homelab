@@ -116,13 +116,10 @@ in
     inherit settings;
     enable = roleEnabled;
     imageTag = "2.1.1";
+    port = 8081;
     extraOptions = [
-      "--label"
-      "traefik.http.routers.dashy.rule=Host(`dash.h`)"
-      "--label"
-      "traefik.http.services.dashy.loadBalancer.server.port=${toString config.services.dashy.port}"
-      "--network=host"
-      "--no-healthcheck"
+      "-p"
+      "${toString cfg.port}:80"
     ];
   };
 }

@@ -10,12 +10,13 @@ in
     ../modules/system/containers.nix
   ];
 
-  services.statping = {
+  services.statping = rec {
     enable = roleEnabled;
     imageTag = "v0.90.78";
+    port = 8082;
     extraOptions = [
       "-p"
-      "8082:8080"
+      "${toString cfg.port}:8080"
       "--dns"
       "${cfg.dns}"
       "-v"
