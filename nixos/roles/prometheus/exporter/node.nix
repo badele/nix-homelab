@@ -10,6 +10,11 @@
       node = {
         enable = true;
         enabledCollectors = [
+          "arp"
+          "dmi"
+          "hwmon"
+          "cpu"
+          "diskstats"
           "ethtool"
           "interrupts"
           "ksmd"
@@ -22,8 +27,33 @@
           "processes"
           "systemd"
           "tcpstat"
+          "zfs"
         ];
       };
     };
   };
+  services.prometheus.scrapeConfigs = [
+    {
+      job_name = "node";
+      scrape_interval = "10s";
+      static_configs = [
+        {
+          targets = [
+            "bootstore:${toString config.services.prometheus.exporters.node.port}"
+          ];
+          labels = {
+            alias = "bootstore";
+          };
+        }
+        {
+          targets = [
+            "rpi40:${toString config.services.prometheus.exporters.node.port}"
+          ];
+          labels = {
+            alias = "rpi40";
+          };
+        }
+      ];
+    }
+  ];
 }

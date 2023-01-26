@@ -8,6 +8,7 @@
     ../../roles # Automatically load service from <host.modules> sectionn from `homelab.json` file
     ../../roles/prometheus/exporter/node.nix
     ../../roles/prometheus/exporter/snmp.nix
+    ../../roles/prometheus/exporter/smokeping.nix
   ];
 
   networking.hostName = "bootstore";

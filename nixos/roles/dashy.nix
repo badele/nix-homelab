@@ -18,10 +18,10 @@ let
     appConfig = {
       theme = "nord-frost";
       layout = "auto";
-      iconSize = "large";
+      iconSize = "medium";
       language = "fr";
-      statusCheck = true;
-      hideComponents.hideSettings = true;
+      statusCheck = false;
+      hideComponents.hideSettings = false;
 
       # Todo: fix this and remove statusCheckUrl
       statusCheckAllowInsecure = true;
@@ -29,6 +29,7 @@ let
     sections = [
       {
         name = "Monitoring";
+        icon = "fas fa-monitor-heart-rate";
         items = [
           {
             title = "Uptime";
@@ -66,11 +67,6 @@ let
             statusCheckUrl = "http://loki.h/services";
             icon = "hl-loki";
           }
-        ];
-      }
-      {
-        name = "Nix";
-        items = [
           rec {
             title = "nix-cache";
             url = "https://nixcache.h/nix-cache-info";
@@ -81,16 +77,33 @@ let
       }
       {
         name = "Tools";
+        icon = "fas fa-rocket";
         items = [
+          {
+            title = "mikrotik";
+            url = "192.168.254.254";
+            icon = "hl-mikrotik";
+          }
+        ];
+      }
+      {
+        name = "Website";
+        icon = "fas fa-bookmark";
+        items = [
+          {
+            title = "Nix packages/Options";
+            url = "https://search.nixos.org/packages";
+            icon = "favicon";
+          }
           {
             title = "Google";
             url = "https://www.google.fr";
-            icon = "hl-google";
+            icon = "favicon";
           }
           {
             title = "Github";
             url = "https://github.com/badele";
-            icon = "hl-github";
+            icon = "favicon";
           }
         ];
       }

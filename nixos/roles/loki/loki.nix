@@ -2,7 +2,7 @@
 let
   roleName = "loki";
   roleEnabled = builtins.elem roleName config.homelab.currentHost.roles;
-  port_loki = 3030;
+  port_loki = 8084;
   cert = (import ../../../nixos/modules/system/homelab-cert.nix { inherit lib; }).environment.etc."homelab/wildcard-domain.crt.pem".source;
 in
 lib.mkIf (roleEnabled)

@@ -86,4 +86,29 @@ lib.mkIf (roleEnabled)
           log
         }
     '';
+
+  services.prometheus.scrapeConfigs = [
+    {
+      job_name = "coredns";
+      scrape_interval = "10s";
+      static_configs = [
+        {
+          targets = [
+            "bootstore:9153"
+          ];
+          labels = {
+            alias = "bootstore";
+          };
+        }
+        {
+          targets = [
+            "rpi40:9153"
+          ];
+          labels = {
+            alias = "rpi40";
+          };
+        }
+      ];
+    }
+  ];
 }
