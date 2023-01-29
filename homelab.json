@@ -45,7 +45,7 @@
         },
         "loki": {
             "icon": "https://grafana.com/static/img/logos/logo-loki.svg",
-            "description": "Scalable log aggregation system"
+            "description": "Scalable log aggregation system [service port 8084,9095]"
         },
         "prometheus": {
             "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Prometheus_software_logo.svg/2066px-Prometheus_software_logo.svg.png",
@@ -130,7 +130,6 @@
                 "nixcache",
                 "ntp",
                 "prometheus",
-                "promtail",
                 "smokeping",
                 "statping",
                 "uptime",

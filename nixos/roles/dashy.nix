@@ -27,6 +27,23 @@ let
       statusCheckAllowInsecure = true;
     };
     sections = [
+      # !!!!!!!!!!!!!!!!!!!!!!!
+      # You mush disable adblock browser
+      # !!!!!!!!!!!!!!!!!!!!!!!
+      {
+        name = "Server status";
+        widgets = [
+          {
+            type = "stat-ping";
+            options = {
+              hostname = "http://192.168.0.29:8082";
+              groupId = 0;
+              showChart = false;
+              showInfo = false;
+            };
+          }
+        ];
+      }
       {
         name = "Monitoring";
         icon = "fas fa-monitor-heart-rate";
