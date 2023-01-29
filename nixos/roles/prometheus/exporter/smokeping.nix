@@ -6,10 +6,14 @@ in
   services.prometheus.exporters.smokeping = {
     enable = true;
     hosts =
-      lib.mapAttrsToList
+      (lib.mapAttrsToList
         (hostname: hostinfo:
           "${hostname}.${domain}")
-        config.homelab.hosts;
+        config.homelab.hosts) ++
+      [
+        "www.google.fr"
+        "www.github.com"
+      ];
   };
 
   services.prometheus.scrapeConfigs = [

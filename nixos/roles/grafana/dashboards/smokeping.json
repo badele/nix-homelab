@@ -120,10 +120,12 @@
                         "type": "prometheus",
                         "uid": "PBFA97CFB590B2093"
                     },
-                    "expr": "sum(rate(smokeping_response_duration_seconds_bucket{host=\"$target\"}[1m])) by (le)",
+                    "editorMode": "code",
+                    "expr": "sum(rate(smokeping_response_duration_seconds_bucket{host=\"$target\"}[5m])) by (le)",
                     "format": "heatmap",
                     "intervalFactor": 1,
                     "legendFormat": "{{le}}",
+                    "range": true,
                     "refId": "A"
                 }
             ],
@@ -146,63 +148,121 @@
             "yBucketBound": "auto"
         },
         {
-            "aliasColors": {},
-            "bars": false,
-            "dashLength": 10,
-            "dashes": false,
             "datasource": {
                 "type": "prometheus",
                 "uid": "PBFA97CFB590B2093"
             },
             "fieldConfig": {
                 "defaults": {
-                    "links": []
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
+                        "axisLabel": "Loss %",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 10,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "never",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "links": [],
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "percentunit"
                 },
-                "overrides": []
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "Count"
+                        },
+                        "properties": [
+                            {
+                                "id": "custom.fillOpacity",
+                                "value": 0
+                            },
+                            {
+                                "id": "unit",
+                                "value": "none"
+                            },
+                            {
+                                "id": "decimals",
+                                "value": 0
+                            },
+                            {
+                                "id": "custom.axisLabel",
+                                "value": "Loss Packet"
+                            },
+                            {
+                                "id": "custom.lineStyle",
+                                "value": {
+                                    "dash": [
+                                        10,
+                                        10
+                                    ],
+                                    "fill": "dash"
+                                }
+                            }
+                        ]
+                    }
+                ]
             },
-            "fill": 1,
-            "fillGradient": 0,
             "gridPos": {
                 "h": 10,
                 "w": 12,
                 "x": 12,
                 "y": 0
             },
-            "hiddenSeries": false,
             "id": 4,
-            "legend": {
-                "alignAsTable": true,
-                "avg": false,
-                "current": true,
-                "max": false,
-                "min": false,
-                "rightSide": false,
-                "show": true,
-                "total": false,
-                "values": true
-            },
-            "lines": true,
-            "linewidth": 1,
-            "nullPointMode": "null",
             "options": {
-                "alertThreshold": true
-            },
-            "percentage": false,
-            "pluginVersion": "9.3.1",
-            "pointradius": 2,
-            "points": false,
-            "renderer": "flot",
-            "seriesOverrides": [
-                {
-                    "alias": "Count",
-                    "dashes": true,
-                    "fill": 0,
-                    "yaxis": 2
+                "legend": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "displayMode": "table",
+                    "placement": "bottom",
+                    "showLegend": true
+                },
+                "tooltip": {
+                    "mode": "multi",
+                    "sort": "none"
                 }
-            ],
-            "spaceLength": 10,
-            "stack": false,
-            "steppedLine": false,
+            },
+            "pluginVersion": "9.3.1",
             "targets": [
                 {
                     "datasource": {
@@ -223,97 +283,132 @@
                     "refId": "B"
                 }
             ],
-            "thresholds": [],
-            "timeRegions": [],
             "title": "Packet Loss - $target",
-            "tooltip": {
-                "shared": true,
-                "sort": 0,
-                "value_type": "individual"
-            },
-            "type": "graph",
-            "xaxis": {
-                "mode": "time",
-                "show": true,
-                "values": []
-            },
-            "yaxes": [
-                {
-                    "format": "percentunit",
-                    "label": "Loss %",
-                    "logBase": 1,
-                    "show": true
-                },
-                {
-                    "decimals": 0,
-                    "format": "none",
-                    "label": "Loss Packet",
-                    "logBase": 1,
-                    "show": true
-                }
-            ],
-            "yaxis": {
-                "align": false
-            }
+            "type": "timeseries"
         },
         {
-            "aliasColors": {},
-            "bars": false,
-            "dashLength": 10,
-            "dashes": false,
             "datasource": {
                 "type": "prometheus",
                 "uid": "PBFA97CFB590B2093"
             },
             "fieldConfig": {
                 "defaults": {
-                    "links": []
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 10,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "never",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "links": [],
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "s"
                 },
-                "overrides": []
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "Count"
+                        },
+                        "properties": [
+                            {
+                                "id": "custom.fillOpacity",
+                                "value": 0
+                            },
+                            {
+                                "id": "unit",
+                                "value": "none"
+                            },
+                            {
+                                "id": "decimals",
+                                "value": 0
+                            },
+                            {
+                                "id": "custom.axisPlacement",
+                                "value": "hidden"
+                            },
+                            {
+                                "id": "custom.axisLabel",
+                                "value": "Loss Packet"
+                            },
+                            {
+                                "id": "custom.lineStyle",
+                                "value": {
+                                    "dash": [
+                                        10,
+                                        10
+                                    ],
+                                    "fill": "dash"
+                                }
+                            }
+                        ]
+                    }
+                ]
             },
-            "fill": 1,
-            "fillGradient": 0,
             "gridPos": {
                 "h": 10,
                 "w": 24,
                 "x": 0,
                 "y": 10
             },
-            "hiddenSeries": false,
             "id": 5,
-            "legend": {
-                "alignAsTable": true,
-                "avg": true,
-                "current": true,
-                "max": true,
-                "min": true,
-                "rightSide": false,
-                "show": true,
-                "total": false,
-                "values": true
-            },
-            "lines": true,
-            "linewidth": 1,
-            "nullPointMode": "null",
             "options": {
-                "alertThreshold": true
-            },
-            "percentage": false,
-            "pluginVersion": "9.3.1",
-            "pointradius": 2,
-            "points": false,
-            "renderer": "flot",
-            "seriesOverrides": [
-                {
-                    "alias": "Count",
-                    "dashes": true,
-                    "fill": 0,
-                    "yaxis": 2
+                "legend": {
+                    "calcs": [
+                        "mean",
+                        "lastNotNull",
+                        "max",
+                        "min"
+                    ],
+                    "displayMode": "table",
+                    "placement": "bottom",
+                    "showLegend": true
+                },
+                "tooltip": {
+                    "mode": "multi",
+                    "sort": "none"
                 }
-            ],
-            "spaceLength": 10,
-            "stack": false,
-            "steppedLine": false,
+            },
+            "pluginVersion": "9.3.1",
             "targets": [
                 {
                     "datasource": {
@@ -325,38 +420,8 @@
                     "refId": "A"
                 }
             ],
-            "thresholds": [],
-            "timeRegions": [],
             "title": "Latency - $target",
-            "tooltip": {
-                "shared": true,
-                "sort": 0,
-                "value_type": "individual"
-            },
-            "type": "graph",
-            "xaxis": {
-                "mode": "time",
-                "show": true,
-                "values": []
-            },
-            "yaxes": [
-                {
-                    "format": "s",
-                    "label": "",
-                    "logBase": 1,
-                    "show": true
-                },
-                {
-                    "decimals": 0,
-                    "format": "none",
-                    "label": "Loss Packet",
-                    "logBase": 1,
-                    "show": false
-                }
-            ],
-            "yaxis": {
-                "align": false
-            }
+            "type": "timeseries"
         }
     ],
     "refresh": "30s",
@@ -368,8 +433,8 @@
             {
                 "current": {
                     "selected": true,
-                    "text": "bootstore.h",
-                    "value": "bootstore.h"
+                    "text": "brdroid.h",
+                    "value": "brdroid.h"
                 },
                 "datasource": {
                     "type": "prometheus",
@@ -397,7 +462,7 @@
         ]
     },
     "time": {
-        "from": "now-30m",
+        "from": "now-24h",
         "to": "now"
     },
     "timepicker": {
@@ -428,6 +493,6 @@
     "timezone": "",
     "title": "Smoke Ping",
     "uid": "i5aRaLaik",
-    "version": 1,
+    "version": 2,
     "weekStart": ""
 }

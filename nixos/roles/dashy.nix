@@ -20,30 +20,13 @@ let
       layout = "auto";
       iconSize = "medium";
       language = "fr";
-      statusCheck = false;
+      statusCheck = true;
       hideComponents.hideSettings = false;
-
-      # Todo: fix this and remove statusCheckUrl
-      statusCheckAllowInsecure = true;
     };
     sections = [
       # !!!!!!!!!!!!!!!!!!!!!!!
       # You mush disable adblock browser
       # !!!!!!!!!!!!!!!!!!!!!!!
-      {
-        name = "Server status";
-        widgets = [
-          {
-            type = "stat-ping";
-            options = {
-              hostname = "http://192.168.0.29:8082";
-              groupId = 0;
-              showChart = false;
-              showInfo = false;
-            };
-          }
-        ];
-      }
       {
         name = "Monitoring";
         icon = "fas fa-monitor-heart-rate";
@@ -98,7 +81,7 @@ let
         items = [
           {
             title = "mikrotik";
-            url = "192.168.254.254";
+            url = "http://192.168.254.254";
             icon = "hl-mikrotik";
           }
         ];
