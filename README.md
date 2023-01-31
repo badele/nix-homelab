@@ -31,87 +31,114 @@ This list generated with `inv docs.all-pages` command
         <th>Disk</th>
         <th>Description</th>
     </tr><tr>
-        <td><a href="./docs/hosts/box.md"><img width="32" src="https://logos-marques.com/wp-content/uploads/2022/03/SFR-Logo-1994.png"></a></td>
-        <td><a href="./docs/hosts/box.md">box</a>&nbsp;(192.168.0.1)</td>
-        <td></td>
-        <td>Sagem</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td>SFR internet box</td>
-    </tr><tr>
-        <td><a href="./docs/hosts/router-ext.md"><img width="32" src="https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32"></a></td>
-        <td><a href="./docs/hosts/router-ext.md">router-ext</a>&nbsp;(192.168.0.10)</td>
-        <td></td>
-        <td>MikroTik</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td>External home mikrotik router</td>
-    </tr><tr>
-        <td><a href="./docs/hosts/router-int.md"><img width="32" src="https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32"></a></td>
-        <td><a href="./docs/hosts/router-int.md">router-int</a>&nbsp;(192.168.254.254)</td>
-        <td></td>
-        <td>MikroTik</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td>Internal home mikrotik router</td>
-    </tr><tr>
-        <td><a href="./docs/hosts/sam.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Xfce_logo-footprint.svg/32px-Xfce_logo-footprint.svg.png"></a></td>
-        <td><a href="./docs/hosts/sam.md">sam</a>&nbsp;(192.168.0.18)</td>
-        <td></td>
-        <td>NixOS</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td>Samsung N110 Latop</td>
-    </tr><tr>
-        <td><a href="./docs/hosts/latino.md"><img width="32" src="https://styles.redditmedia.com/t5_6sciw0/styles/communityIcon_h3cvittvupi91.png"></a></td>
-        <td><a href="./docs/hosts/latino.md">latino</a>&nbsp;(192.168.254.152)</td>
-        <td>x86_64</td>
-        <td>NixOS</td>
-        <td>4</td>
-        <td>8 Go</td>
-        <td>465.76 GiB</td>
-        <td>Dell Latitude E5540 Latop</td>
-    </tr><tr>
-        <td><a href="./docs/hosts/rpi40.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Raspberry_Pi_logo.svg/32px-Raspberry_Pi_logo.svg.png"></a></td>
-        <td><a href="./docs/hosts/rpi40.md">rpi40</a>&nbsp;(192.168.0.17)</td>
-        <td>aarch64</td>
-        <td>NixOS</td>
-        <td>4</td>
-        <td>8 Go</td>
-        <td>495.48 GiB</td>
-        <td>The Raspberry PI 4 storage server</td>
-    </tr><tr>
-        <td><a href="./docs/hosts/bootstore.md"><img width="32" src="https://simpleicons.org/icons/databricks.svg"></a></td>
-        <td><a href="./docs/hosts/bootstore.md">bootstore</a>&nbsp;(192.168.0.29)</td>
-        <td>x86_64</td>
-        <td>NixOS</td>
-        <td>2</td>
-        <td>8 Go</td>
-        <td>3.64 TiB</td>
-        <td>HP Proliant Microserver N40L storage server</td>
-    </tr><tr>
-        <td><a href="./docs/hosts/badwork.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png"></a></td>
-        <td><a href="./docs/hosts/badwork.md">badwork</a>&nbsp;(192.168.254.177)</td>
-        <td>x86_64</td>
-        <td>Nix</td>
-        <td>12</td>
-        <td>32 Go</td>
-        <td>953.87 GiB</td>
-        <td>A work thinkpad</td>
-    </tr><tr>
-        <td><a href="./docs/hosts/brdroid.md"><img width="32" src="https://cdn-icons-png.flaticon.com/512/38/38002.png"></a></td>
-        <td><a href="./docs/hosts/brdroid.md">brdroid</a>&nbsp;(192.168.254.120)</td>
-        <td></td>
-        <td>Android</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td>Bruno's phone</td>
-    </tr></table>
+            <td><a href="./docs/hosts/box.md"><img width="32" src="https://logos-marques.com/wp-content/uploads/2022/03/SFR-Logo-1994.png"></a></td>
+            <td><a href="./docs/hosts/box.md">box</a>&nbsp;(192.168.0.1)</td>
+            <td></td>
+            <td>Sagem</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>SFR internet box</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/router-ext.md"><img width="32" src="https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32"></a></td>
+            <td><a href="./docs/hosts/router-ext.md">router-ext</a>&nbsp;(192.168.0.10)</td>
+            <td></td>
+            <td>MikroTik</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>External home mikrotik router</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/router-int.md"><img width="32" src="https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32"></a></td>
+            <td><a href="./docs/hosts/router-int.md">router-int</a>&nbsp;(192.168.254.254)</td>
+            <td></td>
+            <td>MikroTik</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Internal home mikrotik router</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/sam.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Xfce_logo-footprint.svg/32px-Xfce_logo-footprint.svg.png"></a></td>
+            <td><a href="./docs/hosts/sam.md">sam</a>&nbsp;(192.168.0.18)</td>
+            <td></td>
+            <td>NixOS</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Samsung N110 Latop</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/latino.md"><img width="32" src="https://styles.redditmedia.com/t5_6sciw0/styles/communityIcon_h3cvittvupi91.png"></a></td>
+            <td><a href="./docs/hosts/latino.md">latino</a>&nbsp;(192.168.254.152)</td>
+            <td>4</td>
+            <td>NixOS</td>
+            <td></td>
+            <td>8 Go</td>
+            <td>465.76 GiB</td>
+            <td>Dell Latitude E5540 Latop</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/rpi40.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Raspberry_Pi_logo.svg/32px-Raspberry_Pi_logo.svg.png"></a></td>
+            <td><a href="./docs/hosts/rpi40.md">rpi40</a>&nbsp;(192.168.0.17)</td>
+            <td>4</td>
+            <td>NixOS</td>
+            <td></td>
+            <td>8 Go</td>
+            <td>495.48 GiB</td>
+            <td>The Raspberry PI 4 storage server</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/bootstore.md"><img width="32" src="https://simpleicons.org/icons/databricks.svg"></a></td>
+            <td><a href="./docs/hosts/bootstore.md">bootstore</a>&nbsp;(192.168.0.29)</td>
+            <td>2</td>
+            <td>NixOS</td>
+            <td></td>
+            <td>8 Go</td>
+            <td>3.64 TiB</td>
+            <td>HP Proliant Microserver N40L storage server</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/badwork.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png"></a></td>
+            <td><a href="./docs/hosts/badwork.md">badwork</a>&nbsp;(192.168.254.177)</td>
+            <td>12</td>
+            <td>Nix</td>
+            <td></td>
+            <td>32 Go</td>
+            <td>953.87 GiB</td>
+            <td>A work thinkpad</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/brdroid.md"><img width="32" src="https://cdn-icons-png.flaticon.com/512/38/38002.png"></a></td>
+            <td><a href="./docs/hosts/brdroid.md">brdroid</a>&nbsp;(192.168.254.120)</td>
+            <td></td>
+            <td>Android</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Bruno's phone</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/tv-chromecast.md"><img width="32" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrW-wZZhmKpadJqRe73njFwEDLzh-jIn1XaSbCVhgMmoN46pgj6M4Fq1tWyr5w_z_HcP4&usqp=CAU"></a></td>
+            <td><a href="./docs/hosts/tv-chromecast.md">tv-chromecast</a>&nbsp;(192.168.254.105)</td>
+            <td></td>
+            <td>Chromecast</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>TV Chromecast</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/bedroom-googlemini-A.md"><img width="32" src="https://c.clc2l.com/t/g/o/google-home-wxDa7w.png"></a></td>
+            <td><a href="./docs/hosts/bedroom-googlemini-A.md">bedroom-googlemini-A</a>&nbsp;(192.168.254.191)</td>
+            <td></td>
+            <td>GoogleMini</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Google Mini room A</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/bedroom-googlemini-C.md"><img width="32" src="https://c.clc2l.com/t/g/o/google-home-wxDa7w.png"></a></td>
+            <td><a href="./docs/hosts/bedroom-googlemini-C.md">bedroom-googlemini-C</a>&nbsp;(192.168.254.193)</td>
+            <td></td>
+            <td>GoogleMini</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Google Mini room C</td>
+        </tr></table>
 
 [comment]: (<<HOSTS)
 
@@ -159,7 +186,7 @@ This list generated with `inv docs.all-pages` command
         <td><a href="./docs/loki.md"><img width="32" src="https://grafana.com/static/img/logos/logo-loki.svg"></a></td>
         <td><a href="./docs/loki.md">loki</a></td>
         <td>bootstore</td>
-        <td>Scalable log aggregation system</td>
+        <td>Scalable log aggregation system [service port 8084,9095]</td>
         <tr>
         <td><a href="./docs/nfs.md"><img width="32" src="https://logo-marque.com/wp-content/uploads/2021/09/Need-For-Speed-Logo-2019-2020.jpg"></a></td>
         <td><a href="./docs/nfs.md">nfs</a></td>

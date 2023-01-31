@@ -26,10 +26,81 @@
     "fiscalYearStartMonth": 0,
     "gnetId": 11335,
     "graphTooltip": 0,
-    "id": 145,
+    "id": 170,
     "links": [],
     "liveNow": false,
     "panels": [
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "custom": {
+                        "fillOpacity": 70,
+                        "lineWidth": 0,
+                        "spanNulls": false
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 7,
+                "w": 24,
+                "x": 0,
+                "y": 0
+            },
+            "id": 7,
+            "options": {
+                "alignValue": "left",
+                "legend": {
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "showLegend": true
+                },
+                "mergeValues": true,
+                "rowHeight": 0.9,
+                "showValue": "never",
+                "tooltip": {
+                    "mode": "single",
+                    "sort": "none"
+                }
+            },
+            "pluginVersion": "9.3.1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "editorMode": "code",
+                    "exemplar": false,
+                    "expr": "sum by(host) (rate(smokeping_response_duration_seconds_bucket{host=~\"$target\", le=\"6.5536\"}[5m])) > 0",
+                    "format": "time_series",
+                    "instant": false,
+                    "legendFormat": "{{host}}",
+                    "range": true,
+                    "refId": "A"
+                }
+            ],
+            "title": "Is up",
+            "transparent": true,
+            "type": "state-timeline"
+        },
         {
             "cards": {},
             "color": {
@@ -60,10 +131,10 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 10,
-                "w": 12,
+                "h": 7,
+                "w": 24,
                 "x": 0,
-                "y": 0
+                "y": 7
             },
             "heatmap": {},
             "hideZeroBuckets": false,
@@ -121,7 +192,7 @@
                         "uid": "PBFA97CFB590B2093"
                     },
                     "editorMode": "code",
-                    "expr": "sum(rate(smokeping_response_duration_seconds_bucket{host=\"$target\"}[5m])) by (le)",
+                    "expr": "sum(rate(smokeping_response_duration_seconds_bucket{host=~\"$target\"}[5m])) by (le)",
                     "format": "heatmap",
                     "intervalFactor": 1,
                     "legendFormat": "{{le}}",
@@ -146,6 +217,148 @@
                 "show": true
             },
             "yBucketBound": "auto"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 10,
+                        "gradientMode": "opacity",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineStyle": {
+                            "fill": "solid"
+                        },
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "never",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "links": [],
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "s"
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "Count"
+                        },
+                        "properties": [
+                            {
+                                "id": "custom.fillOpacity",
+                                "value": 0
+                            },
+                            {
+                                "id": "unit",
+                                "value": "none"
+                            },
+                            {
+                                "id": "decimals",
+                                "value": 0
+                            },
+                            {
+                                "id": "custom.axisPlacement",
+                                "value": "hidden"
+                            },
+                            {
+                                "id": "custom.axisLabel",
+                                "value": "Loss Packet"
+                            },
+                            {
+                                "id": "custom.lineStyle",
+                                "value": {
+                                    "dash": [
+                                        10,
+                                        10
+                                    ],
+                                    "fill": "dash"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 12,
+                "x": 0,
+                "y": 14
+            },
+            "id": 5,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "mean",
+                        "lastNotNull",
+                        "max",
+                        "min"
+                    ],
+                    "displayMode": "table",
+                    "placement": "bottom",
+                    "showLegend": true
+                },
+                "tooltip": {
+                    "mode": "multi",
+                    "sort": "none"
+                }
+            },
+            "pluginVersion": "9.3.1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "editorMode": "code",
+                    "expr": "smokeping_response_duration_seconds_sum{host=~\"$target\"} / smokeping_response_duration_seconds_count{host=~\"$target\"}",
+                    "legendFormat": "{{host}}",
+                    "range": true,
+                    "refId": "A"
+                }
+            ],
+            "title": "Latency - $target",
+            "type": "timeseries"
         },
         {
             "datasource": {
@@ -245,7 +458,7 @@
                 "h": 10,
                 "w": 12,
                 "x": 12,
-                "y": 0
+                "y": 14
             },
             "id": 4,
             "options": {
@@ -269,8 +482,10 @@
                         "type": "prometheus",
                         "uid": "PBFA97CFB590B2093"
                     },
-                    "expr": "(smokeping_requests_total{host=\"$target\"} - smokeping_response_duration_seconds_count{host=\"$target\"})/smokeping_requests_total{host=\"$target\"} ",
-                    "legendFormat": "Percentage",
+                    "editorMode": "code",
+                    "expr": "(smokeping_requests_total{host=~\"$target\"} - smokeping_response_duration_seconds_count{host=~\"$target\"})/smokeping_requests_total{host=~\"$target\"} ",
+                    "legendFormat": "{{host}} %",
+                    "range": true,
                     "refId": "A"
                 },
                 {
@@ -278,163 +493,45 @@
                         "type": "prometheus",
                         "uid": "PBFA97CFB590B2093"
                     },
-                    "expr": "(smokeping_requests_total{host=\"$target\"} - smokeping_response_duration_seconds_count{host=\"$target\"})",
+                    "editorMode": "code",
+                    "expr": "(smokeping_requests_total{host=~\"$target\"} - smokeping_response_duration_seconds_count{host=~\"$target\"})",
                     "legendFormat": "Count",
+                    "range": true,
                     "refId": "B"
                 }
             ],
             "title": "Packet Loss - $target",
-            "type": "timeseries"
-        },
-        {
-            "datasource": {
-                "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
-            },
-            "fieldConfig": {
-                "defaults": {
-                    "color": {
-                        "mode": "palette-classic"
-                    },
-                    "custom": {
-                        "axisCenteredZero": false,
-                        "axisColorMode": "text",
-                        "axisLabel": "",
-                        "axisPlacement": "auto",
-                        "barAlignment": 0,
-                        "drawStyle": "line",
-                        "fillOpacity": 10,
-                        "gradientMode": "none",
-                        "hideFrom": {
-                            "legend": false,
-                            "tooltip": false,
-                            "viz": false
-                        },
-                        "lineInterpolation": "linear",
-                        "lineWidth": 1,
-                        "pointSize": 5,
-                        "scaleDistribution": {
-                            "type": "linear"
-                        },
-                        "showPoints": "never",
-                        "spanNulls": false,
-                        "stacking": {
-                            "group": "A",
-                            "mode": "none"
-                        },
-                        "thresholdsStyle": {
-                            "mode": "off"
-                        }
-                    },
-                    "links": [],
-                    "mappings": [],
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
-                            {
-                                "color": "green",
-                                "value": null
-                            },
-                            {
-                                "color": "red",
-                                "value": 80
-                            }
-                        ]
-                    },
-                    "unit": "s"
-                },
-                "overrides": [
-                    {
-                        "matcher": {
-                            "id": "byName",
-                            "options": "Count"
-                        },
-                        "properties": [
-                            {
-                                "id": "custom.fillOpacity",
-                                "value": 0
-                            },
-                            {
-                                "id": "unit",
-                                "value": "none"
-                            },
-                            {
-                                "id": "decimals",
-                                "value": 0
-                            },
-                            {
-                                "id": "custom.axisPlacement",
-                                "value": "hidden"
-                            },
-                            {
-                                "id": "custom.axisLabel",
-                                "value": "Loss Packet"
-                            },
-                            {
-                                "id": "custom.lineStyle",
-                                "value": {
-                                    "dash": [
-                                        10,
-                                        10
-                                    ],
-                                    "fill": "dash"
-                                }
-                            }
-                        ]
-                    }
-                ]
-            },
-            "gridPos": {
-                "h": 10,
-                "w": 24,
-                "x": 0,
-                "y": 10
-            },
-            "id": 5,
-            "options": {
-                "legend": {
-                    "calcs": [
-                        "mean",
-                        "lastNotNull",
-                        "max",
-                        "min"
-                    ],
-                    "displayMode": "table",
-                    "placement": "bottom",
-                    "showLegend": true
-                },
-                "tooltip": {
-                    "mode": "multi",
-                    "sort": "none"
-                }
-            },
-            "pluginVersion": "9.3.1",
-            "targets": [
-                {
-                    "datasource": {
-                        "type": "prometheus",
-                        "uid": "PBFA97CFB590B2093"
-                    },
-                    "expr": "smokeping_response_duration_seconds_sum{host=\"$target\"} / smokeping_response_duration_seconds_count{host=\"$target\"}",
-                    "legendFormat": "{{host}}",
-                    "refId": "A"
-                }
-            ],
-            "title": "Latency - $target",
             "type": "timeseries"
         }
     ],
     "refresh": "30s",
     "schemaVersion": 37,
     "style": "dark",
-    "tags": [],
+    "tags": [
+        "isup",
+        "smokeping"
+    ],
     "templating": {
         "list": [
             {
                 "current": {
                     "selected": true,
-                    "text": "brdroid.h",
-                    "value": "brdroid.h"
+                    "text": [
+                        "bedroom-googlemini-A.h",
+                        "bedroom-googlemini-C.h",
+                        "bootstore.h",
+                        "brdroid.h",
+                        "tv-chromecast.h",
+                        "rpi40.h"
+                    ],
+                    "value": [
+                        "bedroom-googlemini-A.h",
+                        "bedroom-googlemini-C.h",
+                        "bootstore.h",
+                        "brdroid.h",
+                        "tv-chromecast.h",
+                        "rpi40.h"
+                    ]
                 },
                 "datasource": {
                     "type": "prometheus",
@@ -442,8 +539,8 @@
                 },
                 "definition": "label_values(smokeping_response_duration_seconds_bucket, host)",
                 "hide": 0,
-                "includeAll": false,
-                "multi": false,
+                "includeAll": true,
+                "multi": true,
                 "name": "target",
                 "options": [],
                 "query": {
@@ -491,8 +588,8 @@
         ]
     },
     "timezone": "",
-    "title": "Smoke Ping",
-    "uid": "i5aRaLaik",
-    "version": 2,
+    "title": "Hosts isup and Smoke Ping graph",
+    "uid": "isupaSmok",
+    "version": 1,
     "weekStart": ""
 }

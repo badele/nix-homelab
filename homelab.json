@@ -164,6 +164,26 @@
             "roles": [
                 "wireguard"
             ]
+        },
+        "tv-chromecast": {
+            "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrW-wZZhmKpadJqRe73njFwEDLzh-jIn1XaSbCVhgMmoN46pgj6M4Fq1tWyr5w_z_HcP4&usqp=CAU",
+            "ipv4": "192.168.254.105",
+            "description": "TV Chromecast",
+            "os": "Chromecast"
+            
+        },
+        "bedroom-googlemini-A": {
+            "icon": "https://c.clc2l.com/t/g/o/google-home-wxDa7w.png",
+            "ipv4": "192.168.254.191",
+            "description": "Google Mini room A",
+            "os": "GoogleMini"
+            
+        },
+        "bedroom-googlemini-C": {
+            "icon": "https://c.clc2l.com/t/g/o/google-home-wxDa7w.png",
+            "ipv4": "192.168.254.193",
+            "description": "Google Mini room C",
+            "os": "GoogleMini"
         }
     }
 }

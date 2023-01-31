@@ -1,0 +1,101 @@
+[
+    {
+        "@protocol": "tcp",
+        "@portid": "22",
+        "service": {
+            "@name": "ssh",
+            "@product": "OpenSSH",
+            "@extrainfo": "protocol 2.0"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "53",
+        "service": {
+            "@name": "tcpwrapped"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "80",
+        "service": {
+            "@name": "http",
+            "@product": "nginx"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "443",
+        "service": {
+            "@name": "http",
+            "@product": "nginx",
+            "@tunnel": "ssl"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "3000",
+        "service": {
+            "@name": "ppp"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "3031",
+        "service": {
+            "@name": "eppc"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "5000",
+        "service": {
+            "@name": "upnp"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "8081",
+        "service": {
+            "@name": "http",
+            "@product": "Node.js Express framework"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "8082",
+        "service": {
+            "@name": "blackice-alerts"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "8083",
+        "service": {
+            "@name": "us-srv"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "8084",
+        "service": {
+            "@name": "http",
+            "@product": "Golang net/http server",
+            "@extrainfo": "Go-IPFS json-rpc or InfluxDB API"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "9090",
+        "service": {
+            "@name": "zeus-admin"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "9100",
+        "service": {
+            "@name": "jetdirect"
+        }
+    }
+]

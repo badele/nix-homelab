@@ -1,7 +1,7 @@
  - system: `"aarch64-linux"`
- - host os: `Linux 5.15.74, NixOS, 23.05 (Stoat), 23.05.20221208.2787fc7`
+ - host os: `Linux 5.15.74, NixOS, 23.05 (Stoat), 23.05.20230105.a518c77`
  - multi-user?: `yes`
  - sandbox: `yes`
  - version: `nix-env (Nix) 2.12.0`
- - nixpkgs: `/nix/store/f97znrjbr0rm0i013hwyx0akq5vb5kll-2i8zqmz2cqa0grjagw94z7g47199db9k-source`
+ - nixpkgs: `/nix/store/as4rk0fwhkycnh5gzjbfhk21hkrkcs5c-bkxnsyy1bdr7rl2ll5icc10crspwqqxj-source`
 

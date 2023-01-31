@@ -4,6 +4,7 @@
 from invoke import run
 from deploykit import DeployHost, DeployGroup
 
+import os
 import sys
 import json
 import re
@@ -94,19 +95,32 @@ def generateHostsList() -> str:
 
     # Hosts loop
     for hn in hosts:
-        with open(f'docs/hosts/{hn}/summaries.json', 'r') as fs:
-            sinfo = json.load(fs)
+        summariespath = f'docs/hosts/{hn}/summaries.json'
+        if os.path.exists(summariespath):
+            with open(summariespath, 'r') as fs:
+                sinfo = json.load(fs)
 
-            hosts_table += f'''<tr>
-        <td><a href="./docs/hosts/{hn}.md"><img width="32" src="{hosts[hn]["icon"]}"></a></td>
-        <td><a href="./docs/hosts/{hn}.md">{hn}</a>&nbsp;({hosts[hn]["ipv4"]})</td>
-        <td>{sinfo["cpu"]["arch"]}</td>
-        <td>{hosts[hn]["os"]}</td>
-        <td>{sinfo["cpu"]["nb"]}</td>
-        <td>{sinfo["memory"]}</td>
-        <td>{sinfo["disk"]}</td>
-        <td>{hosts[hn]["description"]}</td>
-    </tr>'''
+        cpuarch = "" 
+        if "cpu" in sinfo and "arch" in sinfo["cpu"]:
+            cpuarch =  sinfo["cpu"]["arch"]
+        cpunb = ""
+        if "cpu" in sinfo and "nb" in sinfo["cpu"]:
+            cpuarch =  sinfo["cpu"]["nb"]
+
+        smemory = sinfo['memory'] if "memory" in sinfo else ''
+        sdisk = sinfo['disk'] if "disk" in sinfo else ''
+        sdescription = sinfo['description'] if "description" in sinfo else ''
+
+        hosts_table += f'''<tr>
+            <td><a href="./docs/hosts/{hn}.md"><img width="32" src="{hosts[hn]["icon"]}"></a></td>
+            <td><a href="./docs/hosts/{hn}.md">{hn}</a>&nbsp;({hosts[hn]["ipv4"]})</td>
+            <td>{cpuarch}</td>
+            <td>{hosts[hn]["os"]}</td>
+            <td>{cpunb}</td>
+            <td>{smemory}</td>
+            <td>{sdisk}</td>
+            <td>{hosts[hn]["description"]}</td>
+        </tr>'''
 
     hosts_table += "</table>"
 
