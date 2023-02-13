@@ -40,8 +40,8 @@ This list generated with `inv docs.all-pages` command
             <td></td>
             <td>SFR internet box</td>
         </tr><tr>
-            <td><a href="./docs/hosts/router-ext.md"><img width="32" src="https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32"></a></td>
-            <td><a href="./docs/hosts/router-ext.md">router-ext</a>&nbsp;(192.168.0.10)</td>
+            <td><a href="./docs/hosts/router-living.md"><img width="32" src="https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32"></a></td>
+            <td><a href="./docs/hosts/router-living.md">router-living</a>&nbsp;(192.168.254.254)</td>
             <td></td>
             <td>MikroTik</td>
             <td></td>
@@ -49,14 +49,23 @@ This list generated with `inv docs.all-pages` command
             <td></td>
             <td>External home mikrotik router</td>
         </tr><tr>
-            <td><a href="./docs/hosts/router-int.md"><img width="32" src="https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32"></a></td>
-            <td><a href="./docs/hosts/router-int.md">router-int</a>&nbsp;(192.168.254.254)</td>
+            <td><a href="./docs/hosts/router-bedroom.md"><img width="32" src="https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32"></a></td>
+            <td><a href="./docs/hosts/router-bedroom.md">router-bedroom</a>&nbsp;(192.168.254.253)</td>
             <td></td>
             <td>MikroTik</td>
             <td></td>
             <td></td>
             <td></td>
-            <td>Internal home mikrotik router</td>
+            <td>Bedroom home mikrotik router</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/router-homeoffice.md"><img width="32" src="https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32"></a></td>
+            <td><a href="./docs/hosts/router-homeoffice.md">router-homeoffice</a>&nbsp;(192.168.254.252)</td>
+            <td></td>
+            <td>MikroTik</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Office home mikrotik router</td>
         </tr><tr>
             <td><a href="./docs/hosts/sam.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Xfce_logo-footprint.svg/32px-Xfce_logo-footprint.svg.png"></a></td>
             <td><a href="./docs/hosts/sam.md">sam</a>&nbsp;(192.168.0.18)</td>
@@ -77,7 +86,7 @@ This list generated with `inv docs.all-pages` command
             <td>Dell Latitude E5540 Latop</td>
         </tr><tr>
             <td><a href="./docs/hosts/rpi40.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Raspberry_Pi_logo.svg/32px-Raspberry_Pi_logo.svg.png"></a></td>
-            <td><a href="./docs/hosts/rpi40.md">rpi40</a>&nbsp;(192.168.0.17)</td>
+            <td><a href="./docs/hosts/rpi40.md">rpi40</a>&nbsp;(192.168.254.101)</td>
             <td>4</td>
             <td>NixOS</td>
             <td></td>
@@ -86,7 +95,7 @@ This list generated with `inv docs.all-pages` command
             <td>The Raspberry PI 4 storage server</td>
         </tr><tr>
             <td><a href="./docs/hosts/bootstore.md"><img width="32" src="https://simpleicons.org/icons/databricks.svg"></a></td>
-            <td><a href="./docs/hosts/bootstore.md">bootstore</a>&nbsp;(192.168.0.29)</td>
+            <td><a href="./docs/hosts/bootstore.md">bootstore</a>&nbsp;(192.168.254.100)</td>
             <td>2</td>
             <td>NixOS</td>
             <td></td>
@@ -103,14 +112,41 @@ This list generated with `inv docs.all-pages` command
             <td>953.87 GiB</td>
             <td>A work thinkpad</td>
         </tr><tr>
-            <td><a href="./docs/hosts/brdroid.md"><img width="32" src="https://cdn-icons-png.flaticon.com/512/38/38002.png"></a></td>
-            <td><a href="./docs/hosts/brdroid.md">brdroid</a>&nbsp;(192.168.254.120)</td>
+            <td><a href="./docs/hosts/badphone.md"><img width="32" src="https://cdn-icons-png.flaticon.com/512/38/38002.png"></a></td>
+            <td><a href="./docs/hosts/badphone.md">badphone</a>&nbsp;(192.168.254.120)</td>
             <td></td>
             <td>Android</td>
             <td></td>
             <td></td>
             <td></td>
             <td>Bruno's phone</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/ladphone.md"><img width="32" src="https://cdn-icons-png.flaticon.com/512/38/38002.png"></a></td>
+            <td><a href="./docs/hosts/ladphone.md">ladphone</a>&nbsp;(192.168.254.106)</td>
+            <td></td>
+            <td>Android</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Lucas's phone</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/sadphone.md"><img width="32" src="https://cdn-icons-png.flaticon.com/512/38/38002.png"></a></td>
+            <td><a href="./docs/hosts/sadphone.md">sadphone</a>&nbsp;(192.168.254.110)</td>
+            <td></td>
+            <td>Android</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Steph's phone</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/loadphone.md"><img width="32" src="https://img.freepik.com/icones-gratuites/pomme_318-162866.jpg"></a></td>
+            <td><a href="./docs/hosts/loadphone.md">loadphone</a>&nbsp;(192.168.254.111)</td>
+            <td></td>
+            <td>Iphone</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Lou's phone</td>
         </tr><tr>
             <td><a href="./docs/hosts/tv-chromecast.md"><img width="32" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrW-wZZhmKpadJqRe73njFwEDLzh-jIn1XaSbCVhgMmoN46pgj6M4Fq1tWyr5w_z_HcP4&usqp=CAU"></a></td>
             <td><a href="./docs/hosts/tv-chromecast.md">tv-chromecast</a>&nbsp;(192.168.254.105)</td>
@@ -160,7 +196,7 @@ This list generated with `inv docs.all-pages` command
     </tr><tr>
         <td><a href="./docs/wireguard.md"><img width="32" src="https://cdn.icon-icons.com/icons2/2699/PNG/512/wireguard_logo_icon_168760.png"></a></td>
         <td><a href="./docs/wireguard.md">wireguard</a></td>
-        <td>router-int, brdroid</td>
+        <td>router-living, badphone</td>
         <td>An VPN client/server alternative to IPSec and OpenVPN</td>
         <tr>
         <td><a href="./docs/coredns.md"><img width="32" src="https://raw.githubusercontent.com/coredns/logo/master/Icon/CoreDNS_Colour_Icon.png"></a></td>
@@ -201,7 +237,7 @@ This list generated with `inv docs.all-pages` command
         <td><a href="./docs/prometheus.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Prometheus_software_logo.svg/2066px-Prometheus_software_logo.svg.png"></a></td>
         <td><a href="./docs/prometheus.md">prometheus</a></td>
         <td>bootstore</td>
-        <td>Monitoring system and time series database</td>
+        <td>Monitoring system and time series database [service port 9090]</td>
         <tr>
         <td><a href="./docs/smokeping.md"><img width="32" src="https://img.freepik.com/vecteurs-premium/cardiogramme-cardiaque-isole-blanc_97886-1185.jpg?w=2000"></a></td>
         <td><a href="./docs/smokeping.md">smokeping</a></td>

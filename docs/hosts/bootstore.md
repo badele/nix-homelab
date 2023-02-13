@@ -125,7 +125,7 @@ passwd
 # From other computer, enter to deploy environment
 # NOTE: Use <SPACE> before command for not storing command in bash history (for secure your passwords)
 nix develop
-export TARGETIP=192.168.0.29
+export TARGETIP=192.168.254.100
 export TARGETNAME=bootstore
 
 ssh-copy-id root@${TARGETIP}

@@ -520,7 +520,7 @@
                         "bedroom-googlemini-A.h",
                         "bedroom-googlemini-C.h",
                         "bootstore.h",
-                        "brdroid.h",
+                        "badphone.h",
                         "tv-chromecast.h",
                         "rpi40.h"
                     ],
@@ -528,7 +528,7 @@
                         "bedroom-googlemini-A.h",
                         "bedroom-googlemini-C.h",
                         "bootstore.h",
-                        "brdroid.h",
+                        "badphone.h",
                         "tv-chromecast.h",
                         "rpi40.h"
                     ]

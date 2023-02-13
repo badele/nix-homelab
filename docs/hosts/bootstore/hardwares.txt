@@ -1,12 +1,12 @@
 System:    Kernel: 5.15.86 x86_64 bits: 64 compiler: gcc v: 11.3.0 
            parameters: BOOT_IMAGE=(hd0,msdos1)//kernels/2dgaqj44642crwhnjyisgq93nqhf9xqh-linux-5.15.86-bzImage 
-           init=/nix/store/i0f8qsbfn2grhn6pprnr3qs1l2w59klh-nixos-system-bootstore-23.05.20230105.a518c77/init 
+           init=/nix/store/fjj4v4byqlm1iww2d884yi8pl3n9f18d-nixos-system-bootstore-23.05.20230105.a518c77/init 
            nohibernate loglevel=4 
            Console: N/A Distro: NixOS 23.05 (Stoat) 
 Machine:   Type: Desktop System: HP product: ProLiant MicroServer v: N/A serial: <filter> Chassis: 
            type: 7 serial: N/A 
            Mobo: N/A model: N/A serial: N/A BIOS: HP v: O41 date: 07/29/2011 
-Memory:    RAM: total: 7.65 GiB used: 4.44 GiB (58.0%) 
+Memory:    RAM: total: 7.65 GiB used: 3.87 GiB (50.6%) 
            Array-1: capacity: 8 GiB slots: 2 EC: Single-bit ECC max-module-size: 4 GiB note: est. 
            Device-1: DIMM0 size: 4 GiB speed: 1333 MT/s type: Other detail: synchronous 
            bus-width: 64 bits total: 72 bits manufacturer: N/A part-no: N/A serial: N/A 
@@ -42,43 +42,42 @@ Network:   Device-1: Broadcom NetXtreme BCM5723 Gigabit Ethernet PCIe
            chip-ID: 14e4:165b class-ID: 0200 
            IF: enp2s0 state: up speed: 1000 Mbps duplex: full mac: <filter> 
            IP v4: <filter> scope: global 
+           IP v4: <filter> type: secondary dynamic noprefixroute scope: global broadcast: <filter> 
            IF-ID-1: docker0 state: up speed: 10000 Mbps duplex: unknown mac: <filter> 
            IP v4: <filter> scope: global broadcast: <filter> 
-           IF-ID-2: veth2ab1f94 state: up speed: 10000 Mbps duplex: full mac: <filter> 
-           IF-ID-3: vethd3c4f3d state: up speed: 10000 Mbps duplex: full mac: <filter> 
-           IF-ID-4: vethdbf11be state: up speed: 10000 Mbps duplex: full mac: <filter> 
+           IF-ID-2: vetha07cc87 state: up speed: 10000 Mbps duplex: full mac: <filter> 
+           IF-ID-3: vethce46263 state: up speed: 10000 Mbps duplex: full mac: <filter> 
+           IF-ID-4: vethdc7ad24 state: up speed: 10000 Mbps duplex: full mac: <filter> 
            WAN IP: <filter> 
-RAID:      Device-1: zroot type: zfs status: ONLINE level: mirror-0 size: 1.8 TiB free: 1.79 TiB 
-           allocated: 11.1 GiB 
+RAID:      Device-1: zroot type: zfs status: ONLINE level: mirror-0 size: 1.8 TiB free: 1.78 TiB 
+           allocated: 12.5 GiB 
            Components: Online: N/A 
-Drives:    Local Storage: total: raw: 3.64 TiB usable: 5.44 TiB used: 11.09 GiB (0.2%) 
+Drives:    Local Storage: total: raw: 3.64 TiB usable: 5.44 TiB used: 12.46 GiB (0.2%) 
            ID-1: /dev/sda maj-min: 8:0 vendor: Seagate model: ST2000DM001-1ER164 
            family: Barracuda 7200.14 (AF) size: 1.82 TiB block-size: physical: 4096 B 
            logical: 512 B sata: 3.1 speed: 3.0 Gb/s rotation: 7200 rpm serial: <filter> rev: CC25 
            temp: 29 C scheme: MBR 
-           SMART: yes state: enabled health: PASSED on: 2y 174d 21h cycles: 54 read: 67.29 TiB 
-           written: 20.67 TiB Pre-Fail: attribute: Spin_Retry_Count value: 100 worst: 100 
+           SMART: yes state: enabled health: PASSED on: 2y 187d 18h cycles: 55 read: 67.32 TiB 
+           written: 21.38 TiB Pre-Fail: attribute: Spin_Retry_Count value: 100 worst: 100 
            threshold: 97 
            ID-2: /dev/sdb maj-min: 8:16 vendor: Seagate model: ST2000DM008-2FR102 
            family: BarraCuda 3.5 (SMR) size: 1.82 TiB block-size: physical: 4096 B logical: 512 B 
            sata: 3.1 speed: 3.0 Gb/s rotation: 7200 rpm serial: <filter> rev: 0001 temp: 31 C 
            scheme: MBR 
-           SMART: yes state: enabled health: PASSED on: 1134h+15m+52.128s cycles: 14 
-           read: 63.64 GiB written: 1.35 TiB Pre-Fail: attribute: Spin_Retry_Count value: 100 
+           SMART: yes state: enabled health: PASSED on: 1443h+34m+49.422s cycles: 15 
+           read: 88.93 GiB written: 2.06 TiB Pre-Fail: attribute: Spin_Retry_Count value: 100 
            worst: 100 threshold: 97 
-Partition: ID-1: / raw-size: N/A size: 1.73 TiB used: 2.53 GiB (0.1%) fs: zfs 
+Partition: ID-1: / raw-size: N/A size: 1.73 TiB used: 3.82 GiB (0.2%) fs: zfs 
            logical: zroot/public/root 
            ID-2: /boot raw-size: 1024 MiB size: 1022 MiB (99.80%) used: 34.4 MiB (3.4%) fs: vfat 
            block-size: 512 B dev: /dev/sda1 maj-min: 8:1 
 Swap:      Kernel: swappiness: 60 (default) cache-pressure: 100 (default) 
-           ID-1: swap-1 type: partition size: 8 GiB used: 0 KiB (0.0%) priority: -2 dev: /dev/sda2 
-           maj-min: 8:2 
-           ID-2: swap-2 type: partition size: 8 GiB used: 0 KiB (0.0%) priority: -3 dev: /dev/sdb2 
+           ID-1: swap-1 type: partition size: 8 GiB used: 0 KiB (0.0%) priority: -2 dev: /dev/sdb2 
            maj-min: 8:18 
-Sensors:   System Temperatures: cpu: 43.5 C mobo: N/A 
+           ID-2: swap-2 type: partition size: 8 GiB used: 0 KiB (0.0%) priority: -3 dev: /dev/sda2 
+           maj-min: 8:2 
+Sensors:   System Temperatures: cpu: 45.5 C mobo: N/A 
            Fan Speeds (RPM): N/A 
-Info:      Processes: 198 
-           Uptime: 07:34:50  up 1 day 21:59,  1 user,  load average: 2.06, 1.40, 0.96 wakeups: 0 
-           Init: systemd v: 252 target: multi-user.target tool: systemctl Compilers: gcc: 11.3.0 
-           Packages: nix-default: 0 nix-sys: 340 lib: 53 nix-usr: 0 Client: Sudo v: 1.9.12p1 
-           inxi: 3.3.04 
+Info:      Processes: 203 Uptime: 13h 14m wakeups: 0 Init: systemd v: 252 
+           target: multi-user.target tool: systemctl Compilers: gcc: 11.3.0 Packages: 
+           nix-default: 0 nix-sys: 340 lib: 53 nix-usr: 0 Client: Sudo v: 1.9.12p1 inxi: 3.3.04 

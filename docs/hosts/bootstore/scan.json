@@ -41,13 +41,6 @@
     },
     {
         "@protocol": "tcp",
-        "@portid": "3031",
-        "service": {
-            "@name": "eppc"
-        }
-    },
-    {
-        "@protocol": "tcp",
         "@portid": "5000",
         "service": {
             "@name": "upnp"
@@ -82,13 +75,6 @@
             "@name": "http",
             "@product": "Golang net/http server",
             "@extrainfo": "Go-IPFS json-rpc or InfluxDB API"
-        }
-    },
-    {
-        "@protocol": "tcp",
-        "@portid": "9090",
-        "service": {
-            "@name": "zeus-admin"
         }
     },
     {

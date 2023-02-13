@@ -17,15 +17,15 @@
 
     defaultGateway = "192.168.0.1";
     nameservers = [
-      "192.168.0.17"
-      "192.168.0.29"
+      "192.168.254.100"
+      "192.168.254.101"
       "89.2.0.1"
       "89.2.0.2"
     ];
 
     interfaces.enp2s0.ipv4 = {
       addresses = [{
-        address = "192.168.0.29";
+        address = "192.168.254.100";
         prefixLength = 24;
       }];
 

@@ -175,6 +175,11 @@ lib.mkIf (roleEnabled)
       menu = Website
       title = Website Latency Probes
 
+      ++ Github
+      menu = Github
+      title = Github
+      host = www.github.com
+
       ++ Google
       menu = Google
       title = Google

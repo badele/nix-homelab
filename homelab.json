@@ -49,7 +49,7 @@
         },
         "prometheus": {
             "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Prometheus_software_logo.svg/2066px-Prometheus_software_logo.svg.png",
-            "description": "Monitoring system and time series database"
+            "description": "Monitoring system and time series database [service port 9090]"
         },
         "smokeping": {
             "icon": "https://img.freepik.com/vecteurs-premium/cardiogramme-cardiaque-isole-blanc_97886-1185.jpg?w=2000",
@@ -75,21 +75,27 @@
             "description": "SFR internet box",
             "os": "Sagem"
         },
-        "router-ext": {
-            "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
-            "ipv4": "192.168.0.10",
-            "description": "External home mikrotik router",
-            "os": "MikroTik"
-        },
-        "router-int": {
+        "router-living": {
             "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
             "ipv4": "192.168.254.254",
             "wg": "10.123.21.254",
-            "description": "Internal home mikrotik router",
+            "description": "External home mikrotik router",
             "os": "MikroTik",
             "roles": [
                 "wireguard"
             ]
+        },
+        "router-bedroom": {
+            "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
+            "ipv4": "192.168.254.253",
+            "description": "Bedroom home mikrotik router",
+            "os": "MikroTik"
+        },
+        "router-homeoffice": {
+            "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
+            "ipv4": "192.168.254.252",
+            "description": "Office home mikrotik router",
+            "os": "MikroTik"
         },
         "sam": {
             "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Xfce_logo-footprint.svg/32px-Xfce_logo-footprint.svg.png",
@@ -105,7 +111,7 @@
         },
         "rpi40": {
             "icon": "https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Raspberry_Pi_logo.svg/32px-Raspberry_Pi_logo.svg.png",
-            "ipv4": "192.168.0.17",
+            "ipv4": "192.168.254.101",
             "alias": [
                 "dns",
                 "ntp"
@@ -121,7 +127,7 @@
             "icon": "https://simpleicons.org/icons/databricks.svg",
             "description": "HP Proliant Microserver N40L storage server",
             "os": "NixOS",
-            "ipv4": "192.168.0.29",
+            "ipv4": "192.168.254.100",
             "alias": [
                 "dns",
                 "grafana",
@@ -155,7 +161,7 @@
             "description": "A work thinkpad",
             "os": "Nix"
         },
-        "brdroid": {
+        "badphone": {
             "icon": "https://cdn-icons-png.flaticon.com/512/38/38002.png",
             "ipv4": "192.168.254.120",
             "wg": "10.123.21.1",
@@ -164,6 +170,24 @@
             "roles": [
                 "wireguard"
             ]
+        },
+        "ladphone": {
+            "icon": "https://cdn-icons-png.flaticon.com/512/38/38002.png",
+            "ipv4": "192.168.254.106",
+            "description": "Lucas's phone",
+            "os": "Android"
+        },
+        "sadphone": {
+            "icon": "https://cdn-icons-png.flaticon.com/512/38/38002.png",
+            "ipv4": "192.168.254.110",
+            "description": "Steph's phone",
+            "os": "Android"
+        },
+        "loadphone": {
+            "icon": "https://img.freepik.com/icones-gratuites/pomme_318-162866.jpg",
+            "ipv4": "192.168.254.111",
+            "description": "Lou's phone",
+            "os": "Iphone"
         },
         "tv-chromecast": {
             "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrW-wZZhmKpadJqRe73njFwEDLzh-jIn1XaSbCVhgMmoN46pgj6M4Fq1tWyr5w_z_HcP4&usqp=CAU",
