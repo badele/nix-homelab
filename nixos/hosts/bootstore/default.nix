@@ -15,7 +15,7 @@
     useDHCP = false;
     hostName = "bootstore";
 
-    defaultGateway = "192.168.0.1";
+    defaultGateway = "192.168.254.254";
     nameservers = [
       "192.168.254.100"
       "192.168.254.101"
@@ -27,12 +27,6 @@
       addresses = [{
         address = "192.168.254.100";
         prefixLength = 24;
-      }];
-
-      routes = [{
-        address = "192.168.254.0";
-        prefixLength = 24;
-        via = "192.168.0.10";
       }];
     };
   };
