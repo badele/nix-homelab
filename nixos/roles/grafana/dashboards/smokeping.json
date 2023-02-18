@@ -517,20 +517,20 @@
                 "current": {
                     "selected": true,
                     "text": [
-                        "bedroom-googlemini-A.h",
-                        "bedroom-googlemini-C.h",
-                        "bootstore.h",
-                        "badphone.h",
-                        "tv-chromecast.h",
-                        "rpi40.h"
+                        "bedroom-googlemini-A.adele.im",
+                        "bedroom-googlemini-C.adele.im",
+                        "bootstore.adele.im",
+                        "badphone.adele.im",
+                        "tv-chromecast.adele.im",
+                        "rpi40.adele.im"
                     ],
                     "value": [
-                        "bedroom-googlemini-A.h",
-                        "bedroom-googlemini-C.h",
-                        "bootstore.h",
-                        "badphone.h",
-                        "tv-chromecast.h",
-                        "rpi40.h"
+                        "bedroom-googlemini-A.adele.im",
+                        "bedroom-googlemini-C.adele.im",
+                        "bootstore.adele.im",
+                        "badphone.adele.im",
+                        "tv-chromecast.adele.im",
+                        "rpi40.adele.im"
                     ]
                 },
                 "datasource": {

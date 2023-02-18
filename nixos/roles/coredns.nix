@@ -51,7 +51,7 @@ let
             180       ; Zone TTL
             3600)     ; Negative response TTL
   
-    h. IN NS ns.h.
+    h. IN NS ns.${domain}.
 
     ns ${toString ttl} IN A ${myhost.ipv4}
 

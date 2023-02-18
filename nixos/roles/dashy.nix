@@ -6,7 +6,7 @@ let
 
   settings = {
     pageInfo = {
-      title = "Homelab";
+      title = "${config.homelab.domain} Homelab";
       description = "homelab made entirelly with nixos";
       navLinks = [
         {
@@ -33,44 +33,37 @@ let
         items = [
           {
             title = "Uptime";
-            url = "https://uptime.h";
-            statusCheckUrl = "http://uptime.h";
+            url = "https://uptime.${config.homelab.domain}";
             icon = "hl-uptime-kuma";
           }
           {
             title = "Statping";
-            url = "https://statping.h";
-            statusCheckUrl = "http://statping.h";
+            url = "https://statping.${config.homelab.domain}";
             icon = "hl-statping";
           }
           {
             title = "Grafana";
-            url = "https://grafana.h";
-            statusCheckUrl = "http://grafana.h";
+            url = "https://grafana.${config.homelab.domain}";
             icon = "hl-grafana";
           }
           {
             title = "Prometheus";
-            url = "https://prometheus.h";
-            statusCheckUrl = "http://prometheus.h";
+            url = "https://prometheus.${config.homelab.domain}";
             icon = "hl-prometheus";
           }
           {
             title = "Smokeping";
-            url = "https://smokeping.h";
-            statusCheckUrl = "http://smokeping.h";
+            url = "https://smokeping.${config.homelab.domain}";
             icon = "hl-smokeping";
           }
           {
             title = "Loki";
             url = "https://loki.h/services";
-            statusCheckUrl = "http://loki.h/services";
             icon = "hl-loki";
           }
           rec {
             title = "nix-cache";
-            url = "https://nixcache.h/nix-cache-info";
-            statusCheckUrl = "http://nixcache.h:5000/nix-cache-info";
+            url = "https://nixcache.${config.homelab.domain}/nix-cache-info";
             icon = "https://camo.githubusercontent.com/33a99d1ffcc8b23014fd5f6dd6bfad0f8923d44d61bdd2aad05f010ed8d14cb4/68747470733a2f2f6e69786f732e6f72672f6c6f676f2f6e69786f732d6c6f676f2d6f6e6c792d68697265732e706e67";
           }
         ];
@@ -80,8 +73,18 @@ let
         icon = "fas fa-rocket";
         items = [
           {
-            title = "mikrotik";
+            title = "mikrotik Livingroom";
             url = "http://192.168.254.254";
+            icon = "hl-mikrotik";
+          }
+          {
+            title = "mikrotik Bedroom";
+            url = "http://192.168.254.253";
+            icon = "hl-mikrotik";
+          }
+          {
+            title = "mikrotik Office";
+            url = "http://192.168.254.252";
             icon = "hl-mikrotik";
           }
         ];

@@ -1,5 +1,5 @@
 {
-    "domain": "h",
+    "domain": "adele.im",
     "networks": {
         "box": {
             "net": "192.168.0.0",
@@ -22,6 +22,10 @@
         "coredns": {
             "icon": "https://raw.githubusercontent.com/coredns/logo/master/Icon/CoreDNS_Colour_Icon.png",
             "description": "A Go DNS server, it used for serving local hosts and alias"
+        },
+        "acme": {
+            "icon": "http://www.kevinsubileau.fr/wp-content/uploads/2016/03/letsencrypt-logo-pad.png",
+            "description": "Let's Encrypt Automatic Certificate Management Environment"
         },
         "ntp": {
             "icon": "https://freesvg.org/img/ftntp-client.png",
@@ -66,6 +70,10 @@
         "uptime": {
             "icon": "https://cf.appdrag.com/dashboard-openvm-clo-b2d42c/uploads/Uptime-kuma-7fPG.png",
             "description": "A Status Page [service port 8083]"
+        },
+        "home-assistant": {
+            "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/32px-Home_Assistant_Logo.svg.png",
+            "description": "Open source home automation [service port 8123]"
         }
     },
     "hosts": {
@@ -79,7 +87,7 @@
             "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
             "ipv4": "192.168.254.254",
             "wg": "10.123.21.254",
-            "description": "External home mikrotik router",
+            "description": "Livingroom home mikrotik router",
             "os": "MikroTik",
             "roles": [
                 "wireguard"
@@ -105,7 +113,7 @@
         },
         "latino": {
             "icon": "https://styles.redditmedia.com/t5_6sciw0/styles/communityIcon_h3cvittvupi91.png",
-            "ipv4": "192.168.254.152",
+            "ipv4": "192.168.254.200",
             "description": "Dell Latitude E5540 Latop",
             "os": "NixOS"
         },
@@ -143,6 +151,7 @@
             ],
             "roles": [
                 "coredns",
+                "acme",
                 "dashy",
                 "grafana",
                 "loki",
@@ -152,18 +161,19 @@
                 "prometheus",
                 "smokeping",
                 "statping",
-                "uptime"
+                "uptime",
+                "home-assistant"
             ]
         },
         "badwork": {
             "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png",
-            "ipv4": "192.168.254.177",
+            "ipv4": "192.168.254.189",
             "description": "A work thinkpad",
             "os": "Nix"
         },
         "badphone": {
             "icon": "https://cdn-icons-png.flaticon.com/512/38/38002.png",
-            "ipv4": "192.168.254.120",
+            "ipv4": "192.168.254.194",
             "wg": "10.123.21.1",
             "description": "Bruno's phone",
             "os": "Android",
@@ -173,19 +183,19 @@
         },
         "ladphone": {
             "icon": "https://cdn-icons-png.flaticon.com/512/38/38002.png",
-            "ipv4": "192.168.254.106",
+            "ipv4": "192.168.254.184",
             "description": "Lucas's phone",
             "os": "Android"
         },
         "sadphone": {
             "icon": "https://cdn-icons-png.flaticon.com/512/38/38002.png",
-            "ipv4": "192.168.254.110",
+            "ipv4": "192.168.254.188",
             "description": "Steph's phone",
             "os": "Android"
         },
         "loadphone": {
             "icon": "https://img.freepik.com/icones-gratuites/pomme_318-162866.jpg",
-            "ipv4": "192.168.254.111",
+            "ipv4": "192.168.254.199",
             "description": "Lou's phone",
             "os": "Iphone"
         },
@@ -198,14 +208,14 @@
         },
         "bedroom-googlemini-A": {
             "icon": "https://c.clc2l.com/t/g/o/google-home-wxDa7w.png",
-            "ipv4": "192.168.254.191",
+            "ipv4": "192.168.254.197",
             "description": "Google Mini room A",
             "os": "GoogleMini"
             
         },
         "bedroom-googlemini-C": {
             "icon": "https://c.clc2l.com/t/g/o/google-home-wxDa7w.png",
-            "ipv4": "192.168.254.193",
+            "ipv4": "192.168.254.196",
             "description": "Google Mini room C",
             "os": "GoogleMini"
         }

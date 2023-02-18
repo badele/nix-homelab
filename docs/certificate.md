@@ -1,12 +1,14 @@
 # Certificate
 
-## Convert certificat to pkcs12
+## Let's Encrypt
 
-Firefox need to import the certificate in pkcs12
+Use the let's encrypt and gandi DNS-01 challenge. See `nixos/roles/acme.nix`
+
+for using the wildcard domain in nginx configuration, add this below block
 
 ```
-sops -d --extract '["wildcard-domain.key.pem"]' hosts/secrets.yml > /tmp/wildcard-domain.crt.key 
-openssl pkcs12 -export -inkey /tmp/wildcard-domain.crt.key -in hosts/wildcard-domain.crt.pem -name localdomain -out /tmp/localdomain.pfx
-rm /tmp/wildcard-domain.crt.key
+    # Use wildcard domain
+    useACMEHost = config.homelab.domain;
+    forceSSL = true;
 ```
 

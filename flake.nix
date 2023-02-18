@@ -3,12 +3,12 @@
 
   nixConfig = {
     extra-substituers = [
-      "http://nixcache.h:5000"
+      "http://nixcache.adele.im:5000"
       "https://nix-community.cachix.org"
     ];
     extra-trusted-public-keys =
       [
-        "nixcache.h:+2EnxpRxBCNd5V/2PNoobcq7fW+oXpZ0IhRwL+X2WHI="
+        "nixcache.adele.im:+2EnxpRxBCNd5V/2PNoobcq7fW+oXpZ0IhRwL+X2WHI="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
   };

@@ -129,9 +129,9 @@ lib.mkIf (roleEnabled)
 
   services.nginx.enable = true;
   services.nginx.virtualHosts."${roleName}.${config.homelab.domain}" = {
-    addSSL = true;
-    sslCertificate = cert;
-    sslCertificateKey = config.sops.secrets."wildcard-domain.key.pem".path;
+    # Use wildcard domain
+    useACMEHost = config.homelab.domain;
+    forceSSL = true;
 
     locations."/" = {
       extraConfig = ''

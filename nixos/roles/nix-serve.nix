@@ -3,7 +3,7 @@
 # mkdir -p $DIR_NIXSERVE && cd $DIR_NIXSERVE  
 # nix-store --generate-binary-cache-key $(hostname).$(hostname -d) cache-priv-key.pem cache-pub-key.pem
 #
-# curl https://nixcache.h:5000/nix-cache-info
+# curl https://nixcache.adele.im:5000/nix-cache-info
 { outputs, lib, config, ... }:
 let
   roleName = "nix-serve";
@@ -34,9 +34,9 @@ lib.mkIf (roleEnabled)
 
   services.nginx.enable = true;
   services.nginx.virtualHosts."${alias}.${config.homelab.domain}" = {
-    addSSL = true;
-    sslCertificate = cert;
-    sslCertificateKey = config.sops.secrets."wildcard-domain.key.pem".path;
+    # Use wildcard domain
+    useACMEHost = config.homelab.domain;
+    forceSSL = true;
 
     locations."/" = {
       extraConfig = ''

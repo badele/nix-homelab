@@ -202,9 +202,10 @@ lib.mkIf (roleEnabled)
 
   services.nginx.enable = true;
   services.nginx.virtualHosts."${alias}.${config.homelab.domain}" = {
-    addSSL = true;
-    sslCertificate = cert;
-    sslCertificateKey = config.sops.secrets."wildcard-domain.key.pem".path;
+    # Use wildcard domain
+    useACMEHost = config.homelab.domain;
+    forceSSL = true;
+
     root = "${pkgs.smokeping}/htdocs";
     extraConfig = ''
       index smokeping.fcgi;
