@@ -24,7 +24,7 @@
             "description": "A Go DNS server, it used for serving local hosts and alias"
         },
         "acme": {
-            "icon": "http://www.kevinsubileau.fr/wp-content/uploads/2016/03/letsencrypt-logo-pad.png",
+            "icon": "https://www.kevinsubileau.fr/wp-content/uploads/2016/03/letsencrypt-logo-pad.png",
             "description": "Let's Encrypt Automatic Certificate Management Environment"
         },
         "ntp": {
@@ -120,7 +120,7 @@
         "rpi40": {
             "icon": "https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Raspberry_Pi_logo.svg/32px-Raspberry_Pi_logo.svg.png",
             "ipv4": "192.168.254.101",
-            "alias": [
+            "dnsalias": [
                 "dns",
                 "ntp"
             ],
@@ -136,7 +136,7 @@
             "description": "HP Proliant Microserver N40L storage server",
             "os": "NixOS",
             "ipv4": "192.168.254.100",
-            "alias": [
+            "dnsalias": [
                 "dns",
                 "grafana",
                 "loki",
@@ -147,7 +147,8 @@
                 "smokeping",
                 "statping",
                 "uptime",
-                "home"
+                "home",
+                "hass"
             ],
             "roles": [
                 "coredns",

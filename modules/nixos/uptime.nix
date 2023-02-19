@@ -4,7 +4,7 @@ with lib;
 
 let
   cfg = config.services.uptime;
-  aliasdefined = !(builtins.elem cfg.alias config.homelab.currentHost.alias);
+  aliasdefined = !(builtins.elem cfg.alias config.homelab.currentHost.dnsalias);
   cert = (import ../../nixos/modules/system/homelab-cert.nix { inherit lib; }).environment.etc."homelab/wildcard-domain.crt.pem".source;
 in
 {
@@ -36,7 +36,7 @@ in
 
     # Check if host alias is defined in homelab.json alias section
     warnings =
-      lib.optional aliasdefined "No `${cfg.alias}` alias defined in alias section ${config.networking.hostName}.alias [ ${toString config.homelab.currentHost.alias} ] in `homelab.json` file";
+      lib.optional aliasdefined "No `${cfg.alias}` alias defined in alias section ${config.networking.hostName}.dnsalias [ ${toString config.homelab.currentHost.dnsalias} ] in `homelab.json` file";
 
     networking.firewall.allowedTCPPorts = [
       cfg.port

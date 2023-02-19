@@ -3,7 +3,7 @@ let
   roleName = "smokeping";
   roleEnabled = lib.elem roleName config.homelab.currentHost.roles;
   alias = "smokeping";
-  aliasdefined = !(builtins.elem alias config.homelab.currentHost.alias);
+  aliasdefined = !(builtins.elem alias config.homelab.currentHost.dnsalias);
   cert = (import ../../nixos/modules/system/homelab-cert.nix { inherit lib; }).environment.etc."homelab/wildcard-domain.crt.pem".source;
   dnshostname = "nixos.org";
 in
@@ -194,7 +194,7 @@ lib.mkIf (roleEnabled)
 
   # Check if host alias is defined in homelab.json alias section
   warnings =
-    lib.optional aliasdefined "No `${alias}` alias defined in alias section ${config.networking.hostName}.alias [ ${toString config.homelab.currentHost.alias} ] in `homelab.json` file";
+    lib.optional aliasdefined "No `${alias}` alias defined in alias section ${config.networking.hostName}.dnsalias [ ${toString config.homelab.currentHost.dnsalias} ] in `homelab.json` file";
 
   services.fcgiwrap = {
     enable = true;

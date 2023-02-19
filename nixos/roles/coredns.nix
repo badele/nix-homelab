@@ -29,7 +29,7 @@ let
         (
           name: host:
             let
-              alias = lib.optionals (host.alias != null) host.alias;
+              alias = lib.optionals (host.dnsalias != null) host.dnsalias;
             in
             map
               (entry: {

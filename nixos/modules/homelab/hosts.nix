@@ -35,11 +35,11 @@ let
       '';
     };
 
-    alias = mkOption {
+    dnsalias = mkOption {
       type = nullOr (listOf str);
       default = null;
       description = ''
-        alias for this host
+        dnsalias for this host
       '';
     };
 
