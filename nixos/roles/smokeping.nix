@@ -4,7 +4,6 @@ let
   roleEnabled = lib.elem roleName config.homelab.currentHost.roles;
   alias = "smokeping";
   aliasdefined = !(builtins.elem alias config.homelab.currentHost.dnsalias);
-  cert = (import ../../nixos/modules/system/homelab-cert.nix { inherit lib; }).environment.etc."homelab/wildcard-domain.crt.pem".source;
   dnshostname = "nixos.org";
 in
 lib.mkIf (roleEnabled)

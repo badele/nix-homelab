@@ -2,7 +2,6 @@
 let
   roleName = "grafana";
   roleEnabled = builtins.elem roleName config.homelab.currentHost.roles;
-  cert = (import ../../../nixos/modules/system/homelab-cert.nix { inherit lib; }).environment.etc."homelab/wildcard-domain.crt.pem".source;
 
   # Copy all json dashboard
   grafana-dashboards = pkgs.stdenv.mkDerivation {
@@ -16,12 +15,6 @@ let
 in
 lib.mkIf (roleEnabled)
 {
-  sops.secrets."wildcard-domain.key.pem" = {
-    owner = "${config.services.nginx.user}";
-    mode = "0444";
-    sopsFile = ../../../nixos/hosts/secrets.yml;
-  };
-
   networking.firewall.allowedTCPPorts = [
     config.services.grafana.settings.server.http_port
     443

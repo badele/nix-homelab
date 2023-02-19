@@ -3,7 +3,6 @@ let
   roleName = "prometheus";
   roleEnabled = builtins.elem roleName config.homelab.currentHost.roles;
   cfg = config.services.prometheus;
-  cert = (import ../../../nixos/modules/system/homelab-cert.nix { inherit lib; }).environment.etc."homelab/wildcard-domain.crt.pem".source;
 in
 lib.mkIf (roleEnabled)
 {

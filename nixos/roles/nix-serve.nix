@@ -10,7 +10,6 @@ let
   roleEnabled = lib.elem roleName config.homelab.currentHost.roles;
   alias = "nixcache";
   aliasdefined = !(builtins.elem alias config.homelab.currentHost.dnsalias);
-  cert = (import ../../nixos/modules/system/homelab-cert.nix { inherit lib; }).environment.etc."homelab/wildcard-domain.crt.pem".source;
   port_nixserve = 5000;
 in
 lib.mkIf (roleEnabled)

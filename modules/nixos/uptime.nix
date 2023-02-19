@@ -5,7 +5,6 @@ with lib;
 let
   cfg = config.services.uptime;
   aliasdefined = !(builtins.elem cfg.alias config.homelab.currentHost.dnsalias);
-  cert = (import ../../nixos/modules/system/homelab-cert.nix { inherit lib; }).environment.etc."homelab/wildcard-domain.crt.pem".source;
 in
 {
   options.services.uptime = {
