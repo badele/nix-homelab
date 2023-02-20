@@ -5,6 +5,13 @@ let
   alias = "smokeping";
   aliasdefined = !(builtins.elem alias config.homelab.currentHost.dnsalias);
   dnshostname = "nixos.org";
+
+  # For reduce smartphone battery utilization, disable ping
+  noPing = [
+    "Android"
+    "Iphone"
+  ];
+  toPing = lib.filterAttrs (hostname: hostinfo: !lib.elem hostinfo.os noPing) config.homelab.hosts;
 in
 lib.mkIf (roleEnabled)
 {
@@ -65,7 +72,7 @@ lib.mkIf (roleEnabled)
               title = The ${hostname} net performance
               host = ${hostinfo.ipv4}
               '')
-            config.homelab.hosts)}
+            toPing)}
 
       + DNS
 

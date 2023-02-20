@@ -1,6 +1,14 @@
 { config, lib, pkgs, ... }:
 let
   domain = config.homelab.domain;
+
+  # For reduce smartphone battery utilization, disable ping
+  noPing = [
+    "Android"
+    "Iphone"
+  ];
+  toPing = lib.filterAttrs (hostname: hostinfo: !lib.elem hostinfo.os noPing) config.homelab.hosts;
+
 in
 {
   services.prometheus.exporters.smokeping = {
@@ -9,7 +17,7 @@ in
       (lib.mapAttrsToList
         (hostname: hostinfo:
           "${hostname}.${domain}")
-        config.homelab.hosts) ++
+        toPing) ++
       [
         "www.google.fr"
         "www.github.com"

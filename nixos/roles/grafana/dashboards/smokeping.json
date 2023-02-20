@@ -26,7 +26,7 @@
     "fiscalYearStartMonth": 0,
     "gnetId": 11335,
     "graphTooltip": 0,
-    "id": 170,
+    "id": 260,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -517,20 +517,30 @@
                 "current": {
                     "selected": true,
                     "text": [
+                        "box.adele.im",
+                        "bootstore.adele.im",
+                        "router-bedroom.adele.im",
+                        "router-homeoffice.adele.im",
+                        "router-living.adele.im",
+                        "rpi40.adele.im",
                         "bedroom-googlemini-A.adele.im",
                         "bedroom-googlemini-C.adele.im",
-                        "bootstore.adele.im",
-                        "badphone.adele.im",
                         "tv-chromecast.adele.im",
-                        "rpi40.adele.im"
+                        "www.github.com",
+                        "www.google.fr"
                     ],
                     "value": [
+                        "box.adele.im",
+                        "bootstore.adele.im",
+                        "router-bedroom.adele.im",
+                        "router-homeoffice.adele.im",
+                        "router-living.adele.im",
+                        "rpi40.adele.im",
                         "bedroom-googlemini-A.adele.im",
                         "bedroom-googlemini-C.adele.im",
-                        "bootstore.adele.im",
-                        "badphone.adele.im",
                         "tv-chromecast.adele.im",
-                        "rpi40.adele.im"
+                        "www.github.com",
+                        "www.google.fr"
                     ]
                 },
                 "datasource": {
