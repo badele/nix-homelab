@@ -3,7 +3,7 @@ let
 
   snmpFile = builtins.fetchurl {
     url = "https://raw.githubusercontent.com/prometheus/snmp_exporter/main/snmp.yml";
-    sha256 = "sha256:0cshh89ijchi10iqijvmw473hhxf5cdrd1y0502wlwgw4glbis36";
+    sha256 = "sha256:0khy3p3rcdajd2dhnyi4619w67ifsmv318vxgc27j3bshqqk2wlw";
   };
 
   mikrotikMib =
