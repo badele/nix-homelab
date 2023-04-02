@@ -39,27 +39,6 @@ nix-store --generate-binary-cache-key {hostname}.h cache-priv-key.pem cache-pub-
 """)
 
 
-def _cert_init_cert_domain() -> None:
-    # openssl_3_0.bin
-    # openssl req -new -newkey rsa:4096 -days 36500 -nodes -x509 -keyout server.key -out server.crt -subj "/CN=h"
-    with open('homelab.json', 'r') as fr:
-        jinfo = json.load(fr)
-        domain = jinfo['domain']
-
-    res = run(f"openssl req -new -newkey rsa:4096 -days 36500 -nodes -x509 -keyout /tmp/wildcard-domain.key.pem -out hosts/wildcard-domain.crt.pem -subj '/CN=*.{domain}'")
-    res = run(f"cat /tmp/wildcard-domain.key.pem",hide=True)
-
-    indent = "  "
-    indented = indent + res.stdout.replace('\n', '\n' + indent)
-
-    info(f"""
-Please add this content to hosts/secrets.yml
-
-wildcard-domain.key.pem: |
-{indented}
-""")
-
-
 def generateCommandsList() -> str:
     res = run(f"inv -l",hide=True)
     commands = f'''```

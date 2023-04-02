@@ -1,0 +1,5 @@
+{ ... }: {
+  imports = [
+    ./low-battery.nix
+  ];
+}

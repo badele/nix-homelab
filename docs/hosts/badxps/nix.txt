@@ -1,0 +1,7 @@
+ - system: `"x86_64-linux"`
+ - host os: `Linux 6.1.20, NixOS, 22.11 (Raccoon), 22.11.20230320.e2c9779`
+ - multi-user?: `yes`
+ - sandbox: `yes`
+ - version: `nix-env (Nix) 2.11.1`
+ - nixpkgs: `/nix/var/nix/profiles/per-user/root/channels/nixos`
+

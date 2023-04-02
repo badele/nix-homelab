@@ -1,1 +1,9 @@
 .decrypted*.yml
+
+# direnv
+.direnv
+
+# Devenv
+.devenv*
+devenv.local.nix
+

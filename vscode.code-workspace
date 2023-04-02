@@ -3,6 +3,9 @@
 		{
 			"name": "nix-homelab",
 			"path": "."
+		},
+		{
+			"path": "../mydocs"
 		}
 	],
 	"settings": {
@@ -44,6 +47,7 @@
 			"appulate.filewatcher",
 			"signageos.signageos-vscode-sops",
 			"bbenoist.nix",
+			"bierner.emojisense"
 		]
 	}
 }

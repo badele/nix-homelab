@@ -146,7 +146,7 @@ sops updatekeys ./hosts/${TARGETNAME}/secrets.yml
 # Nix serve binary cache
 ##########################################################
 
-# configure nix-server, <One time> add host and public key to modules/system/nix.nix 
+# configure nix-server, <One time> add host and public key to features/system/nix.nix 
 inv init-nix-serve --hosts ${TARGETIP} --hostnames ${TARGETNAME}
 
 ####################################################

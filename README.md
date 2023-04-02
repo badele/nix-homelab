@@ -1,16 +1,17 @@
 # nix-homelab
 
-Practically all hosts from this home lab installed by Nix system. 
+This homelab entirelly managed by [NixOS](https://nixos.org/) 
 
-All the configuration is stored on `homelab.json`  file, you can do:
+All the configuration is stored on `homelab.json` file, you can do:
 - Define network CIDR
 - Define hosts
 - Define the roles installed for selected hosts
 - Define services descriptions
+- etc ...
 
-Also, from the `homelab.json` you can do:
-- Generate documentation automatically
-- Install automatically roles
+This documentation is generated from `homelab.json` file content 
+
+<img width="60%" src="./docs/neofetch.png" />
 
 ## Roles
 
@@ -280,7 +281,7 @@ Boot from NixOS live cd
 
 ```
 ##########################################################
-# NixOS installation configuration
+# From NixOS LiveCD installation
 ##########################################################
 
 # Change keymap & root password
@@ -288,24 +289,45 @@ sudo -i
 loadkeys fr
 passwd 
 
+# WI-FI
+systemctl start wpa_supplicant
+wpa_cli
+add_network
+set_network 0 ssid "ssid_name"
+set_network 0 psk "password"
+enable_network 0
+
+# Connect to nixos installation
+ip a
+
+##########################################################
 # From other computer, enter to deploy environment
+##########################################################
+
 # NOTE: Use <SPACE> before command for not storing command in bash history (for secure your passwords)
 nix develop
 export TARGETIP=<hostip>
 export TARGETNAME=<hostname>
 
 ssh-copy-id root@${TARGETIP}
- inv disk-format --hosts ${TARGETIP} --disk /dev/sda --mirror /dev/sdb --mode MBR
- [Optional] inv disk-mount --hosts ${TARGETIP} --mirror true --password "<zfspassword>"
-inv ssh-init-host-key --hosts ${TARGETIP} --hostnames ${TARGETNAME}
-inv nixos-generate-config --hosts ${TARGETIP} --hostnames ${TARGETNAME} --name hp-proliant-microserver-n40l
 
-# Add hosts/bootstore/ssh-to-age.txt content to .sops.yaml
-# Add root password key to ./hosts/bootstore/secrets.yml 
+# Disk initialisation (some examples)
+inv init.disk-format --hosts ${TARGETIP} --disk /dev/sda --mirror /dev/sdb --mode MBR --passwd <PASSWORD> # encrypt ZFS
+inv init.disk-format --hosts ${TARGETIP} --disk /dev/sda --mirror /dev/sdb --mode MBR
+inv init.disk-format --hosts ${TARGETIP} --disk /dev/nvme0n1  --mode EFI
+or 
+inv nix.disk-mount --hosts ${TARGETIP} --password "<zfspassword>" [--mirror /dev/sdb] 
+
+inv init.ssh-init-host-key --hosts ${TARGETIP} --hostnames ${TARGETNAME}
+inv init.nixos-generate-config --hosts ${TARGETIP} --hostnames ${TARGETNAME}
+
+# Add hosts/${TARGETNAME}/ssh-to-age.txt in &hosts section in the .sops.yaml file
+# Add root password key to ./hosts/${TARGETNAME}/secrets.yml
 echo 'yourpassword' | mkpasswd -m sha-512 -s
 
 # Re-encrypt all keys for the previous host
-sops updatekeys ./hosts/${TARGETNAME}/secrets.yml
+sops ./hosts/${TARGETNAME}/secrets.yml
+[Optional] sops updatekeys ./hosts/${TARGETNAME}/secrets.yml
 
 ####################################################
 # Execute your custom task here, exemple:
@@ -314,16 +336,22 @@ sops updatekeys ./hosts/${TARGETNAME}/secrets.yml
 ####################################################
 
 # Add hostname in configurations.nix with minimalModules
-# Configure hosts/<hostname>/default.nix
+# Configure hosts/<hostname>/default.nix and hosts/<hostname>/hardware-configuration.nix 
 
 # NixOS installation
-inv nixos-install --hosts ${TARGETIP} --flakeattr ${TARGETNAME}
+inv init.nixos-install --hostnames ${TARGETIP} --flakeattr ${TARGETNAME}
 ```
 
 ## Update nixos
 
 ```
-inv deploy --hosts bootstore
+# for remote installation
+inv nix.deploy --hostnames ${TARGETNAME} 
+
+or
+
+# For local installation
+inv nix.deploy 
 ```
 
 

@@ -219,6 +219,12 @@
             "ipv4": "192.168.254.196",
             "description": "Google Mini room C",
             "os": "GoogleMini"
+        },
+        "badxps": {
+            "icon": "https://styles.redditmedia.com/t5_6sciw0/styles/communityIcon_h3cvittvupi91.png",
+            "ipv4": "192.168.254.114",
+            "description": "Dell XPS 9570 Latop",
+            "os": "NixOS"
         }
     }
 }

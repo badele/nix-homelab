@@ -133,6 +133,7 @@ def firmware_rpi_update(c, hosts):
         _firmware_rpi_update(h)
 
 
+@task
 def ssh_init_host_key(c, hosts, hostnames):
     """
     Init ssh host key from nixos installation 
@@ -175,7 +176,7 @@ def disk_format(c, hosts, disk, mirror="", mode="GPT", password=""):
 
     for h in get_hosts(hosts):
         _format_disks(h, disk, mirror, mode, password)
-        _disk_mount(h, mirror != "", password)
+        _disk_mount(h, mirror , password)
 
 
 @task
@@ -195,8 +196,9 @@ def sync_homelab(c, hosts):
     for h in get_hosts(hosts):
         _sync_homelab({h.host})
 
+
 @task
-def nixos_generate_config(c, hosts, hostnames, confname):
+def nixos_generate_config(c, hosts, hostnames):
     """
     Generate hardware configuration for the host
     """
@@ -205,7 +207,13 @@ def nixos_generate_config(c, hosts, hostnames, confname):
     hn = hostnames.split(',')
 
     for idx in range(len(h)):
-        _nixos_generate_config(h[idx], hn[idx], confname)
+        _nixos_generate_config(h[idx], hn[idx])
+
+
+##############################################################################
+# Nixos
+##############################################################################
+
 
 @task
 def nixos_install(c, hosts, flakeattr):
@@ -223,6 +231,44 @@ def nixos_install(c, hosts, flakeattr):
             f"cd /mnt/nix-homelab && nix --extra-experimental-features 'nix-command flakes' shell nixpkgs#git -c nixos-install --verbose --flake .#{flakeattr} && sync"
         )
 
+
+@task(
+name="build",
+help={
+    'cache' : "Use binary cache from flake extra-substituers section",
+    'keeperror' : "Continue, if error",
+    'showtrace': "Show trace on error"
+    }
+)
+def nix_build(c, hostnames="", cache=True, keeperror=True,showtrace=False):
+    """
+    Test to <hostnames> server
+
+    if <hostnames> is empty, deploy to all nix homelab server
+
+    """
+    _execute_nixos_rebuild("build",hostnames,False,cache,keeperror,showtrace)
+
+
+@task(
+name="test",
+help={
+    'discovery': "get host information after deployment",
+    'cache' : "Use binary cache from flake extra-substituers section",
+    'keeperror' : "Continue, if error",
+    'showtrace': "Show trace on error"
+    }
+)
+def nix_test(c, hostnames="",discovery=True, cache=True, keeperror=True,showtrace=False):
+    """
+    Test to <hostnames> server
+
+    if <hostnames> is empty, deploy to all nix homelab server
+
+    """
+    _execute_nixos_rebuild("test",hostnames,discovery,cache,keeperror,showtrace)
+
+
 @task(
 name="deploy",
 help={
@@ -239,8 +285,17 @@ def nix_deploy(c, hostnames="",discovery=True, cache=True, keeperror=True,showtr
     if <hostnames> is empty, deploy to all nix homelab server
 
     """
-    deploylist = get_deploylist_from_homelab(hostnames)
-    _nix_deploy(deploylist, discovery, cache, keeperror,showtrace)
+    _execute_nixos_rebuild("switch",hostnames,discovery,cache,keeperror,showtrace)
+
+
+nixos = Collection('nixos')
+nixos.add_task(nix_deploy)
+nixos.add_task(nix_test)
+nixos.add_task(nix_build)
+
+##############################################################################
+# Home-manager (user)
+##############################################################################
 
 
 @task(
@@ -251,20 +306,92 @@ help={
     'showtrace': "Show trace on error"
     }
 )
-def nix_build(c, hostnames="", cache=True, keeperror=True,showtrace=False):
+def home_build(c, hostnames="", cache=True, keeperror=True,showtrace=False):
     """
-    Build for <hostnames>
+    Test to <hostnames> server
 
-    if <hostnames> is empty, build for all nix homelab attribute
+    if <hostnames> is empty, deploy to all nix homelab server
+
     """
-    deploylist = get_deploylist_from_homelab(hostnames)
-    _nix_build(deploylist, cache, keeperror,showtrace)
+    _execute_home_manager("build",hostnames,False,cache,keeperror,showtrace)
 
 
-nix = Collection('nix')
-nix.add_task(nix_deploy)
-nix.add_task(nix_build)
+@task(
+name="test",
+help={
+    'discovery': "get host information after deployment",
+    'cache' : "Use binary cache from flake extra-substituers section",
+    'keeperror' : "Continue, if error",
+    'showtrace': "Show trace on error"
+    }
+)
+def home_test(c, hostnames="",discovery=True, cache=True, keeperror=True,showtrace=False):
+    """
+    Test to <hostnames> server
 
+    if <hostnames> is empty, deploy to all nix homelab server
+
+    """
+    _execute_home_manager("test",hostnames,discovery,cache,keeperror,showtrace)
+
+
+@task(
+name="deploy",
+help={
+    'discovery': "get host information after deployment",
+    'cache' : "Use binary cache from flake extra-substituers section",
+    'keeperror' : "Continue, if error",
+    'showtrace': "Show trace on error"
+    }
+)
+def home_deploy(c, hostnames="",discovery=True, cache=True, keeperror=True,showtrace=False):
+    """
+    Deploy to <hostnames> server
+
+    if <hostnames> is empty, deploy to all nix homelab server
+
+    """
+    _execute_home_manager("switch",hostnames,discovery,cache,keeperror,showtrace)
+
+
+home = Collection('home')
+home.add_task(home_deploy)
+home.add_task(home_test)
+home.add_task(home_build)
+
+
+@task(
+name="build",
+help={
+    'cache' : "Use binary cache from flake extra-substituers section",
+    'keeperror' : "Continue, if error",
+    'showtrace': "Show trace on error"
+    }
+)
+def role_build(c, role, cache=True, keeperror=True,showtrace=False):
+    """
+    Build for all hosts contains the role
+    """
+
+    deploylist = get_deploylist_from_role(role)
+    _nixos_rebuild(deploylist, "build", False, cache, keeperror,showtrace)
+
+@task(
+name="test",
+help={
+    'discovery': "get host information after deployment",
+    'cache' : "Use binary cache from flake extra-substituers section",
+    'keeperror' : "Continue, if error",
+    'showtrace': "Show trace on error"
+    }
+)
+def role_test(c, role, discovery=True, cache=True, keeperror=True,showtrace=False):
+    """
+    Test for all hosts contains the role
+    """
+
+    deploylist = get_deploylist_from_role(role)
+    _nixos_rebuild(deploylist, "test", discovery, cache, keeperror,showtrace)
 
 @task(
 name="deploy",
@@ -281,27 +408,13 @@ def role_deploy(c, role, discovery=True, cache=True, keeperror=True,showtrace=Fa
     """
 
     deploylist = get_deploylist_from_role(role)
-    _nix_deploy(deploylist, discovery, cache, keeperror,showtrace)
+    _nixos_rebuild(deploylist, "switch", discovery, cache, keeperror,showtrace)
 
-
-@task(
-name="build",
-help={
-    'cache' : "Use binary cache from flake extra-substituers section",
-    'keeperror' : "Continue, if error",
-    'showtrace': "Show trace on error"
-    }
-)
-def role_build(c, role, cache=True, keeperror=True,showtrace=False):
-    """
-    Build for all hosts contains the role
-    """
-    deploylist = get_deploylist_from_role(role)
-    _nix_build(deploylist, cache, keeperror,showtrace)
 
 
 role = Collection('role')
 role.add_task(role_deploy)
+role.add_task(role_test)
 role.add_task(role_build)
 
 
@@ -325,8 +438,13 @@ def cert_init_cert_domain(c):
     taskslib._cert_init_cert_domain()
 
 init = Collection('init')
+init.add_task(disk_format)
+init.add_task(disk_mount)
 init.add_task(init_nix_serve)
 init.add_task(cert_init_cert_domain)
+init.add_task(ssh_init_host_key)
+init.add_task(nixos_generate_config)
+init.add_task(nixos_install)
 
 
 @task(name="all_pages")
@@ -383,11 +501,16 @@ def _format_disks(host: DeployHost, disk: str,mirror: str, mode: str, zfspassphr
     # - partition 2 swap partition for system with few RAM
     # - partition 3 zfs partition
 
+    diskprefix=""
+
+    if "nvme" in disk:
+        diskprefix="p"
+
     # Umount all /mnt
     host.run(f"umount -R /mnt",check=False)
 
     # swapoff
-    host.run(f'swapoff {disk}2',check=False)
+    host.run(f'swapoff {disk}{diskprefix}2',check=False)
     if mirror:
         host.run(f'swapoff {mirror}2',check=False)
 
@@ -410,8 +533,9 @@ def _format_disks(host: DeployHost, disk: str,mirror: str, mode: str, zfspassphr
     # Clone partition [If mirror mode]
     if mirror:
         host.run(f'sfdisk --dump {disk} | sfdisk {mirror}')
-
-    zdisks = f"{disk}3 {mirror}3".strip()
+        zdisks = f"{disk}{diskprefix}3 {mirror}{diskprefix}3".strip()
+    else:
+        zdisks = f"{disk}{diskprefix}3".strip()
     # Create ZFS pool
     if mirror:
         host.run(f"zpool create -f -o ashift=12 -O mountpoint=none zroot mirror {zdisks}")
@@ -420,14 +544,14 @@ def _format_disks(host: DeployHost, disk: str,mirror: str, mode: str, zfspassphr
 
     # Format boot
     host.run(f"""
-    mkfs.vfat {disk}1 -n BOOT_1ST
-    test -n "{mirror}" && mkfs.vfat {mirror}1 -n BOOT_2ND
+    mkfs.vfat {disk}{diskprefix}1 -n BOOT_1ST
+    test -n "{mirror}" && mkfs.vfat {mirror}{diskprefix}1 -n BOOT_2ND || true
     """)
 
     # swap
     host.run(f"""
-    mkswap {disk}2 -L SWAP_1ST
-    mkswap {mirror}2 -L SWAP_2ND
+    mkswap {disk}{diskprefix}2 -L SWAP_1ST
+    test -n "{mirror}" && mkswap {mirror}{diskprefix}2 -L SWAP_2ND || true
     """)
 
 
@@ -457,7 +581,7 @@ def _format_disks(host: DeployHost, disk: str,mirror: str, mode: str, zfspassphr
     host.run(f'zfs get encryption')
 
 
-def _disk_mount(host: DeployHost,mirror: bool, zfspassphrase: str) -> None:
+def _disk_mount(host: DeployHost,mirror: str, zfspassphrase: str) -> None:
     # Umount all volumes
     host.run(f"umount -R /mnt",check=False)
 
@@ -474,7 +598,7 @@ def _disk_mount(host: DeployHost,mirror: bool, zfspassphrase: str) -> None:
     mount -t zfs zroot/{zfspool}/root /mnt
     mkdir -p /mnt/{{boot,boot-fallback,nix,nix-homelab,data,persist/host,persist/user}}
     mount /dev/disk/by-label/BOOT_1ST /mnt/boot
-    test -n "{mirror}" && mount /dev/disk/by-label/BOOT_2ND /mnt/boot-fallback
+    test -n "{mirror}" && mount /dev/disk/by-label/BOOT_2ND /mnt/boot-fallback || true
     mount -t zfs zroot/public/nix /mnt/nix
     mount -t zfs zroot/public/nix-homelab /mnt/nix-homelab
     mount -t zfs zroot/{zfspool}/data /mnt/data
@@ -485,7 +609,7 @@ def _disk_mount(host: DeployHost,mirror: bool, zfspassphrase: str) -> None:
     # Mount swap
     host.run(f"""
 swapon /dev/disk/by-label/SWAP_1ST
-test -n "{mirror}" && swapon /dev/disk/by-label/SWAP_2ND
+test -n "{mirror}" && swapon /dev/disk/by-label/SWAP_2ND || true
 mount -o remount,nr_inodes=0,size=6G /nix/.rw-store
 swapon --show
 """,check=False)
@@ -547,9 +671,32 @@ def _wireguard_keys(hostname:str) -> None:
 
     info(f"wireguard-priv-key: {private}")
 
-def _nixos_generate_config(host: DeployHost, hostname: str, confname: str, ) -> None:
+
+def _execute_nixos_rebuild(action:str, hostnames:str, discovery:bool, cache:bool, keeperror:bool,showtrace:bool):
+    if hostnames != "":
+        # Remote deploy
+        deploylist = get_deploylist_from_homelab(hostnames)
+        _nixos_rebuild(deploylist, action, discovery, cache, keeperror,showtrace)
+    else:
+        # Local deploy
+        _nix_local_deploy(action, discovery, cache, keeperror,showtrace)
+
+
+def _execute_home_manager(action:str, hostnames:str, discovery:bool, cache:bool, keeperror:bool,showtrace:bool):
+    if hostnames != "":
+        # Remote deploy
+        deploylist = get_deploylist_from_homelab(hostnames)
+        _home_manager(deploylist, action, discovery, cache, keeperror,showtrace)
+    else:
+        # Local deploy
+        _home_local_deploy(action, discovery, cache, keeperror,showtrace)
+
+
+def _nixos_generate_config(host: DeployHost, hostname: str ) -> None:
     
-    confpath = f'modules/hardware/{confname}.nix'
+    confpath = f'hosts/{hostname}/hardware-configuration.nix'
+
+    os.makedirs(f'hosts/{hostname}',exist_ok=True)
     if not os.path.exists(confpath):
         host.run("""
         nixos-generate-config --dir /tmp/hw --root /mnt
@@ -559,6 +706,7 @@ def _nixos_generate_config(host: DeployHost, hostname: str, confname: str, ) -> 
         run(f"""
         scp root@{host.host}:/tmp/hw/hardware-configuration.nix {confpath}
         """)
+
 
 # Remove .git (for ignoring dirty message), no git add needed :)
 def _sync_homelab(host: DeployHost) -> None:
@@ -633,7 +781,7 @@ def _host_hardware_discovery(h: DeployHost) -> None:
                             pass
 
 
-def _nix_deploy(hosts: List[DeployHost], discovery: bool, cache: bool, keeperror: bool,showtrace: bool) -> None:
+def _nixos_rebuild(hosts: List[DeployHost], action: str, discovery: bool, cache: bool, keeperror: bool,showtrace: bool) -> None:
     """
     Deploy to all hosts in parallel
     """
@@ -669,7 +817,7 @@ def _nix_deploy(hosts: List[DeployHost], discovery: bool, cache: bool, keeperror
             if showtrace:
                 showtrace_opts="--show-trace"
 
-            cmd = f"cd /nix-homelab && nixos-rebuild -v switch {showtrace_opts} {cache_opts} {keeperror_opts} --fast --option accept-flake-config true --flake .#{hostname}"
+            cmd = f"cd /nix-homelab && nixos-rebuild -v {action} {showtrace_opts} {cache_opts} {keeperror_opts} --fast --option accept-flake-config true --flake .#{hostname}"
             h.run(cmd)
 
             if discovery:
@@ -679,13 +827,14 @@ def _nix_deploy(hosts: List[DeployHost], discovery: bool, cache: bool, keeperror
     g.run_function(deploy)
 
 
-def _nix_build(hosts: List[DeployHost], cache: bool, keeperror: bool, showtrace: bool) -> None:
+def _home_manager(hosts: List[DeployHost], action: str, discovery: bool, cache: bool, keeperror: bool,showtrace: bool) -> None:
     """
-    Build for all hosts in parallel
+    Deploy to all hosts in parallel
     """
     g = DeployGroup(hosts)
 
     def deploy(h: DeployHost) -> None:
+        
         with open('homelab.json', 'r') as f:
             jinfo = json.load(f)
             hosts = jinfo['hosts']
@@ -714,12 +863,105 @@ def _nix_build(hosts: List[DeployHost], cache: bool, keeperror: bool, showtrace:
             if showtrace:
                 showtrace_opts="--show-trace"
 
-            cmd = f"cd /nix-homelab && nixos-rebuild -v build {showtrace_opts} {cache_opts} {keeperror_opts} --fast --option accept-flake-config true --option keep-going true --flake .#{hostname}"
+            cmd = f"cd /nix-homelab && home-manager -v {action} {showtrace_opts} {cache_opts} {keeperror_opts} --option accept-flake-config true --flake .#{hostname}"
             h.run(cmd)
 
-            h.meta['hostname'] = hostname
+            if discovery:
+                h.meta['hostname'] = hostname
+                _host_hardware_discovery(h)
 
     g.run_function(deploy)
+
+
+def _nix_local_deploy(action: str, discovery: bool, cache: bool, keeperror: bool,showtrace: bool) -> None:
+    """
+    Deploy to on local compute
+    """
+    run(
+        f"rsync --delete {' --exclude '.join([''] + RSYNC_EXCLUDES)} -ar . /nix-homelab/"
+    )
+
+    cache_opts = ""
+    if not cache:
+        cache_opts = "--fallback --option binary-caches https://cache.nixos.org/"
+
+    keeperror_opts = ""
+    if keeperror:
+        keeperror_opts = "--option keep-going true"
+
+    showtrace_opts = ""
+    if showtrace:
+        showtrace_opts="--show-trace"
+
+    cmd = f"cd /nix-homelab && sudo nixos-rebuild -v {action} {showtrace_opts} {cache_opts} {keeperror_opts} --fast --option accept-flake-config true --flake .#"
+    run(cmd)
+
+
+def _home_local_deploy(action: str, discovery: bool, cache: bool, keeperror: bool,showtrace: bool) -> None:
+    """
+    Deploy to on local compute
+    """
+    run(
+        f"rsync --delete {' --exclude '.join([''] + RSYNC_EXCLUDES)} -ar . /nix-homelab/"
+    )
+
+    cache_opts = ""
+    if not cache:
+        cache_opts = "--fallback --option binary-caches https://cache.nixos.org/"
+
+    keeperror_opts = ""
+    if keeperror:
+        keeperror_opts = "--option keep-going true"
+
+    showtrace_opts = ""
+    if showtrace:
+        showtrace_opts="--show-trace"
+
+    cmd = f"cd /nix-homelab && home-manager {action} {showtrace_opts} {cache_opts} {keeperror_opts} --option accept-flake-config true --flake ."
+    run(cmd)
+
+
+# def _nix_build(hosts: List[DeployHost], cache: bool, keeperror: bool, showtrace: bool) -> None:
+#     """
+#     Build for all hosts in parallel
+#     """
+#     g = DeployGroup(hosts)
+
+#     def deploy(h: DeployHost) -> None:
+#         with open('homelab.json', 'r') as f:
+#             jinfo = json.load(f)
+#             hosts = jinfo['hosts']
+
+#             # Search host by ip
+#             hostname = None
+#             for hn in hosts:
+#                 if 'ipv4' in hosts[hn] and  hosts[hn]['ipv4'] == h.host:
+#                     hostname = hn
+#                     break
+
+#         h.run_local(
+#             f"rsync --delete {' --exclude '.join([''] + RSYNC_EXCLUDES)} -ar . {h.user}@{h.host}:/nix-homelab/"
+#         )
+
+#         if hostname:
+#             cache_opts = ""
+#             if not cache:
+#                 cache_opts = "--fallback --option binary-caches https://cache.nixos.org/"
+
+#             keeperror_opts = ""
+#             if keeperror:
+#                 keeperror_opts = "--option keep-going true"
+
+#             showtrace_opts = ""
+#             if showtrace:
+#                 showtrace_opts="--show-trace"
+
+#             cmd = f"cd /nix-homelab && nixos-rebuild -v build {showtrace_opts} {cache_opts} {keeperror_opts} --fast --option accept-flake-config true --option keep-going true --flake .#{hostname}"
+#             h.run(cmd)
+
+#             h.meta['hostname'] = hostname
+
+#     g.run_function(deploy)
 
 
 
@@ -905,7 +1147,8 @@ def _doc_update_hosts_pages() -> None:
 
 ns = Collection()
 ns.add_collection(wg)
-ns.add_collection(nix)
+ns.add_collection(nixos)
+ns.add_collection(home)
 ns.add_collection(docs)
 ns.add_collection(init)
 ns.add_collection(role)

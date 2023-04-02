@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+IMAGES="$HOME/wallpapers"
+
+set -x
+
+# Check if dunst running
+pgrep dunst > /dev/null
+if [ $? ]; then
+    NOTIFY=notify-send
+else
+    NOTIFY=echo
+fi
+
+# Generate files from wpg templates
+if [ -n "$1" ]; then
+    IMG=$1
+else
+    CURRENT=$(wpg -c)
+
+    if [ "$CURRENT" != ".current" ]; then
+        IMG=${IMAGES}/$CURRENT
+    else
+        IMG=${IMAGES}/default.jpg
+
+        wpg -a $IMG
+        wpg -A $IMG
+    fi
+fi
+
+# Compute and set Colorscheme
+wpg -a ${IMG}
+wpg -A ${IMG}
+
+# Select theme
+wpg -s ${IMG} | grep -v 'icons - base file does not exist' | grep '\[e\]' && $NOTIFY -u critical "Error ${IMG} theme selelection" || $NOTIFY "${IMG} colorscheme selected"
+#launch-polybar
+
+# Change some resources
+feh --bg-center ${IMAGES}/$(wpg -c)
+
+rm -f ${IMAGES}/*_sample.png
