@@ -17,6 +17,7 @@
 
     # Misc
     ./tools/broot.nix
+    ./tools/htop.nix
     ./tools/neofetch.nix
     ./tools/user-scripts
   ];
@@ -104,7 +105,9 @@
     ranger # TUI file manager
 
     #    procs # top alternative
-    bottom # System viewer
+    atop # Top alternative
+    btop # Top alternative
+
     ripgrep # Better grep
     jq # JSON pretty printer and manipulator
     sops # Deployment secrets tool
