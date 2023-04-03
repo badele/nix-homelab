@@ -2,17 +2,14 @@
 
 let
   cfg = config.xsession.windowManager.i3.config;
+  inherit (config) colorscheme;
+  inherit (colorscheme) colors;
 
   py3status-conf = import ./py3status.nix { inherit py3status-conf; };
 
-  # pythonPackages = (pkgs.python310.withPackages (p: with p; [
-  #   normalizer
-  #   py3status
-  # ])).override
-  #   (args: { ignoreCollisions = true; });
-
   lockTime = 4 * 60; # TODO: configurable desktop (10 min)/laptop (4 min)
 
+  # i3 workspaces
   mod = "Mod4";
   w1 = "1:  TSK";
   w2 = "2:  MUS";
@@ -25,35 +22,22 @@ let
   w9 = "9:  DEV";
   w0 = "0:  TERM";
 
+  # i3 parameters
+  border = 1;
+  gaps_inner = 5;
+  gaps_outer = 5;
+  gaps_top = 5;
+  gaps_bottom = 5;
+
   flameshot = "${pkgs.flameshot}/bin/flameshot";
   peek = "${pkgs.peek}/bin/peek";
-  #light = "${pkgs.light}/bin/light";
-  # mako = "${pkgs.mako}/bin/mako";
-  # makoctl = "${pkgs.mako}/bin/makoctl";
-  # neomutt = "${pkgs.neomutt}/bin/neomutt";
-  # pactl = "${pkgs.pulseaudio}/bin/pactl";
-  # pass-wofi = "${pkgs.pass-wofi}/bin/pass-wofi";
-  # playerctl = "${pkgs.playerctl}/bin/playerctl";
-  # playerctld = "${pkgs.playerctl}/bin/playerctld";
-  # swaybg = "${pkgs.swaybg}/bin/swaybg";
-  # swayidle = "${pkgs.swayidle}/bin/swayidle";
   py3status = "${pkgs.python3Packages.py3status}/bin/py3status";
+  feh = "${pkgs.feh}/bin/feh";
   i3lock = "${pkgs.i3lock-color}/bin/i3lock-color";
   xidlehook = "${pkgs.xidlehook}/bin/xidlehook";
   lockCmd = "${i3lock} --blur 5";
-  # swaylock = "${pkgs.swaylock-effects}/bin/swaylock";
-  # systemctl = "${pkgs.systemd}/bin/systemctl";
   rofi = "${pkgs.rofi}/bin/rofi";
-
   terminal = "${pkgs.wezterm}/bin/wezterm";
-  # termcmd = class: cmd: "${terminal} --class ${class}} bash -c ${cmd}";
-
-  # spotify = "${pkgs.spotify}/bin/spotify";
-  # ncspot = "${pkgs.ncspot}/bin/ncspot";
-  # firefox = "${pkgs.firefox}/bin/firefox";
-  # termcava = termcmd "cava" "cava";
-  # termncspot = termcmd "ncspot" "ncspot";
-
 in
 {
 
@@ -66,15 +50,46 @@ in
     enable = true;
     windowManager.i3 = {
       enable = true;
+      package = pkgs.i3-gaps;
       config = {
         modifier = mod;
         terminal = terminal;
 
         fonts = [ "Source Code Pro" "DejaVu Sans Mono, FontAwesome 6" ];
+        colors = {
+          focused = {
+            background = "#${colors.base00}";
+            border = "#${colors.base0C}";
+            childBorder = "#${colors.base0C}";
+            indicator = "#${colors.base0C}";
+            text = "#${colors.base0F}";
+          };
+          unfocused = {
+            background = "#${colors.base00}";
+            border = "#${colors.base03}";
+            childBorder = "#${colors.base03}";
+            indicator = "#${colors.base03}";
+            text = "#${colors.base0F}";
+          };
+        };
+
+        window = {
+          titlebar = false;
+          border = border;
+        };
 
         focus = {
           newWindow = "smart";
         };
+
+        gaps =
+          {
+            # Set inner/outer gaps
+            outer = gaps_outer;
+            inner = gaps_inner;
+            top = gaps_top;
+            bottom = gaps_bottom;
+          };
 
         keybindings = {
           # Shortcut
@@ -220,12 +235,21 @@ in
             #mode = "hide";
             position = "top";
             statusCommand = "py3status -c .config/py3status.conf";
+
+            colors = {
+              background = "#${colors.base00}";
+            };
           }
         ];
 
         startup = [
           {
             command = "${xidlehook} --not-when-fullscreen --timer ${toString lockTime} '${lockCmd}' ''";
+            always = false;
+            notification = false;
+          }
+          {
+            command = "${feh} --bg-scale '${config.wallpaper}'";
             always = false;
             notification = false;
           }

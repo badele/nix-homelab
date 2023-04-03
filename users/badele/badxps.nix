@@ -76,6 +76,8 @@
 
   # inv home.deploy ; neofetch ; ll
   colorscheme = inputs.nix-colors.colorSchemes.darktooth;
+  wallpaper = pkgs.wallpapers.forest-deer-landscape;
+
   # OK colorscheme = inputs.nix-colors.colorSchemes.gruvbox-dark-soft;
   # OK colorscheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
   # OK colorscheme = inputs.nix-colors.colorSchemes.solarized-dark;

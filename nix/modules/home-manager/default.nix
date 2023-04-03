@@ -5,4 +5,5 @@
   # List your module files here
   userconf = import ./userconf.nix;
   font = import ./font.nix;
+  wallpaper = import ./wallpaper.nix;
 }

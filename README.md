@@ -11,8 +11,7 @@ All the configuration is stored on `homelab.json` file, you can do:
 
 This documentation is generated from `homelab.json` file content 
 
-<img align="right" width="30%" src="./docs/top.png" />
-<img width="60%" src="./docs/neofetch.png" />
+<img width="100%" src="./docs/nixos.png" />
 
 ## Roles
 
