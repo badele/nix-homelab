@@ -19,6 +19,7 @@
     ./tools/broot.nix
     ./tools/htop.nix
     ./tools/neofetch.nix
+    ./tools/top
     ./tools/user-scripts
   ];
 
