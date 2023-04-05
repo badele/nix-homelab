@@ -17,8 +17,8 @@ in
         interval = 1
     }
     order += "spotify"
-    order += "online_status"
     order += "wireless wlp59s0"
+    order += "online_status"
     order += "ethernet enp3s0f0"
     order += "vpn_status"
     order += "cpu_usage"

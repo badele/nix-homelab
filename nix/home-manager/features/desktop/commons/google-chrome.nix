@@ -1,4 +1,4 @@
-{ pkgs, lib, inputs, ... }:
+{ pkgs, config, lib, inputs, ... }:
 {
   programs.browserpass = {
     enable = config.programs.chromium.enable;
