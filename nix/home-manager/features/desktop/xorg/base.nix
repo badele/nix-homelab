@@ -1,6 +1,12 @@
 { config, lib, pkgs, ... }:
 {
-  home.packages = with pkgs; [
-    xorg.xev
+
+  imports = [
+    ./dunst.nix
+    ./rofi.nix
   ];
+
+  home.packages = with pkgs;
+    [
+    ];
 }
