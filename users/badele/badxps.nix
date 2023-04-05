@@ -8,6 +8,9 @@
 , lib
 , ...
 }:
+let
+  feh = "${pkgs.feh}/bin/feh";
+in
 {
   imports = [
     inputs.nix-colors.homeManagerModule
@@ -68,7 +71,10 @@
               rate = "60.00";
             };
           };
-          #hooks.postswitch = readFile script;
+          hooks.postswitch = ''
+            ${pkgs.i3}/bin/i3-msg restart
+            ${feh} --bg-scale '${config.wallpaper}'
+          '';
         };
       };
     };

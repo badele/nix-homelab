@@ -104,6 +104,7 @@
     fd # find alternative
     httpie # curl alternative
     ranger # TUI file manager
+    bashmount # Terminal mount helper
 
     #    procs # top alternative
     atop # Top alternative

@@ -13,6 +13,9 @@
 # 5) .zlogout is sometimes used to clear and reset the terminal. It is called when exiting, not when opening.
 
 { config, pkgs, lib, ... }:
+let
+  xprop = "${pkgs.xorg.xprop}/bin/xprop";
+in
 {
   imports = [
   ];
@@ -144,7 +147,7 @@
         # My tools
         calc_latency = "_calc_latency"; ## Compute approximatively internet latency
         toclipboard = "${xclip} -selection clipboard"; ## Copy output to clipboard
-        get_i3_window_name = "${xorg.xprop} | grep CLASS";
+        get_i3_window_name = "${xprop} | grep CLASS | cut -d\",\" -f2 | sed 's/\"//g'";
 
         # Tools
         calc = "eva"; ## launch calc computing (eva)

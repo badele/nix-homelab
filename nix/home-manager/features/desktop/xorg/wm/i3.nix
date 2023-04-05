@@ -5,8 +5,6 @@ let
   inherit (config) colorscheme;
   inherit (colorscheme) colors;
 
-  py3status-conf = import ./py3status.nix { inherit py3status-conf; };
-
   lockTime = 4 * 60; # TODO: configurable desktop (10 min)/laptop (4 min)
 
   # i3 workspaces
@@ -29,6 +27,8 @@ let
   gaps_top = 5;
   gaps_bottom = 5;
 
+
+  playerctl = "${pkgs.playerctl}/bin/playerctl";
   flameshot = "${pkgs.flameshot}/bin/flameshot";
   peek = "${pkgs.peek}/bin/peek";
   py3status = "${pkgs.python3Packages.py3status}/bin/py3status";
@@ -36,13 +36,11 @@ let
   i3lock = "${pkgs.i3lock-color}/bin/i3lock-color";
   xidlehook = "${pkgs.xidlehook}/bin/xidlehook";
   lockCmd = "${i3lock} --blur 5";
-  rofi = "${pkgs.rofi}/bin/rofi";
   terminal = "${pkgs.wezterm}/bin/wezterm";
 in
 {
 
   imports = [
-    ../rofi.nix
     ./py3status.nix
   ];
 
@@ -111,7 +109,7 @@ in
           # # || Super+Space || Show rofi launcher | i3
           # # || Super+Ctrl+Space || Search rofi mode | i3
           # # || Super+Shift+e || Power and exit menu | i3
-          "${mod}+space" = "exec --no-startup-id ${rofi} -show-icons -show drun";
+          "${mod}+space" = "exec --no-startup-id rofi -show-icons -show drun";
 
           # # Screenshot
           # # || Print || Take a desktop screenshot | i3
@@ -129,9 +127,10 @@ in
           "XF86AudioMicMute" = "exec --no-startup-id ~/.local/bin/mixer mic mute";
           "XF86AudioLowerVolume" = "exec --no-startup-id ~/.local/bin/mixer output down";
           "XF86AudioRaiseVolume" = "exec --no-startup-id ~/.local/bin/mixer output up";
-          "${mod}+p" = "exec --no-startup-id ~/.local/bin/mediactl play-pause";
-          "${mod}+m" = "exec --no-startup-id $terminal start --class pulsemixer -- pulsemixer";
-          "${mod}+d" = "exec --no-startup-id $terminal start --class bashmount -- bashmount";
+          "${mod}+p" = "exec --no-startup-id ${playerctl} play-pause";
+          "${mod}+n" = "exec --no-startup-id ${playerctl} next";
+          "${mod}+m" = "exec --no-startup-id ${cfg.terminal} start --class pulsemixer -- pulsemixer";
+          "${mod}+d" = "exec --no-startup-id ${cfg.terminal} start --class bashmount -- bashmount";
 
           # # Screen brightness controls
           "XF86MonBrightnessUp" = "exec \"xbacklight -inc 10; notify-send 'brightness up'\"";
@@ -259,7 +258,34 @@ in
           #   notification = false;
           # }
         ];
+
+        assigns = {
+          "${w2}" = [
+            { class = "Spotify"; }
+          ];
+          "${w3}" = [
+            { class = "Discord"; }
+          ];
+          "${w7}" = [
+            { class = "Google-chrome"; }
+          ];
+          "${w9}" = [
+            { class = "VSCodium"; }
+          ];
+        };
+
+        floating = {
+          border = 1;
+          titlebar = false;
+          criteria = [
+            { class = "pulsemixer"; }
+            { class = "bashmount"; }
+          ];
+        };
+
+        #for_window [class="pulsemixer"] floating enable border pixel $border
       };
     };
   };
 }
+
