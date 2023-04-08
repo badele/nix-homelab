@@ -18,7 +18,7 @@ import string
 import shutil
 from pathlib import Path
 from typing import List, Any
-from deploykit import DeployHost, DeployGroup
+from deploykit import DeployHost, DeployGroup, HostKeyCheck
 from typing import IO, Any, Callable, List, Dict, Optional, Text
 
 
@@ -53,13 +53,24 @@ OSSCAN = {
     ],
     'Android': [
                 "Scan",
-    ]
-
+    ],
+    'Iphone': [
+                "Scan",
+    ],
+    'Chromecast': [
+                "Scan",
+    ],
+    'GoogleMini': [
+                "Scan",
+    ],
 }
 
 
 def get_hosts(hosts: str) -> List[DeployHost]:
-    return [DeployHost(h, user="root") for h in hosts.split(",")]
+    return parse_hosts(
+        hosts=hosts,
+        user="root"
+    )
 
 
 def get_deploylist_from_homelab(hosts: str) -> List[DeployHost]:
@@ -77,6 +88,7 @@ def get_deploylist_from_homelab(hosts: str) -> List[DeployHost]:
             dh = DeployHost(
                 hostslist[hn]['ipv4'], 
                 user="root",
+                host_key_check = HostKeyCheck.NONE,
                 meta=dict(
                     hostname=hn,
                     os=hostslist[hn]['os']
@@ -475,19 +487,20 @@ def doc_generate_hosts_pages(c):
     _doc_update_hosts_pages()
 
 
-docs = Collection('docs')
-docs.add_task(doc_generate_all_pages)
-docs.add_task(doc_generate_main_page)
-docs.add_task(doc_generate_hosts_pages)
-
-
-@task
-def scan_all_hosts(c,hosts=""):
+@task(name="scan_all_hosts")
+def doc_scan_all_hosts(c,hosts=""):
     """
     Retrieve all hosts system infromations
     """ 
     deploylist = get_deploylist_from_homelab(hosts)
     _scan_all_hosts(deploylist)
+
+
+docs = Collection('docs')
+docs.add_task(doc_generate_all_pages)
+docs.add_task(doc_generate_main_page)
+docs.add_task(doc_generate_hosts_pages)
+docs.add_task(doc_scan_all_hosts)
 
 
 ##############################################################################
@@ -732,23 +745,23 @@ def _host_hardware_discovery(h: DeployHost) -> None:
                 check=False)
 
             for dn in OSSCAN[hosts[hn]["os"]]:
-                
                 # For non NixOS installation
                 # TODO: find beautifull solution (.bash_profile & co)
                 PREFIX_COMMAND="source /etc/bashrc ; LC_ALL=C"
+                SSH_OPTS='-o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no"'
                 match dn:
-                    case "Nix":
+                    case "Nix"| "NixOS":
                         h.run(f"{PREFIX_COMMAND} nix-shell -p nix-info --run 'nix-info -m' > /tmp/hw/{dn}.txt")
-                        run(f'scp root@{h.host}:/tmp/hw/{dn}.txt docs/hosts/{hn}/{dn.lower()}.txt')
+                        run(f'scp {SSH_OPTS} root@{h.host}:/tmp/hw/{dn}.txt docs/hosts/{hn}/{dn.lower()}.txt')
                     case "Hardwares":
                         h.run(f"{PREFIX_COMMAND} nix-shell -p 'inxi.override {{ withRecommends = true; }}' --run 'sudo inxi -F -a -i --slots -xxx -c0 -i -m --filter' > /tmp/hw/{dn}.txt")
-                        run(f'scp root@{h.host}:/tmp/hw/{dn}.txt docs/hosts/{hn}/{dn.lower()}.txt')
+                        run(f'scp {SSH_OPTS} root@{h.host}:/tmp/hw/{dn}.txt docs/hosts/{hn}/{dn.lower()}.txt')
                     case "CPU":
                         h.run(f"{PREFIX_COMMAND} lscpu > /tmp/hw/{dn}.txt")
-                        run(f'scp root@{h.host}:/tmp/hw/{dn}.txt docs/hosts/{hn}/{dn.lower()}.txt')
+                        run(f'scp {SSH_OPTS} root@{h.host}:/tmp/hw/{dn}.txt docs/hosts/{hn}/{dn.lower()}.txt')
                     case "Topologie":
                         res = h.run(f"{PREFIX_COMMAND} nix-shell -p hwloc --run 'sudo lstopo -f /tmp/hw/{hn}.lstopo.svg'")
-                        run(f"scp root@{hosts[hn]['ipv4']}:/tmp/hw/{hn}.lstopo.svg docs/hosts/{hn}/{dn.lower()}.svg")
+                        run(f"scp {SSH_OPTS} root@{hosts[hn]['ipv4']}:/tmp/hw/{hn}.lstopo.svg docs/hosts/{hn}/{dn.lower()}.svg")
                     case "Scan":
                         res = run(f"{PREFIX_COMMAND} nix-shell -p nmap --run 'sudo nmap --version-intensity 0 -sV {hosts[hn]['ipv4']} -oX -'")
                         
@@ -1003,6 +1016,7 @@ def _doc_update_hosts_pages() -> None:
                         "bogomips": 0
                     }
                 }
+
                 for dn in OSSCAN[hosts[hn]["os"]]:
                     output = ""
                     match dn:

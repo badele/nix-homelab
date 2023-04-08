@@ -1,0 +1,39 @@
+[
+    {
+        "@protocol": "tcp",
+        "@portid": "8008",
+        "service": {
+            "@name": "http"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "8009",
+        "service": {
+            "@name": "ajp13",
+            "@tunnel": "ssl"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "8443",
+        "service": {
+            "@name": "https-alt",
+            "@tunnel": "ssl"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "9000",
+        "service": {
+            "@name": "cslistener"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "10001",
+        "service": {
+            "@name": "scp-config"
+        }
+    }
+]

@@ -1,0 +1,9 @@
+[
+    {
+        "@protocol": "tcp",
+        "@portid": "80",
+        "service": {
+            "@name": "tcpwrapped"
+        }
+    }
+]

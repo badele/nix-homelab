@@ -3,11 +3,11 @@ System:    Kernel: 5.15.74 aarch64 bits: 64 compiler: gcc v: 9.5.0
            snd_bcm2835.enable_hdmi=1 bcm2708_fb.fbwidth=1184 bcm2708_fb.fbheight=624 
            bcm2708_fb.fbswap=1 smsc95xx.macaddr=DC:A6:32:F0:05:16 vc_mem.mem_base=0x3eb00000 
            vc_mem.mem_size=0x3ff00000 nohibernate loglevel=4 
-           init=/nix/store/j42igrd9dzpafgm0dcnd5pld9lspr09a-nixos-system-rpi40-23.05.20230105.a518c77/init 
+           init=/nix/store/9yfbng1lkj4mqpdw6n0r877pnrhi6z76-nixos-system-rpi40-23.05.20230105.a518c77/init 
            Console: N/A Distro: NixOS 23.05 (Stoat) 
 Machine:   Type: ARM Device System: Raspberry Pi 4 Model B Rev 1.4 details: BCM2835 rev: d03114 
            serial: <filter> 
-Memory:    RAM: total: 7.62 GiB used: 2.31 GiB (30.3%) 
+Memory:    RAM: total: 7.62 GiB used: 3.32 GiB (43.6%) 
            RAM Report: smbios: No SMBIOS data for dmidecode to process 
 PCI Slots: ARM: No ARM data found for this feature. 
 CPU:       Info: Quad Core model: N/A variant: cortex-a72 bits: 64 type: MCP arch: ARMv8 family: 8 
@@ -43,26 +43,28 @@ Network:   Device-1: bcm2835-mmc driver: mmc_bcm2835 v: N/A port: N/A bus-ID: N/
            IF-ID-1: docker0 state: down mac: <filter> 
            IP v4: <filter> scope: global broadcast: <filter> 
            WAN IP: <filter> 
-RAID:      Device-1: zroot type: zfs status: ONLINE level: linear size: 464 GiB free: 455 GiB 
-           allocated: 9.01 GiB 
+RAID:      Device-1: zroot type: zfs status: ONLINE level: linear size: 464 GiB free: 454 GiB 
+           allocated: 10.4 GiB 
            Components: Online: N/A 
-Drives:    Local Storage: total: raw: 495.48 GiB usable: 959.48 GiB used: 6.43 GiB (0.7%) 
+Drives:    Local Storage: total: raw: 495.48 GiB usable: 959.48 GiB used: 7.84 GiB (0.8%) 
            ID-1: /dev/mmcblk0 maj-min: 179:0 vendor: SanDisk model: SL32G size: 29.72 GiB 
            block-size: physical: 512 B logical: 512 B rotation: SSD serial: <filter> scheme: MBR 
            SMART Message: Unknown smartctl error. Unable to generate data. 
            ID-2: /dev/sda maj-min: 8:0 type: USB vendor: Hitachi model: HTS547550A9E384 
            family: HGST Travelstar 5K750 size: 465.76 GiB block-size: physical: 4096 B 
            logical: 512 B sata: 2.6 speed: 3.0 Gb/s rotation: 5400 rpm serial: <filter> rev: JE3O 
-           temp: 27 C scheme: GPT 
-           SMART: yes state: enabled health: PASSED on: 1y 170d 20h cycles: 69596 Old-Age: 
-           g-sense error rate: 1052 Pre-Fail: reallocated sector: 100 threshold: 5 
-Partition: ID-1: / raw-size: N/A size: 441.45 GiB used: 850 MiB (0.2%) fs: zfs 
+           temp: 26 C scheme: GPT 
+           SMART: yes state: enabled health: PASSED on: 1y 219d 18h cycles: 69597 Old-Age: 
+           g-sense error rate: 1054 Pre-Fail: reallocated sector: 100 threshold: 5 
+Partition: ID-1: / raw-size: N/A size: 441.47 GiB used: 2.26 GiB (0.5%) fs: zfs 
            logical: zroot/private/root 
            ID-2: /boot raw-size: 1024 MiB size: 1022 MiB (99.80%) used: 150.4 MiB (14.7%) fs: vfat 
            block-size: 512 B dev: /dev/sda1 maj-min: 8:1 
 Swap:      Alert: No swap data was found. 
-Sensors:   System Temperatures: cpu: 58.9 C mobo: N/A 
+Sensors:   System Temperatures: cpu: 57.5 C mobo: N/A 
            Fan Speeds (RPM): N/A 
-Info:      Processes: 183 Uptime: 13h 25m Init: systemd v: 252 target: multi-user.target 
-           tool: systemctl Compilers: gcc: 9.5.0 Packages: nix-default: 0 nix-sys: 335 lib: 52 
-           nix-usr: 0 Client: Sudo v: 1.9.12p1 inxi: 3.3.04 
+Info:      Processes: 179 
+           Uptime: 06:50:49  up 48 days 14:11,  0 users,  load average: 0.08, 0.06, 0.02 
+           Init: systemd v: 252 target: multi-user.target tool: systemctl Compilers: gcc: 9.5.0 
+           Packages: nix-default: 0 nix-sys: 335 lib: 52 nix-usr: 0 Client: Sudo v: 1.9.12p1 
+           inxi: 3.3.04 

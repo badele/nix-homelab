@@ -1,7 +1,7 @@
 {
     "memory": "8 Go",
     "disk": "3.64 TiB",
-    "kernel": "5.15.82",
+    "kernel": "5.15.86",
     "cpu": {
         "arch": "x86_64",
         "model": "AMD Turion(tm) II Neo N40L Dual-Core Processor",

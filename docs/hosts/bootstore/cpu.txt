@@ -18,7 +18,7 @@ Stepping:                        3
 CPU(s) scaling MHz:              100%
 CPU max MHz:                     1500.0000
 CPU min MHz:                     800.0000
-BogoMIPS:                        2994.98
+BogoMIPS:                        2994.97
 Flags:                           fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm 3dnowext 3dnow constant_tsc rep_good nopl nonstop_tsc cpuid extd_apicid pni monitor cx16 popcnt lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt nodeid_msr hw_pstate vmmcall npt lbrv svm_lock nrip_save
 Virtualization:                  AMD-V
 L1d cache:                       128 KiB (2 instances)

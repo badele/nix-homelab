@@ -1,0 +1,9 @@
+[
+    {
+        "@protocol": "tcp",
+        "@portid": "5060",
+        "service": {
+            "@name": "sip"
+        }
+    }
+]

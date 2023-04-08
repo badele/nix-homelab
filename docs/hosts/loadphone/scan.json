@@ -1,0 +1,16 @@
+[
+    {
+        "@protocol": "tcp",
+        "@portid": "49152",
+        "service": {
+            "@name": "unknown"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "62078",
+        "service": {
+            "@name": "tcpwrapped"
+        }
+    }
+]

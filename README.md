@@ -43,7 +43,7 @@ This list generated with `inv docs.all-pages` command
         <td>rpi40, bootstore</td>
         <td>Network Time Protocol</td>
         <tr>
-        <td><a href="./docs/acme.md"><img width="32" src="http://www.kevinsubileau.fr/wp-content/uploads/2016/03/letsencrypt-logo-pad.png"></a></td>
+        <td><a href="./docs/acme.md"><img width="32" src="https://www.kevinsubileau.fr/wp-content/uploads/2016/03/letsencrypt-logo-pad.png"></a></td>
         <td><a href="./docs/acme.md">acme</a></td>
         <td>bootstore</td>
         <td>Let's Encrypt Automatic Certificate Management Environment</td>
@@ -263,6 +263,15 @@ This list generated with `inv docs.all-pages` command
             <td></td>
             <td></td>
             <td>Google Mini room C</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/badxps.md"><img width="32" src="https://ih1.redbubble.net/image.201056839.4943/flat,32x32,075,t.jpg"></a></td>
+            <td><a href="./docs/hosts/badxps.md">badxps</a>&nbsp;(192.168.254.114)</td>
+            <td>12</td>
+            <td>NixOS</td>
+            <td></td>
+            <td>16 Go</td>
+            <td>476.94 GiB</td>
+            <td>Dell XPS 9570 Latop</td>
         </tr></table>
 
 [comment]: (<<HOSTS)
@@ -366,17 +375,28 @@ This list generated with `inv docs.all-pages` command
 ```
 Available tasks:
 
-  docs.all-pages     generate all homelab documentation
-  docs.host-pages    generate all homelab hosts page
-  docs.main-page     generate main homelab page
-  init.domain-cert   Init domain certificate
-  init.nix-serve     Init nix binary cache server <hostname> nix-serve private
-                     & public key
-  nix.build          Build for <hostnames>
-  nix.deploy         Deploy to <hostnames> server
-  role.build         Build for all hosts contains the role
-  role.deploy        Deploy for all hosts contains the role
-  wireguard.keys     Generate wireguard private key for <hostname>
+  docs.all-pages               generate all homelab documentation
+  docs.host-pages              generate all homelab hosts page
+  docs.main-page               generate main homelab page
+  docs.scan-all-hosts          Retrieve all hosts system infromations
+  home.build                   Test to <hostnames> server
+  home.deploy                  Deploy to <hostnames> server
+  home.test                    Test to <hostnames> server
+  init.disk-format             Format disks with zfs
+  init.disk-mount              Mount disks from the installer
+  init.domain-cert             Init domain certificate
+  init.nix-serve               Init nix binary cache server <hostname> nix-
+                               serve private & public key
+  init.nixos-generate-config   Generate hardware configuration for the host
+  init.nixos-install           install nixos
+  init.ssh-init-host-key       Init ssh host key from nixos installation
+  nixos.build                  Test to <hostnames> server
+  nixos.deploy                 Deploy to <hostnames> server
+  nixos.test                   Test to <hostnames> server
+  role.build                   Build for all hosts contains the role
+  role.deploy                  Deploy for all hosts contains the role
+  role.test                    Test for all hosts contains the role
+  wireguard.keys               Generate wireguard private key for <hostname>
 
 
 ```

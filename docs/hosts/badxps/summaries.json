@@ -1,0 +1,12 @@
+{
+    "memory": "16 Go",
+    "disk": "476.94 GiB",
+    "kernel": "6.1.20",
+    "cpu": {
+        "arch": "x86_64",
+        "model": "Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz",
+        "nb": "12",
+        "bits": "64",
+        "bogomips": 4399
+    }
+}
