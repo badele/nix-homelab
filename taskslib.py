@@ -144,10 +144,19 @@ def generateUsedRoles() -> str:
         for h in allroles[mname]:
             hosts_list.append(h)
 
-        roles_table += f'''<tr>
-        <td><a href="./docs/{mname}.md"><img width="32" src="{roles[mname]["icon"]}"></a></td>
-        <td><a href="./docs/{mname}.md">{mname}</a></td>
-        <td>{", ".join(hosts_list)}</td>
+        filename=f'./docs/{mname}.md'
+        if os.path.exists(filename):
+            roles_table += f'''<tr>
+            <td><a href="./docs/{mname}.md"><img width="32" src="{roles[mname]["icon"]}"></a></td>
+            <td><a href="./docs/{mname}.md">{mname}</a></td>
+            '''
+        else:
+            roles_table += f'''<tr>
+            <td><img width="32" src="{roles[mname]["icon"]}"></td>
+            <td>{mname}</td>
+            '''
+
+        roles_table += f'''<td>{", ".join(hosts_list)}</td>
         <td>{roles[mname]['description']}</td>
         '''
 
