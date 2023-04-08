@@ -132,3 +132,7 @@ Info:      Processes: 358
         
 
 [comment]: (<<HOSTINFOS)
+
+## Install from scratch
+
+[Commons installation](../installation.md)

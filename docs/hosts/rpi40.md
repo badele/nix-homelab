@@ -112,34 +112,14 @@ Info:      Processes: 183 Uptime: 13h 25m Init: systemd v: 252 target: multi-use
 
 Download RPI image `https://hydra.nixos.org/build/201124221`
 
+Start [Commons installation](../installation.md)
+
+On specific **host section**
+
+# configure nix-server, <One time> add host and public key to features/system/nix.nix 
+inv init-nix-serve --hosts ${TARGETIP} --hostnames ${TARGETNAME}
+
 ```
-# Change keymap & root password
-sudo -i
-loadkeys fr
-passwd 
-
-# WI-FI
-systemctl start wpa_supplicant
-wpa_cli
-add_network
-set_network 0 ssid "ssid_name"
-set_network 0 psk "password"
-enable_network 0
-
-# From other computer, enter to deploy environment
-# NOTE: Use <SPACE> before command for not storing command in bash history (for secure your passwords)
-nix develop
-ssh-copy-id root@<nixos-livecd-ip>
- inv firmware-tpi-update --hosts <nixos-livecd-ip> 
- inv disk-format --hosts <nixos-livecd-ip> --disks /dev/sda --password <zfspassword>
-inv ssh-init-host-key --hosts <nixos-livecd-ip> --hostnames <hostname>
-
-# Add password key to ./hosts/<hostname>/secrets.yml 
-echo 'yourpassword' | mkpasswd -m sha-512 -s
-
-# Re-encrypt all keys for the previous host
-sops updatekeys ./hosts/<hostname>/secrets.yml
-
 # configure nix-server
 inv init-nix-server --hosts <nixos-livecd-ip>
 export DIR_NIXSERVE=/persist/host/data/nix-serve
@@ -148,18 +128,8 @@ nix-store --generate-binary-cache-key rpi40.adele.local cache-priv-key.pem cache
 
 # Update RPI and configure USB boot
 inv firmware-rpi-update --hosts <nixos-livecd-ip>
-
-# install
-inv nixos-install --hosts <nixos-livecd-ip> --flakeattr <hostname>
-
 ```
 
-## Second install
-```
+End [Commons installation](../installation.md) with **custom task**
 
-```
-
-## nix-serve
-```
-nix verify --store http://localhost:5000 --trusted-public-keys 'rpi40.adele.local:JYE85lTt2SBXUwueEftHLH/CE7INzV0zH7TWfNtIqYU=' /nix/store
-```
+TODO: update rpi40, bootstore nix-server documentation and remove persistent store

@@ -132,37 +132,10 @@ Info:      Processes: 203 Uptime: 13h 14m wakeups: 0 Init: systemd v: 252
 
 ## Install from scratch
 
-Download RPI image `https://hydra.nixos.org/build/201124221`
+Start [Commons installation](../installation.md)
 
+On specific **host section**
 ```
-##########################################################
-# NixOS installation configuration
-##########################################################
-
-# Change keymap & root password
-sudo -i
-loadkeys fr
-passwd 
-
-# From other computer, enter to deploy environment
-# NOTE: Use <SPACE> before command for not storing command in bash history (for secure your passwords)
-nix develop
-export TARGETIP=192.168.254.100
-export TARGETNAME=bootstore
-
-ssh-copy-id root@${TARGETIP}
- inv disk-format --hosts ${TARGETIP} --disk /dev/sda --mirror /dev/sdb --mode MBR
- [Optional] inv disk-mount --hosts ${TARGETIP} --mirror true --password "<zfspassword>"
-inv ssh-init-host-key --hosts ${TARGETIP} --hostnames ${TARGETNAME}
-inv wireguard.keys # Add to wireguard-privatekey (./hosts/bootstore/secrets.yml )
-inv nixos-generate-config --hosts ${TARGETIP} --hostnames ${TARGETNAME} --name hp-proliant-microserver-n40l
-
-# Add hosts/bootstore/ssh-to-age.txt content to .sops.yaml
-# Add root password key to ./hosts/bootstore/secrets.yml 
-echo 'yourpassword' | mkpasswd -m sha-512 -s
-
-# Re-encrypt all keys for the previous host
-sops updatekeys ./hosts/${TARGETNAME}/secrets.yml
 
 ##########################################################
 # Nix serve binary cache
@@ -170,22 +143,8 @@ sops updatekeys ./hosts/${TARGETNAME}/secrets.yml
 
 # configure nix-server, <One time> add host and public key to features/system/nix.nix 
 inv init-nix-serve --hosts ${TARGETIP} --hostnames ${TARGETNAME}
-
-####################################################
-# Execute your custom task here, exemple:
-# - Restore persist borgbackup
-# - Configure some program (private key generation)
-####################################################
-
-# Add hostname in configurations.nix with minimalModules
-# Configure hosts/<hostname>/default.nix
-
-# NixOS installation
-inv nixos-install --hosts ${TARGETIP} --flakeattr ${TARGETNAME}
 ```
 
-## Update nixos
+End [Commons installation](../installation.md) with **custom task**
 
-```
-inv deploy --hosts bootstore
-```
+TODO: update rpi40, bootstore nix-server documentation and remove persistent store

@@ -284,84 +284,25 @@ This list generated with `inv docs.all-pages` command
 inv init.domain-cert
 ```
 
-## Commons scratch installation
+## NixOS installation & update
 
-Boot from NixOS live cd
+See [Commons installation](docs//installation.md)
 
-```
-##########################################################
-# From NixOS LiveCD installation
-##########################################################
 
-# Change keymap & root password
-sudo -i
-loadkeys fr
-passwd 
-
-# WI-FI
-systemctl start wpa_supplicant
-wpa_cli
-add_network
-set_network 0 ssid "ssid_name"
-set_network 0 psk "password"
-enable_network 0
-
-# Connect to nixos installation
-ip a
-
-##########################################################
-# From other computer, enter to deploy environment
-##########################################################
-
-# NOTE: Use <SPACE> before command for not storing command in bash history (for secure your passwords)
-nix develop
-export TARGETIP=<hostip>
-export TARGETNAME=<hostname>
-
-ssh-copy-id root@${TARGETIP}
-
-# Disk initialisation (some examples)
-inv init.disk-format --hosts ${TARGETIP} --disk /dev/sda --mirror /dev/sdb --mode MBR --passwd <PASSWORD> # encrypt ZFS
-inv init.disk-format --hosts ${TARGETIP} --disk /dev/sda --mirror /dev/sdb --mode MBR
-inv init.disk-format --hosts ${TARGETIP} --disk /dev/nvme0n1  --mode EFI
-or 
-inv nix.disk-mount --hosts ${TARGETIP} --password "<zfspassword>" [--mirror /dev/sdb] 
-
-inv init.ssh-init-host-key --hosts ${TARGETIP} --hostnames ${TARGETNAME}
-inv init.nixos-generate-config --hosts ${TARGETIP} --hostnames ${TARGETNAME}
-
-# Add hosts/${TARGETNAME}/ssh-to-age.txt in &hosts section in the .sops.yaml file
-# Add root password key to ./hosts/${TARGETNAME}/secrets.yml
-echo 'yourpassword' | mkpasswd -m sha-512 -s
-
-# Re-encrypt all keys for the previous host
-sops ./hosts/${TARGETNAME}/secrets.yml
-[Optional] sops updatekeys ./hosts/${TARGETNAME}/secrets.yml
-
-####################################################
-# Execute your custom task here, exemple:
-# - Restore persist borgbackup
-# - Configure some program (private key generation)
-####################################################
-
-# Add hostname in configurations.nix with minimalModules
-# Configure hosts/<hostname>/default.nix and hosts/<hostname>/hardware-configuration.nix 
-
-# NixOS installation
-inv init.nixos-install --hostnames ${TARGETIP} --flakeattr ${TARGETNAME}
-```
-
-## Update nixos
+### Update from you local computer/laptop
 
 ```
-# for remote installation
-inv nix.deploy --hostnames ${TARGETNAME} 
-
-or
-
-# For local installation
-inv nix.deploy 
+inv nixos.deploy
+inv home.deploy
 ```
+
+## Update roles or multiple hosts
+
+```
+inv role.deploy --role <rolename>
+inv nixos.deploy --hosts <hostname1,hostname2>
+```
+
 
 
 ## Commands

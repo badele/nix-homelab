@@ -13,7 +13,7 @@ inv init.nix-serve --hostnames <hostname>
 inv nix.deploy --hostnames <hostname>
 ```
 
-Testing the nix cache server
+## Testing the nix cache server
 
 ```
 curl -sLv https://nixcache.adele.im/nix-cache-info
