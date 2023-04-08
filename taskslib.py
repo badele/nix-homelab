@@ -84,7 +84,7 @@ def generateHostsList() -> str:
             cpuarch =  sinfo["cpu"]["arch"]
         cpunb = ""
         if "cpu" in sinfo and "nb" in sinfo["cpu"]:
-            cpuarch =  sinfo["cpu"]["nb"]
+            cpunb =  sinfo["cpu"]["nb"]
 
         smemory = sinfo['memory'] if "memory" in sinfo else ''
         sdisk = sinfo['disk'] if "disk" in sinfo else ''
@@ -166,6 +166,7 @@ def _replace_content(content: str, marker: str, newcontent) -> str:
     result = re.sub(rf'\[comment\]: \(\>\>{marker}\).*\[comment\]\: \(\<\<{marker}\)',newcontent, content,  flags=re.DOTALL | re.M)
     
     return result
+
 
 # Update the main README.md project page
 def _doc_update_main_project_page() -> None:

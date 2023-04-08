@@ -167,36 +167,36 @@ This list generated with `inv docs.all-pages` command
         </tr><tr>
             <td><a href="./docs/hosts/latino.md"><img width="32" src="https://styles.redditmedia.com/t5_6sciw0/styles/communityIcon_h3cvittvupi91.png"></a></td>
             <td><a href="./docs/hosts/latino.md">latino</a>&nbsp;(192.168.254.200)</td>
-            <td>4</td>
+            <td>x86_64</td>
             <td>NixOS</td>
-            <td></td>
+            <td>4</td>
             <td>8 Go</td>
             <td>465.76 GiB</td>
             <td>Dell Latitude E5540 Latop</td>
         </tr><tr>
             <td><a href="./docs/hosts/rpi40.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Raspberry_Pi_logo.svg/32px-Raspberry_Pi_logo.svg.png"></a></td>
             <td><a href="./docs/hosts/rpi40.md">rpi40</a>&nbsp;(192.168.254.101)</td>
-            <td>4</td>
+            <td>aarch64</td>
             <td>NixOS</td>
-            <td></td>
+            <td>4</td>
             <td>8 Go</td>
             <td>495.48 GiB</td>
             <td>The Raspberry PI 4 storage server</td>
         </tr><tr>
             <td><a href="./docs/hosts/bootstore.md"><img width="32" src="https://simpleicons.org/icons/databricks.svg"></a></td>
             <td><a href="./docs/hosts/bootstore.md">bootstore</a>&nbsp;(192.168.254.100)</td>
-            <td>2</td>
+            <td>x86_64</td>
             <td>NixOS</td>
-            <td></td>
+            <td>2</td>
             <td>8 Go</td>
             <td>3.64 TiB</td>
             <td>HP Proliant Microserver N40L storage server</td>
         </tr><tr>
             <td><a href="./docs/hosts/badwork.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png"></a></td>
             <td><a href="./docs/hosts/badwork.md">badwork</a>&nbsp;(192.168.254.189)</td>
-            <td>12</td>
+            <td>x86_64</td>
             <td>Nix</td>
-            <td></td>
+            <td>12</td>
             <td>32 Go</td>
             <td>953.87 GiB</td>
             <td>A work thinkpad</td>
@@ -266,9 +266,9 @@ This list generated with `inv docs.all-pages` command
         </tr><tr>
             <td><a href="./docs/hosts/badxps.md"><img width="32" src="https://ih1.redbubble.net/image.201056839.4943/flat,32x32,075,t.jpg"></a></td>
             <td><a href="./docs/hosts/badxps.md">badxps</a>&nbsp;(192.168.254.114)</td>
-            <td>12</td>
+            <td>x86_64</td>
             <td>NixOS</td>
-            <td></td>
+            <td>12</td>
             <td>16 Go</td>
             <td>476.94 GiB</td>
             <td>Dell XPS 9570 Latop</td>
