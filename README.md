@@ -33,6 +33,11 @@ This list generated with `inv docs.all-pages` command
             <td>router-living, badphone</td>
         <td>An VPN client/server alternative to IPSec and OpenVPN</td>
         <tr>
+            <td><a href="./docs/acme.md"><img width="32" src="https://www.kevinsubileau.fr/wp-content/uploads/2016/03/letsencrypt-logo-pad.png"></a></td>
+            <td><a href="./docs/acme.md">acme</a></td>
+            <td>rpi40, bootstore</td>
+        <td>Let's Encrypt Automatic Certificate Management Environment</td>
+        <tr>
             <td><img width="32" src="https://raw.githubusercontent.com/coredns/logo/master/Icon/CoreDNS_Colour_Icon.png"></td>
             <td>coredns</td>
             <td>rpi40, bootstore</td>
@@ -43,10 +48,15 @@ This list generated with `inv docs.all-pages` command
             <td>rpi40, bootstore</td>
         <td>Network Time Protocol</td>
         <tr>
-            <td><img width="32" src="https://www.kevinsubileau.fr/wp-content/uploads/2016/03/letsencrypt-logo-pad.png"></td>
-            <td>acme</td>
-            <td>bootstore</td>
-        <td>Let's Encrypt Automatic Certificate Management Environment</td>
+            <td><img width="32" src="https://developer.community.boschrexroth.com/t5/image/serverpage/image-id/13467i19FDFA6E5DC7C260?v=v2"></td>
+            <td>mosquitto</td>
+            <td>rpi40</td>
+        <td>A mqtt broker [service port 1883]</td>
+        <tr>
+            <td><img width="32" src="https://www.zigbee2mqtt.io/logo.png"></td>
+            <td>zigbee2mqtt</td>
+            <td>rpi40</td>
+        <td>A zigbee2mqtt [service port 8080]</td>
         <tr>
             <td><img width="32" src="https://dashy.to/img/dashy.png"></td>
             <td>dashy</td>
@@ -292,6 +302,11 @@ See [Commons installation](docs//installation.md)
 ### Update from you local computer/laptop
 
 ```
+# Simulate deployment(build)
+inv nixos.build
+inv home.build
+
+# Install
 inv nixos.deploy
 inv home.deploy
 ```
@@ -299,6 +314,11 @@ inv home.deploy
 ## Update roles or multiple hosts
 
 ```
+# Simulate deployment(build)
+inv role.build --role <rolename>
+inv nixos.build --hosts <hostname1,hostname2>
+
+# Install
 inv role.deploy --role <rolename>
 inv nixos.deploy --hosts <hostname1,hostname2>
 ```

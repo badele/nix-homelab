@@ -74,6 +74,14 @@
         "home-assistant": {
             "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/32px-Home_Assistant_Logo.svg.png",
             "description": "Open source home automation [service port 8123]"
+        },
+        "mosquitto": {
+            "icon": "https://developer.community.boschrexroth.com/t5/image/serverpage/image-id/13467i19FDFA6E5DC7C260?v=v2",
+            "description": "A mqtt broker [service port 1883]"
+        },
+        "zigbee2mqtt": {
+            "icon": "https://www.zigbee2mqtt.io/logo.png",
+            "description": "A zigbee2mqtt [service port 8080]"
         }
     },
     "hosts": {
@@ -122,13 +130,18 @@
             "ipv4": "192.168.254.101",
             "dnsalias": [
                 "dns",
-                "ntp"
+                "ntp",
+                "mqtt",
+                "zigbee2mqtt"
             ],
             "description": "The Raspberry PI 4 storage server",
             "os": "NixOS",
             "roles": [
+                "acme",
                 "coredns",
-                "ntp"
+                "ntp",
+                "mosquitto",
+                "zigbee2mqtt"
             ]
         },
         "bootstore": {

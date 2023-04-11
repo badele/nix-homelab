@@ -5,19 +5,21 @@
 }:
 {
   imports = [
-    ./coredns.nix
+    #    ./loki/promtail.nix
     ./acme.nix
+    ./coredns.nix
     ./dashy.nix
     ./grafana
+    ./home-assistant
     ./loki/loki.nix
-    #    ./loki/promtail.nix
-    ./prometheus
+    ./mosquitto.nix
     ./nfs.nix
     ./nix-serve.nix
     ./ntp.nix
+    ./prometheus
     ./smokeping.nix
     ./statping.nix
     ./uptime.nix
-    ./home-assistant
+    ./zigbee2mqtt.nix
   ];
 }

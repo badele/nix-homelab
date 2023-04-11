@@ -80,6 +80,14 @@
             ./hosts/badxps
           ];
         };
+
+        rpi40 = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs outputs; };
+          modules = [
+            inputs.sops-nix.nixosModules.sops
+            ./hosts/rpi40
+          ];
+        };
       };
 
       # Standalone home-manager configuration entrypoint

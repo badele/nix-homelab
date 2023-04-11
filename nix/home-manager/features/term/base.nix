@@ -87,6 +87,7 @@
     wget
     eva
     unzip
+    mqttui
 
     nvd # Show diff nix packages
     nix-diff # Check derivation differences
