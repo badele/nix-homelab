@@ -40,6 +40,7 @@ in
     networking.firewall.allowedTCPPorts = [
       cfg.port
       80
+      443
     ];
 
     # uptime docker service

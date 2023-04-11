@@ -129,7 +129,7 @@ in
 {
 
   imports = [
-    ../modules/dashy.nix
+    ../../modules/nixos/dashy.nix # TODO: use nixosModules
     ../features/system/containers.nix
   ];
 

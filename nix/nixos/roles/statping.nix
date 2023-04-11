@@ -6,7 +6,7 @@ let
 in
 {
   imports = [
-    ../modules/statping.nix
+    ../../modules/nixos/statping.nix # TODO: use nixosModules
     ../features/system/containers.nix
   ];
 

@@ -8,6 +8,9 @@ lib.mkIf (roleEnabled)
   # Configure sops secret 
   sops.secrets.gandi-apikey = { };
 
+  # acme must nginx user
+  services.nginx.enable = true;
+
   # Wildcard certificate issued via DNS-01 challenge.
   security.acme = {
     acceptTerms = true;
@@ -16,7 +19,7 @@ lib.mkIf (roleEnabled)
       domain = "*.${config.homelab.domain}";
       extraDomainNames = [ config.homelab.domain ];
       dnsProvider = "gandiv5";
-      group = "nginx";
+      group = config.services.nginx.group;
       credentialsFile = config.sops.secrets.gandi-apikey.path;
       dnsPropagationCheck = true;
     };

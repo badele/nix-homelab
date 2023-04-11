@@ -17,8 +17,8 @@ lib.mkIf (roleEnabled)
 {
   networking.firewall.allowedTCPPorts = [
     config.services.grafana.settings.server.http_port
-    443
     80
+    443
   ];
 
   services.grafana = {

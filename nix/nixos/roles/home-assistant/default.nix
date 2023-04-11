@@ -34,6 +34,7 @@ let
   '';
 
 in
+lib.mkIf (roleEnabled)
 {
 
   sops.secrets."home-assistant" = {
@@ -41,8 +42,8 @@ in
   };
 
   networking.firewall.allowedTCPPorts = [
-    443
     80
+    443
   ];
 
   # Dashy docker service

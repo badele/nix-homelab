@@ -43,6 +43,7 @@ in
     networking.firewall.allowedTCPPorts = [
       cfg.port
       80
+      443
     ];
 
     # Dashy docker service

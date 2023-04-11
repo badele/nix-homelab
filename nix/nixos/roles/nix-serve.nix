@@ -10,7 +10,7 @@ let
   roleEnabled = lib.elem roleName config.homelab.currentHost.roles;
   alias = "nixcache";
   aliasdefined = !(builtins.elem alias config.homelab.currentHost.dnsalias);
-  port_nixserve = 5000;
+  cfg = config.services.nix-serve;
 in
 lib.mkIf (roleEnabled)
 {
@@ -18,8 +18,9 @@ lib.mkIf (roleEnabled)
   sops.secrets.nixserve-private-key = { };
 
   networking.firewall.allowedTCPPorts = [
-    port_nixserve
+    cfg.port
     80
+    443
   ];
 
   services.nix-serve = {
@@ -39,7 +40,7 @@ lib.mkIf (roleEnabled)
 
     locations."/" = {
       extraConfig = ''
-        proxy_pass http://127.0.0.1:${toString port_nixserve};
+        proxy_pass http://127.0.0.1:${toString cfg.port};
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

@@ -6,7 +6,7 @@ let
 in
 {
   imports = [
-    ../modules/uptime.nix
+    ../../modules/nixos/uptime.nix # TODO: use nixosModules
     ../features/system/containers.nix
   ];
 
