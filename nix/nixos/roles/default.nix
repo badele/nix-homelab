@@ -7,6 +7,7 @@
   imports = [
     #    ./loki/promtail.nix
     ./acme.nix
+    ./adguard.nix
     ./coredns.nix
     ./dashy.nix
     ./grafana

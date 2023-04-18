@@ -40,7 +40,7 @@ This list generated with `inv docs.all-pages` command
         <tr>
             <td><img width="32" src="https://raw.githubusercontent.com/coredns/logo/master/Icon/CoreDNS_Colour_Icon.png"></td>
             <td>coredns</td>
-            <td>rpi40, bootstore</td>
+            <td>rpi40</td>
         <td>A Go DNS server, it used for serving local hosts and alias</td>
         <tr>
             <td><img width="32" src="https://freesvg.org/img/ftntp-client.png"></td>
@@ -53,10 +53,15 @@ This list generated with `inv docs.all-pages` command
             <td>rpi40</td>
         <td>A mqtt broker [service port 1883]</td>
         <tr>
-            <td><img width="32" src="https://www.zigbee2mqtt.io/logo.png"></td>
-            <td>zigbee2mqtt</td>
+            <td><a href="./docs/zigbee2mqtt.md"><img width="32" src="https://www.zigbee2mqtt.io/logo.png"></a></td>
+            <td><a href="./docs/zigbee2mqtt.md">zigbee2mqtt</a></td>
             <td>rpi40</td>
         <td>A zigbee2mqtt [service port 8080]</td>
+        <tr>
+            <td><img width="32" src="https://play-lh.googleusercontent.com/pCqOLS2w-QaTI63tjFLvncHnbXc4100EQI3FAD0RZEFWjGMa_54M4x2HD7j48qMSv3kk"></td>
+            <td>adguard</td>
+            <td>bootstore</td>
+        <td>DNS ad blocker [service port 3002]</td>
         <tr>
             <td><img width="32" src="https://dashy.to/img/dashy.png"></td>
             <td>dashy</td>
@@ -101,7 +106,7 @@ This list generated with `inv docs.all-pages` command
             <td><img width="32" src="https://cf.appdrag.com/dashboard-openvm-clo-b2d42c/uploads/Uptime-kuma-7fPG.png"></td>
             <td>uptime</td>
             <td>bootstore</td>
-        <td>A Status Page [service port 8083]</td>
+        <td>A Status Page [service port 3001/8083]</td>
         <tr>
             <td><a href="./docs/home-assistant.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/32px-Home_Assistant_Logo.svg.png"></a></td>
             <td><a href="./docs/home-assistant.md">home-assistant</a></td>
@@ -180,8 +185,8 @@ This list generated with `inv docs.all-pages` command
             <td>x86_64</td>
             <td>NixOS</td>
             <td>4</td>
-            <td>8 Go</td>
-            <td>465.76 GiB</td>
+            <td></td>
+            <td></td>
             <td>Dell Latitude E5540 Latop</td>
         </tr><tr>
             <td><a href="./docs/hosts/rpi40.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Raspberry_Pi_logo.svg/32px-Raspberry_Pi_logo.svg.png"></a></td>
@@ -189,8 +194,8 @@ This list generated with `inv docs.all-pages` command
             <td>aarch64</td>
             <td>NixOS</td>
             <td>4</td>
-            <td>8 Go</td>
-            <td>495.48 GiB</td>
+            <td></td>
+            <td></td>
             <td>The Raspberry PI 4 storage server</td>
         </tr><tr>
             <td><a href="./docs/hosts/bootstore.md"><img width="32" src="https://simpleicons.org/icons/databricks.svg"></a></td>
@@ -198,8 +203,8 @@ This list generated with `inv docs.all-pages` command
             <td>x86_64</td>
             <td>NixOS</td>
             <td>2</td>
-            <td>8 Go</td>
-            <td>3.64 TiB</td>
+            <td></td>
+            <td></td>
             <td>HP Proliant Microserver N40L storage server</td>
         </tr><tr>
             <td><a href="./docs/hosts/badwork.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png"></a></td>
@@ -207,8 +212,8 @@ This list generated with `inv docs.all-pages` command
             <td>x86_64</td>
             <td>Nix</td>
             <td>12</td>
-            <td>32 Go</td>
-            <td>953.87 GiB</td>
+            <td></td>
+            <td></td>
             <td>A work thinkpad</td>
         </tr><tr>
             <td><a href="./docs/hosts/badphone.md"><img width="32" src="https://cdn-icons-png.flaticon.com/512/38/38002.png"></a></td>
@@ -279,8 +284,8 @@ This list generated with `inv docs.all-pages` command
             <td>x86_64</td>
             <td>NixOS</td>
             <td>12</td>
-            <td>16 Go</td>
-            <td>476.94 GiB</td>
+            <td></td>
+            <td></td>
             <td>Dell XPS 9570 Latop</td>
         </tr></table>
 

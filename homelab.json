@@ -23,6 +23,10 @@
             "icon": "https://raw.githubusercontent.com/coredns/logo/master/Icon/CoreDNS_Colour_Icon.png",
             "description": "A Go DNS server, it used for serving local hosts and alias"
         },
+        "adguard": {
+            "icon": "https://play-lh.googleusercontent.com/pCqOLS2w-QaTI63tjFLvncHnbXc4100EQI3FAD0RZEFWjGMa_54M4x2HD7j48qMSv3kk",
+            "description": "DNS ad blocker [service port 3002]"
+        },
         "acme": {
             "icon": "https://www.kevinsubileau.fr/wp-content/uploads/2016/03/letsencrypt-logo-pad.png",
             "description": "Let's Encrypt Automatic Certificate Management Environment"
@@ -69,7 +73,7 @@
         },
         "uptime": {
             "icon": "https://cf.appdrag.com/dashboard-openvm-clo-b2d42c/uploads/Uptime-kuma-7fPG.png",
-            "description": "A Status Page [service port 8083]"
+            "description": "A Status Page [service port 3001/8083]"
         },
         "home-assistant": {
             "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/32px-Home_Assistant_Logo.svg.png",
@@ -129,10 +133,10 @@
             "icon": "https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Raspberry_Pi_logo.svg/32px-Raspberry_Pi_logo.svg.png",
             "ipv4": "192.168.254.101",
             "dnsalias": [
-                "dns",
+                "coredns",
                 "ntp",
                 "mqtt",
-                "zigbee2mqtt"
+                "zigbee"
             ],
             "description": "The Raspberry PI 4 storage server",
             "os": "NixOS",
@@ -164,7 +168,7 @@
                 "hass"
             ],
             "roles": [
-                "coredns",
+                "adguard",
                 "acme",
                 "dashy",
                 "grafana",

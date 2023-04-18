@@ -71,6 +71,16 @@ let
             url = "https://hass.${config.homelab.domain}";
             icon = "hl-home-assistant";
           }
+          {
+            title = "zigbee";
+            url = "https://zigbee.${config.homelab.domain}";
+            icon = "hl-mqtt";
+          }
+          {
+            title = "adguard";
+            url = "https://dns.${config.homelab.domain}";
+            icon = "hl-adguard-home";
+          }
         ];
       }
       {
@@ -112,14 +122,6 @@ let
             title = "Github";
             url = "https://github.com/badele";
             icon = "favicon";
-          }
-        ];
-      }
-      {
-        name = "Widgets";
-        widgets = [
-          {
-            type = "apod";
           }
         ];
       }
