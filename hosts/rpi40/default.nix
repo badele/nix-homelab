@@ -16,8 +16,24 @@
     ../../nix/nixos/roles/prometheus/exporter/node.nix
   ];
 
-  networking.hostName = "rpi40";
-  networking.useDHCP = lib.mkDefault true;
+  networking = {
+    useDHCP = false;
+    hostName = "rpi40";
+
+    defaultGateway = "192.168.254.254";
+    nameservers = [
+      "192.168.254.101" # use CoreDNS server
+      "89.2.0.1"
+      "89.2.0.2"
+    ];
+
+    interfaces.enp2s0.ipv4 = {
+      addresses = [{
+        address = "192.168.254.101";
+        prefixLength = 24;
+      }];
+    };
+  };
 
   system.stateVersion = "22.11";
 }

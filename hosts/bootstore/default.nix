@@ -5,6 +5,15 @@
 {
   imports = [
     ./hardware-configuration.nix
+
+    # Users
+    ../../users/root/nixos_passwd.nix
+    ../../users/badele/nixos_passwd.nix
+    # Commons
+    ../../nix/nixos/features/term/base
+    ../../nix/nixos/features/homelab
+
+    # Roles
     ../../nix/nixos/roles # Automatically load service from <host.modules> sectionn from `homelab.json` file
     ../../nix/nixos/roles/prometheus/exporter/node.nix
     ../../nix/nixos/roles/prometheus/exporter/snmp.nix
@@ -17,8 +26,7 @@
 
     defaultGateway = "192.168.254.254";
     nameservers = [
-      "192.168.254.100"
-      "192.168.254.101"
+      "192.168.254.101" # use CoreDNS server
       "89.2.0.1"
       "89.2.0.2"
     ];
@@ -30,13 +38,6 @@
       }];
     };
   };
-
-  # TODO: move to commons file
-  environment.systemPackages = with pkgs; [
-    wget
-    vim
-    unzip
-  ];
 
   system.stateVersion = "22.11";
 }

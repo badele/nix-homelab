@@ -17,8 +17,6 @@ in
     extraOptions = [
       "-p"
       "${toString cfg.port}:3001"
-      "--dns"
-      "${cfg.dns}"
       "-v"
       "/data/docker/uptime:/app/data"
     ];

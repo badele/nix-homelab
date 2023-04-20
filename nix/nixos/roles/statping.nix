@@ -17,8 +17,6 @@ in
     extraOptions = [
       "-p"
       "${toString cfg.port}:8080"
-      "--dns"
-      "${cfg.dns}"
       "-v"
       "/data/docker/statping:/app"
 

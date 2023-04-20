@@ -287,6 +287,24 @@ This list generated with `inv docs.all-pages` command
             <td></td>
             <td></td>
             <td>Dell XPS 9570 Latop</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/bridge-hue.md"><img width="32" src="https://www.daskeyboard.com/images/applets/philips-hue/icon.png"></a></td>
+            <td><a href="./docs/hosts/bridge-hue.md">bridge-hue</a>&nbsp;(192.168.254.191)</td>
+            <td>x86_64</td>
+            <td>Bridge</td>
+            <td>12</td>
+            <td></td>
+            <td></td>
+            <td>Philips Hue bridge</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/sadhome.md"><img width="32" src="https://cdn.icon-icons.com/icons2/2699/PNG/512/archlinux_logo_icon_167835.png"></a></td>
+            <td><a href="./docs/hosts/sadhome.md">sadhome</a>&nbsp;(192.168.254.185)</td>
+            <td>x86_64</td>
+            <td>Linux</td>
+            <td>12</td>
+            <td></td>
+            <td></td>
+            <td>Stephanie's laptop</td>
         </tr></table>
 
 [comment]: (<<HOSTS)
