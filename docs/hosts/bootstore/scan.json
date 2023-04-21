@@ -10,13 +10,6 @@
     },
     {
         "@protocol": "tcp",
-        "@portid": "53",
-        "service": {
-            "@name": "tcpwrapped"
-        }
-    },
-    {
-        "@protocol": "tcp",
         "@portid": "80",
         "service": {
             "@name": "http",

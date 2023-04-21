@@ -28,21 +28,21 @@ os.chdir(ROOT)
 
 RSYNC_EXCLUDES = [".git"]
 
+# NOTE: Array order is important (Config section must be computed first)
 OSSCAN = {
     'NixOS': [
+                "Role",
+                "Scan",
+                "Config",
                 "Topologie",
                 "Hardwares",
-                "Services",
-                "Scan",
-                "CPU",
                 "Nix"
             ],
     'Nix': [
+                "Scan",
+                "Config",
                 "Topologie",
                 "Hardwares",
-                "Services",
-                "Scan",
-                "CPU",
                 "Nix"
             ],
     'MikroTik': [
@@ -61,6 +61,12 @@ OSSCAN = {
                 "Scan",
     ],
     'GoogleMini': [
+                "Scan",
+    ],
+    'Bridge': [
+                "Scan",
+    ],
+    'ArchLinux': [
                 "Scan",
     ],
 }
@@ -1020,9 +1026,12 @@ def _doc_update_hosts_pages() -> None:
                 for dn in OSSCAN[hosts[hn]["os"]]:
                     output = ""
                     match dn:
-                        case "CPU":
-                            filename = f'docs/hosts/{hn}/{dn.lower()}.txt'
+                        case "Role":
+                            output = taskslib.generateUsedRoles(hostname=hn,rootpath="..")
+                        case "Config":
+                            filename = f'docs/hosts/{hn}/cpu.txt'
                             if os.path.exists(filename):
+                                output = "```text\n"
                                 with open(filename, 'r') as fr:
                                     cpu_content = fr.read().strip()
 
@@ -1030,27 +1039,27 @@ def _doc_update_hosts_pages() -> None:
                                     m = re.search('Architecture:\s+(.*)',cpu_content,flags=re.M)
                                     if m:
                                         sinfo['cpu']['arch'] = m.group(1)
+                                        output += f"Arch     : {sinfo['cpu']['arch']}\n"
                                     
-                                    
-                                    # CPU model
-                                    m = re.search('Model name:\s+(.*)',cpu_content,flags=re.M)
-                                    if m:
-                                        sinfo['cpu']['model'] = m.group(1)
-
                                     # CPU number
                                     m = re.search('CPU\(s\):\s+([0-9]+)',cpu_content,flags=re.M)
                                     if m:
                                         sinfo['cpu']['nb'] = m.group(1)
 
+                                    # CPU model
+                                    m = re.search('Model name:\s+(.*)',cpu_content,flags=re.M)
+                                    if m:
+                                        sinfo['cpu']['model'] = m.group(1)
+                                        output += f"CPU      : {sinfo['cpu']['nb']} x {sinfo['cpu']['model']}\n"
+
+
                                     # CPU cores
                                     m = re.search('BogoMIPS:\s+([0-9]+)',cpu_content,flags=re.M)
                                     if m:
                                         sinfo['cpu']['bogomips'] = round(int(m.group(1)))
-                                        
-                                    
+                                        output += f"BogoMIPS : {sinfo['cpu']['bogomips']}\n"
 
-                        case "Hardwares":
-                            filename = f'docs/hosts/{hn}/{dn.lower()}.txt'
+                            filename = f'docs/hosts/{hn}/hardwares.txt'
                             if os.path.exists(filename):
                                 with open(filename, 'r') as fr:
                                     hw_content = fr.read().strip().replace('\\','~')
@@ -1059,11 +1068,13 @@ def _doc_update_hosts_pages() -> None:
                                     m = re.search('Memory:.*RAM: total: .*?([0-9]+\.[0-9]+) GiB',hw_content,flags=re.M)
                                     if m:
                                         sinfo['memory'] = f'{math.floor(float(m.group(1))*1.073741824)} Go'
+                                        output += f"RAM      : {sinfo['memory']} Go\n"
 
                                     # Disk
                                     m = re.search('Local Storage:.*?total.*?: ([0-9]+\.[0-9]+ \w?iB)',hw_content,flags=re.M)
                                     if m:
                                         sinfo['disk'] = m.group(1)
+                                        output += f"DISK     : {sinfo['disk']} Go\n"
                                     
                                     # CPU bits
                                     m = re.search('CPU: .*?bits: (.*?) \w+:',hw_content,flags=re.M)
@@ -1074,7 +1085,16 @@ def _doc_update_hosts_pages() -> None:
                                     m = re.search('System: .*?Kernel: ([0-9]+\.[0-9]+\.[0-9]+)',hw_content,flags=re.M)
                                     if m:
                                         sinfo['kernel'] = m.group(1)
-                                    
+                                        output += f"KERNEL   : {sinfo['kernel']}\n"
+
+                            if output:
+                                output += "```"
+
+                        case "Hardwares":
+                            filename = f'docs/hosts/{hn}/{dn.lower()}.txt'
+                            if os.path.exists(filename):
+                                with open(filename, 'r') as fr:
+                                    hw_content = fr.read().strip().replace('\\','~')
 
                                     output = f'''```
 {hw_content}
@@ -1108,35 +1128,6 @@ def _doc_update_hosts_pages() -> None:
                                     
                                         output += f"|{port}|{name}|{product}|{extrainfo}|\n"
                                     output += "\n"
-
-                        case "Services":
-                            filename = f'homelab.json'
-                            services = {}
-                            with open(filename, 'r') as fr:
-                                jinfo = json.load(fr)
-                                hostslist = jinfo['hosts']
-
-                                if 'services' in hostslist[hn]:
-                                    sinfo['services'] = hostslist[hn]['services']
-                                    for svc in hostslist[hn]['services']:
-                                        if svc not in allservices:
-                                            allservices[svc] = []
-                                        allservices[svc].append(hn)
-
-                                output = '''| Port | Service | Product | Extra info |
-| ------ | ------ |------ |------ |
-'''
-
-                                for svc in services:
-                                    proto = svc["@protocol"]
-                                    port = svc["@portid"]
-                                    
-                                    name = svc["service"].get("@name","")
-                                    product = svc["service"].get("@product","")
-                                    extrainfo = svc["service"].get("@extrainfo","")
-                                
-                                    output += f"|{port}|{name}|{product}|{extrainfo}|\n"
-                                output += "\n"
 
                     if output != "":
                         hinfo += f'''

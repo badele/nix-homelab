@@ -28,7 +28,7 @@
     loader = {
       efi = {
         canTouchEfiVariables = false;
-           };
+      };
 
       grub = {
         efiSupport = false;
@@ -49,49 +49,57 @@
 
 
   fileSystems."/" =
-    { device = "zroot/public/root";
+    {
+      device = "zroot/public/root";
       fsType = "zfs";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/66BD-AE42";
+    {
+      device = "/dev/disk/by-uuid/66BD-AE42";
       fsType = "vfat";
     };
 
   fileSystems."/boot-fallback" =
-    { device = "/dev/disk/by-uuid/66C2-95D6";
+    {
+      device = "/dev/disk/by-uuid/66C2-95D6";
       fsType = "vfat";
     };
 
   fileSystems."/nix" =
-    { device = "zroot/public/nix";
+    {
+      device = "zroot/public/nix";
       fsType = "zfs";
     };
 
   fileSystems."/data" =
-    { device = "zroot/public/data";
+    {
+      device = "zroot/public/data";
       fsType = "zfs";
     };
 
   fileSystems."/persist/host" =
-    { device = "zroot/public/persist/host";
+    {
+      device = "zroot/public/persist/host";
       fsType = "zfs";
     };
 
   fileSystems."/persist/user" =
-    { device = "zroot/public/persist/user";
+    {
+      device = "zroot/public/persist/user";
       fsType = "zfs";
     };
 
   fileSystems."/nix-homelab" =
-    { device = "zroot/public/nix-homelab";
+    {
+      device = "zroot/public/nix-homelab";
       fsType = "zfs";
     };
 
   swapDevices =
-    [ { device = "/dev/disk/by-uuid/25f7eb2d-c6f0-40a2-8ce3-35d27f7ed58c"; }
-      { device = "/dev/disk/by-uuid/67c231a5-78e7-4a88-a13e-21df4c5ffe19"; }
-    ];
+    [{ device = "/dev/disk/by-uuid/25f7eb2d-c6f0-40a2-8ce3-35d27f7ed58c"; }
+      { device = "/dev/disk/by-uuid/67c231a5-78e7-4a88-a13e-21df4c5ffe19"; }];
 
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }

@@ -3,17 +3,18 @@ System:    Kernel: 5.15.74 aarch64 bits: 64 compiler: gcc v: 9.5.0
            snd_bcm2835.enable_hdmi=1 bcm2708_fb.fbwidth=1184 bcm2708_fb.fbheight=624 
            bcm2708_fb.fbswap=1 smsc95xx.macaddr=DC:A6:32:F0:05:16 vc_mem.mem_base=0x3eb00000 
            vc_mem.mem_size=0x3ff00000 nohibernate loglevel=4 
-           init=/nix/store/9yfbng1lkj4mqpdw6n0r877pnrhi6z76-nixos-system-rpi40-23.05.20230105.a518c77/init 
+           init=/nix/store/l51q8xrjh5npkssi98xdg8fmxg3q0m25-nixos-system-rpi40-22.11.20230320.e2c9779/init 
            Console: N/A Distro: NixOS 23.05 (Stoat) 
 Machine:   Type: ARM Device System: Raspberry Pi 4 Model B Rev 1.4 details: BCM2835 rev: d03114 
            serial: <filter> 
-Memory:    RAM: total: 7.62 GiB used: 3.32 GiB (43.6%) 
+Memory:    RAM: total: 7.62 GiB used: 5.87 GiB (77.1%) 
            RAM Report: smbios: No SMBIOS data for dmidecode to process 
 PCI Slots: ARM: No ARM data found for this feature. 
 CPU:       Info: Quad Core model: N/A variant: cortex-a72 bits: 64 type: MCP arch: ARMv8 family: 8 
            model-id: 0 stepping: 3 
            features: Use -f option to see features bogomips: 432 
-           Speed: 600 MHz min/max: 600/1500 MHz Core speeds (MHz): 1: 600 2: 600 3: 600 4: 600 
+           Speed: 1400 MHz min/max: 600/1500 MHz Core speeds (MHz): 1: 1400 2: 1400 3: 1400 
+           4: 1400 
            Vulnerabilities: Type: itlb_multihit status: Not affected 
            Type: l1tf status: Not affected 
            Type: mds status: Not affected 
@@ -38,33 +39,34 @@ Network:   Device-1: bcm2835-mmc driver: mmc_bcm2835 v: N/A port: N/A bus-ID: N/
            IF: wlan0 state: down mac: <filter> 
            Device-2: bcm2711-genet-v5 driver: bcmgenet v: N/A port: N/A bus-ID: N/A 
            chip-ID: brcm:fd580000 class-ID: ethernet 
-           IF: end0 state: up speed: 1000 Mbps duplex: full mac: <filter> 
+           IF: eth0 state: up speed: 1000 Mbps duplex: full mac: <filter> 
            IP v4: <filter> type: dynamic noprefixroute scope: global broadcast: <filter> 
+           IP v6: <filter> type: noprefixroute scope: link 
            IF-ID-1: docker0 state: down mac: <filter> 
            IP v4: <filter> scope: global broadcast: <filter> 
            WAN IP: <filter> 
-RAID:      Device-1: zroot type: zfs status: ONLINE level: linear size: 464 GiB free: 454 GiB 
-           allocated: 10.4 GiB 
+RAID:      Device-1: zroot type: zfs status: ONLINE level: linear size: 464 GiB free: 444 GiB 
+           allocated: 20.3 GiB 
            Components: Online: N/A 
-Drives:    Local Storage: total: raw: 495.48 GiB usable: 959.48 GiB used: 7.84 GiB (0.8%) 
+Drives:    Local Storage: total: raw: 495.48 GiB usable: 959.48 GiB used: 17.79 GiB (1.9%) 
            ID-1: /dev/mmcblk0 maj-min: 179:0 vendor: SanDisk model: SL32G size: 29.72 GiB 
            block-size: physical: 512 B logical: 512 B rotation: SSD serial: <filter> scheme: MBR 
            SMART Message: Unknown smartctl error. Unable to generate data. 
            ID-2: /dev/sda maj-min: 8:0 type: USB vendor: Hitachi model: HTS547550A9E384 
            family: HGST Travelstar 5K750 size: 465.76 GiB block-size: physical: 4096 B 
            logical: 512 B sata: 2.6 speed: 3.0 Gb/s rotation: 5400 rpm serial: <filter> rev: JE3O 
-           temp: 26 C scheme: GPT 
-           SMART: yes state: enabled health: PASSED on: 1y 219d 18h cycles: 69597 Old-Age: 
-           g-sense error rate: 1054 Pre-Fail: reallocated sector: 100 threshold: 5 
-Partition: ID-1: / raw-size: N/A size: 441.47 GiB used: 2.26 GiB (0.5%) fs: zfs 
+           temp: 29 C scheme: GPT 
+           SMART: yes state: enabled health: PASSED on: 1y 233d 8h cycles: 69600 Old-Age: 
+           g-sense error rate: 1057 Pre-Fail: reallocated sector: 100 threshold: 5 
+Partition: ID-1: / raw-size: N/A size: 432.61 GiB used: 3.25 GiB (0.8%) fs: zfs 
            logical: zroot/private/root 
-           ID-2: /boot raw-size: 1024 MiB size: 1022 MiB (99.80%) used: 150.4 MiB (14.7%) fs: vfat 
+           ID-2: /boot raw-size: 1024 MiB size: 1022 MiB (99.80%) used: 252.7 MiB (24.7%) fs: vfat 
            block-size: 512 B dev: /dev/sda1 maj-min: 8:1 
 Swap:      Alert: No swap data was found. 
-Sensors:   System Temperatures: cpu: 57.5 C mobo: N/A 
+Sensors:   System Temperatures: cpu: 61.8 C mobo: N/A 
            Fan Speeds (RPM): N/A 
-Info:      Processes: 179 
-           Uptime: 06:50:49  up 48 days 14:11,  0 users,  load average: 0.08, 0.06, 0.02 
-           Init: systemd v: 252 target: multi-user.target tool: systemctl Compilers: gcc: 9.5.0 
-           Packages: nix-default: 0 nix-sys: 335 lib: 52 nix-usr: 0 Client: Sudo v: 1.9.12p1 
+Info:      Processes: 181 
+           Uptime: 08:29:52  up 8 days 12:50,  0 users,  load average: 0.27, 0.16, 0.18 
+           Init: systemd v: 253 target: multi-user.target tool: systemctl Compilers: gcc: 9.5.0 
+           Packages: nix-default: 0 nix-sys: 630 lib: 143 nix-usr: 0 Client: Sudo v: 1.9.13p3 
            inxi: 3.3.04 

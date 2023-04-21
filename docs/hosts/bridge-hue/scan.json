@@ -1,0 +1,28 @@
+[
+    {
+        "@protocol": "tcp",
+        "@portid": "80",
+        "service": {
+            "@name": "http",
+            "@product": "nginx"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "443",
+        "service": {
+            "@name": "http",
+            "@product": "nginx",
+            "@tunnel": "ssl"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "8080",
+        "service": {
+            "@name": "http",
+            "@product": "Web-Based Enterprise Management CIM serverOpenPegasus WBEM httpd",
+            "@ostype": "Linux"
+        }
+    }
+]

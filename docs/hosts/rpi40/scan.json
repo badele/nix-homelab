@@ -12,7 +12,25 @@
         "@protocol": "tcp",
         "@portid": "53",
         "service": {
-            "@name": "tcpwrapped"
+            "@name": "domain",
+            "@product": "Unbound"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "80",
+        "service": {
+            "@name": "http",
+            "@product": "nginx"
+        }
+    },
+    {
+        "@protocol": "tcp",
+        "@portid": "443",
+        "service": {
+            "@name": "http",
+            "@product": "nginx",
+            "@tunnel": "ssl"
         }
     },
     {

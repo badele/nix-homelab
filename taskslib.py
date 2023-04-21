@@ -64,11 +64,7 @@ def generateHostsList() -> str:
     <tr>
         <th>Logo</th>
         <th>Name</th>
-        <th>Arch</th>
         <th>OS</th>
-        <th>CPU</th>
-        <th>Memory</th>
-        <th>Disk</th>
         <th>Description</th>
     </tr>'''
 
@@ -79,25 +75,12 @@ def generateHostsList() -> str:
             with open(summariespath, 'r') as fs:
                 sinfo = json.load(fs)
 
-        cpuarch = "" 
-        if "cpu" in sinfo and "arch" in sinfo["cpu"]:
-            cpuarch =  sinfo["cpu"]["arch"]
-        cpunb = ""
-        if "cpu" in sinfo and "nb" in sinfo["cpu"]:
-            cpunb =  sinfo["cpu"]["nb"]
-
-        smemory = sinfo['memory'] if "memory" in sinfo else ''
-        sdisk = sinfo['disk'] if "disk" in sinfo else ''
         sdescription = sinfo['description'] if "description" in sinfo else ''
 
         hosts_table += f'''<tr>
             <td><a href="./docs/hosts/{hn}.md"><img width="32" src="{hosts[hn]["icon"]}"></a></td>
             <td><a href="./docs/hosts/{hn}.md">{hn}</a>&nbsp;({hosts[hn]["ipv4"]})</td>
-            <td>{cpuarch}</td>
             <td>{hosts[hn]["os"]}</td>
-            <td>{cpunb}</td>
-            <td>{smemory}</td>
-            <td>{sdisk}</td>
             <td>{hosts[hn]["description"]}</td>
         </tr>'''
 
@@ -106,7 +89,7 @@ def generateHostsList() -> str:
     return hosts_table
 
 
-def getUsedRolesList():
+def getUsedRolesList(hostname=None):
     filename = f'homelab.json'
     allroles = {}
     with open(filename, 'r') as fr:
@@ -114,6 +97,9 @@ def getUsedRolesList():
         hostslist = jinfo['hosts']
 
         for hn in hostslist:
+            if hostname and hn!=hostname:
+                continue
+
             if 'roles' in hostslist[hn]:
                 for svc in hostslist[hn]['roles']:
                     if svc not in allroles:
@@ -123,13 +109,16 @@ def getUsedRolesList():
     return allroles
 
 
-def generateUsedRoles() -> str:
+def generateUsedRoles(rootpath,hostname=None) -> str:
     # Get hosts infos
     with open('homelab.json', 'r') as fhl:
         jhl = json.load(fhl)
         roles = jhl['roles']
 
-    allroles = getUsedRolesList()
+    allroles = getUsedRolesList(hostname)
+
+    if not allroles:
+        return ""
 
     roles_table = '''<table>
     <tr>
@@ -144,11 +133,11 @@ def generateUsedRoles() -> str:
         for h in allroles[mname]:
             hosts_list.append(h)
 
-        filename=f'./docs/{mname}.md'
+        filename=f'docs/{mname}.md'
         if os.path.exists(filename):
             roles_table += f'''<tr>
-            <td><a href="./docs/{mname}.md"><img width="32" src="{roles[mname]["icon"]}"></a></td>
-            <td><a href="./docs/{mname}.md">{mname}</a></td>
+            <td><a href="{rootpath}/{mname}.md"><img width="32" src="{roles[mname]["icon"]}"></a></td>
+            <td><a href="{rootpath}/{mname}.md">{mname}</a></td>
             '''
         else:
             roles_table += f'''<tr>
@@ -186,7 +175,7 @@ def _doc_update_main_project_page() -> None:
 
     # Get generated contents
     hosts_table = generateHostsList() 
-    roles_table = generateUsedRoles()
+    roles_table = generateUsedRoles(rootpath="./docs")
     commands = generateCommandsList()
 
     # Replace content

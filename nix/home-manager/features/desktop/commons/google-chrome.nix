@@ -22,8 +22,4 @@
       "naepdomgkenhinolocfifgehidddafch" # browserpass
     ];
   };
-
-  # home.persistence = {
-  #   "/persist/user/${config.home.username}".directories = [ ".config/google-chrome" ];
-  # };
 }
