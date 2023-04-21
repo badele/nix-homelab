@@ -11,7 +11,7 @@ All the configuration is stored on `homelab.json` file, you can do:
 
 This documentation is generated from `homelab.json` file content 
 
-<img width="100%" src="./docs/nixos.png" />
+<img width="100%" src="./docs/nixos.gif" />
 
 ## Roles
 
