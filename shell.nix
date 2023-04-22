@@ -11,7 +11,7 @@ let
         hooks = [
 
           {
-            id = "black";
+            id = "reorder-python-imports";
             entry = "${pkgs.python310Packages.reorder-python-imports}/bin/reorder-python-imports";
             language = "system";
             types = [ "python" ];

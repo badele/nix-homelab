@@ -189,6 +189,12 @@
             "description": "A work thinkpad",
             "os": "Nix"
         },
+        "badwork-eth": {
+            "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png",
+            "ipv4": "192.168.254.102",
+            "description": "A ethernet work thinkpad",
+            "os": "Nix"
+        },
         "badphone": {
             "icon": "https://cdn-icons-png.flaticon.com/512/38/38002.png",
             "ipv4": "192.168.254.194",

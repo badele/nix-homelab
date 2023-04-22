@@ -1,19 +1,27 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import json
+import math
+import os
+import re
+import shutil
+import sys
+from pathlib import Path
+from typing import Any
+from typing import Callable
+from typing import IO
+from typing import List
 
-from invoke import task, run, Collection
+import xmltodict
+from deploykit import DeployGroup
+from deploykit import DeployHost
+from deploykit import HostKeyCheck
+from deploykit import parse_hosts
+from invoke import Collection
+from invoke import run
+from invoke import task
 
 import taskslib
-import math
-import re
-import sys
-import os
-import json
-import xmltodict
-import shutil
-from pathlib import Path
-from deploykit import DeployHost, DeployGroup, HostKeyCheck, parse_hosts
-from typing import IO, Any, Callable, List
 
 
 ROOT = Path(__file__).parent.resolve()
@@ -1288,7 +1296,7 @@ def _doc_update_hosts_pages() -> None:
                                     services = json.loads(frs)
 
                                     output = """| Port | Proto | Service | Product | Extra info |
-| ------ | ------ |------ |------ |
+| ------ | ------ | ------ |------ |------ |
 """  # noqa: E501
 
                                     for svc in services:

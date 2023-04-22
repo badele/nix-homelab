@@ -176,6 +176,11 @@ This list generated with `inv docs.all-pages` command
             <td>Nix</td>
             <td>A work thinkpad</td>
         </tr><tr>
+            <td><a href="./docs/hosts/badwork-eth.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png"></a></td>
+            <td><a href="./docs/hosts/badwork-eth.md">badwork-eth</a>&nbsp;(192.168.254.102)</td>
+            <td>Nix</td>
+            <td>A ethernet work thinkpad</td>
+        </tr><tr>
             <td><a href="./docs/hosts/badphone.md"><img width="32" src="https://cdn-icons-png.flaticon.com/512/38/38002.png"></a></td>
             <td><a href="./docs/hosts/badphone.md">badphone</a>&nbsp;(192.168.254.194)</td>
             <td>Android</td>
@@ -300,7 +305,6 @@ Available tasks:
   role.build                   Build for all hosts contains the role
   role.deploy                  Deploy for all hosts contains the role
   role.test                    Test for all hosts contains the role
-  wireguard.keys               Generate wireguard private key for <hostname>
 
 
 ```
