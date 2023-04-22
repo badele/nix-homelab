@@ -92,53 +92,59 @@
         "box": {
             "icon": "https://logos-marques.com/wp-content/uploads/2022/03/SFR-Logo-1994.png",
             "ipv4": "192.168.0.1",
+            "zone": "livingroom",
+            "parent": "internet",
             "description": "SFR internet box",
             "os": "Sagem"
         },
         "router-living": {
             "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
             "ipv4": "192.168.254.254",
+            "zone": "livingroom",
+            "parent": "box",
             "wg": "10.123.21.254",
-            "description": "Livingroom home mikrotik router",
+            "description": "Livingroom mikrotik router",
             "os": "MikroTik",
             "roles": [
                 "wireguard"
             ]
         },
-        "router-bedroom": {
+        "router-ladbedroom": {
             "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
             "ipv4": "192.168.254.253",
-            "description": "Bedroom home mikrotik router",
+            "zone": "ladbedroom",
+            "parent": "router-living",
+            "description": "Bedroom mikrotik router",
             "os": "MikroTik"
         },
         "router-homeoffice": {
             "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
             "ipv4": "192.168.254.252",
-            "description": "Office home mikrotik router",
+            "zone": "homeoffice",
+            "parent": "router-living",
+            "description": "Office mikrotik router",
             "os": "MikroTik"
-        },
-        "sam": {
-            "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Xfce_logo-footprint.svg/32px-Xfce_logo-footprint.svg.png",
-            "ipv4": "192.168.0.18",
-            "description": "Samsung N110 Latop",
-            "os": "NixOS"
         },
         "latino": {
             "icon": "https://styles.redditmedia.com/t5_6sciw0/styles/communityIcon_h3cvittvupi91.png",
             "ipv4": "192.168.254.200",
-            "description": "Dell Latitude E5540 Latop",
+            "zone": "homeoffice",
+            "parent": "router-ladbedroom",
+            "description": "Dell E5540 Latop",
             "os": "NixOS"
         },
         "rpi40": {
             "icon": "https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Raspberry_Pi_logo.svg/32px-Raspberry_Pi_logo.svg.png",
             "ipv4": "192.168.254.101",
+            "zone": "homeoffice",
+            "parent": "router-homeoffice",
             "dnsalias": [
                 "coredns",
                 "ntp",
                 "mqtt",
                 "zigbee"
             ],
-            "description": "The Raspberry PI 4 storage server",
+            "description": "The RPI 4 server",
             "os": "NixOS",
             "roles": [
                 "acme",
@@ -150,9 +156,11 @@
         },
         "bootstore": {
             "icon": "https://simpleicons.org/icons/databricks.svg",
-            "description": "HP Proliant Microserver N40L storage server",
+            "description": "HP Microserver N40L server",
             "os": "NixOS",
             "ipv4": "192.168.254.100",
+            "zone": "homeoffice",
+            "parent": "router-homeoffice",
             "dnsalias": [
                 "dns",
                 "grafana",
@@ -186,18 +194,23 @@
         "badwork": {
             "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png",
             "ipv4": "192.168.254.189",
+            "zone": "homeoffice",
+            "parent": "router-ladbedroom",
             "description": "A work thinkpad",
             "os": "Nix"
         },
         "badwork-eth": {
             "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png",
             "ipv4": "192.168.254.102",
+            "zone": "homeoffice",
+            "parent": "router-homeoffice",
             "description": "A ethernet work thinkpad",
             "os": "Nix"
         },
         "badphone": {
             "icon": "https://cdn-icons-png.flaticon.com/512/38/38002.png",
             "ipv4": "192.168.254.194",
+            "parent": "router-ladbedroom",
             "wg": "10.123.21.1",
             "description": "Bruno's phone",
             "os": "Android",
@@ -208,24 +221,29 @@
         "ladphone": {
             "icon": "https://cdn-icons-png.flaticon.com/512/38/38002.png",
             "ipv4": "192.168.254.184",
+            "parent": "router-ladbedroom",
             "description": "Lucas's phone",
             "os": "Android"
         },
         "sadphone": {
             "icon": "https://cdn-icons-png.flaticon.com/512/38/38002.png",
             "ipv4": "192.168.254.188",
+            "parent": "router-ladbedroom",
             "description": "Steph's phone",
             "os": "Android"
         },
         "loadphone": {
             "icon": "https://img.freepik.com/icones-gratuites/pomme_318-162866.jpg",
             "ipv4": "192.168.254.199",
+            "parent": "router-ladbedroom",
             "description": "Lou's phone",
             "os": "Iphone"
         },
         "tv-chromecast": {
             "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrW-wZZhmKpadJqRe73njFwEDLzh-jIn1XaSbCVhgMmoN46pgj6M4Fq1tWyr5w_z_HcP4&usqp=CAU",
             "ipv4": "192.168.254.105",
+            "zone": "livingroom",
+            "parent": "router-ladbedroom",
             "description": "TV Chromecast",
             "os": "Chromecast"
             
@@ -233,6 +251,8 @@
         "bedroom-googlemini-A": {
             "icon": "https://c.clc2l.com/t/g/o/google-home-wxDa7w.png",
             "ipv4": "192.168.254.197",
+            "zone": "badbedroom",
+            "parent": "router-ladbedroom",
             "description": "Google Mini room A",
             "os": "GoogleMini"
             
@@ -240,24 +260,32 @@
         "bedroom-googlemini-C": {
             "icon": "https://c.clc2l.com/t/g/o/google-home-wxDa7w.png",
             "ipv4": "192.168.254.196",
+            "zone": "loadbedroom",
+            "parent": "router-ladbedroom",
             "description": "Google Mini room C",
             "os": "GoogleMini"
         },
         "badxps": {
             "icon": "https://ih1.redbubble.net/image.201056839.4943/flat,32x32,075,t.jpg",
             "ipv4": "192.168.254.114",
+            "zone": "homeoffice",
+            "parent": "router-ladbedroom",
             "description": "Dell XPS 9570 Latop",
             "os": "NixOS"
         },
         "bridge-hue": {
             "icon": "https://www.daskeyboard.com/images/applets/philips-hue/icon.png",
             "ipv4": "192.168.254.191",
+            "zone": "ladbedroom",
+            "parent": "router-ladbedroom",
             "description": "Philips Hue bridge",
             "os": "Bridge"
         },
         "sadhome": {
             "icon": "https://cdn.icon-icons.com/icons2/2699/PNG/512/archlinux_logo_icon_167835.png",
             "ipv4": "192.168.254.185",
+            "zone": "livingroom",
+            "parent": "router-ladbedroom",
             "description": "Stephanie's laptop",
             "os": "ArchLinux"
         }
