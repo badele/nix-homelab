@@ -7,7 +7,8 @@
 
   inputs = {
     # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    #nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:badele/fork-nixpkgs/unstable-fix-smokeping-symbolic-links";
     # You can access packages and modules from different nixpkgs revs
     # at the same time. Here's an working example:
 
@@ -31,9 +32,12 @@
     # Pure  base16-schemes color themes
     nix-colors.url = "github:misterio77/nix-colors";
 
+    # Precomit local generator
+    nix-pre-commit.url = "github:jmgilman/nix-pre-commit";
+
   };
 
-  outputs = { self, nixpkgs, home-manager, sops-nix, hardware, devenv, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, sops-nix, hardware, devenv, nix-pre-commit, ... }@inputs:
     let
       inherit (self) outputs;
       forAllSystems = nixpkgs.lib.genAttrs [
@@ -55,7 +59,7 @@
       # Acessible through 'nix develop' or 'nix-shell' (legacy)
       devShells = forAllSystems (system:
         let pkgs = nixpkgs.legacyPackages.${system};
-        in import ./shell.nix { inherit pkgs; }
+        in import ./shell.nix { inherit pkgs system nix-pre-commit; }
       );
 
       # Your custom packages and modifications, exported as overlays
