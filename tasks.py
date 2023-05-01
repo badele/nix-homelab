@@ -65,7 +65,7 @@ def get_hosts(hosts: str) -> List[DeployHost]:
     return parse_hosts(hosts=hosts, user="root")
 
 
-def get_deploylist_from_homelab(hosts: str) -> List[DeployHost]:
+def get_deploylist_from_homelab(username: str, hosts: str) -> List[DeployHost]:
     with open("homelab.json", "r") as fh:
         jinfo = json.load(fh)
         hostslist = jinfo["hosts"]
@@ -79,7 +79,7 @@ def get_deploylist_from_homelab(hosts: str) -> List[DeployHost]:
         for hn in hostnames:
             dh = DeployHost(
                 hostslist[hn]["ipv4"],
-                user="root",
+                user=username,
                 host_key_check=HostKeyCheck.NONE,
                 meta=dict(hostname=hn, os=hostslist[hn]["os"]),
             )
@@ -329,22 +329,23 @@ nixos.add_task(nix_build)
         "showtrace": "Show trace on error",
     },
 )
-def home_build(c, hostnames="", cache=True, keeperror=True, showtrace=False):
+def home_build(
+    c, username="", hostnames="", cache=True, keeperror=True, showtrace=False
+):
     """
     Test to <hostnames> server
 
     if <hostnames> is empty, deploy to all nix homelab server
 
     """
-    _execute_home_manager(
-        "build", hostnames, False, cache, keeperror, showtrace
+    _execute_home_remote_deploy(
+        "build", username, hostnames, cache, keeperror, showtrace
     )
 
 
 @task(
     name="test",
     help={
-        "discovery": "get host information after deployment",
         "cache": "Use binary cache from flake extra-substituers section",
         "keeperror": "Continue, if error",
         "showtrace": "Show trace on error",
@@ -352,8 +353,8 @@ def home_build(c, hostnames="", cache=True, keeperror=True, showtrace=False):
 )
 def home_test(
     c,
+    username="",
     hostnames="",
-    discovery=True,
     cache=True,
     keeperror=True,
     showtrace=False,
@@ -364,15 +365,14 @@ def home_test(
     if <hostnames> is empty, deploy to all nix homelab server
 
     """
-    _execute_home_manager(
-        "test", hostnames, discovery, cache, keeperror, showtrace
+    _execute_home_remote_deploy(
+        "test", username, hostnames, cache, keeperror, showtrace
     )
 
 
 @task(
     name="deploy",
     help={
-        "discovery": "get host information after deployment",
         "cache": "Use binary cache from flake extra-substituers section",
         "keeperror": "Continue, if error",
         "showtrace": "Show trace on error",
@@ -380,8 +380,8 @@ def home_test(
 )
 def home_deploy(
     c,
+    username="",
     hostnames="",
-    discovery=True,
     cache=True,
     keeperror=True,
     showtrace=False,
@@ -392,8 +392,8 @@ def home_deploy(
     if <hostnames> is empty, deploy to all nix homelab server
 
     """
-    _execute_home_manager(
-        "switch", hostnames, discovery, cache, keeperror, showtrace
+    _execute_home_remote_deploy(
+        "switch", username, hostnames, cache, keeperror, showtrace
     )
 
 
@@ -532,7 +532,7 @@ def doc_scan_all_hosts(c, hosts=""):
     """
     Retrieve all hosts system infromations
     """
-    deploylist = get_deploylist_from_homelab(hosts)
+    deploylist = get_deploylist_from_homelab("root", hosts)
     _scan_all_hosts(deploylist)
 
 
@@ -774,7 +774,7 @@ def _execute_nixos_rebuild(
 ):
     if hostnames != "":
         # Remote deploy
-        deploylist = get_deploylist_from_homelab(hostnames)
+        deploylist = get_deploylist_from_homelab("root", hostnames)
         _nixos_rebuild(
             deploylist, action, discovery, cache, keeperror, showtrace
         )
@@ -783,23 +783,24 @@ def _execute_nixos_rebuild(
         _nix_local_deploy(action, discovery, cache, keeperror, showtrace)
 
 
-def _execute_home_manager(
+def _execute_home_remote_deploy(
     action: str,
+    username: str,
     hostnames: str,
-    discovery: bool,
     cache: bool,
     keeperror: bool,
     showtrace: bool,
 ):
     if hostnames != "":
         # Remote deploy
-        deploylist = get_deploylist_from_homelab(hostnames)
-        _home_manager(
-            deploylist, action, discovery, cache, keeperror, showtrace
+        deploylist = get_deploylist_from_homelab(username, hostnames)
+
+        _home_remote_deploy(
+            username, deploylist, action, cache, keeperror, showtrace
         )
     else:
         # Local deploy
-        _home_local_deploy(action, discovery, cache, keeperror, showtrace)
+        _home_local_deploy(action, cache, keeperror, showtrace)
 
 
 def _nixos_generate_config(host: DeployHost, hostname: str) -> None:
@@ -972,10 +973,10 @@ def _nixos_rebuild(
     g.run_function(deploy)
 
 
-def _home_manager(
+def _home_remote_deploy(
+    username: str,
     hosts: List[DeployHost],
     action: str,
-    discovery: bool,
     cache: bool,
     keeperror: bool,
     showtrace: bool,
@@ -1014,12 +1015,15 @@ def _home_manager(
             if showtrace:
                 showtrace_opts = "--show-trace"
 
-            cmd = f"cd /nix-homelab && home-manager -v {action} {showtrace_opts} {cache_opts} {keeperror_opts} --option accept-flake-config true --flake .#{hostname}"  # noqa: E501
-            h.run(cmd)
+            # Create missing user profile
+            h.run(f"sudo mkdir -p /nix/var/nix/profiles/per-user/{h.user}")
+            h.run(
+                f"sudo chown {h.user} /nix/var/nix/profiles/per-user/{h.user}"
+            )
 
-            if discovery:
-                h.meta["hostname"] = hostname
-                _host_hardware_discovery(h)
+            # homemanager deployment
+            cmd = f"cd /nix-homelab && home-manager -v {action} {showtrace_opts} {cache_opts} {keeperror_opts} --option accept-flake-config true --flake .#{username}@{hostname}"  # noqa: E501
+            h.run(cmd)
 
     g.run_function(deploy)
 
@@ -1053,7 +1057,7 @@ def _nix_local_deploy(
 
 
 def _home_local_deploy(
-    action: str, discovery: bool, cache: bool, keeperror: bool, showtrace: bool
+    action: str, cache: bool, keeperror: bool, showtrace: bool
 ) -> None:
     """
     Deploy to on local compute

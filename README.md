@@ -312,13 +312,13 @@ See [Commons installation](docs//installation.md)
 ### Update from you local computer/laptop
 
 ```
-# Simulate deployment(build)
-inv nixos.build
-inv home.build
+# Local installation
+inv nixos.[build|test|deploy]
+inv home.[build|test|deploy]
 
-# Install
-inv nixos.deploy
-inv home.deploy
+# Remote installation
+inv nixos.[build|test|deploy] --hostnames <hostname>,<hostname>,...
+inv home.[build|test|deploy] --username <username> --hostnames <hostname>,<hostname>,...
 ```
 
 ## Update roles or multiple hosts
@@ -326,11 +326,11 @@ inv home.deploy
 ```
 # Simulate deployment(build)
 inv role.build --role <rolename>
-inv nixos.build --hosts <hostname1,hostname2>
+inv nixos.build --hosts <hostname>,<hostname>
 
 # Install
 inv role.deploy --role <rolename>
-inv nixos.deploy --hosts <hostname1,hostname2>
+inv nixos.deploy --hosts <hostname>,<hostname>
 ```
 
 
