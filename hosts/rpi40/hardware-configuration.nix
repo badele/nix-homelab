@@ -78,4 +78,12 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "aarch64-linux";
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
+
+  # SDR
+  hardware.rtl-sdr.enable = true;
+  networking.firewall.allowedTCPPorts = [
+    1234
+    1235
+  ];
+
 }

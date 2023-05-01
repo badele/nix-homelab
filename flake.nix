@@ -121,6 +121,15 @@
             ./users/badele/badxps.nix
           ];
         };
+
+        "badele@rpi40" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.aarch64-linux; # Home-manager requires 'pkgs' instance
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [
+            # > Our main home-manager configuration file <
+            ./users/badele/rpi40.nix
+          ];
+        };
       };
     };
 }

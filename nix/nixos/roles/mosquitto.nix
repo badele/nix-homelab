@@ -10,10 +10,9 @@ in
 lib.mkIf (roleEnabled)
 {
   # Configure sops secret 
-  sops.secrets."mqtt/pass/homelab" = {
-    owner = "mosquitto";
-    group = "mosquitto";
-  };
+  sops.secrets."mqtt/pass/zigbee2mqtt" = { owner = "mosquitto"; group = "mosquitto"; };
+  sops.secrets."mqtt/pass/hass" = { owner = "mosquitto"; group = "mosquitto"; };
+
 
   networking.firewall.allowedTCPPorts = [
     port
@@ -35,14 +34,14 @@ lib.mkIf (roleEnabled)
         acl = [
           "readwrite #"
         ];
-        passwordFile = config.sops.secrets."mqtt/pass/homelab".path;
+        passwordFile = config.sops.secrets."mqtt/pass/hass".path;
       };
 
       users."${config.services.zigbee2mqtt.settings.mqtt.user}" = {
         acl = [
           "readwrite #"
         ];
-        passwordFile = config.sops.secrets."mqtt/pass/homelab".path;
+        passwordFile = config.sops.secrets."mqtt/pass/zigbee2mqtt".path;
       };
 
     }];

@@ -9,14 +9,15 @@
 let
   ifTheyExist = groups: builtins.filter (group: builtins.hasAttr group config.users.groups) groups;
   extraGroups = [
-    "wheel"
-    "video"
     "audio"
+    "video"
+    "wheel"
   ] ++ ifTheyExist [
-    "network"
-    "networkmanager"
     "docker"
     "git"
+    "network"
+    "networkmanager"
+    "plugdev"
   ];
 
 in
