@@ -87,7 +87,11 @@
     wget
     eva
     unzip
+    tmux
+
+    # MQTT
     mqttui
+    mosquitto
 
     nvd # Show diff nix packages
     nix-diff # Check derivation differences
@@ -114,6 +118,12 @@
     ripgrep # Better grep
     jq # JSON pretty printer and manipulator
     sops # Deployment secrets tool
+
+    # System
+    ltrace # System trace
+    strace # Library trace
+    usbutils # USB utils
+    dig # DNS tools
   ];
 
   # home = {

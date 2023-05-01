@@ -280,6 +280,11 @@ in
           criteria = [
             { class = "pulsemixer"; }
             { class = "bashmount"; }
+            { class = ".gnuradio-companion-wrapped"; }
+            # SDR
+            { class = "gqrx"; }
+            { class = "SDRangel"; }
+            { class = "qradiolink"; }
           ];
         };
 

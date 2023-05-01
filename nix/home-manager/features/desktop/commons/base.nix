@@ -25,5 +25,7 @@
   home.packages = with pkgs ; [
     arandr
     discord
+    simplescreenrecorder
+    mpv
   ];
 }

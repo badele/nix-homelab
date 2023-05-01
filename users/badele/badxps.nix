@@ -24,6 +24,7 @@ in
 
     # Language
     ../../nix/home-manager/features/language/python.nix
+    ../../nix/home-manager/features/language/go.nix
 
     # Desktop
     ../../nix/home-manager/features/desktop/commons/base.nix

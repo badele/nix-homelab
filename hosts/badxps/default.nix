@@ -19,6 +19,7 @@
     # Commons
     ../../nix/nixos/features/term/base
     ../../nix/nixos/features/homelab
+    ../../nix/nixos/features/system/containers.nix
 
     # Desktop
     ../../nix/nixos/features/desktop/wm/xorg/lightdm.nix

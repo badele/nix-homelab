@@ -9,5 +9,10 @@
   virtualisation.docker = {
     enable = true;
     storageDriver = "zfs";
+
+    rootless = {
+      enable = true;
+      setSocketVariable = true;
+    };
   };
 }
