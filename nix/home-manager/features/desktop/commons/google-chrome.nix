@@ -20,6 +20,7 @@
       "fiabciakcmgepblmdkmemdbbkilneeeh" # Tab suspender
       "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
       "naepdomgkenhinolocfifgehidddafch" # browserpass
+      "mhccpoafgdgbhnjfhkcmgknndkeenfhe" # InVID & WeVerify (Image fake detector)
     ];
   };
 }
