@@ -15,5 +15,6 @@
       };
     };
     windowManager.i3.enable = true;
+    synaptics.enable = true;
   };
 }
