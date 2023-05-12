@@ -11,4 +11,8 @@
     ./zfs.nix
     ./networking.nix
   ];
+
+  programs = {
+    zsh.enable = true;
+  };
 }
