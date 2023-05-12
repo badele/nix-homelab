@@ -27,5 +27,9 @@
     discord
     simplescreenrecorder
     mpv
+    libreoffice
+    gimp
+    inkscape
+    firefox
   ];
 }
