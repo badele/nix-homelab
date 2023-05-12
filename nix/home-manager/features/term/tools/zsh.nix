@@ -153,8 +153,6 @@ in
         calc = "eva"; ## launch calc computing (eva)
         fd = "fd"; ## find files alternative (fd)
         pup = "up"; ## pipe output (we can run linux command in realtime)
-        diga = "dog A CNAME MX TXT AAAA NS"; ## dig DNS resolution alternative (dog)
-        dig = "dog A"; ## dig DNS resolution alternative (dog)
         hexyl = "hexyl --border none"; ## hexdump alternative
         #br="broot"; ## File manager        
 
