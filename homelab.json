@@ -273,6 +273,14 @@
             "description": "Dell XPS 9570 Latop",
             "os": "NixOS"
         },
+        "badxps-eth": {
+            "icon": "https://ih1.redbubble.net/image.201056839.4943/flat,32x32,075,t.jpg",
+            "ipv4": "192.168.254.179",
+            "zone": "homeoffice",
+            "parent": "router-ladbedroom",
+            "description": "Dell XPS 9570 Latop",
+            "os": "NixOS"
+        },
         "bridge-hue": {
             "icon": "https://www.daskeyboard.com/images/applets/philips-hue/icon.png",
             "ipv4": "192.168.254.191",
