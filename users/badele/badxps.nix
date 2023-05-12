@@ -23,8 +23,9 @@ in
     ../../nix/home-manager/features/term/security
 
     # Language
-    ../../nix/home-manager/features/language/python.nix
+    ../../nix/home-manager/features/language/c.nix
     ../../nix/home-manager/features/language/go.nix
+    ../../nix/home-manager/features/language/python.nix
 
     # Desktop
     ../../nix/home-manager/features/desktop/commons/base.nix
