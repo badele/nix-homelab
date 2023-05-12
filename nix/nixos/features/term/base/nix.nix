@@ -49,4 +49,13 @@ in
 
   hardware.enableRedistributableFirmware = true;
   nixpkgs.config.unfree = true;
+
+  # Show installed packages (https://www.reddit.com/r/NixOS/comments/fsummx/comment/fm45htj/?utm_source=share&utm_medium=web2x&context=3)
+  environment.etc."installed-packages".text =
+    let
+      packages = builtins.map (p: "${p.name}") config.environment.systemPackages;
+      sortedUnique = builtins.sort builtins.lessThan (lib.unique packages);
+      formatted = builtins.concatStringsSep "\n" sortedUnique;
+    in
+    formatted;
 }
