@@ -285,6 +285,9 @@ in
             { class = "gqrx"; }
             { class = "SDRangel"; }
             { class = "qradiolink"; }
+            { class = "SDRHunter"; }
+            { class = "SDR++.*"; }
+
           ];
         };
 
