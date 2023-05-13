@@ -1,10 +1,13 @@
 # https://nixos.wiki/wiki/VSCodium
+# Available nix VS extensions https://github.com/NixOS/nixpkgs/blob/nixos-22.11/pkgs/applications/editors/vscode/extensions/default.nix
 { config, pkgs, ... }:
 {
   programs.vscode = {
     enable = true;
     package = pkgs.vscodium;
     extensions = with pkgs.vscode-extensions; [
+      bbenoist.nix
+      golang.go
       gruntfuggly.todo-tree
       yzhang.markdown-all-in-one
     ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
@@ -25,12 +28,6 @@
         publisher = "spmeesseman";
         version = "2.9.1";
         sha256 = "sha256-m/9wtfNbLKakB5ewOKTgnmQlQbD8804p1a4o4u0+zAk=";
-      }
-      {
-        name = "nix";
-        publisher = "bbenoist";
-        version = "1.0.1";
-        sha256 = "sha256-qwxqOGublQeVP2qrLF94ndX/Be9oZOn+ZMCFX1yyoH0=";
       }
       {
         name = "signageos-vscode-sops";
