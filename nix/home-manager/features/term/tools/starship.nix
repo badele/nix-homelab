@@ -41,7 +41,7 @@ in
 
       hostname = {
         format = "[@$hostname]($style)";
-        ssh_only = false;
+        ssh_only = true;
         style = "bg:#${colors.base0F}";
       };
 
