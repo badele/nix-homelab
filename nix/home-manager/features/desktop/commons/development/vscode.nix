@@ -9,6 +9,7 @@
       bbenoist.nix
       golang.go
       gruntfuggly.todo-tree
+      naumovs.color-highlight
       yzhang.markdown-all-in-one
     ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
       {
@@ -34,6 +35,12 @@
         publisher = "signageos";
         version = "0.6.1";
         sha256 = "sha256-fHXiIfc+EXGzR1nl9x87nyKVvLGS1zW6hV5D0CxvUCg=";
+      }
+      {
+        name = "vscode-ansi";
+        publisher = "iliazeus";
+        version = "1.1.6";
+        sha256 = "sha256-ZPV8zd/GkXOGf6s8fz9ZPmC3i1jO0wFAqV0E67lW0do=";
       }
     ];
 
