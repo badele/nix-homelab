@@ -31,6 +31,7 @@ let
   playerctl = "${pkgs.playerctl}/bin/playerctl";
   flameshot = "${pkgs.flameshot}/bin/flameshot";
   peek = "${pkgs.peek}/bin/peek";
+  gpick = "${pkgs.gpick}/bin/gpick";
   py3status = "${pkgs.python3Packages.py3status}/bin/py3status";
   feh = "${pkgs.feh}/bin/feh";
   i3lock = "${pkgs.i3lock-color}/bin/i3lock-color";
@@ -117,7 +118,7 @@ in
           # # || Super+c || Color picker | i3
           "Print" = "exec --no-startup-id ${flameshot} gui";
           "Shift+Print" = "--release exec --no-startup-id ${peek}";
-          "${mod}+c" = "--release exec ~/.local/bin/colorpicker";
+          "${mod}+c" = "--release exec ${gpick}";
 
           # # Audio
           # # || Super+p || Pause media player | i3

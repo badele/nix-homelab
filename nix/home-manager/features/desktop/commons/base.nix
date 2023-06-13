@@ -25,11 +25,13 @@
   home.packages = with pkgs ; [
     arandr
     discord
-    simplescreenrecorder
-    mpv
-    libreoffice
+    file
+    firefox
     gimp
     inkscape
-    firefox
+    libreoffice
+    mpv
+    simplescreenrecorder
+    gpick
   ];
 }
