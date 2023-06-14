@@ -344,33 +344,6 @@ def home_build(
 
 
 @task(
-    name="test",
-    help={
-        "cache": "Use binary cache from flake extra-substituers section",
-        "keeperror": "Continue, if error",
-        "showtrace": "Show trace on error",
-    },
-)
-def home_test(
-    c,
-    username="",
-    hostnames="",
-    cache=True,
-    keeperror=True,
-    showtrace=False,
-):
-    """
-    Test to <hostnames> server
-
-    if <hostnames> is empty, deploy to all nix homelab server
-
-    """
-    _execute_home_remote_deploy(
-        "test", username, hostnames, cache, keeperror, showtrace
-    )
-
-
-@task(
     name="deploy",
     help={
         "cache": "Use binary cache from flake extra-substituers section",
@@ -399,7 +372,6 @@ def home_deploy(
 
 home = Collection("home")
 home.add_task(home_deploy)
-home.add_task(home_test)
 home.add_task(home_build)
 
 
