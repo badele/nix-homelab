@@ -1,7 +1,6 @@
 { config, lib, pkgs, ... }:
 let
-  inherit (config) colorscheme;
-  inherit (colorscheme) colors;
+  hexPalette = with pkgs.lib.nix-rice; palette.toRGBHex pkgs.rice.colorPalette;
 in
 {
 
@@ -19,13 +18,13 @@ in
         offset = "30x50";
         origin = "top-right";
         transparency = 10;
-        frame_color = "#${colors.base0C}";
+        frame_color = hexPalette.bright.magenta;
         font = "${config.fontProfiles.regular.family} 12";
       };
 
       urgency_normal = {
-        background = "#${colors.base00}";
-        foreground = "#eceff1";
+        background = hexPalette.normal.black;
+        foreground = hexPalette.bright.magenta;
         timeout = 10;
       };
     };

@@ -1,7 +1,6 @@
 { config, lib, pkgs, ... }:
 let
-  inherit (config) colorscheme;
-  inherit (colorscheme) colors;
+  hexPalette = with pkgs.lib.nix-rice; palette.toRGBHex pkgs.rice.colorPalette;
 in
 {
   home.packages = [
@@ -12,8 +11,8 @@ in
     general {
         output_format = i3bar
         colors = true
-        color_good = "#${colors.base0B}"
-        color_bad = "#${colors.base08}"
+        color_good = "${hexPalette.normal.green}"
+        color_bad = "${hexPalette.normal.red}"
         interval = 1
     }
     order += "spotify"
@@ -107,3 +106,4 @@ in
     }
   '';
 }
+

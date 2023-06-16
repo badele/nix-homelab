@@ -13,8 +13,6 @@ let
 in
 {
   imports = [
-    inputs.nix-colors.homeManagerModule
-
     # User
     ./base.nix
 
@@ -83,49 +81,5 @@ in
   };
 
   # inv home.deploy ; neofetch ; ll
-  colorscheme = inputs.nix-colors.colorSchemes.darktooth;
   wallpaper = pkgs.wallpapers.forest-deer-landscape;
-
-  # OK colorscheme = inputs.nix-colors.colorSchemes.gruvbox-dark-soft;
-  # OK colorscheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
-  # OK colorscheme = inputs.nix-colors.colorSchemes.solarized-dark;
-
-  # OK colorscheme = inputs.nix-colors.colorSchemes.shadesmear-dark;
-  # OK colorscheme = inputs.nix-colors.colorSchemes.gruvbox-material-dark-hard;
-  # OK colorscheme = inputs.nix-colors.colorSchemes.gruvbox-dark-hard;
-  # OKcolorscheme = inputs.nix-colors.colorSchemes.tokyo-city-dark;
-  # OK colorscheme = inputs.nix-colors.colorSchemes.google-dark;
-  # OK colorscheme = inputs.nix-colors.colorSchemes.summerfruit-dark;
-  # OK colorscheme = inputs.nix-colors.colorSchemes.unikitty-dark;
-
-  # OK colorscheme = inputs.nix-colors.colorSchemes.default-dark;
-  # OK colorscheme = inputs.nix-colors.colorSchemes.tokyo-city-terminal-dark
-  # OK colorscheme = inputs.nix-colors.colorSchemes.horizon-dark;
-  # OK colorscheme = inputs.nix-colors.colorSchemes.grayscale-dark;
-  # OK colorscheme = inputs.nix-colors.colorSchemes.harmonic16-dark;
-  # OK colorscheme = inputs.nix-colors.colorSchemes.equilibrium-gray-dark;
-  # OK colorscheme = inputs.nix-colors.colorSchemes.humanoid-dark;
-  # OK colorscheme = inputs.nix-colors.colorSchemes.brushtrees-dark;
-  # OK colorscheme = inputs.nix-colors.colorSchemes.classic-dark;
-  # OK colorscheme = inputs.nix-colors.colorSchemes.tokyo-night-dark;
-
-  # NO colorscheme = inputs.nix-colors.colorSchemes.primer-dark-dimmed;
-  # NO colorscheme = inputs.nix-colors.colorSchemes.tokyodark-terminal;
-  # NO colorscheme = inputs.nix-colors.colorSchemes.onedark;
-  # NO colorscheme = inputs.nix-colors.colorSchemes.darkviolet;
-  # NO colorscheme = inputs.nix-colors.colorSchemes.outrun-dark;
-  # NO colorscheme = inputs.nix-colors.colorSchemes.silk-dark;
-  # NO colorscheme = inputs.nix-colors.colorSchemes.darkmoss;
-  # NO colorscheme = inputs.nix-colors.colorSchemes.edge-dark;
-  # NO colorscheme = inputs.nix-colors.colorSchemes.tokyo-night-terminal-dark;
-  # NO colorscheme = inputs.nix-colors.colorSchemes.tokyodark; 
-
-  # OK/NO colorscheme = inputs.nix-colors.colorSchemes.gruvbox-material-dark-medium;
-  # OK/NO colorscheme = inputs.nix-colors.colorSchemes.black-metal-dark-funeral
-  # OK/NO colorscheme = inputs.nix-colors.colorSchemes.horizon-terminal-dark;
-  # OK/NO colorscheme = inputs.nix-colors.colorSchemes.gruvbox-dark-pale;
-
-
-  # NO colorscheme = inputs.nix-colors.colorSchemes.synth-midnight-dark;
-
 }

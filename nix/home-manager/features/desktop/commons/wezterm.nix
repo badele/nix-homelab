@@ -1,50 +1,52 @@
 { config, pkgs, ... }:
 
 let
-  inherit (config) colorscheme;
-  inherit (colorscheme) colors;
+  hexPalette = with pkgs.lib.nix-rice; palette.toRGBHex pkgs.rice.colorPalette;
 in
 {
   programs.wezterm = {
     enable = true;
+
     colorSchemes = {
-      "${colorscheme.slug}" = {
-        foreground = "#${colors.base04}";
-        background = "#${colors.base00}";
+      "usertheme" = {
+
+        foreground = hexPalette.foreground;
+        background = hexPalette.background;
 
         ansi = [
-          "#${colors.base01}"
-          "#${colors.base08}"
-          "#${colors.base0B}"
-          "#${colors.base0A}"
-          "#${colors.base0D}"
-          "#${colors.base0F}"
-          "#${colors.base0C}"
-          "#${colors.base06}"
-        ];
-        brights = [
-          "#${colors.base00}"
-          "#${colors.base09}"
-          "#${colors.base02}"
-          "#${colors.base03}"
-          "#${colors.base04}"
-          "#${colors.base0E}"
-          "#${colors.base05}"
-          "#${colors.base07}"
+          hexPalette.normal.black
+          hexPalette.normal.red
+          hexPalette.normal.green
+          hexPalette.normal.yellow
+          hexPalette.normal.blue
+          hexPalette.normal.magenta
+          hexPalette.normal.cyan
+          hexPalette.normal.white
         ];
 
-        cursor_bg = "#${colors.base04}";
-        cursor_border = "#${colors.base04}";
-        cursor_fg = "#${colors.base01}";
-        selection_fg = "#${colors.base00}";
-        selection_bg = "#${colors.base01}";
+        brights = [
+          hexPalette.bright.black
+          hexPalette.bright.red
+          hexPalette.bright.green
+          hexPalette.bright.yellow
+          hexPalette.bright.blue
+          hexPalette.bright.magenta
+          hexPalette.bright.cyan
+          hexPalette.bright.white
+        ];
+
+        cursor_bg = hexPalette.cursor_bg;
+        cursor_border = hexPalette.cursor_border;
+        cursor_fg = hexPalette.cursor_fg;
+        selection_fg = hexPalette.selection_fg;
+        selection_bg = hexPalette.selection_bg;
       };
     };
     #font = wezterm.font("${config.fontProfiles.monospace.family}"),
     extraConfig = /* lua */ ''
       return {
         font_size = 12.0,
-        color_scheme = "${colorscheme.slug}",
+        color_scheme = "usertheme",
         hide_tab_bar_if_only_one_tab = true,
         window_close_confirmation = "NeverPrompt",
         set_environment_variables = {

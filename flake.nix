@@ -7,7 +7,7 @@
 
   inputs = {
     # Nixpkgs
-    #nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs.url = "github:badele/fork-nixpkgs/unstable-fix-smokeping-symbolic-links";
     # You can access packages and modules from different nixpkgs revs
     # at the same time. Here's an working example:
@@ -29,15 +29,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Pure  base16-schemes color themes
-    nix-colors.url = "github:misterio77/nix-colors";
+    # Color scheme
+    nix-rice = { url = "github:bertof/nix-rice"; };
 
     # Precomit local generator
     nix-pre-commit.url = "github:jmgilman/nix-pre-commit";
-
   };
 
-  outputs = { self, nixpkgs, home-manager, sops-nix, hardware, devenv, nix-pre-commit, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, sops-nix, hardware, devenv, nix-pre-commit, nix-rice, ... }@inputs:
     let
       inherit (self) outputs;
       forAllSystems = nixpkgs.lib.genAttrs [
@@ -52,7 +51,7 @@
       # Your custom packages
       # Acessible through 'nix build', 'nix shell', etc
       packages = forAllSystems (system:
-        let pkgs = nixpkgs.legacyPackages.${system};
+        let pkgs = import nixpkgs { inherit system; overlays = [ nix-rice.overlays.default ]; };
         in import ./nix/pkgs { inherit pkgs; }
       );
       # Devshell for bootstrapping
@@ -109,6 +108,7 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
+            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
             ./nix/home-manager/users/root/badxps.nix
           ];
         };
@@ -118,6 +118,7 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
+            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
             ./users/badele/badxps.nix
           ];
         };
@@ -127,6 +128,7 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
+            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
             ./users/badele/rpi40.nix
           ];
         };

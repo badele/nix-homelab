@@ -10,7 +10,6 @@
 {
   imports = [
     #inputs.sops-nix.nixosModules.sops
-    inputs.nix-colors.homeManagerModule
   ];
 
   home = {
@@ -18,7 +17,4 @@
     homeDirectory = lib.mkDefault "/root/";
     stateVersion = lib.mkDefault "22.05";
   };
-
-  colorscheme = inputs.nix-colors.colorSchemes.summerfruit-dark;
-
 }

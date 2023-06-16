@@ -2,9 +2,7 @@
 
 let
   cfg = config.xsession.windowManager.i3.config;
-  inherit (config) colorscheme;
-  inherit (colorscheme) colors;
-
+  hexPalette = with pkgs.lib.nix-rice; palette.toRGBHex pkgs.rice.colorPalette;
   lockTime = 4 * 60; # TODO: configurable desktop (10 min)/laptop (4 min)
 
   # i3 workspaces
@@ -57,18 +55,18 @@ in
         fonts = [ "Source Code Pro" "DejaVu Sans Mono, FontAwesome 6" ];
         colors = {
           focused = {
-            background = "#${colors.base00}";
-            border = "#${colors.base0C}";
-            childBorder = "#${colors.base0C}";
-            indicator = "#${colors.base0C}";
-            text = "#${colors.base0F}";
+            background = hexPalette.normal.black;
+            border = hexPalette.bright.magenta;
+            childBorder = hexPalette.bright.magenta;
+            indicator = hexPalette.bright.magenta;
+            text = hexPalette.bright.white;
           };
           unfocused = {
-            background = "#${colors.base00}";
-            border = "#${colors.base03}";
-            childBorder = "#${colors.base03}";
-            indicator = "#${colors.base03}";
-            text = "#${colors.base0F}";
+            background = hexPalette.normal.black;
+            border = hexPalette.normal.yellow;
+            childBorder = hexPalette.normal.yellow;
+            indicator = hexPalette.normal.yellow;
+            text = hexPalette.bright.white;
           };
         };
 
@@ -97,7 +95,8 @@ in
           # || Super+q || Kill a window | i3
           # || Super+k || Show where is rocky | i3
           "${mod}+Return" = "exec ${cfg.terminal}";
-          "${mod}+Shift+r" = "restart; exec notify-send 'i3 restarted'";
+          "${mod}+Shift+r" = "restart;
+            exec notify-send 'i3 restarted'";
           "${mod}+q" = "kill";
           "${mod}+k" = "--release exec --no-startup-id //home/badele/private/projects/rokeys/rokeys";
 
@@ -237,7 +236,7 @@ in
             statusCommand = "py3status -c .config/py3status.conf";
 
             colors = {
-              background = "#${colors.base00}";
+              background = hexPalette.normal.black;
             };
           }
         ];
@@ -297,4 +296,3 @@ in
     };
   };
 }
-
