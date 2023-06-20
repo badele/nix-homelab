@@ -7,10 +7,15 @@
     liberation_ttf
     fira-code
     fira-code-symbols
+    font-awesome
   ];
 
   fontProfiles = {
     enable = true;
+    fontawesome = {
+      family = "Font Awesome 6 Free Solid";
+      package = pkgs.font-awesome;
+    };
     monospace = {
       family = "FiraCode Nerd Font";
       package = pkgs.nerdfonts.override { fonts = [ "FiraCode" ]; };

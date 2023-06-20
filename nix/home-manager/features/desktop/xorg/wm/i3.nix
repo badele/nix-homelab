@@ -7,16 +7,16 @@ let
 
   # i3 workspaces
   mod = "Mod4";
-  w1 = "1:  TSK";
-  w2 = "2:  MUS";
-  w3 = "3:  CHAT";
-  w4 = "4:  VIRT";
-  w5 = "5:  TERM";
-  w6 = "6:  GFX";
+  w1 = "1:  TSK";
+  w2 = "2:  MUS";
+  w3 = "3:  CHAT";
+  w4 = "4:  VIRT";
+  w5 = "5:  TERM";
+  w6 = "6:  GFX";
   w7 = "7:  WWW";
-  w8 = "8:  TERM";
-  w9 = "9:  DEV";
-  w0 = "0:  TERM";
+  w8 = "8:  TERM";
+  w9 = "9:  DEV";
+  w0 = "0:  TERM";
 
   # i3 parameters
   border = 1;
@@ -30,7 +30,8 @@ let
   flameshot = "${pkgs.flameshot}/bin/flameshot";
   peek = "${pkgs.peek}/bin/peek";
   gpick = "${pkgs.gpick}/bin/gpick";
-  py3status = "${pkgs.python3Packages.py3status}/bin/py3status";
+  # py3status = "${pkgs.python3Packages.py3status}/bin/py3status";
+  i3status-rust = "${pkgs.i3status-rust}/bin/i3status-rs";
   feh = "${pkgs.feh}/bin/feh";
   i3lock = "${pkgs.i3lock-color}/bin/i3lock-color";
   xidlehook = "${pkgs.xidlehook}/bin/xidlehook";
@@ -40,7 +41,8 @@ in
 {
 
   imports = [
-    ./py3status.nix
+    # ./py3status.nix
+    ./i3status-rust.nix
   ];
 
   xsession = {
@@ -52,20 +54,25 @@ in
         modifier = mod;
         terminal = terminal;
 
-        fonts = [ "Source Code Pro" "DejaVu Sans Mono, FontAwesome 6" ];
+        fonts = {
+          names = [ "${config.fontProfiles.monospace.family}" "${config.fontProfiles.fontawesome.family}" ];
+          style = "Bold Semi-Condensed";
+          size = 10.0;
+        };
+
         colors = {
           focused = {
-            background = hexPalette.normal.black;
-            border = hexPalette.bright.magenta;
-            childBorder = hexPalette.bright.magenta;
-            indicator = hexPalette.bright.magenta;
+            background = hexPalette.background;
+            border = hexPalette.normal.magenta;
+            childBorder = hexPalette.normal.magenta;
+            indicator = hexPalette.normal.magenta;
             text = hexPalette.bright.white;
           };
           unfocused = {
-            background = hexPalette.normal.black;
-            border = hexPalette.normal.yellow;
-            childBorder = hexPalette.normal.yellow;
-            indicator = hexPalette.normal.yellow;
+            background = hexPalette.background;
+            border = hexPalette.dark-normal.white;
+            childBorder = hexPalette.dark-normal.white;
+            indicator = hexPalette.dark-normal.white;
             text = hexPalette.bright.white;
           };
         };
@@ -233,10 +240,29 @@ in
           {
             #mode = "hide";
             position = "top";
-            statusCommand = "py3status -c .config/py3status.conf";
+
+            # statusCommand = "py3status -c .config/py3status.conf";
+            statusCommand = "${i3status-rust} ~/.config/i3status-rust/config-top.toml";
 
             colors = {
-              background = hexPalette.normal.black;
+              background = hexPalette.background;
+              statusline = hexPalette.normal.white;
+
+              inactiveWorkspace = {
+                border = hexPalette.normal.black;
+                background = hexPalette.background;
+                text = hexPalette.bright.black;
+              };
+              focusedWorkspace = {
+                border = hexPalette.normal.blue;
+                background = hexPalette.normal.blue;
+                text = hexPalette.bright.white;
+              };
+              urgentWorkspace = {
+                border = hexPalette.bright.red;
+                background = hexPalette.normal.red;
+                text = hexPalette.bright.white;
+              };
             };
           }
         ];

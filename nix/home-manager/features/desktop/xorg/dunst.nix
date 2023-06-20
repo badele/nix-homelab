@@ -19,7 +19,7 @@ in
         origin = "top-right";
         transparency = 10;
         frame_color = hexPalette.bright.magenta;
-        font = "${config.fontProfiles.regular.family} 12";
+        font = "${config.fontProfiles.monospace.family} 12";
       };
 
       urgency_normal = {

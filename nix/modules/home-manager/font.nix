@@ -20,6 +20,7 @@ in
 {
   options.fontProfiles = {
     enable = lib.mkEnableOption "Whether to enable font profiles";
+    fontawesome = mkFontOption "fontawesome";
     monospace = mkFontOption "monospace";
     regular = mkFontOption "regular";
   };
@@ -27,6 +28,6 @@ in
 
   config = lib.mkIf cfg.enable {
     fonts.fontconfig.enable = true;
-    home.packages = [ cfg.monospace.package cfg.regular.package ];
+    home.packages = [ cfg.fontawesome.package cfg.monospace.package cfg.regular.package ];
   };
 }

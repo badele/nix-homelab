@@ -19,13 +19,35 @@
 
     rice.colorPalette = with final.lib.nix-rice;
       let
-        themename = "gruvbox-dark";
-        blackDarken = 15;
-
         # https://github.com/kovidgoyal/kitty-themes/tree/master/themes
+        themename = "gruvbox-dark";
         theme = kitty-themes.getThemeByName themename;
+
+        blackDarkenValue = 15;
+        darkNormalValue = 90;
+        darkBrightValue = 90;
       in
       rec  {
+        dark-normal = {
+          black = color.darken darkNormalValue theme.color0;
+          red = color.darken darkNormalValue theme.color1;
+          green = color.darken darkNormalValue theme.color2;
+          yellow = color.darken darkNormalValue theme.color3;
+          blue = color.darken darkNormalValue theme.color4;
+          magenta = color.darken darkNormalValue theme.color5;
+          cyan = color.darken darkNormalValue theme.color6;
+          white = color.darken darkNormalValue theme.color7;
+        };
+        dark-bright = {
+          black = color.darken darkBrightValue theme.color0;
+          red = color.darken darkBrightValue theme.color1;
+          green = color.darken darkBrightValue theme.color2;
+          yellow = color.darken darkBrightValue theme.color3;
+          blue = color.darken darkBrightValue theme.color4;
+          magenta = color.darken darkBrightValue theme.color5;
+          cyan = color.darken darkBrightValue theme.color6;
+          white = color.darken darkBrightValue theme.color7;
+        };
         normal = {
           black = theme.color0;
           red = theme.color1;
@@ -46,15 +68,15 @@
           cyan = theme.color14;
           white = theme.color15;
         };
-        background = color.darken blackDarken theme.color0;
+        background = color.darken blackDarkenValue theme.color0;
         foreground = color.darken 10 theme.color15;
 
         cursor_bg = color.darken 10 theme.color15;
         cursor_border = color.darken 10 theme.color15;
-        cursor_fg = color.darken blackDarken theme.color0;
+        cursor_fg = color.darken blackDarkenValue theme.color0;
 
         selection_bg = color.darken 10 theme.color4;
-        selection_fg = color.darken blackDarken theme.color0;
+        selection_fg = color.darken blackDarkenValue theme.color0;
       };
   };
 

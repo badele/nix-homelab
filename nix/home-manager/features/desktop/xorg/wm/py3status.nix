@@ -61,8 +61,8 @@ in
         format_time = "{icon} {name} %a %d %b %H:%M"
     }
     spotify {
-        color_playing = "#fdf6e3"
-        color_paused = "#93a1a1"
+        color_playing = "${hexPalette.bright.white}"
+        color_paused = "${hexPalette.normal.white}"
         format = "🎵 {title} - {artist} ({album})"
         format_stopped = "[Paused] {title} - {artist} ({album})"
         format_down = ""
