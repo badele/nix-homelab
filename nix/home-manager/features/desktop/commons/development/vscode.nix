@@ -9,6 +9,7 @@
       bbenoist.nix
       golang.go
       gruntfuggly.todo-tree
+      jebbs.plantuml
       naumovs.color-highlight
       yzhang.markdown-all-in-one
     ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
