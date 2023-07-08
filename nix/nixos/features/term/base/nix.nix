@@ -6,6 +6,12 @@ in
   nixpkgs.config.allowUnfree = true;
 
   nix = {
+    # Add all flake inputs to registry / CMD: nix registry list 
+    registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
+
+    # Add all flake inputs to legacy / CMD: echo $NIX_PATH | tr ":" "\n"
+    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
+
     settings = {
       substituters = [
         "http://nixcache.${domain}:5000"
