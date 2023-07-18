@@ -16,6 +16,9 @@ in
     # User
     ./base.nix
 
+    # Commons packages
+    ../../nix/home-manager/features/commons.nix
+
     # Term
     ../../nix/home-manager/features/term/base.nix
     ../../nix/home-manager/features/term/security
