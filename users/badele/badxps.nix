@@ -19,6 +19,9 @@ in
     # Commons packages
     ../../nix/home-manager/features/commons.nix
 
+    # Editor
+    ../../nix/home-manager/features/term/editor/nvim
+
     # Term
     ../../nix/home-manager/features/term/base.nix
     ../../nix/home-manager/features/term/security
