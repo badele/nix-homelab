@@ -12,9 +12,15 @@
 local opt = {silent = true}
 local map = vim.api.nvim_set_keymap
 
+map("n", "<F1>", "<Cmd>h MyHelp<CR>", opt)                       -- Search
+map("n", "<F25>", "<Cmd>helptags ALL<CR>", {silent=false})          -- Search
 map("n", "<C-f>", "<Cmd>Telescope<CR>", {silent=false})          -- Search
-map("n", "<C-d>", "<Cmd>NeoTreeRevealToggle<CR>", opt)       -- Show folder
-map("n", "<C-s>", "<Cmd>write<CR>", opt)                    -- Save current file
+map("n", "<C-b>", "<Cmd>Telescope buffers<CR>", {silent=false})  -- Search
+map("n", "<C-d>", "<Cmd>NeoTreeRevealToggle<CR>", opt)           -- Show folder
+map("n", "<C-s>", "<Cmd>write<CR>", opt)                         -- Save current file
+map("i", "<C-s>", "<Esc><Cmd>write<CR>", opt)                    -- Save current file
+map("n", "<C-L>", "<C-]>", opt)                                  -- Link to vim help link
+
 
 local wk = require("which-key")
 wk.register({
@@ -41,6 +47,13 @@ wk.register({
             r = { "<cmd>NeoTreeRevealToggle<cr>", "Reveal file in the tree" },
             o = { "<cmd>Telescope oldfiles<cr>", "Open Recent File" },
             n = { "<cmd>enew<cr>", "New File" },
+        },
+        t = {
+            name = "+Text",
+            l = { "<cmd>left<cr>", "Left align" },
+            c = { "<cmd>center<cr>", "Center align" },
+            r = { "<cmd>right<cr>", "Right align" },
+            w = { "gqq", "Wrap" },
         },
     },
 })

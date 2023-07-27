@@ -1,5 +1,8 @@
 .decrypted*.yml
 
+# Project
+docs/nvim/tags
+
 # direnv
 .direnv
 

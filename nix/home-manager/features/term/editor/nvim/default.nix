@@ -1,5 +1,11 @@
 { config, pkgs, ... }:
 {
+  # Custom help file
+  
+  xdg.configFile."nvim/doc/help.txt".text =(builtins.readFile
+  ../../../../../../docs/nvim/help.txt); 
+
+
   # Test comment add new comment
   programs.neovim = {
     enable = true;
@@ -23,18 +29,17 @@
       ################################################################################
       # Editor & UI
       ################################################################################
-      vimPlugins.nvim-web-devicons # Icons
-      vimPlugins.tokyonight-nvim # Colorscheme tokyonight
-      vimPlugins.gitsigns-nvim # Git integration for buffers
-      vimPlugins.bufferline-nvim # buffer line (with tabpage integration)
-      vimPlugins.lualine-nvim # Neovim statusline written in Lua
-      vimPlugins.indent-blankline-nvim # Indentation guide
-      vimPlugins.alpha-nvim # Start screen
-      vimPlugins.which-key-nvim        # Show maps keys
-      vimPlugins.neo-tree-nvim         # Folders
+      vimPlugins.nvim-web-devicons      # Icons
+      vimPlugins.tokyonight-nvim        # Colorscheme tokyonight
+      vimPlugins.gitsigns-nvim          # Git integration for buffers
+      vimPlugins.bufferline-nvim        # buffer line (with tabpage integration)
+      vimPlugins.lualine-nvim           # Neovim statusline written in Lua
+      vimPlugins.indent-blankline-nvim  # Indentation guide
+      vimPlugins.alpha-nvim             # Start screen
+      vimPlugins.which-key-nvim         # Show maps keys
+      vimPlugins.neo-tree-nvim          # Folders
 
       # vimPlugins.scope-nvim # Introducing Enhanced Tab Scoping
-
       vimPlugins.telescope-nvim # Telescope
       vimPlugins.telescope-file-browser-nvim
       vimPlugins.telescope-fzf-native-nvim
@@ -45,6 +50,8 @@
       vimPlugins.project-nvim
       vimPlugins.telescope-project-nvim
 
+      # Tools
+      vimPlugins.vim-easy-align        # Text align
 
       ################################################################################
       # LSP & Completion
