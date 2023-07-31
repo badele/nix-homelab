@@ -44,8 +44,8 @@ in
         icons = "awesome6";
         settings.theme = {
           overrides = {
-            idle_bg = "${hexPalette.background}";
-            idle_fg = "${hexPalette.bright.white}";
+            idle_bg = "${hexPalette.dark-bright.blue}";
+            idle_fg = "${hexPalette.bright.blue}";
             info_bg = "${hexPalette.dark-bright.blue}";
             info_fg = "${hexPalette.bright.white}";
             good_bg = "${hexPalette.dark-normal.green}";
@@ -59,8 +59,8 @@ in
             #     #separator = "\ue0b2";
             #     separator_bg = "auto";
             #     separator_fg = "auto";
-            alternating_tint_bg = "#111111";
-            alternating_tint_fg = "#111111";
+            alternating_tint_bg = "#222222";
+            alternating_tint_fg = "#222222";
           };
         };
 
@@ -84,18 +84,29 @@ in
           {
             block = "cpu";
             interval = 1;
-            format = " $icon $barchart $utilization ";
-            format_alt = " $icon $frequency{ $boost|} ";
+            format = " CPU $barchart $utilization ";
+            format_alt = " CPU $frequency{ $boost|} ";
+            #              theme_overrides = {
+            #                 idle_bg = "${hexPalette.dark-bright.blue}";
+            #                 idle_fg = "${hexPalette.bright.blue}";
+            #               }; 
+            merge_with_next = true;
           }
           {
             block = "load";
-            format = " $icon $5m ";
-            interval = 1;
+            format = " Avg $5m ";
+            interval = 10;
+            merge_with_next = true;
           }
           {
             block = "memory";
-            format = " $icon $mem_used_percents ";
-            format_alt = " $icon $swap_used_percents ";
+            format = " MEM $mem_used_percents ";
+            format_alt = " MEM $swap_used_percents ";
+            merge_with_next = true;
+          }
+          {
+            block = "battery";
+            format = " Bat $percentage ";
           }
           #   {
           #     block = "custom";
@@ -104,13 +115,14 @@ in
           #   }
           {
             block = "net";
-            format = " $icon {$signal_strength $ssid ^icon_net_down $speed_down $graph_down ^icon_net_up $speed_up $graph_up |Eth ^icon_net_down $speed_down $graph_down ^icon_net_up $speed_up $graph_up} ";
+            format = " Net {$ssid($signal_strength) D: $speed_down $graph_down U: $speed_up $graph_up |Eth ^icon_net_down $speed_down $graph_down ^icon_net_up $speed_up $graph_up} ";
+            format_alt = " $icon $ip ";
           }
           # Ping latency
           {
             block = "custom";
             json = true;
-            command = ''echo "{\"icon\":\"ping\",\"text\":\"`ping -c4 1.1.1.1 | tail -n1 | cut -d'/' -f5`\"}" | tee -a /tmp/ping'';
+            command = ''echo "{\"text\":\"Ping: `ping -c4 1.1.1.1 | tail -n1 | cut -d'/' -f5`\"}" | tee -a /tmp/ping'';
             interval = 60;
             click = [
               {
@@ -129,7 +141,7 @@ in
           # }
           {
             block = "sound";
-            format = "$icon $output_name {$volume.eng(w:2) |}";
+            format = " $icon $output_name {$volume.eng(w:2) |} ";
             click = [
               {
                 button = "left";
@@ -175,4 +187,3 @@ in
     };
   };
 }
-
