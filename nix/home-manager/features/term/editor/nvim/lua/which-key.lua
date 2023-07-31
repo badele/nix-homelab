@@ -13,11 +13,11 @@ local opt = {silent = true}
 local map = vim.api.nvim_set_keymap
 
 map("n", "<F1>", "<Cmd>h MyHelp<CR>", opt)                       -- Search
-map("n", "<F25>", "<Cmd>helptags ALL<CR>", {silent=false})          -- Search
+map("n", "<F25>", "<Cmd>helptags ALL<CR>", {silent=false})       -- Search
 map("n", "<C-f>", "<Cmd>Telescope<CR>", {silent=false})          -- Search
 map("n", "<C-b>", "<Cmd>Telescope buffers<CR>", {silent=false})  -- Search
 map("n", "<C-d>", "<Cmd>NeoTreeRevealToggle<CR>", opt)           -- Show folder
-map("n", "<C-s>", "<Cmd>write<CR>", opt)                         -- Save current file
+map("n", "<C-s>", "<Cmd>Neoformat <Bar> write<CR>", opt)         -- Save current file
 map("i", "<C-s>", "<Esc><Cmd>write<CR>", opt)                    -- Save current file
 map("n", "<C-L>", "<C-]>", opt)                                  -- Link to vim help link
 
@@ -25,6 +25,10 @@ map("n", "<C-L>", "<C-]>", opt)                                  -- Link to vim 
 local wk = require("which-key")
 wk.register({
     ["<leader>"] = {
+        c = {
+            name = "+Code",
+            f = { "<Cmd>Neoformat<Cr>", "Format code" },
+        },
         s = {
             name = "+Search",
             b = { "<cmd>Telescope buffers<cr>", "Buffers" },

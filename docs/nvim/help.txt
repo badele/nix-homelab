@@ -26,16 +26,17 @@ NOTE: this help with refresh with `:helptags docs/nvim`
 ==============================================================================
 
                                == *Plugins* ==
-
+²
                      alpha    Neovim splash screen
+                   comment    Comments
                    lualine    Status for neovi
-                bufferline    Buffer line with tab integration
-          indent_blankline    Indent guides for Neovim
                   gitsigns    Git integration for buffers
-                 tokyonigh    Colorscheme
-                 which-key    Displays a popup with possible keybindings
                   neo-tree    Manage the file system
                  telescope    Find, Filter, Preview, Pick. All lua, all the time.
+                 tokyonigh    Colorscheme
+                 which-key    Displays a popup with possible keybindings
+                bufferline    Buffer line with tab integration
+          indent_blankline    Indent guides for Neovim
 
                                      ---
 

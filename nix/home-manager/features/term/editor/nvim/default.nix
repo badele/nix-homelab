@@ -59,6 +59,7 @@
 
       # Format some language
       vimPlugins.neoformat
+      vimPlugins.comment-nvim
 
       # Completion
       vimPlugins.cmp-nvim-lsp

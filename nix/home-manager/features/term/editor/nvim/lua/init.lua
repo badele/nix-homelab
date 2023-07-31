@@ -52,6 +52,7 @@ opt("b", "shiftwidth", 4)
 -------------------------------
 require'colorizer'.setup()
 require("gitsigns").setup()
+require('Comment').setup()
 
 require('telescope').load_extension('projects')
 require("project_nvim").setup {
