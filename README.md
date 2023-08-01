@@ -297,7 +297,21 @@ end
 
 [comment]: (<<NETWORK)
 
+## Structure
 
+- **Configuration**
+    - `homelab.json`: main homelab file configuration (roles servers, network, etc)
+    - `hosts`: hosts configuration (system, hardware, host secrets)
+    - `users`: users configuration (on user environment, user secrets)
+- **System**
+    - `nix`: all ***.nix** files
+      - `home-manager`: All users ***.nix** files (installed on user environment)
+      - `modules`: all nix modules
+        - `home-manager`: user modules
+        - `nixos`: nixos modules (installed on system wide)
+      - `nixos`: all ***.nix** files installed on system wide
+      - `overlays`: overlays **nix derivations**
+      - `pkgs`: custom nix packages
 
 ## Homelab initialisation
 ```
