@@ -1,6 +1,5 @@
 {
-
-  # See 
+  # See
   # Flake => https://nixos.wiki/wiki/Flakes
 
   description = "Nixos homelab configuration with flakes";
@@ -8,6 +7,7 @@
   inputs = {
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixpkgs.url = "path:/home/badele/ghq/github.com/badele/fork-nixpkgs";
     # nixpkgs.url = "github:badele/fork-nixpkgs/unstable-fix-smokeping-symbolic-links";
     # You can access packages and modules from different nixpkgs revs
     # at the same time. Here's an working example:
@@ -36,7 +36,17 @@
     nix-pre-commit.url = "github:jmgilman/nix-pre-commit";
   };
 
-  outputs = { self, nixpkgs, home-manager, sops-nix, hardware, devenv, nix-pre-commit, nix-rice, ... }@inputs:
+  outputs =
+    { self
+    , nixpkgs
+    , home-manager
+    , sops-nix
+    , hardware
+    , devenv
+    , nix-pre-commit
+    , nix-rice
+    , ...
+    }@inputs:
     let
       inherit (self) outputs;
       forAllSystems = nixpkgs.lib.genAttrs [
@@ -51,15 +61,18 @@
       # Your custom packages
       # Acessible through 'nix build', 'nix shell', etc
       packages = forAllSystems (system:
-        let pkgs = import nixpkgs { inherit system; overlays = [ nix-rice.overlays.default ]; };
-        in import ./nix/pkgs { inherit pkgs; }
-      );
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = [ nix-rice.overlays.default ];
+          };
+        in
+        import ./nix/pkgs { inherit pkgs; });
       # Devshell for bootstrapping
       # Acessible through 'nix develop' or 'nix-shell' (legacy)
       devShells = forAllSystems (system:
         let pkgs = nixpkgs.legacyPackages.${system};
-        in import ./shell.nix { inherit pkgs system nix-pre-commit; }
-      );
+        in import ./shell.nix { inherit pkgs system nix-pre-commit; });
 
       # Your custom packages and modifications, exported as overlays
       overlays = import ./nix/overlays { inherit inputs; };
@@ -76,26 +89,22 @@
       nixosConfigurations = {
         badxps = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
-          modules = [
-            inputs.sops-nix.nixosModules.sops
-            ./hosts/badxps
-          ];
+          modules = [ inputs.sops-nix.nixosModules.sops ./hosts/badxps ];
+        };
+
+        sadhome = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs outputs; };
+          modules = [ inputs.sops-nix.nixosModules.sops ./hosts/sadhome ];
         };
 
         bootstore = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
-          modules = [
-            inputs.sops-nix.nixosModules.sops
-            ./hosts/bootstore
-          ];
+          modules = [ inputs.sops-nix.nixosModules.sops ./hosts/bootstore ];
         };
 
         rpi40 = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
-          modules = [
-            inputs.sops-nix.nixosModules.sops
-            ./hosts/rpi40
-          ];
+          modules = [ inputs.sops-nix.nixosModules.sops ./hosts/rpi40 ];
         };
       };
 
@@ -103,8 +112,12 @@
       # Available through 'home-manager --flake .#your-username@your-hostname'
       # or 'home-manager --flake .' for current user in current hostname
       homeConfigurations = {
+        ########################################################################
+        # badxps
+        ########################################################################
         "root@badxps" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+          pkgs =
+            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
@@ -114,7 +127,8 @@
         };
 
         "badele@badxps" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+          pkgs =
+            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
@@ -123,8 +137,48 @@
           ];
         };
 
+        ########################################################################
+        # sadhome
+        ########################################################################
+        "root@sadhome" = home-manager.lib.homeManagerConfiguration {
+          pkgs =
+            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [
+            # > Our main home-manager configuration file <
+            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
+            ./nix/home-manager/users/root/sadhome.nix
+          ];
+        };
+
+        "badele@sadhome" = home-manager.lib.homeManagerConfiguration {
+          pkgs =
+            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [
+            # > Our main home-manager configuration file <
+            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
+            ./users/badele/sadhome.nix
+          ];
+        };
+
+        "sadele@sadhome" = home-manager.lib.homeManagerConfiguration {
+          pkgs =
+            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [
+            # > Our main home-manager configuration file <
+            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
+            ./users/sadele/sadhome.nix
+          ];
+        };
+
+        ########################################################################
+        # rpi40
+        ########################################################################
         "badele@rpi40" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.aarch64-linux; # Home-manager requires 'pkgs' instance
+          pkgs =
+            nixpkgs.legacyPackages.aarch64-linux; # Home-manager requires 'pkgs' instance
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
@@ -135,6 +189,3 @@
       };
     };
 }
-
-
-

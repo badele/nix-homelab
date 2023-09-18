@@ -1,0 +1,11 @@
+[
+    {
+        "@protocol": "tcp",
+        "@portid": "22",
+        "service": {
+            "@name": "ssh",
+            "@product": "OpenSSH",
+            "@extrainfo": "protocol 2.0"
+        }
+    }
+]

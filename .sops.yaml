@@ -5,7 +5,7 @@ keys:
   # Hosts
   - &hosts: # inv ssh-init-host-key
     - &rpi40 age152ud7upe5xylsvf7kkfpdz6x99r6hcmkam8gwntfdv0px70f0u0sqzc8qe 
-    - &latino age12lhx7ktnd4fvqjeq06h0z25n0s0a3r0ap6thzsxwuxvglqsjufls8mhk9u
+    - &sadhome age1qfarvkm9ejyfu785vmawj5vve3uffsh7r78pef4ec3njl9vfgs2sx3524g
     - &sam age1x363tjjzx6j77j3m4zynkjgyj38qcyf4wah5mc8mtjt5yt6zvgxqr3z7px
     - &bootstore age1ejza6f2xzycq7jj2eu8fyg5vjdctljttm67mfteyd4k7wzvdyc8s7sc8jh
     - &badxps age1w9v05mvydywp39cq8tmgxjh8yc2w86qpp9aa4zt9ukf0qq8n5y4s5tkn7z
@@ -21,10 +21,11 @@ creation_rules:
     key_groups:
       - age:
           - *badele
+          - *badxps
           - *bootstore
           - *rpi40
+          - *sadhome
           - *sam
-          - *badxps
 
   - path_regex: hosts/rpi40/secrets.yml$
     key_groups:
@@ -38,11 +39,11 @@ creation_rules:
           - *badele
           - *bootstore
 
-  - path_regex: hosts/latino.yml$
+  - path_regex: hosts/sadhome/secrets.yml$
     key_groups:
       - age:
           - *badele
-          - *latino
+          - *sadhome
 
   - path_regex: hosts/sam.yml$
     key_groups:

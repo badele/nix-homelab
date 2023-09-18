@@ -1,301 +1,276 @@
 {
-    "domain": "adele.im",
-    "networks": {
-        "box": {
-            "net": "192.168.0.0",
-            "mask": 24
-        },
-        "home": {
-            "net": "192.168.254.0",
-            "mask": 24
-        },
-        "vpn-server": {
-            "net": "10.123.45.0",
-            "mask": 24
-        },
-        "vpn-client": {
-            "net": "10.123.21.0",
-            "mask": 24
-        }
+  "domain": "adele.im",
+  "networks": {
+    "box": {
+      "net": "192.168.0.0",
+      "mask": 24
     },
-    "roles": {
-        "coredns": {
-            "icon": "https://raw.githubusercontent.com/coredns/logo/master/Icon/CoreDNS_Colour_Icon.png",
-            "description": "A Go DNS server, it used for serving local hosts and alias"
-        },
-        "adguard": {
-            "icon": "https://play-lh.googleusercontent.com/pCqOLS2w-QaTI63tjFLvncHnbXc4100EQI3FAD0RZEFWjGMa_54M4x2HD7j48qMSv3kk",
-            "description": "DNS ad blocker [service port 3002]"
-        },
-        "acme": {
-            "icon": "https://www.kevinsubileau.fr/wp-content/uploads/2016/03/letsencrypt-logo-pad.png",
-            "description": "Let's Encrypt Automatic Certificate Management Environment"
-        },
-        "ntp": {
-            "icon": "https://freesvg.org/img/ftntp-client.png",
-            "description": "Network Time Protocol"
-        },
-        "nfs": {
-            "icon": "https://logo-marque.com/wp-content/uploads/2021/09/Need-For-Speed-Logo-2019-2020.jpg",
-            "description": "A Linux NFS server, it used for backuping a servers and Latops"
-        },
-        "nix-serve": {
-            "icon": "https://camo.githubusercontent.com/33a99d1ffcc8b23014fd5f6dd6bfad0f8923d44d61bdd2aad05f010ed8d14cb4/68747470733a2f2f6e69786f732e6f72672f6c6f676f2f6e69786f732d6c6f676f2d6f6e6c792d68697265732e706e67",
-            "description": "For caching the nix build results"
-        },
-        "wireguard": {
-            "icon": "https://cdn.icon-icons.com/icons2/2699/PNG/512/wireguard_logo_icon_168760.png",
-            "description": "An VPN client/server alternative to IPSec and OpenVPN"
-        },
-        "grafana": {
-            "icon": "https://patch.pulseway.com/Images/features/patch/3pp-logos/Grafana.png",
-            "description": "The open and composable observability and data visualization platform [service port 3000]"
-        },
-        "loki": {
-            "icon": "https://grafana.com/static/img/logos/logo-loki.svg",
-            "description": "Scalable log aggregation system [service port 8084,9095]"
-        },
-        "prometheus": {
-            "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Prometheus_software_logo.svg/2066px-Prometheus_software_logo.svg.png",
-            "description": "Monitoring system and time series database [service port 9090]"
-        },
-        "smokeping": {
-            "icon": "https://img.freepik.com/vecteurs-premium/cardiogramme-cardiaque-isole-blanc_97886-1185.jpg?w=2000",
-            "description": "Latency measurement tool"
-        },
-        "dashy": {
-            "icon": "https://dashy.to/img/dashy.png",
-            "description": "The Ultimate Homepage for your Homelab [service port 8081]"
-        },
-        "statping": {
-            "icon": "https://avatars.githubusercontent.com/u/61949049?s=32&v=4",
-            "description": "A Status Page for monitoring your websites and applications with beautiful graphs [service port 8082]"
-        },
-        "uptime": {
-            "icon": "https://cf.appdrag.com/dashboard-openvm-clo-b2d42c/uploads/Uptime-kuma-7fPG.png",
-            "description": "A Status Page [service port 3001/8083]"
-        },
-        "home-assistant": {
-            "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/32px-Home_Assistant_Logo.svg.png",
-            "description": "Open source home automation [service port 8123]"
-        },
-        "mosquitto": {
-            "icon": "https://developer.community.boschrexroth.com/t5/image/serverpage/image-id/13467i19FDFA6E5DC7C260?v=v2",
-            "description": "A mqtt broker [service port 1883]"
-        },
-        "zigbee2mqtt": {
-            "icon": "https://www.zigbee2mqtt.io/logo.png",
-            "description": "A zigbee2mqtt [service port 8080]"
-        }
+    "home": {
+      "net": "192.168.254.0",
+      "mask": 24
     },
-    "hosts": {
-        "box": {
-            "icon": "https://logos-marques.com/wp-content/uploads/2022/03/SFR-Logo-1994.png",
-            "ipv4": "192.168.0.1",
-            "zone": "livingroom",
-            "parent": "internet",
-            "description": "SFR internet box",
-            "os": "Sagem"
-        },
-        "router-living": {
-            "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
-            "ipv4": "192.168.254.254",
-            "zone": "livingroom",
-            "parent": "box",
-            "wg": "10.123.21.254",
-            "description": "Livingroom mikrotik router",
-            "os": "MikroTik",
-            "roles": [
-                "wireguard"
-            ]
-        },
-        "router-ladbedroom": {
-            "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
-            "ipv4": "192.168.254.253",
-            "zone": "ladbedroom",
-            "parent": "router-living",
-            "description": "Bedroom mikrotik router",
-            "os": "MikroTik"
-        },
-        "router-homeoffice": {
-            "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
-            "ipv4": "192.168.254.252",
-            "zone": "homeoffice",
-            "parent": "router-living",
-            "description": "Office mikrotik router",
-            "os": "MikroTik"
-        },
-        "latino": {
-            "icon": "https://styles.redditmedia.com/t5_6sciw0/styles/communityIcon_h3cvittvupi91.png",
-            "ipv4": "192.168.254.200",
-            "zone": "homeoffice",
-            "parent": "router-ladbedroom",
-            "description": "Dell E5540 Latop",
-            "os": "NixOS"
-        },
-        "rpi40": {
-            "icon": "https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Raspberry_Pi_logo.svg/32px-Raspberry_Pi_logo.svg.png",
-            "ipv4": "192.168.254.101",
-            "zone": "homeoffice",
-            "parent": "router-homeoffice",
-            "dnsalias": [
-                "coredns",
-                "ntp",
-                "mqtt",
-                "zigbee"
-            ],
-            "description": "The RPI 4 server",
-            "os": "NixOS",
-            "roles": [
-                "acme",
-                "coredns",
-                "ntp",
-                "mosquitto",
-                "zigbee2mqtt"
-            ]
-        },
-        "bootstore": {
-            "icon": "https://simpleicons.org/icons/databricks.svg",
-            "description": "HP Microserver N40L server",
-            "os": "NixOS",
-            "ipv4": "192.168.254.100",
-            "zone": "homeoffice",
-            "parent": "router-homeoffice",
-            "dnsalias": [
-                "dns",
-                "grafana",
-                "loki",
-                "nfs",
-                "nixcache",
-                "ntp",
-                "prometheus",
-                "smokeping",
-                "statping",
-                "uptime",
-                "home",
-                "hass"
-            ],
-            "roles": [
-                "adguard",
-                "acme",
-                "dashy",
-                "grafana",
-                "loki",
-                "nfs",
-                "nix-serve",
-                "ntp",
-                "prometheus",
-                "smokeping",
-                "statping",
-                "uptime",
-                "home-assistant"
-            ]
-        },
-        "badwork": {
-            "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png",
-            "ipv4": "192.168.254.189",
-            "zone": "homeoffice",
-            "parent": "router-ladbedroom",
-            "description": "A work thinkpad",
-            "os": "Nix"
-        },
-        "badwork-eth": {
-            "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png",
-            "ipv4": "192.168.254.102",
-            "zone": "homeoffice",
-            "parent": "router-homeoffice",
-            "description": "A ethernet work thinkpad",
-            "os": "Nix"
-        },
-        "badphone": {
-            "icon": "https://cdn-icons-png.flaticon.com/512/38/38002.png",
-            "ipv4": "192.168.254.194",
-            "parent": "router-ladbedroom",
-            "wg": "10.123.21.1",
-            "description": "Bruno's phone",
-            "os": "Android",
-            "roles": [
-                "wireguard"
-            ]
-        },
-        "ladphone": {
-            "icon": "https://cdn-icons-png.flaticon.com/512/38/38002.png",
-            "ipv4": "192.168.254.184",
-            "parent": "router-ladbedroom",
-            "description": "Lucas's phone",
-            "os": "Android"
-        },
-        "sadphone": {
-            "icon": "https://cdn-icons-png.flaticon.com/512/38/38002.png",
-            "ipv4": "192.168.254.188",
-            "parent": "router-ladbedroom",
-            "description": "Steph's phone",
-            "os": "Android"
-        },
-        "loadphone": {
-            "icon": "https://img.freepik.com/icones-gratuites/pomme_318-162866.jpg",
-            "ipv4": "192.168.254.199",
-            "parent": "router-ladbedroom",
-            "description": "Lou's phone",
-            "os": "Iphone"
-        },
-        "tv-chromecast": {
-            "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrW-wZZhmKpadJqRe73njFwEDLzh-jIn1XaSbCVhgMmoN46pgj6M4Fq1tWyr5w_z_HcP4&usqp=CAU",
-            "ipv4": "192.168.254.105",
-            "zone": "livingroom",
-            "parent": "router-ladbedroom",
-            "description": "TV Chromecast",
-            "os": "Chromecast"
-            
-        },
-        "bedroom-googlemini-A": {
-            "icon": "https://c.clc2l.com/t/g/o/google-home-wxDa7w.png",
-            "ipv4": "192.168.254.197",
-            "zone": "badbedroom",
-            "parent": "router-ladbedroom",
-            "description": "Google Mini room A",
-            "os": "GoogleMini"
-            
-        },
-        "bedroom-googlemini-C": {
-            "icon": "https://c.clc2l.com/t/g/o/google-home-wxDa7w.png",
-            "ipv4": "192.168.254.196",
-            "zone": "loadbedroom",
-            "parent": "router-ladbedroom",
-            "description": "Google Mini room C",
-            "os": "GoogleMini"
-        },
-        "badxps": {
-            "icon": "https://ih1.redbubble.net/image.201056839.4943/flat,32x32,075,t.jpg",
-            "ipv4": "192.168.254.114",
-            "zone": "homeoffice",
-            "parent": "router-ladbedroom",
-            "description": "Dell XPS 9570 Latop",
-            "os": "NixOS"
-        },
-        "badxps-eth": {
-            "icon": "https://ih1.redbubble.net/image.201056839.4943/flat,32x32,075,t.jpg",
-            "ipv4": "192.168.254.179",
-            "zone": "homeoffice",
-            "parent": "router-ladbedroom",
-            "description": "Dell XPS 9570 Latop",
-            "os": "NixOS"
-        },
-        "bridge-hue": {
-            "icon": "https://www.daskeyboard.com/images/applets/philips-hue/icon.png",
-            "ipv4": "192.168.254.191",
-            "zone": "ladbedroom",
-            "parent": "router-ladbedroom",
-            "description": "Philips Hue bridge",
-            "os": "Bridge"
-        },
-        "sadhome": {
-            "icon": "https://cdn.icon-icons.com/icons2/2699/PNG/512/archlinux_logo_icon_167835.png",
-            "ipv4": "192.168.254.185",
-            "zone": "livingroom",
-            "parent": "router-ladbedroom",
-            "description": "Stephanie's laptop",
-            "os": "ArchLinux"
-        }
+    "vpn-server": {
+      "net": "10.123.45.0",
+      "mask": 24
+    },
+    "vpn-client": {
+      "net": "10.123.21.0",
+      "mask": 24
     }
+  },
+  "roles": {
+    "coredns": {
+      "icon": "https://raw.githubusercontent.com/coredns/logo/master/Icon/CoreDNS_Colour_Icon.png",
+      "description": "A Go DNS server, it used for serving local hosts and alias"
+    },
+    "adguard": {
+      "icon": "https://play-lh.googleusercontent.com/pCqOLS2w-QaTI63tjFLvncHnbXc4100EQI3FAD0RZEFWjGMa_54M4x2HD7j48qMSv3kk",
+      "description": "DNS ad blocker [service port 3002]"
+    },
+    "acme": {
+      "icon": "https://www.kevinsubileau.fr/wp-content/uploads/2016/03/letsencrypt-logo-pad.png",
+      "description": "Let's Encrypt Automatic Certificate Management Environment"
+    },
+    "ntp": {
+      "icon": "https://freesvg.org/img/ftntp-client.png",
+      "description": "Network Time Protocol"
+    },
+    "nfs": {
+      "icon": "https://logo-marque.com/wp-content/uploads/2021/09/Need-For-Speed-Logo-2019-2020.jpg",
+      "description": "A Linux NFS server, it used for backuping a servers and Latops"
+    },
+    "nix-serve": {
+      "icon": "https://camo.githubusercontent.com/33a99d1ffcc8b23014fd5f6dd6bfad0f8923d44d61bdd2aad05f010ed8d14cb4/68747470733a2f2f6e69786f732e6f72672f6c6f676f2f6e69786f732d6c6f676f2d6f6e6c792d68697265732e706e67",
+      "description": "For caching the nix build results"
+    },
+    "wireguard": {
+      "icon": "https://cdn.icon-icons.com/icons2/2699/PNG/512/wireguard_logo_icon_168760.png",
+      "description": "An VPN client/server alternative to IPSec and OpenVPN"
+    },
+    "grafana": {
+      "icon": "https://patch.pulseway.com/Images/features/patch/3pp-logos/Grafana.png",
+      "description": "The open and composable observability and data visualization platform [service port 3000]"
+    },
+    "loki": {
+      "icon": "https://grafana.com/static/img/logos/logo-loki.svg",
+      "description": "Scalable log aggregation system [service port 8084,9095]"
+    },
+    "prometheus": {
+      "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Prometheus_software_logo.svg/2066px-Prometheus_software_logo.svg.png",
+      "description": "Monitoring system and time series database [service port 9090]"
+    },
+    "smokeping": {
+      "icon": "https://img.freepik.com/vecteurs-premium/cardiogramme-cardiaque-isole-blanc_97886-1185.jpg?w=2000",
+      "description": "Latency measurement tool"
+    },
+    "dashy": {
+      "icon": "https://dashy.to/img/dashy.png",
+      "description": "The Ultimate Homepage for your Homelab [service port 8081]"
+    },
+    "statping": {
+      "icon": "https://avatars.githubusercontent.com/u/61949049?s=32&v=4",
+      "description": "A Status Page for monitoring your websites and applications with beautiful graphs [service port 8082]"
+    },
+    "uptime": {
+      "icon": "https://cf.appdrag.com/dashboard-openvm-clo-b2d42c/uploads/Uptime-kuma-7fPG.png",
+      "description": "A Status Page [service port 3001/8083]"
+    },
+    "home-assistant": {
+      "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/32px-Home_Assistant_Logo.svg.png",
+      "description": "Open source home automation [service port 8123]"
+    },
+    "mosquitto": {
+      "icon": "https://developer.community.boschrexroth.com/t5/image/serverpage/image-id/13467i19FDFA6E5DC7C260?v=v2",
+      "description": "A mqtt broker [service port 1883]"
+    },
+    "zigbee2mqtt": {
+      "icon": "https://www.zigbee2mqtt.io/logo.png",
+      "description": "A zigbee2mqtt [service port 8080]"
+    }
+  },
+  "hosts": {
+    "box": {
+      "icon": "https://logos-marques.com/wp-content/uploads/2022/03/SFR-Logo-1994.png",
+      "ipv4": "192.168.0.1",
+      "zone": "livingroom",
+      "parent": "internet",
+      "description": "SFR internet box",
+      "os": "Sagem"
+    },
+    "router-living": {
+      "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
+      "ipv4": "192.168.254.254",
+      "zone": "livingroom",
+      "parent": "box",
+      "wg": "10.123.21.254",
+      "description": "Livingroom mikrotik router",
+      "os": "MikroTik",
+      "roles": ["wireguard"]
+    },
+    "router-ladbedroom": {
+      "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
+      "ipv4": "192.168.254.253",
+      "zone": "ladbedroom",
+      "parent": "router-living",
+      "description": "Bedroom mikrotik router",
+      "os": "MikroTik"
+    },
+    "router-homeoffice": {
+      "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
+      "ipv4": "192.168.254.252",
+      "zone": "homeoffice",
+      "parent": "router-living",
+      "description": "Office mikrotik router",
+      "os": "MikroTik"
+    },
+    "sadhome": {
+      "icon": "https://cdn.icon-icons.com/icons2/2699/PNG/512/archlinux_logo_icon_167835.png",
+      "ipv4": "192.168.254.200",
+      "zone": "livingroom",
+      "parent": "router-ladbedroom",
+      "description": "Stephanie's laptop",
+      "os": "ArchLinux"
+    },
+    "rpi40": {
+      "icon": "https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Raspberry_Pi_logo.svg/32px-Raspberry_Pi_logo.svg.png",
+      "ipv4": "192.168.254.101",
+      "zone": "homeoffice",
+      "parent": "router-homeoffice",
+      "dnsalias": ["coredns", "ntp", "mqtt", "zigbee"],
+      "description": "The RPI 4 server",
+      "os": "NixOS",
+      "roles": ["acme", "coredns", "ntp", "mosquitto", "zigbee2mqtt"]
+    },
+    "bootstore": {
+      "icon": "https://simpleicons.org/icons/databricks.svg",
+      "description": "HP Microserver N40L server",
+      "os": "NixOS",
+      "ipv4": "192.168.254.100",
+      "zone": "homeoffice",
+      "parent": "router-homeoffice",
+      "dnsalias": [
+        "dns",
+        "grafana",
+        "loki",
+        "nfs",
+        "nixcache",
+        "ntp",
+        "prometheus",
+        "smokeping",
+        "statping",
+        "uptime",
+        "home",
+        "hass"
+      ],
+      "roles": [
+        "adguard",
+        "acme",
+        "dashy",
+        "grafana",
+        "loki",
+        "nfs",
+        "nix-serve",
+        "ntp",
+        "prometheus",
+        "smokeping",
+        "statping",
+        "uptime",
+        "home-assistant"
+      ]
+    },
+    "badwork": {
+      "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png",
+      "ipv4": "192.168.254.189",
+      "zone": "homeoffice",
+      "parent": "router-ladbedroom",
+      "description": "A work thinkpad",
+      "os": "Nix"
+    },
+    "badwork-eth": {
+      "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png",
+      "ipv4": "192.168.254.102",
+      "zone": "homeoffice",
+      "parent": "router-homeoffice",
+      "description": "A ethernet work thinkpad",
+      "os": "Nix"
+    },
+    "badphone": {
+      "icon": "https://cdn-icons-png.flaticon.com/512/38/38002.png",
+      "ipv4": "192.168.254.194",
+      "parent": "router-ladbedroom",
+      "wg": "10.123.21.1",
+      "description": "Bruno's phone",
+      "os": "Android",
+      "roles": ["wireguard"]
+    },
+    "ladphone": {
+      "icon": "https://cdn-icons-png.flaticon.com/512/38/38002.png",
+      "ipv4": "192.168.254.184",
+      "parent": "router-ladbedroom",
+      "description": "Lucas's phone",
+      "os": "Android"
+    },
+    "sadphone": {
+      "icon": "https://cdn-icons-png.flaticon.com/512/38/38002.png",
+      "ipv4": "192.168.254.188",
+      "parent": "router-ladbedroom",
+      "description": "Steph's phone",
+      "os": "Android"
+    },
+    "loadphone": {
+      "icon": "https://img.freepik.com/icones-gratuites/pomme_318-162866.jpg",
+      "ipv4": "192.168.254.199",
+      "parent": "router-ladbedroom",
+      "description": "Lou's phone",
+      "os": "Iphone"
+    },
+    "tv-chromecast": {
+      "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrW-wZZhmKpadJqRe73njFwEDLzh-jIn1XaSbCVhgMmoN46pgj6M4Fq1tWyr5w_z_HcP4&usqp=CAU",
+      "ipv4": "192.168.254.105",
+      "zone": "livingroom",
+      "parent": "router-ladbedroom",
+      "description": "TV Chromecast",
+      "os": "Chromecast"
+    },
+    "bedroom-googlemini-A": {
+      "icon": "https://c.clc2l.com/t/g/o/google-home-wxDa7w.png",
+      "ipv4": "192.168.254.197",
+      "zone": "badbedroom",
+      "parent": "router-ladbedroom",
+      "description": "Google Mini room A",
+      "os": "GoogleMini"
+    },
+    "bedroom-googlemini-C": {
+      "icon": "https://c.clc2l.com/t/g/o/google-home-wxDa7w.png",
+      "ipv4": "192.168.254.196",
+      "zone": "loadbedroom",
+      "parent": "router-ladbedroom",
+      "description": "Google Mini room C",
+      "os": "GoogleMini"
+    },
+    "badxps": {
+      "icon": "https://ih1.redbubble.net/image.201056839.4943/flat,32x32,075,t.jpg",
+      "ipv4": "192.168.254.114",
+      "zone": "homeoffice",
+      "parent": "router-ladbedroom",
+      "description": "Dell XPS 9570 Latop",
+      "os": "NixOS"
+    },
+    "badxps-eth": {
+      "icon": "https://ih1.redbubble.net/image.201056839.4943/flat,32x32,075,t.jpg",
+      "ipv4": "192.168.254.179",
+      "zone": "homeoffice",
+      "parent": "router-ladbedroom",
+      "description": "Dell XPS 9570 Latop",
+      "os": "NixOS"
+    },
+    "bridge-hue": {
+      "icon": "https://www.daskeyboard.com/images/applets/philips-hue/icon.png",
+      "ipv4": "192.168.254.191",
+      "zone": "ladbedroom",
+      "parent": "router-ladbedroom",
+      "description": "Philips Hue bridge",
+      "os": "Bridge"
+    }
+  }
 }
