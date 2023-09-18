@@ -1,18 +1,15 @@
-##########################################################
-# HOME-MANAGER (user)
-##########################################################
 { config
-, inputs
-, outputs
-, pkgs
-, lib
-, ...
+  , inputs
+    , outputs
+    , pkgs
+    , lib
+    , ...
 }:
 {
 
-  ####################################
-  # Common user conf
-  ####################################
+##############################################################################
+# Common user conf
+##############################################################################
   home = {
     username = lib.mkDefault "badele";
     homeDirectory = lib.mkDefault "/home/${config.home.username}";
@@ -48,4 +45,26 @@
       };
     };
   };
+
+##############################################################################
+# Packages
+##############################################################################
+  home.packages = with pkgs; [
+# MQTT
+    mosquitto
+      mqttui
+      yadm
+
+      go
+      nano
+      nodejs
+      stylua
+
+      lazygit
+      lazydocker
+
+      tree-sitter
+      lua54Packages.luarocks
+      xclip
+  ];
 }

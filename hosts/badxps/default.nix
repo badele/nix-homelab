@@ -11,10 +11,11 @@
   imports = [
     ./hardware-configuration.nix
     #inputs.hardware.nixosModules.dell-xps-15-9560
+    ../../nix/modules/nixos/host.nix
 
     # Users
-    ../../users/root/nixos_passwd.nix
-    ../../users/badele/nixos_passwd.nix
+    ../root.nix
+    ../badele.nix
 
     # Commons
     ../../nix/nixos/features/term/base
@@ -66,9 +67,22 @@
   #hardware.nvidia.package = boot.kernelPackages.nvidiaPackages.stable;
   #hardware.nvidia.modesetting.enable = true;
 
+
+  ####################################
+  # host profile
+  ####################################
+  hostprofile = {
+    nproc = 12;
+    autologin = {
+      user = "badele";
+      session = "none+i3";
+    };
+  };
+
   ####################################
   # Hardware
   ####################################
+
 
   # Nvidia
   hardware.opengl.enable = true;
@@ -76,10 +90,10 @@
   hardware.nvidia.modesetting.enable = true;
   hardware.bumblebee.enable = true;
   hardware.bumblebee.pmMethod = "none"; # Needs nixos-unstable
-  hardware.nvidia.optimus_prime = {
-    intelBusId = "PCI:0:2:0";
-    nvidiaBusId = "PCI:1:0:0";
-  };
+  # hardware.nvidia.optimus_prime = {
+  #   intelBusId = "PCI:0:2:0";
+  #   nvidiaBusId = "PCI:1:0:0";
+  # };
 
   # Pulseaudio
   hardware.pulseaudio = {
@@ -115,6 +129,6 @@
     };
   };
 
-
+  nixpkgs.hostPlatform.system = "x86_64-linux";
   system.stateVersion = "22.11";
 }

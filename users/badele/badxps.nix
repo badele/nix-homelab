@@ -14,13 +14,13 @@ in
 {
   imports = [
     # User
-    ./base.nix
+    ./commons.nix
 
     # Commons packages
-    ../../nix/home-manager/features/commons.nix
+    ../../nix/home-manager/commons/packages.nix
 
     # Editor
-    ../../nix/home-manager/features/term/editor/nvim
+    ../../nix/home-manager/features/term/editor/lazyvim.nix
 
     # Term
     ../../nix/home-manager/features/term/base.nix
@@ -36,6 +36,9 @@ in
     ../../nix/home-manager/features/desktop/xorg/base.nix
     ../../nix/home-manager/features/desktop/xorg/wm/i3.nix
 
+    # Web browser
+    ../../nix/home-manager/features/desktop/commons/google-chrome.nix
+
     # Multimedia
     ../../nix/home-manager/features/desktop/commons/spotify.nix
 
@@ -43,9 +46,44 @@ in
     ../../nix/home-manager/features/term/development/base.nix
 
     # Development desktop
-    ../../nix/home-manager/features/desktop/commons/development/base.nix
+    ../../nix/home-manager/features/desktop/commons/development/packages.nix
     ../../nix/home-manager/features/desktop/commons/development/vscode.nix
   ] ++ (builtins.attrValues outputs.homeManagerModules);
+
+
+  ###############################################################################
+  # Packages
+  ###############################################################################
+  home.packages = with pkgs; [ 
+  geeqie
+  gimp
+  inkscape
+  libreoffice
+
+# bash
+# shellharden
+# shellcheck
+#
+# # deno
+# deno
+#
+# # json
+# nodePackages.fixjson
+# nodePackages.jsonlint
+#
+# # lua
+#   luajitPackages.luacheck
+#   selene
+#   
+# # markdown
+# marksman
+# nodePackages.markdownlint-cli
+#
+# # misc language
+#   nodePackages.prettier
+  
+  ];
+
 
   programs = {
     ####################################

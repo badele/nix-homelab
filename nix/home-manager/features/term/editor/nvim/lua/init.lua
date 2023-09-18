@@ -4,7 +4,7 @@ local homefolder = "$HOME/ghq" -- Home folder for telescope find_files
 vim.g.mapleader = " "
 
 vim.g.loaded_perl_provider = 0 -- Disable perl provider
-
+vim.g.loaded_ruby_provider = 0 -- Disabled ruby
 
 --------------------------------------------------------------------------------
 -- Check some plugins with :checkheath
@@ -37,10 +37,12 @@ opt("b", "textwidth", 80)
 opt("w", "wrap", true)
 opt("w", "cursorline", true)
 opt("w", "colorcolumn", "+1")
-opt("o", "mouse", "a")
 opt("b", "spelllang", "en,fr")
 opt("w", "signcolumn", "yes")
 opt("o", "cmdheight", 1)
+
+opt("o", "mouse", "a")
+opt("o", "clipboard", "unnamedplus")
 
 -- tabulation / indentline
 opt("b", "expandtab", true)
@@ -54,7 +56,6 @@ require'colorizer'.setup()
 require("gitsigns").setup()
 require('Comment').setup()
 
-require('telescope').load_extension('projects')
 require("project_nvim").setup {
     patterns = { ".git",  "Makefile" },
 }

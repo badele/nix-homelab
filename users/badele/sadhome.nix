@@ -20,7 +20,7 @@ in
     ../../nix/home-manager/commons/packages.nix
 
     # Editor
-    ../../nix/home-manager/features/term/editor/nvim
+    # ../../nix/home-manager/features/term/editor/nvim
 
     # Term
     ../../nix/home-manager/features/term/base.nix

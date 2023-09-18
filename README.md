@@ -116,6 +116,21 @@ This list generated with `inv docs.all-pages` command
 
 [comment]: (<<ROLES)
 
+## User programs
+
+<table>
+    <tr>
+        <th>Logo</th>
+        <th>Name</th>
+        <th>Description</th>
+    </tr><tr>
+            <td><a href="https://github.com/badele/nix-homelab"><img width="32" src="https://user-images.githubusercontent.com/28633984/66519056-2e840c80-eaef-11e9-8670-c767213c26ba.png"></a></td>
+            <td>Neovim</td>
+            <td>Moved to <a href="https://github.com/badele/vide">badele/vide</td>
+</table>
+
+
+
 ## Hosts
 
 List of hosts composing the home lab

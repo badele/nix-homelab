@@ -105,7 +105,9 @@
       "wg": "10.123.21.254",
       "description": "Livingroom mikrotik router",
       "os": "MikroTik",
-      "roles": ["wireguard"]
+      "roles": [
+        "wireguard"
+      ]
     },
     "router-ladbedroom": {
       "icon": "https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32",
@@ -136,10 +138,21 @@
       "ipv4": "192.168.254.101",
       "zone": "homeoffice",
       "parent": "router-homeoffice",
-      "dnsalias": ["coredns", "ntp", "mqtt", "zigbee"],
+      "dnsalias": [
+        "coredns",
+        "ntp",
+        "mqtt",
+        "zigbee"
+      ],
       "description": "The RPI 4 server",
       "os": "NixOS",
-      "roles": ["acme", "coredns", "ntp", "mosquitto", "zigbee2mqtt"]
+      "roles": [
+        "acme",
+        "coredns",
+        "ntp",
+        "mosquitto",
+        "zigbee2mqtt"
+      ]
     },
     "bootstore": {
       "icon": "https://simpleicons.org/icons/databricks.svg",
@@ -201,7 +214,9 @@
       "wg": "10.123.21.1",
       "description": "Bruno's phone",
       "os": "Android",
-      "roles": ["wireguard"]
+      "roles": [
+        "wireguard"
+      ]
     },
     "ladphone": {
       "icon": "https://cdn-icons-png.flaticon.com/512/38/38002.png",
