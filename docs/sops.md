@@ -6,6 +6,6 @@
 - yubikey requirement
 
 ```bash
-mkdir -p ~/.config/sops/age/
+mkdir -p ~/.config/sops/age
 pass show home/bruno/homelab/age/privatekey > ~/.config/sops/age/keys.txt
 ```

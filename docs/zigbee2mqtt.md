@@ -31,4 +31,3 @@ mosquitto_pub -d -h zigbee.adele.im -u zigbee2mqtt -P "${MQTT_Z2M_PASS}" -t zigb
 export MQTT_Z2M_PASS=$(pass show home/bruno/homelab/mqtt/zigbee2mqtt)
 mqttui -b mqtt://mqtt.adele.im -u zigbee2mqtt --password "${MQTT_Z2M_PASS}" 
 ```
-

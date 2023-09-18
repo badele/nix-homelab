@@ -1,5 +1,5 @@
  - system: `"aarch64-linux"`
- - host os: `Linux 5.15.74, NixOS, 23.05 (Stoat), 23.05.20230420.1dc2054`
+ - host os: `Linux 5.15.84, NixOS, 23.05 (Stoat), 23.05.20230425.2c9ade3`
  - multi-user?: `yes`
  - sandbox: `yes`
  - version: `nix-env (Nix) 2.15.0`

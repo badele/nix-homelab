@@ -8,6 +8,15 @@
 varname = "${pkgs.writeText "<filename>" (builtins.toJSON <attrname>)}";
 ```
 
+### Write to /etc folder
+
+```
+  environment.etc."installed-packages".text =
+  '''
+  content
+  ''';
+```
+
 ### Get remote file
 
 ```

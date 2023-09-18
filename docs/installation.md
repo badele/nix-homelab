@@ -35,11 +35,11 @@ export TARGETNAME=<hostname>
 ssh-copy-id root@${TARGETIP}
 
 # Disk initialisation (some examples)
-inv init.disk-format --hosts ${TARGETIP} --disk /dev/sda --mirror /dev/sdb --mode MBR --passwd <PASSWORD> # encrypt ZFS
+inv init.disk-format --hosts ${TARGETIP} --disk /dev/sda --mirror /dev/sdb --mode MBR --password <PASSWORD> # encrypt ZFS
 inv init.disk-format --hosts ${TARGETIP} --disk /dev/sda --mirror /dev/sdb --mode MBR
 inv init.disk-format --hosts ${TARGETIP} --disk /dev/nvme0n1  --mode EFI
 or 
-inv nix.disk-mount --hosts ${TARGETIP} --password "<zfspassword>" [--mirror /dev/sdb] 
+inv init.disk-mount --hosts ${TARGETIP} --password "<zfspassword>" [--mirror /dev/sdb] 
 
 inv init.ssh-init-host-key --hosts ${TARGETIP} --hostnames ${TARGETNAME}
 inv init.nixos-generate-config --hosts ${TARGETIP} --hostnames ${TARGETNAME}

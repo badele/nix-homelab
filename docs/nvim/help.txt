@@ -14,19 +14,22 @@
                                  Bruno Adelé
 
 ==============================================================================
-CONTENTS                                                                *MyHelp*
+CONTENTS                                                              *MyHLHelp*
 
-    1. Neovim plugins .......   |Plugins|
-    2. Keys leader ..........   |KeysLeader|
-    2. Keys mapping..........   |KeysMapping|
-    3. Vim Help .............   |VimHelp|
+    1. Neovim plugins .......   |MyHLPlugins|
+    2. Keys leader ..........   |MyHLKeysLeader|
+    3. Keys mapping .........   |MyHLKeysMapping|
+    4. Telescope ............   |MyHLTelescope|
+    5. Quickfixlist .........   |MyHLQuickfixlist|
+    6. Coding ...............   |MyHLCoding|
+    7. Debug ................   |MyHLDebug|
 
-NOTE: this help with refresh with `:helptags docs/nvim`
+NOTE: this help with refresh with `<leader>hr`
 
 ==============================================================================
 
-                               == *Plugins* ==
-²
+                               == *MyHLPlugins* ==
+
                      alpha    Neovim splash screen
                    comment    Comments
                    lualine    Status for neovi
@@ -36,27 +39,50 @@ NOTE: this help with refresh with `:helptags docs/nvim`
                  tokyonigh    Colorscheme
                  which-key    Displays a popup with possible keybindings
                 bufferline    Buffer line with tab integration
+           mardown-preview    Markdown preview
           indent_blankline    Indent guides for Neovim
 
                                      ---
 
 
-                             == *KeysLeader* ==
+                             == *MyHLKeysLeader* ==
 
-              <space>h       Help
-              <space>f       Files
-              <space>s       Search
-              <space>t       Text
+              <leader>c       Code
+              <leader>f       Files
+              <leader>h       Help
+              <leader>s       Search
+              <leader>t       Text
                                      ---
 
 
-                             == *KeysMapping* ==
+                             == *MyKeysMapping* ==
 
                     Cheatsheet from https://vim.rtorr.com/
 
 == Help ==
-L       Goto link word under cusor
-K       Open VIM manual word under cusor
+F1         - show this help
+Shift + F1 - refresh help tokens
+K          - Open VIM manual word under cusor
+
+
+== Custom key ==
+Ctrl + d - Toggle folder view
+
+== Visual Mode ==
+
+v,V             - start visual mode/ start visual line mode
+Ctrl + v        - start visual block mode
+o,O             - move to other begin or end of marked area
+a<block>        - around block with "({[<>]})"
+i<block>        - inside block with "({[<>]})"
+aw              - around mark a word
+ip              - inside paragraph
+Esc or Ctrl + c - exit visual Mode
+
+
+== Comment ==
+gc              - comment current line (visual mode)
+gb              - comment current block (visual mode
 
 == Movement ==
 h,j,k,l         - move cursor left,down,up,right
@@ -107,7 +133,7 @@ Ctrl + h        - delete the character before the cursor during insert mode
 Ctrl + w        - delete word before the cursor during insert mode
 Ctrl + j        - begin new line during insert mode
 Ctrl + t        - indent (move right) line one shiftwidth during insert mode
-Ctrl + d        - de-indent (move left) line one shiftwidth during insert mode
+Ctrl + d        - [DISABLE] de-indent (move left) line one shiftwidth during insert mode
 Ctrl + n        - insert (auto-complete) next match before the cursor during
                 insert mode
 Ctrl + p        - insert (auto-complete) previous match before the cursor
@@ -126,7 +152,7 @@ gwip            - reflow paragraph
 g~              - switch case up to motion
 gu              - change to lowercase up to motion
 gU              - change to uppercase up to motion
-cc              - change (replace) entire line
+cc              - change (rplace) entire line
 c$ or C         - change (replace) to the end of the line
 ciw             - change (replace) entire word
 cw or ce        - change (replace) to the end of the word
@@ -138,21 +164,7 @@ U               - restore (undo) last changed line
 Ctrl + r        - redo
 .               - repeat last command
 
-== Visual Mode ==
-
-v,V             - start visual mode/ start visual line mode
-Ctrl + v        - start visual block mode
-o,O             - move to other end of marked area,move to other corner of block
-aw              - mark a word
-ab              - a block with ()
-aB              - a block with {}
-at              - a block with <> tags
-ib              - inner block with ()
-iB              - inner block with {}
-it              - inner block with <> tags
-Esc or Ctrl + c - exit visual Mode
-
-== Visual Commands ==
+== Visual Commands 
 
 >               - shift text right
 <               - shift text left
@@ -212,14 +224,46 @@ holding the mark.
  U      Undo
  C-d    Redo
 
-== Search and replace
 
- [/]    Search pattern, /pattern\c insensitive, /pattern\C sensitive
- [n,N]  Next, Previous
- [*,g*] Search word under cursor, search partial word
+
+                            == *MyHLTelescope* ==
+
+== Live grep
+Ctrl + k  - Surround quote
+-t <ext>         - filter with extension (ripgrep option)
+-g "<folder>/*"  - Filter on specific folder
+                            == *MyHLQuifixlist* ==
+
+Alt + Q   - Send seledted to quick fix list
+Ctrl + Q  - Send all result to quick fix list
+
+================
+== *MyHLCoding* ==
+================
+
+... *Indent/FormatCode* ...
+gg=G                   - Indent/format code
+:NeoFormat             - Indent/format code
+:EasyAlign /<marker>/  - Align text with marker
+
+*LSP*
+:LspInfo               - Get lsp information for current language
+
+== *Search-And-Replace* ==
+[/]    Search pattern, /pattern\c insensitive, /pattern\C sensitive
+[n,N]  Next, Previous
+[*,g*] Search word under cursor, search partial word
 
 :/<search>
 :s/<search>/<replace>/g (On single line)
 :%s/<search>/<replace>/g (all lines)
 :%s/<search>/<replace>/gc (all lines + confirmation)
 
+
+                               == *MyHLDebug* ==
+
+:h provider                          - Check vim external provider
+:checkhealth or :checkhealth <name>  - Check vim installation
+:LspInfo                             - Show the LSP confirmation
+:LspLog                              - Show LSP log
+:h key-notation                      - Show key notations

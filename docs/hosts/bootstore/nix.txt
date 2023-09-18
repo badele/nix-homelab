@@ -1,7 +1,7 @@
  - system: `"x86_64-linux"`
- - host os: `Linux 5.15.86, NixOS, 23.05 (Stoat), 23.05.20230420.1dc2054`
+ - host os: `Linux 5.15.107, NixOS, 23.11 (Tapir), 23.11.20230614.0d2cf7f`
  - multi-user?: `yes`
  - sandbox: `yes`
- - version: `nix-env (Nix) 2.15.0`
- - nixpkgs: `/nix/var/nix/profiles/per-user/root/channels/nixos`
+ - version: `nix-env (Nix) 2.16.1`
+ - nixpkgs: `/nix/store/3m6cc1gnap8mq14amrzv2j1qjfzmigmd-source`
 

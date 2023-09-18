@@ -35,6 +35,13 @@
     },
     {
         "@protocol": "tcp",
+        "@portid": "1234",
+        "service": {
+            "@name": "hotline"
+        }
+    },
+    {
+        "@protocol": "tcp",
         "@portid": "9100",
         "service": {
             "@name": "jetdirect"
