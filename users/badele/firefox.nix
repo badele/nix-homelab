@@ -1,38 +1,7 @@
-{ pkgs, lib, inputs, ... }:
+{ config, ... }:
 {
   programs.firefox = {
     enable = true;
-    extensions = with pkgs.nur.repos.rycee.firefox-addons; [
-      ublock-origin
-      netflix-1080p
-      browserpass # GPG passwordstore
-      simple-tab-groups # Tab gropu
-      vimium # Vim shorcut
-
-      floccus # Sync bookmark
-      behind-the-overlay-revival # Block overlay mask
-
-      # imtranslator
-      (buildFirefoxXpiAddon {
-        pname = "imtranslator";
-        version = "16.30";
-        addonId = "{9AA46F4F-4DC7-4c06-97AF-5035170634FE}";
-        url = "https://addons.mozilla.org/firefox/downloads/file/4028792/imtranslator-16.30.xpi";
-        sha256 = "sha256-9ZC3FmYXUWgZ+4VADX66cApOyJKmkgHWAi0zzovcn8U=";
-        meta = { };
-      })
-
-      # Clean bookmark (duplicate links & unavailable links & )
-      (buildFirefoxXpiAddon {
-        pname = "clean-up";
-        version = "16.30";
-        addonId = "{9AA46F4F-4DC7-4c06-97AF-5035170634FE}";
-        url = "https://addons.mozilla.org/firefox/downloads/file/4028792/imtranslator-16.30.xpi";
-        sha256 = "sha256-9ZC3FmYXUWgZ+4VADX66cApOyJKmkgHWAi0zzovcn8U=";
-        meta = { };
-      })
-
-    ];
     profiles.badele = {
       bookmarks = { };
       settings = {
@@ -106,6 +75,35 @@
              "newElementCount":6
           }'';
       };
+      extensions = with config.nur.repos.rycee.firefox-addons; [
+        ublock-origin
+        browserpass # GPG passwordstore
+        simple-tab-groups # Tab gropu
+        vimium # Vim shorcut
+
+        floccus # Sync bookmark
+        behind-the-overlay-revival # Block overlay mask
+
+        # imtranslator
+        (buildFirefoxXpiAddon {
+          pname = "imtranslator";
+          version = "16.30";
+          addonId = "{9AA46F4F-4DC7-4c06-97AF-5035170634FE}";
+          url = "https://addons.mozilla.org/firefox/downloads/file/4028792/imtranslator-16.30.xpi";
+          sha256 = "sha256-9ZC3FmYXUWgZ+4VADX66cApOyJKmkgHWAi0zzovcn8U=";
+          meta = { };
+        })
+
+        # Clean bookmark (duplicate links & unavailable links & )
+        (buildFirefoxXpiAddon {
+          pname = "clean-up";
+          version = "16.30";
+          addonId = "{9AA46F4F-4DC7-4c06-97AF-5035170634FE}";
+          url = "https://addons.mozilla.org/firefox/downloads/file/4028792/imtranslator-16.30.xpi";
+          sha256 = "sha256-9ZC3FmYXUWgZ+4VADX66cApOyJKmkgHWAi0zzovcn8U=";
+          meta = { };
+        })
+      ];
     };
   };
 

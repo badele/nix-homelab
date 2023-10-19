@@ -38,6 +38,7 @@ in
 
     # Web browser
     ../../nix/home-manager/features/desktop/commons/google-chrome.nix
+    ../../users/badele/firefox.nix
 
     # Multimedia
     ../../nix/home-manager/features/desktop/commons/spotify.nix
@@ -54,34 +55,34 @@ in
   ###############################################################################
   # Packages
   ###############################################################################
-  home.packages = with pkgs; [ 
-  geeqie
-  gimp
-  inkscape
-  libreoffice
+  home.packages = with pkgs; [
+    geeqie
+    gimp
+    inkscape
+    libreoffice
 
-# bash
-# shellharden
-# shellcheck
-#
-# # deno
-# deno
-#
-# # json
-# nodePackages.fixjson
-# nodePackages.jsonlint
-#
-# # lua
-#   luajitPackages.luacheck
-#   selene
-#   
-# # markdown
-# marksman
-# nodePackages.markdownlint-cli
-#
-# # misc language
-#   nodePackages.prettier
-  
+    # bash
+    # shellharden
+    # shellcheck
+    #
+    # # deno
+    # deno
+    #
+    # # json
+    # nodePackages.fixjson
+    # nodePackages.jsonlint
+    #
+    # # lua
+    #   luajitPackages.luacheck
+    #   selene
+    #   
+    # # markdown
+    # marksman
+    # nodePackages.markdownlint-cli
+    #
+    # # misc language
+    #   nodePackages.prettier
+
   ];
 
 

@@ -45,6 +45,7 @@
     , devenv
     , nix-pre-commit
     , nix-rice
+    , nur
     , ...
     }@inputs:
     let
@@ -132,6 +133,7 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
+            nur.hmModules.nur
             { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
             ./users/badele/badxps.nix
           ];
