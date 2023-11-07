@@ -1,12 +1,5 @@
 { pkgs, config, lib, inputs, ... }:
 {
-  programs.browserpass = {
-    enable = config.programs.chromium.enable;
-    browsers = [
-      "chromium"
-    ];
-  };
-
   programs.chromium = {
     enable = true;
     extensions = [

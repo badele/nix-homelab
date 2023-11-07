@@ -1,4 +1,4 @@
-{ pkgs, config, lib, ... }: {
+{ pkgs, ... }: {
 
   programs.password-store = {
     enable = true;
@@ -6,5 +6,13 @@
       PASSWORD_STORE_DIR = "$HOME/ghq/github.com/badele/pass";
     };
     package = pkgs.pass.withExtensions (exts: [ exts.pass-otp ]);
+  };
+
+  programs.browserpass = {
+    enable = true;
+    browsers = [
+      "chromium"
+      "firefox"
+    ];
   };
 }
