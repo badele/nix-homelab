@@ -9,7 +9,6 @@
 
   imports = [
     ./tools/inxi.nix
-    ./tools/system.nix
 
     # Shell
     ./tools/starship.nix
@@ -51,7 +50,7 @@
     # Autojump
     zoxide = {
       enable = true;
-      options = [ "--cmd j" ];
+      options = [ "--cmd c" ];
     };
 
     # FZF
@@ -65,13 +64,28 @@
     # Cheats navigators
     navi = {
       enable = true;
-      settings = {
-        cheats = {
-          paths = [
-            "~/ghq/github.com/badele/cheats"
-          ];
-        };
-      };
+      # settings = {
+      #   cheats = {
+      #     paths = [
+      #       "~/ghq/github.com/badele/cheats"
+      #       "~/ghq/github.com/denisidoro/cheats"
+      #       "~/ghq/github.com/denisidoro/navi-tldr-pages"
+      #       "~/ghq/github.com/denisidoro/dotfiles"
+      #       "~/ghq/github.com/mrVanDalo/navi-cheats"
+      #       "~/ghq/github.com/chazeon/my-navi-cheats"
+      #       "~/ghq/github.com/caojianhua/MyCheat"
+      #       "~/ghq/github.com/Kidman1670/cheats"
+      #       "~/ghq/github.com/isene/cheats"
+      #       "~/ghq/github.com/m42martin/navi-cheats"
+      #       "~/ghq/github.com/infosecstreams/cheat.sheets"
+      #       "~/ghq/github.com/prx2090/cheatsheets-for-navi"
+      #       "~/ghq/github.com/papanito/cheats"
+      #       "~/ghq/github.com/esp0xdeadbeef/cheat.sheets"
+      #     ];
+      #   };
+      # };
     };
   };
+
+  home.packages = with pkgs ; [ ];
 }

@@ -131,11 +131,11 @@ in
         zle -N fzf-zoxide
 
         # FZF & Z
-        bindkey "^R"     fzf-history-widget ## [CTRL-R] Show FZF histories
-        bindkey "^T"     fzf-file-widget ## [CTRL-T] Show FZF files
-        bindkey "^F"     fzf-cd-widget ## [CTRL-F] Goto FZF selected folder
-        bindkey "^J"    fzf-zoxide ## [CTRL-J] zoxide autojump ZFS list
-        bindkey "^G"    _navi_widget ## [CTRL-G] Show local navi
+        bindkey "^R"     fzf-history-widget # [CTRL-R] Show FZF histories
+        bindkey "^T"     fzf-file-widget # [CTRL-T] Show FZF files
+        bindkey "^F"     fzf-cd-widget # [CTRL-F] Goto FZF selected folder
+        bindkey "^J"    fzf-zoxide # [CTRL-J] zoxide autojump ZFS list
+        bindkey "^G"    _navi_widget # [CTRL-G] Show local navi
       '';
 
       shellAliases = with pkgs;{
@@ -145,16 +145,16 @@ in
         nsp = "nix-shell --pure";
 
         # My tools
-        calc_latency = "_calc_latency"; ## Compute approximatively internet latency
-        toclipboard = "${xclip} -selection clipboard"; ## Copy output to clipboard
+        calc_latency = "_calc_latency"; # Compute approximatively internet latency
+        toclipboard = "${xclip} -selection clipboard"; # Copy output to clipboard
         get_i3_window_name = "${xprop} | grep CLASS | cut -d\",\" -f2 | sed 's/\"//g'";
 
         # Tools
-        calc = "eva"; ## launch calc computing (eva)
-        fd = "fd"; ## find files alternative (fd)
-        pup = "up"; ## pipe output (we can run linux command in realtime)
-        hexyl = "hexyl --border none"; ## hexdump alternative
-        #br="broot"; ## File manager        
+        calc = "eva"; # launch calc computing (eva)
+        fd = "fd"; # find files alternative (fd)
+        pup = "up"; # pipe output (we can run linux command in realtime)
+        hexyl = "hexyl --border none"; # hexdump alternative
+        #br="broot"; # File manager        
 
         # ZSH
         my-zkeys = "cat $HOME/.config/zsh/.zprofile | grep -Eo '# \[.*' | sed 's/# //g'";
@@ -171,14 +171,14 @@ in
         topw = "procs -W 1 --sortd write";
 
         # Disk size
-        dua = "dua i"; ## | Interactive disk size(dua)
-        dut = "dust"; ## | Show tree disk size (ordered by big file) (dust)
+        dua = "dua i"; # | Interactive disk size(dua)
+        dut = "dust"; # | Show tree disk size (ordered by big file) (dust)
 
         # SSH
-        sk = "sh -o StrictHostKeyChecking=no"; ## ssh without host verification        
+        sk = "sh -o StrictHostKeyChecking=no"; # ssh without host verification        
 
         # cat alternative
-        cat = "bat --style=plain"; ## cat alternative (bat)
+        cat = "bat --style=plain"; # cat alternative (bat)
 
         # ls alternative
         la = "exa --color=always -a";
@@ -192,74 +192,80 @@ in
         cdw = "cd ${config.programs.zsh.sessionVariables.WORK}";
         cdp = "cd ${config.programs.zsh.sessionVariables.PRIVATE}";
         cdg = "cd ~/ghq";
+        cdgh = "cd ~/ghq/github.com";
+        cdgl = "cd ~/ghq/gitlab.com";
         cdb = "cd ~/ghq/github.com/badele";
         cdn = "cd ~/ghq/github.com/badele/nix-config";
 
+        #just
+        j = "just"; # just
+
         # git
-        gs = "git status"; ## git status
-        gl = "git log"; ## git log
-        gd = "git diff"; ## git diff
-        gds = "git diff --staged"; ## git diff
+        gs = "git status"; # git status
+        gl = "git log"; # git log
+        gd = "git diff"; # git diff
+        gds = "git diff --staged"; # git diff
         gcb = "git checkout";
-        gbl = "git branch"; ## git branch
-        gbm = "git blame"; ## git blame
-        ga = "git add"; ## git add
-        gc = "git commit -m"; ## git commit
-        gss = "git stash"; ## git stash
-        gsl = "git stash list"; ## git stash list
-        gsp = "git stash pop"; ## git stash pop
-        gpl = "git pull"; ## git pull
-        gph = "git push"; ## git push
+        gbl = "git branch"; # git branch
+        gbm = "git blame"; # git blame
+        ga = "git add"; # git add
+        gc = "git commit -m"; # git commit
+        gss = "git stash"; # git stash
+        gsl = "git stash list"; # git stash list
+        gsp = "git stash pop"; # git stash pop
+        gpl = "git pull"; # git pull
+        gph = "git push"; # git push
 
         # yadm
-        ys = "yadm status"; ## yadm status
-        yl = "yadm log"; ## yadm log
-        yd = "yadm diff"; ## yadm diff
-        yds = "yadm diff --staged"; ## yadm diff
-        ybl = "yadm branch"; ## yadm branch
-        ybm = "yadm blame"; ## yadm blame
-        ya = "yadm add"; ## yadm add
-        yc = "yadm commit -m"; ## yadm commit
-        ypl = "yadm pull"; ## yadm pull
-        yph = "yadm push"; ## yadm push
+        ys = "yadm status"; # yadm status
+        yl = "yadm log"; # yadm log
+        yd = "yadm diff"; # yadm diff
+        yds = "yadm diff --staged"; # yadm diff
+        ybl = "yadm branch"; # yadm branch
+        ybm = "yadm blame"; # yadm blame
+        ya = "yadm add"; # yadm add
+        yc = "yadm commit -m"; # yadm commit
+        ypl = "yadm pull"; # yadm pull
+        yph = "yadm push"; # yadm push
 
         # pass
-        pps = "pass git status"; ## pass status
-        pl = "pass git log"; ## pass log
-        pd = "pass git diff"; ## pass diff
-        pds = "pass git diff"; ## pass diff
-        pbl = "pass git branch"; ## pass branch
-        pbm = "pass git blame"; ## pass blame
-        pa = "pass git add"; ## pass add
-        pc = "pass git commit -m"; ## pass commit
-        ppl = "pass git pull"; ## pass pull
-        pph = "pass git push"; ## pass push
+        pps = "pass git status"; # pass status
+        pl = "pass git log"; # pass log
+        pd = "pass git diff"; # pass diff
+        pds = "pass git diff"; # pass diff
+        pbl = "pass git branch"; # pass branch
+        pbm = "pass git blame"; # pass blame
+        pa = "pass git add"; # pass add
+        pc = "pass git commit -m"; # pass commit
+        ppl = "pass git pull"; # pass pull
+        pph = "pass git push"; # pass push
 
         # Trash
-        # rm="${trash-put}"; ## alternative rm (push file to trash)
-        # trm="${trash-put}"; ## push file to trash
-        # tls="${trash-list}"; ## list trash files
-        # tre="${trash-restore}"; ## restore file from trash
-        # tem="${trash-empty}"; ## delete all files from trash
+        # rm="${trash-put}"; # alternative rm (push file to trash)
+        # trm="${trash-put}"; # push file to trash
+        # tls="${trash-list}"; # list trash files
+        # tre="${trash-restore}"; # restore file from trash
+        # tem="${trash-empty}"; # delete all files from trash
 
         # Cloud & co
         #unalias kubectl # Disable clourify for using P10K plugin
-        a = "aws"; ## aws alias
-        g = "gcloud"; ## gcloud alias
-        k = "kubectl"; ## kubectl alias
+        a = "aws"; # aws alias
+        g = "gcloud"; # gcloud alias
+        k = "kubectl"; # kubectl alias
         kcc = "kubectl config current-context";
-        h = "helm"; ## helm alias
+        h = "helm"; # helm alias
 
-        vim = "nvim"; ## alternative vim (nvim)
+        vim = "nvim"; # alternative vim (nvim)
 
         # navi
-        lnavi = "navi --path $PRIVATE/cheats"; ## Show cheat commands
-        lpnavi = "navi --print --path $PRIVATE/cheats"; ## Show cheat commands
+        lnavi = "navi --path $PRIVATE/cheats"; # Show cheat commands
+        lpnavi = "navi --print --path $PRIVATE/cheats"; # Show cheat commands
 
         # Date & Time
-        clock = "peaclock --config-dir ~/.config/peaclock"; ## Show terminal clock
+        clock = "peaclock --config-dir ~/.config/peaclock"; # Show terminal clock
 
         # Color
+        colors_table = "${pkgs.gettext}/bin/msgcat --color=test | head -n 11";
         grep = "grep --color=auto";
         ip = "ip -color=auto";
       };
