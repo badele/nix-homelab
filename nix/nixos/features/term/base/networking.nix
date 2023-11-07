@@ -29,6 +29,8 @@ in
 
     # add an entry to /etc/hosts for each host
     extraHosts = ''
+      127.0.0.1 cert.adele.im
+
       # Hosts
       ${lib.concatStringsSep "\n"
           (lib.mapAttrsToList

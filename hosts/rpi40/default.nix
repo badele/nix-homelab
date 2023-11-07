@@ -5,8 +5,8 @@
     ./hardware-configuration.nix
 
     # Users
-    ../../users/root/nixos_passwd.nix
-    ../../users/badele/nixos_passwd.nix
+    ../root.nix
+    ../badele.nix
     # Commons
     ../../nix/nixos/features/term/base
     ../../nix/nixos/features/homelab

@@ -2,14 +2,15 @@
 }:
 {
   imports = [
-    ./fuse.nix
+    ./disk.nix
     ./locale.nix
+    ./networking.nix
     ./nix.nix
+    ./packages.nix
     ./security.nix
     ./sops.nix
     ./sshd.nix
     ./zfs.nix
-    ./networking.nix
   ];
 
   programs = {

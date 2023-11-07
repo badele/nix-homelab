@@ -4,25 +4,6 @@ with lib;
 {
   options = {
     home.userconf = {
-      host = {
-        nproc = mkOption {
-          type = types.int;
-          default = 1;
-          description = ''
-            Nb processor cores
-          '';
-        };
-
-        coretemp = mkOption {
-          type = types.str;
-          default = 1;
-          description = ''
-            /sys/devices/platform/coretemp.0/hwmon/hwmon4/temp1_input
-          '';
-        };
-
-      };
-
       user = {
         gpg = {
           id = mkOption {

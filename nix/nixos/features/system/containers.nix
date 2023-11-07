@@ -8,11 +8,16 @@
   virtualisation.oci-containers.backend = "docker";
   virtualisation.docker = {
     enable = true;
+    enableOnBoot = true;
     storageDriver = "zfs";
 
     rootless = {
-      enable = true;
-      setSocketVariable = true;
+      enable = false;
+      # setSocketVariable = true;
+    };
+
+    daemon.settings = {
+      experimental = true;
     };
   };
 }

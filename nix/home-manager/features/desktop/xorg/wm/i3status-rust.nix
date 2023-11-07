@@ -107,6 +107,9 @@ in
           {
             block = "battery";
             format = " Bat $percentage ";
+            empty_format = " Bat $percentage";
+            not_charging_format = " Bat $percentage";
+
           }
           #   {
           #     block = "custom";

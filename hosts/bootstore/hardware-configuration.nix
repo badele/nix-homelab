@@ -100,6 +100,5 @@
     [{ device = "/dev/disk/by-uuid/25f7eb2d-c6f0-40a2-8ce3-35d27f7ed58c"; }
       { device = "/dev/disk/by-uuid/67c231a5-78e7-4a88-a13e-21df4c5ffe19"; }];
 
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }

@@ -20,6 +20,22 @@ let
       '';
     };
 
+    zone = mkOption {
+      type = nullOr str;
+      default = null;
+      description = ''
+        Zone localisation
+      '';
+    };
+
+    parent = mkOption {
+      type = nullOr str;
+      default = null;
+      description = ''
+        network link
+      '';
+    };
+
     ipv4 = mkOption {
       type = str;
       description = ''

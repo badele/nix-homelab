@@ -11,4 +11,9 @@
   security.sudo.wheelNeedsPassword = false;
   security.pam.services = { swaylock = { }; };
   programs.fuse.userAllowOther = true;
+
+
+  environment.systemPackages = with pkgs; [
+    cryptsetup
+  ];
 }

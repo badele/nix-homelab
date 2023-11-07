@@ -16,13 +16,11 @@ import xmltodict
 from deploykit import DeployGroup
 from deploykit import DeployHost
 from deploykit import HostKeyCheck
-from deploykit import parse_hosts
 from invoke import Collection
 from invoke import run
 from invoke import task
 
 import taskslib
-
 
 ROOT = Path(__file__).parent.resolve()
 os.chdir(ROOT)
@@ -62,7 +60,7 @@ OSSCAN = {
 
 
 def get_hosts(hosts: str) -> List[DeployHost]:
-    return parse_hosts(hosts=hosts, user="root")
+    return [DeployHost(h, user="root") for h in hosts.split(",")]
 
 
 def get_deploylist_from_homelab(username: str, hosts: str) -> List[DeployHost]:
@@ -528,6 +526,10 @@ def _format_disks(
     # - partition 2 swap partition for system with few RAM
     # - partition 3 zfs partition
 
+    if mode not in ["MBR", "EFI"]:
+        print("Please choose MBR or EFI partition mode")
+        sys.exit(1)
+
     diskprefix = ""
 
     if "nvme" in disk:
@@ -699,9 +701,7 @@ def _ssh_init_host_key(host: DeployHost, hostname: str) -> None:
     # Generate age key
     host.run(
         """
-    # mkdir -p ~/.config/sops/age
-    # nix-shell -p ssh-to-age --command "ssh-to-age --private-key -i /mnt/etc/ssh/ssh_host_ed25519_key -o ~/.config/sops/age/keys.txt"
-    nix-shell -p ssh-to-age --command "ssh-to-age -i /mnt/etc/ssh/ssh_host_ed25519_key.pub -o /tmp/ssh-to-age.txt"
+        nix-shell -p ssh-to-age --command "ssh-to-age -i /mnt/etc/ssh/ssh_host_ed25519_key.pub -o /tmp/ssh-to-age.txt"
     """  # noqa: E501
     )
 
@@ -938,6 +938,14 @@ def _nixos_rebuild(
             cmd = f"cd /nix-homelab && nixos-rebuild -v {action} {showtrace_opts} {cache_opts} {keeperror_opts} --fast --option accept-flake-config true --flake .#{hostname}"  # noqa: E501
             h.run(cmd)
 
+            if action == "build":
+                print("#####################################################")
+                print(
+                    "# You can see the build result at"
+                    f"{h.user}@{h.host}:/nix-homelab/result"
+                )
+                print("#####################################################")
+
             if discovery:
                 h.meta["hostname"] = hostname
                 _host_hardware_discovery(h)
@@ -971,7 +979,7 @@ def _home_remote_deploy(
                     break
 
         h.run_local(
-            f"rsync --delete {' --exclude '.join([''] + RSYNC_EXCLUDES)} -ar . {h.user}@{h.host}:/nix-homelab/"  # noqa: E501
+            f"rsync --delete {' --exclude '.join([''] + RSYNC_EXCLUDES)} -ar . {h.user}@{h.host}:~/nix-homelab/"  # noqa: E501
         )
 
         if hostname:
@@ -988,13 +996,16 @@ def _home_remote_deploy(
                 showtrace_opts = "--show-trace"
 
             # Create missing user profile
-            h.run(f"sudo mkdir -p /nix/var/nix/profiles/per-user/{h.user}")
             h.run(
-                f"sudo chown {h.user} /nix/var/nix/profiles/per-user/{h.user}"
-            )
+                "mkdir -p ~/.local/state/nix/profiles && home-manager init"
+            )  # noqa: E501
+            # h.run(f"sudo mkdir -p /nix/var/nix/profiles/per-user/{h.user}")
+            # h.run(
+            #    f"sudo chown {h.user} /nix/var/nix/profiles/per-user/{h.user}"
+            # )
 
             # homemanager deployment
-            cmd = f"cd /nix-homelab && home-manager -v {action} {showtrace_opts} {cache_opts} {keeperror_opts} --option accept-flake-config true --flake .#{username}@{hostname}"  # noqa: E501
+            cmd = f"cd ~/nix-homelab && home-manager -v {action} {showtrace_opts} {cache_opts} {keeperror_opts} --option accept-flake-config true --flake .#{username}@{hostname}"  # noqa: E501
             h.run(cmd)
 
     g.run_function(deploy)
@@ -1027,6 +1038,11 @@ def _nix_local_deploy(
     cmd = f"cd /nix-homelab && sudo nixos-rebuild -v {action} {showtrace_opts} {cache_opts} {keeperror_opts} --fast --option accept-flake-config true --flake .#"  # noqa: E501
     run(cmd)
 
+    if action == "build":
+        print("#####################################################")
+        print("# You can see the build result at /nix-homelab/result")
+        print("#####################################################")
+
 
 def _home_local_deploy(
     action: str, cache: bool, keeperror: bool, showtrace: bool
@@ -1035,7 +1051,7 @@ def _home_local_deploy(
     Deploy to on local compute
     """
     run(
-        f"rsync --delete {' --exclude '.join([''] + RSYNC_EXCLUDES)} -ar . /nix-homelab/"  # noqa: E501
+        f"rsync --delete {' --exclude '.join([''] + RSYNC_EXCLUDES)} -ar . ~/nix-homelab/"  # noqa: E501
     )
 
     cache_opts = ""
@@ -1052,7 +1068,7 @@ def _home_local_deploy(
     if showtrace:
         showtrace_opts = "--show-trace"
 
-    cmd = f"cd /nix-homelab && home-manager {action} {showtrace_opts} {cache_opts} {keeperror_opts} --option accept-flake-config true --flake ."  # noqa: E501
+    cmd = f"cd ~/nix-homelab && home-manager {action} {showtrace_opts} {cache_opts} {keeperror_opts} --option accept-flake-config true --flake ."  # noqa: E501
     run(cmd)
 
 

@@ -306,7 +306,7 @@ in
         cpu =
           let
             # show nproc CPU bars
-            icons = lib.concatMapStrings (x: "{icon" + toString x + "} ") (lib.range 0 (config.home.userconf.host.nproc - 1));
+            icons = lib.concatMapStrings (x: "{icon" + toString x + "} ") (lib.range 0 (config.hostprofile.nproc - 1));
           in
           {
             interval = 1;
@@ -321,7 +321,7 @@ in
         # see sensors command
         temperature = {
           format = "  {temperatureC:>2}°C";
-          hwmon-path = config.home.userconf.host.coretemp;
+          hwmon-path = config.hostprofile.coretemp;
           critical-threshold = 80;
         };
 

@@ -3,7 +3,7 @@
 
 {
   # List your module files here
-  dashy = import ./dashy.nix;
-  statping = import ./statping.nix;
-  uptime = import ./uptime.nix;
+  # dashy = import ./dashy.nix;
+  # statping = import ./statping.nix;
+  # uptime = import ./uptime.nix;
 }

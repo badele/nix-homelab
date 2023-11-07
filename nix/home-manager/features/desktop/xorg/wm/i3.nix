@@ -57,7 +57,7 @@ in
         fonts = {
           names = [ "${config.fontProfiles.monospace.family}" "${config.fontProfiles.fontawesome.family}" ];
           style = "Bold Semi-Condensed";
-          size = 10.0;
+          size = 12.0;
         };
 
         colors = {
@@ -313,7 +313,11 @@ in
             { class = "qradiolink"; }
             { class = "SDRHunter"; }
             { class = "SDR++.*"; }
-
+            # Graphics/Video
+            { class = "geeqie"; }
+            # { class = "openshoot"; }
+            { class = "openshoot-qt"; }
+            { class = "gimp-2.10"; }
           ];
         };
 

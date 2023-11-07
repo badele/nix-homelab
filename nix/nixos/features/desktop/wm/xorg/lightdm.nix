@@ -1,5 +1,10 @@
 { config, pkgs, ... }:
 {
+
+  imports = [
+    ../../../../../modules/nixos/host.nix
+  ];
+
   environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw 
   services.xserver = {
     enable = true;
@@ -8,13 +13,18 @@
     layout = "fr";
     videoDrivers = [ "intel" "i965" "nvidia" ];
     displayManager = {
-      defaultSession = "none+i3";
       lightdm.enable = true;
-      autoLogin = {
-        user = "badele";
-      };
+      defaultSession = config.hostprofile.autologin.session;
+      autoLogin.user = config.hostprofile.autologin.user;
+    };
+
+    # Touchpad
+    libinput = {
+      enable = true;
+      naturalScrolling = true;
+      middleEmulation = false;
+      tapping = true;
     };
     windowManager.i3.enable = true;
-    synaptics.enable = true;
   };
 }

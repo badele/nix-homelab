@@ -40,6 +40,7 @@ in
     git
     nix-index
     gnumake
+    cmake
     home-manager
   ];
 

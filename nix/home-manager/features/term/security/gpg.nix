@@ -5,15 +5,15 @@ let
 
   pinentry =
     if config.gtk.enable then {
-      package = pkgs.pinentry-gnome;
+      packages = [ pkgs.pinentry-gnome pkgs.gcr ];
       name = "gnome3";
     } else {
-      package = pkgs.pinentry-curses;
+      packages = [ pkgs.pinentry-curses ];
       name = "curses";
     };
 in
 {
-  home.packages = [ pinentry.package ];
+  home.packages = pinentry.packages;
 
   services.gpg-agent = {
     enable = true;
