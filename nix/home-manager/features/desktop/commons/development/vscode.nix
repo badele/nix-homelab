@@ -4,9 +4,10 @@
 {
   programs.vscode = {
     enable = true;
-    package = pkgs.vscodium;
+    # package = pkgs.vscodium;
     extensions = with pkgs.vscode-extensions; [
       bbenoist.nix
+      github.copilot 
       golang.go
       gruntfuggly.todo-tree
       jebbs.plantuml
