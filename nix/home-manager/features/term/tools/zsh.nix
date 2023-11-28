@@ -276,6 +276,7 @@ in
         NIX_CONFIG = "extra-experimental-features = nix-command flakes repl-flake";
 
         PATH = lib.concatStringsSep ":" [
+          "${config.home.homeDirectory}/.deno/bin"
           "${config.home.homeDirectory}/.local/bin"
           "\${PATH}"
         ];
