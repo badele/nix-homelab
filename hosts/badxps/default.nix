@@ -23,6 +23,7 @@
     ../../nix/nixos/features/system/containers.nix
 
     # Desktop
+    ../../nix/nixos/features/system/bluetooth.nix
     ../../nix/nixos/features/desktop/wm/xorg/lightdm.nix
   ];
 
