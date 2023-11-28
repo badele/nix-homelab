@@ -309,10 +309,39 @@ def nix_deploy(
     )
 
 
+@task(
+    name="boot",
+    help={
+        "discovery": "get host information after deployment",
+        "cache": "Use binary cache from flake extra-substituers section",
+        "keeperror": "Continue, if error",
+        "showtrace": "Show trace on error",
+    },
+)
+def nix_boot(
+    c,
+    hostnames="",
+    discovery=True,
+    cache=True,
+    keeperror=True,
+    showtrace=False,
+):
+    """
+    rebuild boot to <hostnames> server
+
+    if <hostnames> is empty, deploy to all nix homelab server
+
+    """
+    _execute_nixos_rebuild(
+        "boot", hostnames, discovery, cache, keeperror, showtrace
+    )
+
+
 nixos = Collection("nixos")
 nixos.add_task(nix_deploy)
 nixos.add_task(nix_test)
 nixos.add_task(nix_build)
+nixos.add_task(nix_boot)
 
 ##############################################################################
 # Home-manager (user)
