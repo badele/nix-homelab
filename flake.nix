@@ -21,7 +21,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hardware.url = "github:badele/fork-nixos-hardware/dell-e5540";
+    # hardware.url = "git+file:///home/badele/ghq/github.com/badele/fork-nixos-hardware";
+    hardware.url = "github:badele/fork-nixos-hardware/xps-15-9530";
+    # hardware.url = "github:NixOS/nixos-hardware/master";
+
     impermanence.url = "github:nix-community/impermanence";
     nur.url = "github:nix-community/NUR";
     sops-nix = {
@@ -30,7 +33,9 @@
     };
 
     # Color scheme
-    nix-rice = { url = "github:bertof/nix-rice"; };
+    nix-rice = {
+      url = "github:bertof/nix-rice";
+    };
 
     # Precomit local generator
     nix-pre-commit.url = "github:jmgilman/nix-pre-commit";
@@ -88,6 +93,11 @@
       # Available through 'nixos-rebuild --flake .#your-hostname'
       # or 'nixos-rebuild --flake .' for current hostname
       nixosConfigurations = {
+        b4d14 = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs outputs; };
+          modules = [ inputs.sops-nix.nixosModules.sops ./hosts/b4d14 ];
+        };
+
         badxps = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
           modules = [ inputs.sops-nix.nixosModules.sops ./hosts/badxps ];
@@ -114,6 +124,32 @@
       # or 'home-manager --flake .' for current user in current hostname
       homeConfigurations = {
         ########################################################################
+        # b4d14
+        ########################################################################
+        "root@b4d14" = home-manager.lib.homeManagerConfiguration {
+          pkgs =
+            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [
+            # > Our main home-manager configuration file <
+            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
+            ./users/root/b4d14.nix
+          ];
+        };
+
+        "badele@b4d14" = home-manager.lib.homeManagerConfiguration {
+          pkgs =
+            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [
+            # > Our main home-manager configuration file <
+            nur.hmModules.nur
+            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
+            ./users/badele/b4d14.nix
+          ];
+        };
+
+        ########################################################################
         # badxps
         ########################################################################
         "root@badxps" = home-manager.lib.homeManagerConfiguration {
@@ -123,7 +159,7 @@
           modules = [
             # > Our main home-manager configuration file <
             { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
-            ./nix/home-manager/users/root/badxps.nix
+            ./users/root/badxps.nix
           ];
         };
 

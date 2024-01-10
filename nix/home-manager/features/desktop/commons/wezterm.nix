@@ -1,7 +1,7 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 let
-  hexPalette = with pkgs.lib.nix-rice; palette.toRGBHex pkgs.rice.colorPalette;
+  hexPalette = with inputs.nix-rice.lib; palette.toRGBHex pkgs.rice.colorPalette;
 in
 {
   programs.wezterm = {

@@ -1,8 +1,8 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 let
   cfg = config.xsession.windowManager.i3.config;
-  hexPalette = with pkgs.lib.nix-rice; palette.toRGBHex pkgs.rice.colorPalette;
+  hexPalette = with inputs.nix-rice.lib; palette.toRGBHex pkgs.rice.colorPalette;
   lockTime = 4 * 60; # TODO: configurable desktop (10 min)/laptop (4 min)
 
   # i3 workspaces
@@ -138,6 +138,7 @@ in
           "${mod}+n" = "exec --no-startup-id ${playerctl} next";
           "${mod}+m" = "exec --no-startup-id ${cfg.terminal} start --class pulsemixer -- pulsemixer";
           "${mod}+d" = "exec --no-startup-id ${cfg.terminal} start --class bashmount -- bashmount";
+          "${mod}+b" = "exec --no-startup-id ${cfg.terminal} start --class bluetuith -- bluetuith";
 
           # # Screen brightness controls
           "XF86MonBrightnessUp" = "exec \"xbacklight -inc 10; notify-send 'brightness up'\"";
@@ -304,10 +305,13 @@ in
           border = 1;
           titlebar = false;
           criteria = [
-            { class = "pulsemixer"; }
-            { class = "bashmount"; }
-            { class = ".gnuradio-companion-wrapped"; }
+            # Float app windows (detetect class with xprops)
+            { class = "pulsemixer"; } # MOD+m
+            { class = "bashmount"; } # MOD+d
+            { class = "bluetuith"; } # MOD+b
+
             # SDR
+            { class = ".gnuradio-companion-wrapped"; }
             { class = "gqrx"; }
             { class = "SDRangel"; }
             { class = "qradiolink"; }

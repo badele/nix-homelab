@@ -1,6 +1,6 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 let
-  hexPalette = with pkgs.lib.nix-rice; palette.toRGBHex pkgs.rice.colorPalette;
+  hexPalette = with inputs.nix-rice.lib; palette.toRGBHex pkgs.rice.colorPalette;
 
   grep = (lib.getBin pkgs.gnugrep) + "/bin/grep";
   bash = (lib.getBin pkgs.bash) + "/bin/bash";
@@ -152,11 +152,12 @@ in
               }
             ];
 
-            #pactl list short sink
+            #pactl list short sinks
             mappings =
               {
                 "alsa_output.usb-MUSIC-BOOST_Nor-Tec_streaming_mic_ES329-00.analog-stereo" = "USB";
-                "alsa_output.pci-0000_00_1f.3.analog-stereo" = "INT";
+                "alsa_output.pci-0000_00_1f.3.analog-stereo" = "INT"; # XPS 15 9570
+                "alsa_output.pci-0000_00_1f.3-platform-skl_hda_dsp_generic.HiFi__hw_sofhdadsp__sink" = "INT"; # XPS 15 9530
                 "bluez_sink.68_59_32_AA_E5_92.a2dp_sink" = "JBL 660";
               };
           }

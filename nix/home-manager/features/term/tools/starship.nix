@@ -7,9 +7,9 @@
 
 # Search font symbol => https://www.nerdfonts.com/cheat-sheet
 # Configuration => https://starship.rs/config/
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 let
-  hexPalette = with pkgs.lib.nix-rice; palette.toRGBHex pkgs.rice.colorPalette;
+  hexPalette = with inputs.nix-rice.lib; palette.toRGBHex pkgs.rice.colorPalette;
 in
 {
   programs.starship = {
@@ -53,7 +53,7 @@ in
         # truncation_symbol = "…/";
 
         substitutions = {
-          "Documents" = " ";
+          "Documents" = "󰈙";
           "Downloads" = " ";
           "Music" = " ";
           "Pictures" = " ";
@@ -93,14 +93,14 @@ in
       cmd_duration = {
         disabled = false;
         style = "bg:${hexPalette.normal.cyan} fg:${hexPalette.background}";
-        format = "[ 祥 $duration ]($style)";
+        format = "[ 󰅒 $duration ]($style)";
       };
 
       time = {
         disabled = false;
         time_format = "%R"; # Hour:Minute Format
         style = "bg:${hexPalette.normal.magenta}";
-        format = "[  $time ]($style)";
+        format = "[ 󰥔 $time ]($style)";
       };
 
     };

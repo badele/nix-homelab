@@ -17,7 +17,9 @@
     # ...
     # });
 
-    rice.colorPalette = with final.lib.nix-rice;
+    # rice.colorPalette = with final.lib.nix-rice;
+    rice.colorPalette = with inputs.nix-rice.lib;
+
       let
         # https://github.com/kovidgoyal/kitty-themes/tree/master/themes
         themename = "gruvbox-dark";
