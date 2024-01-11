@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+# Vars
+volvalue=5
+timeout=3000
+icon_path="/usr/share/icons/Adwaita/scalable"
+pulseid=$(pgrep pulseaudio)
+
+# Send notification
+function notify {
+    muted=$(pulsemixer --id "$1" --get-mute )
+    volume=$(pulsemixer --id "$1" --get-volume | awk '{print $1}')
+    bar=$(seq -s "─" $(($volume / 5)) | sed 's/[0-9]//g')
+
+    if [ "$muted" -ne 1 ]; then
+        if [ "$volume" -lt 34 ]
+        then
+            icon="status/audio-volume-low-symbolic.svg"
+        elif [ "$volume" -lt 67 ]
+        then
+            icon="status/audio-volume-medium-symbolic.svg"
+        elif [ "$volume" -le 100 ]
+        then
+            icon="status/audio-volume-high-symbolic.svg"
+        else
+            icon="status/audio-volume-overamplified-symbolic.svg"
+        fi
+        dunstify -i "$icon_path/$icon" -u low -r "$pulseid" -t "$timeout" "$bar"
+    else
+        icon="status/audio-volume-muted-symbolic.svg"
+        dunstify -i "$icon_path/$icon" -u low -r "$pulseid" -t "$timeout" "muted"
+    fi
+}
+
+# Update volume
+mix () {
+    unmute=""
+    if [[ "$(pulsemixer --get-mute)" == "1" ]]; then
+        unmute="--toggle-mute"    
+    fi
+
+	case $1 in
+		up) 
+            pulsemixer $unmute --change-volume +"$volvalue" --id $2
+		;;
+		down) 
+            pulsemixer $unmute --change-volume -"$volvalue" --id $2
+		;;
+		mute) 
+            pulsemixer --toggle-mute --id $2
+	esac
+    
+    notify "$2"
+}
+
+# Select source
+case $1 in
+    output)
+        mix "$2" "sink-0"
+        ;;
+    mic)
+        mix "$2" "source-1"
+        ;;
+esac
