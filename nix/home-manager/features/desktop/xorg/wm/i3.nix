@@ -4,6 +4,7 @@ let
   cfg = config.xsession.windowManager.i3.config;
   hexPalette = with inputs.nix-rice.lib; palette.toRGBHex pkgs.rice.colorPalette;
   lockTime = 4 * 60; # TODO: configurable desktop (10 min)/laptop (4 min)
+  execAndNotify = cmd: mess: ''exec "${cmd}; notify-send '${mess}'"'';
 
   # i3 workspaces
   mod = "Mod4";
@@ -132,8 +133,8 @@ in
           # # || Super+d || Show TUI mount disk | i3
           "XF86AudioMute" = "exec --no-startup-id ~/.local/bin/mixer output mute";
           "XF86AudioMicMute" = "exec --no-startup-id ~/.local/bin/mixer mic mute";
-          "XF86AudioLowerVolume" = "exec --no-startup-id ~/.local/bin/mixer output down";
-          "XF86AudioRaiseVolume" = "exec --no-startup-id ~/.local/bin/mixer output up";
+          "XF86AudioLowerVolume" = "exec --no-startup-id my-mixer output down";
+          "XF86AudioRaiseVolume" = "exec --no-startup-id my-mixer output up";
           "${mod}+p" = "exec --no-startup-id ${playerctl} play-pause";
           "${mod}+n" = "exec --no-startup-id ${playerctl} next";
           "${mod}+m" = "exec --no-startup-id ${cfg.terminal} start --class pulsemixer -- pulsemixer";
@@ -141,8 +142,8 @@ in
           "${mod}+b" = "exec --no-startup-id ${cfg.terminal} start --class bluetuith -- bluetuith";
 
           # # Screen brightness controls
-          "XF86MonBrightnessUp" = "exec \"xbacklight -inc 10; notify-send 'brightness up'\"";
-          "XF86MonBrightnessDown" = "exec \"xbacklight -dec 10; notify-send 'brightness down'\"";
+          "XF86MonBrightnessUp" = execAndNotify "brightnessctl set 5%+" "brightness up";
+          "XF86MonBrightnessDown" = execAndNotify "brightnessctl set 5%-" "brightness down";
 
           # # Video
           "${mod}+ctrl+r" = "exec --no-startup-id ~/.local/bin/video_toggle_record_desktop";
@@ -286,6 +287,7 @@ in
           # }
         ];
 
+        # Get window class name with xprop
         assigns = {
           "${w2}" = [
             { class = "Spotify"; }
@@ -295,17 +297,18 @@ in
           ];
           "${w7}" = [
             { class = "Google-chrome"; }
+            { class = "Navigator"; }
           ];
           "${w9}" = [
             { class = "VSCodium"; }
           ];
         };
 
+        # Get window class name with xprop
         floating = {
           border = 1;
           titlebar = false;
           criteria = [
-            # Float app windows (detetect class with xprops)
             { class = "pulsemixer"; } # MOD+m
             { class = "bashmount"; } # MOD+d
             { class = "bluetuith"; } # MOD+b

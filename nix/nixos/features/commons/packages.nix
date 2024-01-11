@@ -5,6 +5,7 @@
   services.udisks2.enable = true;
 
   environment.systemPackages = with pkgs; [
+
     # System diagnose
     file
     lsof
@@ -12,6 +13,7 @@
     strace
     dig # DNS tools
     usbutils
+    lshw # Hardware info
 
     # Disk
     f3 # SSD benchmark
@@ -21,8 +23,14 @@
     testdisk # Recovery datas
 
     # System
+    brightnessctl
     dmidecode # Hardwarde info
     pciutils # pci cards info
+
+    # xorg
+    xorg.xev
+    xorg.xmodmap
+    mesa-demos
 
     # Bluetooth
     bluez-tools
