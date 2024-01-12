@@ -287,7 +287,7 @@ in
           # }
         ];
 
-        # Get window class name with xprop
+        # Get window class name with xprop | grep WM_CLASS
         assigns = {
           "${w2}" = [
             { class = "Spotify"; }
@@ -297,14 +297,14 @@ in
           ];
           "${w7}" = [
             { class = "Google-chrome"; }
-            { class = "Navigator"; }
+            { class = "firefox"; }
           ];
           "${w9}" = [
             { class = "VSCodium"; }
           ];
         };
 
-        # Get window class name with xprop
+        # Get window class name with xprop | grep WM_CLASS
         floating = {
           border = 1;
           titlebar = false;
