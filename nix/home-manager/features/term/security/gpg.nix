@@ -1,12 +1,12 @@
-{ pkgs, config, home, lib, ... }:
+{ pkgs, config, lib, ... }:
 let
   fetchKey = { url, sha256 ? lib.fakeSha256 }:
     builtins.fetchurl { inherit sha256 url; };
 
   pinentry =
     if config.gtk.enable then {
-      packages = [ pkgs.pinentry-gnome pkgs.gcr ];
-      name = "gnome3";
+      packages = [ pkgs.pinentry-qt ];
+      name = "qt";
     } else {
       packages = [ pkgs.pinentry-curses ];
       name = "curses";
