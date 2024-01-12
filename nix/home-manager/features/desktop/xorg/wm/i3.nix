@@ -136,10 +136,11 @@ in
           "XF86AudioLowerVolume" = "exec --no-startup-id my-mixer output down";
           "XF86AudioRaiseVolume" = "exec --no-startup-id my-mixer output up";
           "${mod}+p" = "exec --no-startup-id ${playerctl} play-pause";
-          "${mod}+n" = "exec --no-startup-id ${playerctl} next";
+          "${mod}+s" = "exec --no-startup-id ${playerctl} next";
+          "${mod}+b" = "exec --no-startup-id ${cfg.terminal} start --class bluetuith  -- bluetuith";
+          "${mod}+d" = "exec --no-startup-id ${cfg.terminal} start --class bashmount  -- bashmount";
           "${mod}+m" = "exec --no-startup-id ${cfg.terminal} start --class pulsemixer -- pulsemixer";
-          "${mod}+d" = "exec --no-startup-id ${cfg.terminal} start --class bashmount -- bashmount";
-          "${mod}+b" = "exec --no-startup-id ${cfg.terminal} start --class bluetuith -- bluetuith";
+          "${mod}+n" = "exec --no-startup-id ${cfg.terminal} start --class nmtui -- nmtui";
 
           # # Screen brightness controls
           "XF86MonBrightnessUp" = execAndNotify "brightnessctl set 5%+" "brightness up";
@@ -170,10 +171,10 @@ in
 
           # # floating and fullscreen
           # # || Super+Shift+Space || Float toggle window | i3
-          # # || Super+s || Sticky toggle window | i3
+          # # || Super+g || Sticky toggle window (glued window) | i3
           # # || Super+f|| Fullscreen window | i3
           "${mod}+Shift+space" = "floating toggle";
-          "${mod}+s" = "sticky toggle";
+          "${mod}+g" = "sticky toggle";
           "${mod}+f" = "fullscreen";
 
           # # Workspaces navigation
@@ -309,9 +310,10 @@ in
           border = 1;
           titlebar = false;
           criteria = [
-            { class = "pulsemixer"; } # MOD+m
-            { class = "bashmount"; } # MOD+d
             { class = "bluetuith"; } # MOD+b
+            { class = "bashmount"; } # MOD+d
+            { class = "pulsemixer"; } # MOD+m
+            { class = "nmtui"; } # MOD+n
 
             # SDR
             { class = ".gnuradio-companion-wrapped"; }
