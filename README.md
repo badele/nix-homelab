@@ -116,19 +116,27 @@ This list generated with `inv docs.all-pages` command
 
 [comment]: (<<ROLES)
 
+
 ## User programs
 
-<table>
-    <tr>
-        <th>Logo</th>
-        <th>Name</th>
-        <th>Description</th>
-    </tr><tr>
-            <td><a href="https://github.com/badele/nix-homelab"><img width="32" src="https://user-images.githubusercontent.com/28633984/66519056-2e840c80-eaef-11e9-8670-c767213c26ba.png"></a></td>
-            <td>Neovim</td>
-            <td>Moved to <a href="https://github.com/badele/vide">badele/vide</td>
-</table>
+| Logo                                                                                                                                                                          | Name     | Description                                                                 |
+| -                                                                                                                                                                             | -        | -                                                                           |
+| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Firefox_logo%2C_2019.svg/32px-Firefox_logo%2C_2019.svg.png">](./users/badele/firefox.nix)     | Firefox  | [Browser](./users/badele/firefox.nix)                                       |
+| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/The_GIMP_icon_-_gnome.svg/32px-The_GIMP_icon_-_gnome.svg.png">](./users/badele/commons.nix)   | Gimp     | [Raster graphics editor ](./users/badele/commons.nix)                       |
+| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/I3_window_manager_logo.svg/32px-I3_window_manager_logo.svg.png">](./users/badele/commons.nix) | i3       | [Tiling window manager](./nix/home-manager/features/desktop/xorg/wm/i3.nix) |
+| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Inkscape_Logo.svg/32px-Inkscape_Logo.svg.png">](./users/badele/commons.nix)                   | Inkscape | [Vectorial graphics editor ](./users/badele/commons.nix)                    |
+| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Meld_Logo.svg/128px-Meld_Logo.svg.png">](./users/badele/commons.nix)                          | Meld     | [Awesome diff tool ](./users/badele/commons.nix)                            |
+| [<img width="32" src="https://user-images.githubusercontent.com/28633984/66519056-2e840c80-eaef-11e9-8670-c767213c26ba.png">](https://github.com/badele/vide)                 | Neovim   | [**VIDE** (badele's customized nix neovim](https://github.com/badele/vide)  |
 
+
+## TUI floating panel configuration
+
+| Scope                                   | Use tool     | Preview                                                                                |
+| -                                          | -            | -                                                                                      |
+| [Bluetooth](./docs/floating_bluetooth.gif) | `bluetuith`  | [<img width="320" src="./docs/floating_bluetooth.png">](./docs/floating_bluetooth.png) |
+| [Disk](./docs/floating_disk.gif)           | `bashmount`  | [<img width="320" src="./docs/floating_disk.png">](./docs/floating_disk.png)           |
+| [Mixer](./docs/floating_mixer.gif)         | `pulsemixer` | [<img width="320" src="./docs/floating_mixer.png">](./docs/floating_mixer.png)         |
+| [Network](./docs/floating_network.gif)     | `nmtui`      | [<img width="320" src="./docs/floating_network.png">](./docs/floating_network.png)     |
 
 
 ## Hosts
@@ -257,12 +265,12 @@ This list generated with `inv docs.all-pages` command
  graph BT
  linkStyle default interpolate basis
  internet((Internet))
- 
+
  box[<center>SFR internet box</br>192.168.0.1</center>]---internet
 router-living[<center>Livingroom mikrotik router</br>192.168.254.254</center>]---box
 router-ladbedroom[<center>Bedroom mikrotik router</br>192.168.254.253</center>]---router-living
 router-homeoffice[<center>Office mikrotik router</br>192.168.254.252</center>]---router-living
-latino[<center>Dell E5540 Latop</br>192.168.254.200</center>]---router-ladbedroom
+sadhome[<center>Stephanie's laptop</br>192.168.254.200</center>]---router-ladbedroom
 rpi40[<center>The RPI 4 server</br>192.168.254.101</center>]---router-homeoffice
 bootstore[<center>HP Microserver N40L server</br>192.168.254.100</center>]---router-homeoffice
 badwork[<center>A work thinkpad</br>192.168.254.189</center>]---router-ladbedroom
@@ -274,15 +282,16 @@ loadphone[<center>Lou's phone</br>192.168.254.199</center>]---router-ladbedroom
 tv-chromecast[<center>TV Chromecast</br>192.168.254.105</center>]---router-ladbedroom
 bedroom-googlemini-A[<center>Google Mini room A</br>192.168.254.197</center>]---router-ladbedroom
 bedroom-googlemini-C[<center>Google Mini room C</br>192.168.254.196</center>]---router-ladbedroom
+b4d14[<center>Dell XPS 9560 Latop</br>192.168.254.124</center>]---router-ladbedroom
 badxps[<center>Dell XPS 9570 Latop</br>192.168.254.114</center>]---router-ladbedroom
+badxps-eth[<center>Dell XPS 9570 Latop</br>192.168.254.179</center>]---router-ladbedroom
 bridge-hue[<center>Philips Hue bridge</br>192.168.254.191</center>]---router-ladbedroom
-sadhome[<center>Stephanie's laptop</br>192.168.254.185</center>]---router-ladbedroom
 
 subgraph livingroom
 box
 router-living
-tv-chromecast
 sadhome
+tv-chromecast
 end
 
 subgraph ladbedroom
@@ -292,12 +301,13 @@ end
 
 subgraph homeoffice
 router-homeoffice
-latino
 rpi40
 bootstore
 badwork
 badwork-eth
+b4d14
 badxps
+badxps-eth
 end
 
 subgraph badbedroom
@@ -383,7 +393,6 @@ Available tasks:
   docs.scan-all-hosts          Retrieve all hosts system infromations
   home.build                   Test to <hostnames> server
   home.deploy                  Deploy to <hostnames> server
-  home.test                    Test to <hostnames> server
   init.disk-format             Format disks with zfs
   init.disk-mount              Mount disks from the installer
   init.domain-cert             Init domain certificate
@@ -392,6 +401,7 @@ Available tasks:
   init.nixos-generate-config   Generate hardware configuration for the host
   init.nixos-install           install nixos
   init.ssh-init-host-key       Init ssh host key from nixos installation
+  nixos.boot                   rebuild boot to <hostnames> server
   nixos.build                  Test to <hostnames> server
   nixos.deploy                 Deploy to <hostnames> server
   nixos.test                   Test to <hostnames> server
@@ -413,3 +423,4 @@ A big thank to the contributors of OpenSource projects in particular :
 - [Mic92](https://github.com/Mic92/dotfiles) and for his some nix contributions
 - [Misterio77](https://github.com/Misterio77/nix-config) and for his some nix contributions
 - [longerHV](https://github.com/LongerHV/nixos-configuration) nix configuration file
+- [wikipedia](https://www.wikipedia.org) for logos inventories
