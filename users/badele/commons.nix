@@ -1,15 +1,13 @@
 { config
-  , inputs
-    , outputs
-    , pkgs
-    , lib
-    , ...
+, pkgs
+, lib
+, ...
 }:
 {
 
-##############################################################################
-# Common user conf
-##############################################################################
+  ##############################################################################
+  # Common user conf
+  ##############################################################################
   home = {
     username = lib.mkDefault "badele";
     homeDirectory = lib.mkDefault "/home/${config.home.username}";
@@ -46,25 +44,34 @@
     };
   };
 
-##############################################################################
-# Packages
-##############################################################################
+  ##############################################################################
+  # Packages
+  ##############################################################################
   home.packages = with pkgs; [
-# MQTT
+    # MQTT
     mosquitto
-      mqttui
-      yadm
+    mqttui
+    yadm
 
-      go
-      nano
-      nodejs
-      stylua
+    # Development
+    go
+    lua54Packages.luarocks
+    nano
+    nodejs
+    stylua
+    tree-sitter
+    meld # Awesome diff tool
 
-      lazygit
-      lazydocker
+    # Graphics
+    geeqie
+    gimp
+    inkscape
 
-      tree-sitter
-      lua54Packages.luarocks
-      xclip
+    # Office
+    discord
+    libreoffice
+
+    # Misc
+    xclip
   ];
 }

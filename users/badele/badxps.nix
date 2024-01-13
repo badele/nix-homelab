@@ -56,12 +56,6 @@ in
   # Packages
   ###############################################################################
   home.packages = with pkgs; [
-    discord
-    geeqie
-    gimp
-    inkscape
-    libreoffice
-
     # bash
     # shellharden
     # shellcheck
