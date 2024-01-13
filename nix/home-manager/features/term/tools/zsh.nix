@@ -152,7 +152,7 @@ in
         # Tools
         calc = "eva"; # launch calc computing (eva)
         fd = "fd"; # find files alternative (fd)
-        pup = "up"; # pipe output (we can run linux command in realtime)
+        # pup = "up"; # pipe output (we can run linux command in realtime)
         hexyl = "hexyl --border none"; # hexdump alternative
         #br="broot"; # File manager        
 
@@ -181,9 +181,9 @@ in
         cat = "bat --style=plain"; # cat alternative (bat)
 
         # ls alternative
-        la = "exa --color=always -a";
-        ll = "exa --color=always -alh";
-        ls = "exa --color=always";
+        la = "eza --color=always -a";
+        ll = "eza --color=always -alh";
+        ls = "eza --color=always";
 
         # Folder
         ".." = "cd ..";
@@ -258,8 +258,10 @@ in
         vim = "nvim"; # alternative vim (nvim)
 
         # navi
-        lnavi = "navi --path $PRIVATE/cheats"; # Show cheat commands
-        lpnavi = "navi --print --path $PRIVATE/cheats"; # Show cheat commands
+        navi = "my-navi"; # Show cheat commands
+        pnavi = "my-navi --print"; # Show cheat commands
+        lnavi = "my-navi --path ~/ghq/github.com/badele/cheats"; # Show cheat commands
+        lpnavi = "my-navi --print --path ~/ghq/github.com/badele/cheats"; # Show cheat commands
 
         # Date & Time
         clock = "peaclock --config-dir ~/.config/peaclock"; # Show terminal clock

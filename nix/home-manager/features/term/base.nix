@@ -64,26 +64,26 @@
     # Cheats navigators
     navi = {
       enable = true;
-      # settings = {
-      #   cheats = {
-      #     paths = [
-      #       "~/ghq/github.com/badele/cheats"
-      #       "~/ghq/github.com/denisidoro/cheats"
-      #       "~/ghq/github.com/denisidoro/navi-tldr-pages"
-      #       "~/ghq/github.com/denisidoro/dotfiles"
-      #       "~/ghq/github.com/mrVanDalo/navi-cheats"
-      #       "~/ghq/github.com/chazeon/my-navi-cheats"
-      #       "~/ghq/github.com/caojianhua/MyCheat"
-      #       "~/ghq/github.com/Kidman1670/cheats"
-      #       "~/ghq/github.com/isene/cheats"
-      #       "~/ghq/github.com/m42martin/navi-cheats"
-      #       "~/ghq/github.com/infosecstreams/cheat.sheets"
-      #       "~/ghq/github.com/prx2090/cheatsheets-for-navi"
-      #       "~/ghq/github.com/papanito/cheats"
-      #       "~/ghq/github.com/esp0xdeadbeef/cheat.sheets"
-      #     ];
-      #   };
-      # };
+      settings = {
+        cheats = {
+          paths = [
+            "$HOME/ghq/github.com/badele/cheats"
+            "$HOME/ghq/github.com/denisidoro/cheats"
+            "$HOME/ghq/github.com/denisidoro/navi-tldr-pages"
+            "$HOME/ghq/github.com/denisidoro/dotfiles"
+            "$HOME/ghq/github.com/mrVanDalo/navi-cheats"
+            "$HOME/ghq/github.com/chazeon/my-navi-cheats"
+            "$HOME/ghq/github.com/caojianhua/MyCheat"
+            "$HOME/ghq/github.com/Kidman1670/cheats"
+            "$HOME/ghq/github.com/isene/cheats"
+            "$HOME/ghq/github.com/m42martin/navi-cheats"
+            "$HOME/ghq/github.com/infosecstreams/cheat.sheets"
+            "$HOME/ghq/github.com/prx2090/cheatsheets-for-navi"
+            "$HOME/ghq/github.com/papanito/cheats"
+            "$HOME/ghq/github.com/esp0xdeadbeef/cheat.sheets"
+          ];
+        };
+      };
     };
   };
 
