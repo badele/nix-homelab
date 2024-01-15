@@ -12,9 +12,6 @@
     # You can access packages and modules from different nixpkgs revs
     # at the same time. Here's an working example:
 
-    # devenv.sh
-    devenv.url = "github:cachix/devenv/latest";
-
     # Home manager
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -25,7 +22,10 @@
     hardware.url = "github:badele/fork-nixos-hardware/xps-15-9530";
     # hardware.url = "github:NixOS/nixos-hardware/master";
 
-    impermanence.url = "github:nix-community/impermanence";
+    impermanence = {
+      url = "github:nix-community/impermanence";
+    };
+
     nur.url = "github:nix-community/NUR";
     sops-nix = {
       url = "github:mic92/sops-nix";
@@ -38,7 +38,10 @@
     };
 
     # Precomit local generator
-    nix-pre-commit.url = "github:jmgilman/nix-pre-commit";
+    nix-pre-commit = {
+      url = "github:jmgilman/nix-pre-commit";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -47,7 +50,6 @@
     , home-manager
     , sops-nix
     , hardware
-    , devenv
     , nix-pre-commit
     , nix-rice
     , nur
