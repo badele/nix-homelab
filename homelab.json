@@ -263,6 +263,14 @@
       "description": "Google Mini room C",
       "os": "GoogleMini"
     },
+    "b4d14": {
+      "icon": "https://ih1.redbubble.net/image.201056839.4943/flat,32x32,075,t.jpg",
+      "ipv4": "192.168.254.124",
+      "zone": "homeoffice",
+      "parent": "router-ladbedroom",
+      "description": "Dell XPS 9560 Latop",
+      "os": "NixOS"
+    },
     "badxps": {
       "icon": "https://ih1.redbubble.net/image.201056839.4943/flat,32x32,075,t.jpg",
       "ipv4": "192.168.254.114",

@@ -1,0 +1,12 @@
+{
+    "memory": "33 Go",
+    "disk": "953.87 GiB",
+    "kernel": "6.1.52",
+    "cpu": {
+        "arch": "",
+        "model": "",
+        "nb": "",
+        "bits": "64",
+        "bogomips": 0
+    }
+}

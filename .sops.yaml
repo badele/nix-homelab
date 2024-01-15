@@ -9,6 +9,7 @@ keys:
     - &sam age1x363tjjzx6j77j3m4zynkjgyj38qcyf4wah5mc8mtjt5yt6zvgxqr3z7px
     - &bootstore age1ejza6f2xzycq7jj2eu8fyg5vjdctljttm67mfteyd4k7wzvdyc8s7sc8jh
     - &badxps age1w9v05mvydywp39cq8tmgxjh8yc2w86qpp9aa4zt9ukf0qq8n5y4s5tkn7z
+    - &b4d14 age1r7d0v4nudrv9wy7rvh784lnmzspm24uja6c6hrhhwjy7qf4e5d5q04gf3x
 
 creation_rules:
   - path_regex: users/badele/secrets.yml$
@@ -16,6 +17,7 @@ creation_rules:
       - age:
           - *badele
           - *badxps
+          - *b4d14
 
   - path_regex: hosts/secrets.yml$
     key_groups:
@@ -26,6 +28,7 @@ creation_rules:
           - *rpi40
           - *sadhome
           - *sam
+          - *b4d14
 
   - path_regex: hosts/rpi40/secrets.yml$
     key_groups:
@@ -56,3 +59,9 @@ creation_rules:
       - age:
           - *badele
           - *badxps
+
+  - path_regex: hosts/b4d14/secrets.yml$
+    key_groups:
+      - age:
+          - *badele
+          - *b4d14

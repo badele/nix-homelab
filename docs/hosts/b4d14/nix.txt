@@ -1,0 +1,7 @@
+ - system: `"x86_64-linux"`
+ - host os: `Linux 6.1.52, NixOS, 23.11 (Tapir), 23.11.20230911.3a2786e`
+ - multi-user?: `yes`
+ - sandbox: `yes`
+ - version: `nix-env (Nix) 2.17.0`
+ - nixpkgs: `/nix/store/zb2695k9v4hmjdki97p0yhd4mys270fs-source`
+
