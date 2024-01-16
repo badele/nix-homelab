@@ -60,7 +60,13 @@
     nodejs
     stylua
     tree-sitter
+    awscli # AWS CLI
+    gh # Github CLI
     meld # Awesome diff tool
+
+    # Network
+    ipcalc # IP subnetcalculator
+    trippy # mtr traceroute alternative
 
     # Graphics
     geeqie
