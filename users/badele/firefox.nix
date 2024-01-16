@@ -18,83 +18,85 @@
         "browser.disableResetPrompt" = true;
         "browser.uiCustomization.state" = ''
           {
-             "placements":{
-                "widget-overflow-fixed-list":[
-         
-                ],
-                "unified-extensions-area":[
-                   "_testpilot-containers-browser-action",
-                   "tranquility_ushnisha_com-browser-action"
-                ],
-                "nav-bar":[
-                   "back-button",
-                   "forward-button",
-                   "stop-reload-button",
-                   "home-button",
-                   "urlbar-container",
-                   "jid1-kt2kyygi32zpuw_jetpack-browser-action",
-                   "browserpass_maximbaz_com-browser-action",
-                   "_c0e1baea-b4cb-4b62-97f0-278392ff8c37_-browser-action",
-                   "simple-tab-groups_drive4ik-browser-action",
-                   "languagetool-webextension_languagetool_org-browser-action",
-                   "_0b457caa-602d-484a-8fe7-c1d894a011ba_-browser-action",
-                   "ublock0_raymondhill_net-browser-action",
-                   "floccus_handmadeideas_org-browser-action",
-                   "library-button",
-                   "downloads-button",
-                   "_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action",
-                   "simple-translate_sienori-browser-action",
-                   "_9aa46f4f-4dc7-4c06-97af-5035170634fe_-browser-action",
-                   "_a1087d5d-d793-445a-b988-088b1d86f2a6_-browser-action",
-                   "unified-extensions-button",
-                   "reset-pbm-toolbar-button",
-                   "_20fc2e06-e3e4-4b2b-812b-ab431220cada_-browser-action",
-                   "addon_darkreader_org-browser-action"
-                ],
-                "toolbar-menubar":[
-                   "menubar-items"
-                ],
-                "TabsToolbar":[
-                   "firefox-view-button",
-                   "tabbrowser-tabs",
-                   "new-tab-button",
-                   "alltabs-button"
-                ],
-                "PersonalToolbar":[
-                   "import-button",
-                   "personal-bookmarks"
-                ]
-             },
-             "seen":[
-                "save-to-pocket-button",
-                "developer-button",
-                "ublock0_raymondhill_net-browser-action",
-                "_a1087d5d-d793-445a-b988-088b1d86f2a6_-browser-action",
-                "_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action",
-                "floccus_handmadeideas_org-browser-action",
+            "placements": {
+              "widget-overflow-fixed-list": [],
+              "unified-extensions-area": [
+                "_testpilot-containers-browser-action",
+                "tranquility_ushnisha_com-browser-action",
+                "craig_wandrer_earth-browser-action"
+              ],
+              "nav-bar": [
+                "back-button",
+                "forward-button",
+                "stop-reload-button",
+                "home-button",
+                "urlbar-container",
+                "jid1-kt2kyygi32zpuw_jetpack-browser-action",
+                "_d634138d-c276-4fc8-924b-40a0ea21d284_-browser-action",
+                "browserpass_maximbaz_com-browser-action",
+                "_c0e1baea-b4cb-4b62-97f0-278392ff8c37_-browser-action",
                 "simple-tab-groups_drive4ik-browser-action",
+                "languagetool-webextension_languagetool_org-browser-action",
+                "_0b457caa-602d-484a-8fe7-c1d894a011ba_-browser-action",
+                "ublock0_raymondhill_net-browser-action",
+                "floccus_handmadeideas_org-browser-action",
+                "library-button",
+                "downloads-button",
+                "_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action",
                 "simple-translate_sienori-browser-action",
                 "_9aa46f4f-4dc7-4c06-97af-5035170634fe_-browser-action",
-                "_c0e1baea-b4cb-4b62-97f0-278392ff8c37_-browser-action",
-                "browserpass_maximbaz_com-browser-action",
-                "_testpilot-containers-browser-action",
+                "_a1087d5d-d793-445a-b988-088b1d86f2a6_-browser-action",
+                "unified-extensions-button",
+                "reset-pbm-toolbar-button",
                 "_20fc2e06-e3e4-4b2b-812b-ab431220cada_-browser-action",
-                "tranquility_ushnisha_com-browser-action",
-                "jid1-kt2kyygi32zpuw_jetpack-browser-action",
-                "_0b457caa-602d-484a-8fe7-c1d894a011ba_-browser-action",
-                "addon_darkreader_org-browser-action",
-                "languagetool-webextension_languagetool_org-browser-action"
-             ],
-             "dirtyAreaCache":[
-                "nav-bar",
-                "PersonalToolbar",
-                "toolbar-menubar",
-                "TabsToolbar",
-                "widget-overflow-fixed-list",
-                "unified-extensions-area"
-             ],
-             "currentVersion":20,
-             "newElementCount":14
+                "addon_darkreader_org-browser-action"
+              ],
+              "toolbar-menubar": [
+                "menubar-items"
+              ],
+              "TabsToolbar": [
+                "firefox-view-button",
+                "tabbrowser-tabs",
+                "new-tab-button",
+                "alltabs-button"
+              ],
+              "PersonalToolbar": [
+                "import-button",
+                "personal-bookmarks"
+              ]
+            },
+            "seen": [
+              "save-to-pocket-button",
+              "developer-button",
+              "ublock0_raymondhill_net-browser-action",
+              "_a1087d5d-d793-445a-b988-088b1d86f2a6_-browser-action",
+              "_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action",
+              "floccus_handmadeideas_org-browser-action",
+              "simple-tab-groups_drive4ik-browser-action",
+              "simple-translate_sienori-browser-action",
+              "_9aa46f4f-4dc7-4c06-97af-5035170634fe_-browser-action",
+              "_c0e1baea-b4cb-4b62-97f0-278392ff8c37_-browser-action",
+              "browserpass_maximbaz_com-browser-action",
+              "_testpilot-containers-browser-action",
+              "_20fc2e06-e3e4-4b2b-812b-ab431220cada_-browser-action",
+              "tranquility_ushnisha_com-browser-action",
+              "jid1-kt2kyygi32zpuw_jetpack-browser-action",
+              "_0b457caa-602d-484a-8fe7-c1d894a011ba_-browser-action",
+              "addon_darkreader_org-browser-action",
+              "languagetool-webextension_languagetool_org-browser-action",
+              "craig_wandrer_earth-browser-action",
+              "_d634138d-c276-4fc8-924b-40a0ea21d284_-browser-action"
+            ],
+            "dirtyAreaCache": [
+              "nav-bar",
+              "PersonalToolbar",
+              "toolbar-menubar",
+              "TabsToolbar",
+              "widget-overflow-fixed-list",
+              "unified-extensions-area"
+            ],
+            "currentVersion": 20,
+            "newElementCount": 16
           }
         '';
       };
@@ -106,6 +108,7 @@
         browserpass # GPG passwordstore
         darkreader # Dark mode
         floccus # Sync bookmark
+        onepassword-password-manager # Password manager
         simple-tab-groups # Tab group
         simple-translate # Translate
         tomato-clock # Pomodoro timer
@@ -114,6 +117,16 @@
         # Install manually addons 
         # Search AddonId with about:support
         # Fireshot
+
+        # LanguageTool, grammar and spell checker
+        (buildFirefoxXpiAddon rec {
+          pname = "fireshot";
+          version = "8.3.0";
+          addonId = "languagetool-webextension@languagetool.org";
+          url = "https://addons.mozilla.org/firefox/downloads/file/4199245/languagetool-${version}.xpi";
+          sha256 = "sha256-41dCTj353eS6EOufjzcZrEgwaBVwVX9NUdsVpGLNdmc=";
+          meta = { };
+        })
 
         # LanguageTool, grammar and spell checker
         (buildFirefoxXpiAddon rec {
