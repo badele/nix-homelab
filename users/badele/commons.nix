@@ -60,9 +60,15 @@
     nodejs
     stylua
     tree-sitter
-    awscli # AWS CLI
     gh # Github CLI
     meld # Awesome diff tool
+
+    # Cloud & co
+    awscli2 # AWS CLI
+    kubectl # Kubernetes CLI
+    kubectx # Kubernetes CLI
+    k9s # Kubernetes CLI
+
 
     # Network
     ipcalc # IP subnetcalculator
