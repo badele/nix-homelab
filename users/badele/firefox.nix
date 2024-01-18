@@ -6,6 +6,7 @@
       bookmarks = { };
       # Get by about:config and format with https://jsonformatter.org/
       settings = {
+        "browser.tabs.tabMinWidth" = 16;
         "browser.startup.homepage" = "https://start.duckduckgo.com";
         "browser.startup.page" = 3; # Restore previous tabs
         "identity.fxaccounts.enabled" = false;
