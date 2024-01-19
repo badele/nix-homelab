@@ -11,7 +11,7 @@
     ../badele.nix
 
     # Commons
-    ../../nix/nixos/features/term/base
+    ../../nix/nixos/features/commons
     ../../nix/nixos/features/homelab
 
     # Roles

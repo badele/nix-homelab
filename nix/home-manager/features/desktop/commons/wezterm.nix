@@ -52,6 +52,14 @@ in
         set_environment_variables = {
           TERM = 'wezterm',
         },
+        -- config.disable_default_key_bindings = true
+        keys = {
+          {
+            key = 'F',
+            mods = 'SHIFT|CTRL',
+            action = wezterm.action.DisableDefaultAssignment,
+          }
+        },
       }
     '';
   };
