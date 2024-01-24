@@ -76,7 +76,9 @@
 
     # Graphics
     geeqie
+    gifsicle
     gimp
+    imagemagick
     inkscape
 
     # Office
@@ -85,5 +87,8 @@
 
     # Misc
     xclip
+
+    # VPN
+    wireguard-tools
   ];
 }
