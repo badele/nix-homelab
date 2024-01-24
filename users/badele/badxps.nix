@@ -84,6 +84,8 @@ in
   programs = {
     ####################################
     # Monitors configuration
+    # autorandr --fingerprints
+    # autorandr --config
     ####################################
     autorandr = {
       enable = true;
