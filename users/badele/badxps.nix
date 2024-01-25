@@ -56,28 +56,10 @@ in
   # Packages
   ###############################################################################
   home.packages = with pkgs; [
-    # bash
-    # shellharden
-    # shellcheck
-    #
-    # # deno
-    # deno
-    #
-    # # json
-    # nodePackages.fixjson
-    # nodePackages.jsonlint
-    #
-    # # lua
-    #   luajitPackages.luacheck
-    #   selene
-    #   
-    # # markdown
-    # marksman
-    # nodePackages.markdownlint-cli
-    #
-    # # misc language
-    #   nodePackages.prettier
-
+    # DAO/CAO
+    openscad
+    librecad
+    solvespace
   ];
 
 
