@@ -5,9 +5,10 @@
     profiles.badele = {
       bookmarks = { };
       # Get by about:config and format with https://jsonformatter.org/
+      # Use Dark theme
       settings = {
         "browser.tabs.tabMinWidth" = 16;
-        "browser.startup.homepage" = "https://start.duckduckgo.com";
+        "browser.startup.homepage" = "https://www.google.fr/";
         "browser.startup.page" = 3; # Restore previous tabs
         "identity.fxaccounts.enabled" = false;
         "privacy.trackingprotection.enabled" = true;
@@ -36,6 +37,7 @@
                 "_d634138d-c276-4fc8-924b-40a0ea21d284_-browser-action",
                 "browserpass_maximbaz_com-browser-action",
                 "_c0e1baea-b4cb-4b62-97f0-278392ff8c37_-browser-action",
+                "addon_darkreader_org-browser-action",
                 "simple-tab-groups_drive4ik-browser-action",
                 "languagetool-webextension_languagetool_org-browser-action",
                 "_0b457caa-602d-484a-8fe7-c1d894a011ba_-browser-action",
@@ -49,8 +51,7 @@
                 "_a1087d5d-d793-445a-b988-088b1d86f2a6_-browser-action",
                 "unified-extensions-button",
                 "reset-pbm-toolbar-button",
-                "_20fc2e06-e3e4-4b2b-812b-ab431220cada_-browser-action",
-                "addon_darkreader_org-browser-action"
+                "_20fc2e06-e3e4-4b2b-812b-ab431220cada_-browser-action"
               ],
               "toolbar-menubar": [
                 "menubar-items"
@@ -97,7 +98,7 @@
               "unified-extensions-area"
             ],
             "currentVersion": 20,
-            "newElementCount": 16
+            "newElementCount": 17
           }
         '';
       };
