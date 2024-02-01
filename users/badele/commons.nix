@@ -64,6 +64,7 @@
     kubectx # Kubernetes CLI
     k9s # Kubernetes CLI
     kubernetes-helm # Helm
+    argocd # ArgoCD CLI
 
     # Network
     ipcalc # IP subnetcalculator
