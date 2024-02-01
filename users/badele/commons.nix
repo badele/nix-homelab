@@ -63,7 +63,7 @@
     kubectl # Kubernetes CLI
     kubectx # Kubernetes CLI
     k9s # Kubernetes CLI
-    helm # Helm
+    kubernetes-helm # Helm
 
     # Network
     ipcalc # IP subnetcalculator
