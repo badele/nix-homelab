@@ -99,6 +99,12 @@ in
             echo "$RESULT ms"
         }
 
+        function assume_role() {
+          ~/ghq/github.com/cynapps/poc-devtools/aws-assume-role.sh $@
+          source /tmp/.sso_exported
+          rm -f /tpm/.sso_exported
+        }
+
         ##############################################################################
         # broot
         ##############################################################################
@@ -154,7 +160,7 @@ in
         fd = "fd"; # find files alternative (fd)
         # pup = "up"; # pipe output (we can run linux command in realtime)
         hexyl = "hexyl --border none"; # hexdump alternative
-        #br="broot"; # File manager        
+        #br="broot"; # File manager
 
         # ZSH
         my-zkeys = "cat $HOME/.config/zsh/.zprofile | grep -Eo '# \[.*' | sed 's/# //g'";
@@ -175,7 +181,7 @@ in
         dut = "dust"; # | Show tree disk size (ordered by big file) (dust)
 
         # SSH
-        sk = "sh -o StrictHostKeyChecking=no"; # ssh without host verification        
+        sk = "sh -o StrictHostKeyChecking=no"; # ssh without host verification
 
         # cat alternative
         cat = "bat --style=plain"; # cat alternative (bat)
@@ -252,8 +258,14 @@ in
         a = "aws"; # aws alias
         g = "gcloud"; # gcloud alias
         k = "kubectl"; # kubectl alias
+        t = "terraform"; # terraform alias
+        
         kcc = "kubectl config current-context";
         h = "helm"; # helm alias
+
+        arl = "assume_role list"; # List AWS role
+        arc = "assume_role connect"; # Assume AWS role
+        ard = "assume_role disconnect"; # Disconnect
 
         vim = "nvim"; # alternative vim (nvim)
 
