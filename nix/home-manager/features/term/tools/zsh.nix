@@ -13,12 +13,9 @@
 # 5) .zlogout is sometimes used to clear and reset the terminal. It is called when exiting, not when opening.
 
 { config, pkgs, lib, ... }:
-let
-  xprop = "${pkgs.xorg.xprop}/bin/xprop";
-in
-{
-  imports = [
-  ];
+let xprop = "${pkgs.xorg.xprop}/bin/xprop";
+in {
+  imports = [ ];
 
   programs = {
     zsh = {
@@ -58,13 +55,11 @@ in
         ];
       };
 
-      plugins = [
-        {
-          name = "zsh-fast-syntax-highlighting";
-          src = pkgs.zsh-fast-syntax-highlighting;
-          file = "share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh";
-        }
-      ];
+      plugins = [{
+        name = "zsh-fast-syntax-highlighting";
+        src = pkgs.zsh-fast-syntax-highlighting;
+        file = "share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh";
+      }];
 
       profileExtra = ''
         setopt no_beep                                              # no beep
@@ -95,7 +90,7 @@ in
                 return 1
             fi
 
-            RESULT=$(eva "$${1}*1000/$${FIBER_SPEED}*1000*2") # Meters * lightspeed * 1000 ms * 2 (round trip)
+            RESULT=$(eva "$''${1}*1000/$''${FIBER_SPEED}*1000*2") # Meters * lightspeed * 1000 ms * 2 (round trip)
             echo "$RESULT ms"
         }
 
@@ -144,16 +139,19 @@ in
         bindkey "^G"    _navi_widget # [CTRL-G] Show local navi
       '';
 
-      shellAliases = with pkgs;{
+      shellAliases = with pkgs; {
         # Nix
         nfmt = "nixpkgs-fmt .";
         ns = "nix-shell";
         nsp = "nix-shell --pure";
 
         # My tools
-        calc_latency = "_calc_latency"; # Compute approximatively internet latency
-        toclipboard = "${xclip} -selection clipboard"; # Copy output to clipboard
-        get_i3_window_name = "${xprop} | grep CLASS | cut -d\",\" -f2 | sed 's/\"//g'";
+        calc_latency =
+          "_calc_latency"; # Compute approximatively internet latency
+        toclipboard =
+          "${xclip} -selection clipboard"; # Copy output to clipboard
+        get_i3_window_name =
+          "${xprop} | grep CLASS | cut -d\",\" -f2 | sed 's/\"//g'";
 
         # Tools
         calc = "eva"; # launch calc computing (eva)
@@ -163,7 +161,8 @@ in
         #br="broot"; # File manager
 
         # ZSH
-        my-zkeys = "cat $HOME/.config/zsh/.zprofile | grep -Eo '# \[.*' | sed 's/# //g'";
+        my-zkeys =
+          "cat $HOME/.config/zsh/.zprofile | grep -Eo '# [.*' | sed 's/# //g'";
 
         # ps & top  alternative
         psc = "procs --sortd cpu";
@@ -203,9 +202,6 @@ in
         cdb = "cd ~/ghq/github.com/badele";
         cdn = "cd ~/ghq/github.com/badele/nix-config";
 
-        #just
-        j = "just"; # just
-
         # git
         gs = "git status"; # git status
         gl = "git log"; # git log
@@ -221,18 +217,6 @@ in
         gsp = "git stash pop"; # git stash pop
         gpl = "git pull"; # git pull
         gph = "git push"; # git push
-
-        # yadm
-        ys = "yadm status"; # yadm status
-        yl = "yadm log"; # yadm log
-        yd = "yadm diff"; # yadm diff
-        yds = "yadm diff --staged"; # yadm diff
-        ybl = "yadm branch"; # yadm branch
-        ybm = "yadm blame"; # yadm blame
-        ya = "yadm add"; # yadm add
-        yc = "yadm commit -m"; # yadm commit
-        ypl = "yadm pull"; # yadm pull
-        yph = "yadm push"; # yadm push
 
         # pass
         pps = "pass git status"; # pass status
@@ -257,9 +241,12 @@ in
         #unalias kubectl # Disable clourify for using P10K plugin
         a = "aws"; # aws alias
         g = "gcloud"; # gcloud alias
+        j = "just"; # just
         k = "kubectl"; # kubectl alias
         t = "terraform"; # terraform alias
-        
+        v = "nvim" # neovim
+        y = "yazi"; # TUI file manager
+
         kcc = "kubectl config current-context";
         h = "helm"; # helm alias
 
@@ -272,11 +259,14 @@ in
         # navi
         navi = "my-navi"; # Show cheat commands
         pnavi = "my-navi --print"; # Show cheat commands
-        lnavi = "my-navi --path ~/ghq/github.com/badele/cheats"; # Show cheat commands
-        lpnavi = "my-navi --print --path ~/ghq/github.com/badele/cheats"; # Show cheat commands
+        lnavi =
+          "my-navi --path ~/ghq/github.com/badele/cheats"; # Show cheat commands
+        lpnavi =
+          "my-navi --print --path ~/ghq/github.com/badele/cheats"; # Show cheat commands
 
         # Date & Time
-        clock = "peaclock --config-dir ~/.config/peaclock"; # Show terminal clock
+        clock =
+          "peaclock --config-dir ~/.config/peaclock"; # Show terminal clock
 
         # Color
         colors_table = "${pkgs.gettext}/bin/msgcat --color=test | head -n 11";
@@ -287,7 +277,8 @@ in
       sessionVariables = {
 
         # NixOS experimental support
-        NIX_CONFIG = "extra-experimental-features = nix-command flakes repl-flake";
+        NIX_CONFIG =
+          "extra-experimental-features = nix-command flakes repl-flake";
 
         PATH = lib.concatStringsSep ":" [
           "${config.home.homeDirectory}/.deno/bin"
@@ -306,19 +297,20 @@ in
         GREP_COLORS = "ms=01;31:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36";
 
         # less & Man color
-        LESS_TERMCAP_mb = "\$(tput bold; tput setaf 2)"; # green
-        LESS_TERMCAP_md = "\$(tput bold; tput setaf 6)"; # cyan
-        LESS_TERMCAP_me = "\$(tput sgr0)";
-        LESS_TERMCAP_so = "\$(tput bold; tput setaf 3; tput setab 4)"; # yellow on blue
-        LESS_TERMCAP_se = "\$(tput rmso; tput sgr0)";
-        LESS_TERMCAP_us = "\$(tput smul; tput bold; tput setaf 4)"; # purple
-        LESS_TERMCAP_ue = "\$(tput rmul; tput sgr0)";
-        LESS_TERMCAP_mr = "\$(tput rev)";
-        LESS_TERMCAP_mh = "\$(tput dim)";
-        LESS_TERMCAP_ZN = "\$(tput ssubm)";
-        LESS_TERMCAP_ZV = "\$(tput rsubm)";
-        LESS_TERMCAP_ZO = "\$(tput ssupm)";
-        LESS_TERMCAP_ZW = "\$(tput rsupm)";
+        LESS_TERMCAP_mb = "$(tput bold; tput setaf 2)"; # green
+        LESS_TERMCAP_md = "$(tput bold; tput setaf 6)"; # cyan
+        LESS_TERMCAP_me = "$(tput sgr0)";
+        LESS_TERMCAP_so =
+          "$(tput bold; tput setaf 3; tput setab 4)"; # yellow on blue
+        LESS_TERMCAP_se = "$(tput rmso; tput sgr0)";
+        LESS_TERMCAP_us = "$(tput smul; tput bold; tput setaf 4)"; # purple
+        LESS_TERMCAP_ue = "$(tput rmul; tput sgr0)";
+        LESS_TERMCAP_mr = "$(tput rev)";
+        LESS_TERMCAP_mh = "$(tput dim)";
+        LESS_TERMCAP_ZN = "$(tput ssubm)";
+        LESS_TERMCAP_ZV = "$(tput rsubm)";
+        LESS_TERMCAP_ZO = "$(tput ssupm)";
+        LESS_TERMCAP_ZW = "$(tput rsupm)";
 
         # TODO
         # GNUPGHOME="${config.xdg.configHome}/gnupg";

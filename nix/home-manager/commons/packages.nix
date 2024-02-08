@@ -1,5 +1,10 @@
 { pkgs, ... }:
 {
+  programs = {
+# TODO: remove ranger from package
+    yazi.enable = true; # TUI file manager
+  };
+
   home.packages = with pkgs; [
     # Nix
     haskellPackages.nix-derivation # Analyse derivation with pretty-derivation < packagename.drv

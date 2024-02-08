@@ -46,7 +46,6 @@
     # MQTT
     mosquitto
     mqttui
-    yadm
 
     # Development
     go
