@@ -244,7 +244,7 @@ in {
         j = "just"; # just
         k = "kubectl"; # kubectl alias
         t = "terraform"; # terraform alias
-        v = "nvim" # neovim
+        v = "nvim"; # neovim
         y = "yazi"; # TUI file manager
 
         kcc = "kubectl config current-context";
