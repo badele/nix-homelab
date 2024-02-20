@@ -139,14 +139,11 @@ in {
           "${mod}+p" = "exec --no-startup-id ${playerctl} play-pause";
           "${mod}+s" = "exec --no-startup-id ${playerctl} next";
           "${mod}+a" = "exec --no-startup-id autorandr -c";
-          "${mod}+b" =
-            "exec --no-startup-id ${cfg.terminal} start --class bluetuith  -- bluetuith";
-          "${mod}+d" =
-            "exec --no-startup-id ${cfg.terminal} start --class bashmount  -- bashmount";
-          "${mod}+m" =
-            "exec --no-startup-id ${cfg.terminal} start --class pulsemixer -- pulsemixer";
-          "${mod}+n" =
-            "exec --no-startup-id ${cfg.terminal} start --class nmtui -- nmtui";
+          "${mod}+b" = "exec --no-startup-id ${cfg.terminal} start --class winfloat  -- bluetuith";
+          "${mod}+d" = "exec --no-startup-id ${cfg.terminal} start --class winfloat  -- bashmount";
+          "${mod}+m" = "exec --no-startup-id ${cfg.terminal} start --class winfloat -- pulsemixer";
+          "${mod}+n" = "exec --no-startup-id ${cfg.terminal} start --class winfloat -- nmtui";
+          "${mod}+t" = "exec --no-startup-id ${cfg.terminal} start --class winfloat -- btop";
 
           # # Screen brightness controls
           "XF86MonBrightnessUp" =
@@ -310,12 +307,7 @@ in {
           border = 1;
           titlebar = false;
           criteria = [
-            { class = "bluetuith"; } # MOD+b
-            { class = "bashmount"; } # MOD+d
-            { class = "pulsemixer"; } # MOD+m
-            {
-              class = "nmtui";
-            } # MOD+n
+            { class = "winfloat"; }
 
             # SDR
             { class = ".gnuradio-companion-wrapped"; }

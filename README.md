@@ -1,15 +1,16 @@
 # nix-homelab
 
-This homelab entirelly managed by [NixOS](https://nixos.org/) 
+This homelab entirelly managed by [NixOS](https://nixos.org/)
 
 All the configuration is stored on `homelab.json` file, you can do:
+
 - Define network CIDR
 - Define hosts
 - Define the roles installed for selected hosts
 - Define services descriptions
 - etc ...
 
-This documentation is generated from `homelab.json` file content 
+This documentation is generated from `homelab.json` file content
 
 <img width="100%" src="./docs/nixos.gif" />
 
@@ -116,30 +117,28 @@ This list generated with `inv docs.all-pages` command
 
 [comment]: (<<ROLES)
 
-
 ## User programs
 
 | Logo                                                                                                                                                                                      | Name        | Description                                                                 |
-| -                                                                                                                                                                                         | -           | -                                                                           |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------- |
 | [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Firefox_logo%2C_2019.svg/32px-Firefox_logo%2C_2019.svg.png">](./users/badele/firefox.nix)                 | Firefox     | [Browser](./users/badele/firefox.nix)                                       |
-| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/The_GIMP_icon_-_gnome.svg/32px-The_GIMP_icon_-_gnome.svg.png">](./users/badele/commons.nix)               | Gimp        | [Raster graphics editor ](./users/badele/commons.nix)                       |
+| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/The_GIMP_icon_-_gnome.svg/32px-The_GIMP_icon_-_gnome.svg.png">](./users/badele/commons.nix)               | Gimp        | [Raster graphics editor](./users/badele/commons.nix)                        |
 | [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/I3_window_manager_logo.svg/32px-I3_window_manager_logo.svg.png">](./users/badele/commons.nix)             | i3          | [Tiling window manager](./nix/home-manager/features/desktop/xorg/wm/i3.nix) |
 | [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Inkscape_Logo.svg/32px-Inkscape_Logo.svg.png">](./users/badele/commons.nix)                               | Inkscape    | [Vectorial graphics editor](./users/badele/commons.nix)                     |
 | [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/LibreOffice_icon_3.3.1_48_px.svg/32px-LibreOffice_icon_3.3.1_48_px.svg.png">](./users/badele/commons.nix) | Libreoffice | [Office editor](./users/badele/commons.nix)                                 |
 | [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Meld_Logo.svg/128px-Meld_Logo.svg.png">](./users/badele/commons.nix)                                      | Meld        | [Awesome diff tool](./users/badele/commons.nix)                             |
-| [<img width="32" src="https://raw.githubusercontent.com/denisidoro/navi/master/assets/icon.png">](./nix/home-manager/features/term/base.nix)                                              | Navi        | [ interactive cheatsheet tool](https://github.com/badele/vide)              |
+| [<img width="32" src="https://raw.githubusercontent.com/denisidoro/navi/master/assets/icon.png">](./nix/home-manager/features/term/base.nix)                                              | Navi        | [interactive cheatsheet tool](https://github.com/badele/vide)               |
 | [<img width="32" src="https://user-images.githubusercontent.com/28633984/66519056-2e840c80-eaef-11e9-8670-c767213c26ba.png">](https://github.com/badele/vide)                             | Neovim      | [**VIDE** (badele's customized nix neovim](https://github.com/badele/vide)  |
-
 
 ## TUI floating panel configuration
 
-| Scope                                   | Use tool     | Preview                                                                                |
-| -                                          | -            | -                                                                                      |
-| [Bluetooth](./docs/floating_bluetooth.gif) | `bluetuith`  | [<img width="320" src="./docs/floating_bluetooth.png">](./docs/floating_bluetooth.png) |
-| [Disk](./docs/floating_disk.gif)           | `bashmount`  | [<img width="320" src="./docs/floating_disk.png">](./docs/floating_disk.png)           |
-| [Mixer](./docs/floating_mixer.gif)         | `pulsemixer` | [<img width="320" src="./docs/floating_mixer.png">](./docs/floating_mixer.png)         |
-| [Network](./docs/floating_network.gif)     | `nmtui`      | [<img width="320" src="./docs/floating_network.png">](./docs/floating_network.png)     |
-
+| [<img width="320" src="./docs/floating_bluetooth.png">](./docs/floating_bluetooth.png) | [<img width="320" src="./docs/floating_disk.png">](./docs/floating_disk.png)       |
+| -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| [Bluetooth](./docs/floating_bluetooth.gif) (`bluetuith`)                               | [Disk](./docs/floating_disk.gif) (`bashmount`)                                     |
+| [<img width="320" src="./docs/floating_mixer.png">](./docs/floating_mixer.png)         | [<img width="320" src="./docs/floating_network.png">](./docs/floating_network.png) |
+| [Mixer](./docs/floating_mixer.gif) (`pulsemixer`)                                      | [Network](./docs/floating_network.gif) (`nmtui`)                                   |
+| [<img width="320" src="./docs/floating_process.png">](./docs/floating_process.png)     |                                                                                    |
+| [Process](./docs/floating_process.gif) (`pulsemixer`)                                  |                                                                                    |
 
 ## Hosts
 
@@ -319,7 +318,6 @@ end
 subgraph loadbedroom
 bedroom-googlemini-C
 end
-
 ```
 
 [comment]: (<<NETWORK)
@@ -327,22 +325,24 @@ end
 ## Structure
 
 - **Configuration**
-    - `homelab.json`: main homelab file configuration (roles servers, network, etc)
-    - `hosts`: hosts configuration (system, hardware, host secrets)
-        - `*.nix`: user accounts
-    - `users`: users configuration (on user environment, user secrets)
+  - `homelab.json`: main homelab file configuration (roles servers, network,
+    etc)
+  - `hosts`: hosts configuration (system, hardware, host secrets)
+    - `*.nix`: user accounts
+  - `users`: users configuration (on user environment, user secrets)
 - **System**
-    - `nix`: all ***.nix** files
-        - `home-manager`: All users ***.nix** files (installed on user environment)
-        - `modules`: all nix modules
-            - `home-manager`: user modules
-            - `nixos`: nixos modules (installed on system wide)
-                - `host.nix`: host options (custom options for host)
-      - `nixos`: all ***.nix** files installed on system wide
-      - `overlays`: overlays **nix derivations**
-      - `pkgs`: custom nix packages
+  - `nix`: all ***.nix** files
+    - `home-manager`: All users ***.nix** files (installed on user environment)
+    - `modules`: all nix modules
+      - `home-manager`: user modules
+      - `nixos`: nixos modules (installed on system wide)
+        - `host.nix`: host options (custom options for host)
+    - `nixos`: all ***.nix** files installed on system wide
+    - `overlays`: overlays **nix derivations**
+    - `pkgs`: custom nix packages
 
 ## Homelab initialisation
+
 ```
 inv init.domain-cert
 ```
@@ -350,7 +350,6 @@ inv init.domain-cert
 ## NixOS installation & update
 
 See [Commons installation](docs//installation.md)
-
 
 ### Update from you local computer/laptop
 
@@ -375,8 +374,6 @@ inv nixos.build --hosts <hostname>,<hostname>
 inv role.deploy --role <rolename>
 inv nixos.deploy --hosts <hostname>,<hostname>
 ```
-
-
 
 ## Commands
 
@@ -410,19 +407,20 @@ Available tasks:
   role.build                   Build for all hosts contains the role
   role.deploy                  Deploy for all hosts contains the role
   role.test                    Test for all hosts contains the role
-
-
 ```
 
-
 [comment]: (<<COMMANDS)
-
 
 # A big thanks ❤️
 
 A big thank to the contributors of OpenSource projects in particular :
-- [doctor-cluster-config](https://github.com/TUM-DSE/doctor-cluster-config) from German TUM School of Computation
+
+- [doctor-cluster-config](https://github.com/TUM-DSE/doctor-cluster-config) from
+  German TUM School of Computation
 - [Mic92](https://github.com/Mic92/dotfiles) and for his some nix contributions
-- [Misterio77](https://github.com/Misterio77/nix-config) and for his some nix contributions
-- [longerHV](https://github.com/LongerHV/nixos-configuration) nix configuration file
+- [Misterio77](https://github.com/Misterio77/nix-config) and for his some nix
+  contributions
+- [longerHV](https://github.com/LongerHV/nixos-configuration) nix configuration
+  file
 - [wikipedia](https://www.wikipedia.org) for logos inventories
+
