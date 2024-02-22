@@ -94,11 +94,13 @@ in {
             echo "$RESULT ms"
         }
 
-        function assume_role() {
-          ~/ghq/github.com/cynapps/poc-devtools/aws-assume-role.sh $@
-          source /tmp/.sso_exported
-          rm -f /tpm/.sso_exported
-        }
+        source "$PRJ_ASSUMEROLE/alias.sh"
+
+        # function assume_role() {
+        #   ~/ghq/github.com/cynapps/poc-devtools/aws-assume-role.sh $@
+        #   source /tmp/.sso_exported
+        #   rm -f /tpm/.sso_exported
+        # }
 
         ##############################################################################
         # broot
@@ -250,9 +252,9 @@ in {
         kcc = "kubectl config current-context";
         h = "helm"; # helm alias
 
-        arl = "assume_role list"; # List AWS role
-        arc = "assume_role connect"; # Assume AWS role
-        ard = "assume_role disconnect"; # Disconnect
+        # arl = "assume_role list"; # List AWS role
+        # arc = "assume_role connect"; # Assume AWS role
+        # ard = "assume_role disconnect"; # Disconnect
 
         vim = "nvim"; # alternative vim (nvim)
 
@@ -311,6 +313,9 @@ in {
         LESS_TERMCAP_ZV = "$(tput rsubm)";
         LESS_TERMCAP_ZO = "$(tput ssupm)";
         LESS_TERMCAP_ZW = "$(tput rsupm)";
+
+        PRJ_ASSUMEROLE="$HOME/ghq/github.com/cynapps/devtools";
+
 
         # TODO
         # GNUPGHOME="${config.xdg.configHome}/gnupg";
