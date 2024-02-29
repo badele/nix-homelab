@@ -49,6 +49,10 @@ in
     # Development desktop
     ../../nix/home-manager/features/desktop/commons/development/packages.nix
     ../../nix/home-manager/features/desktop/commons/development/vscode.nix
+
+    # Virtualisation
+    ../../nix/home-manager/features/desktop/xorg/virtualisation.nix
+
   ] ++ (builtins.attrValues outputs.homeManagerModules);
 
 

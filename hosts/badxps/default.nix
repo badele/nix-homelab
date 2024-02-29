@@ -21,6 +21,7 @@
     ../../nix/nixos/features/commons
     ../../nix/nixos/features/homelab
     ../../nix/nixos/features/system/containers.nix
+    ../../nix/nixos/features/system/virtualisation.nix
 
     # Desktop
     ../../nix/nixos/features/system/bluetooth.nix
@@ -91,6 +92,7 @@
   hardware.nvidia.modesetting.enable = true;
   hardware.bumblebee.enable = true;
   hardware.bumblebee.pmMethod = "none"; # Needs nixos-unstable
+  nixpkgs.config.nvidia.acceptLicense = true;
   # hardware.nvidia.optimus_prime = {
   #   intelBusId = "PCI:0:2:0";
   #   nvidiaBusId = "PCI:1:0:0";

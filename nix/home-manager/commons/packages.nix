@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   programs = {
-# TODO: remove ranger from package
+    # TODO: remove ranger from package
     yazi.enable = true; # TUI file manager
   };
 
@@ -25,14 +25,17 @@
     eza # ls alternative
     fd # find alternative
 
+    # Floating apps
     bashmount # Terminal mount helper
+    bluetuith # Bluetooth manager
+    btop # Top alternative
+
     bat # cat alternative
     httpie # curl alternative
     ranger # TUI file manager
 
     #    procs # top alternative
     atop # Top alternative
-    btop # Top alternative
 
     jq # JSON pretty printer and manipulator
     ripgrep # Better grep

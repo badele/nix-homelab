@@ -94,7 +94,7 @@ in {
             echo "$RESULT ms"
         }
 
-        source "$PRJ_ASSUMEROLE/alias.sh"
+        test -e "$PRJ_ASSUMEROLE/alias.sh" && source "$PRJ_ASSUMEROLE/alias.sh"
 
         # function assume_role() {
         #   ~/ghq/github.com/cynapps/poc-devtools/aws-assume-role.sh $@

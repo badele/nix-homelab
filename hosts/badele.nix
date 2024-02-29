@@ -15,6 +15,7 @@ let
   ] ++ ifTheyExist [
     "docker"
     "git"
+    "libvirtd"
     "network"
     "networkmanager"
     "plugdev"
