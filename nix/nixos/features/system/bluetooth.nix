@@ -7,4 +7,8 @@
 
   hardware.pulseaudio.enable = true;
   services.blueman.enable = true;
+
+  environment.systemPackages = with pkgs; [
+    bluetuith
+  ];
 }

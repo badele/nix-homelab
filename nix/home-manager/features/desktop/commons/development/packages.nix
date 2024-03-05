@@ -9,5 +9,7 @@
     meld # Visual diff and merge tool
     vagrant # Virtual machine manager
     qemu # Virtual machine manager
+    lazygit # git terminal UI
+    lazydocker # docker terminal UI
   ];
 }
