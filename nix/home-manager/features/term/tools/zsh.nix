@@ -13,7 +13,9 @@
 # 5) .zlogout is sometimes used to clear and reset the terminal. It is called when exiting, not when opening.
 
 { config, pkgs, lib, ... }:
-let xprop = "${pkgs.xorg.xprop}/bin/xprop";
+let 
+xprop = "${pkgs.xorg.xprop}/bin/xprop";
+prj_devtools = "${config.home.homeDirectory}/ghq/github.com/cynapps/devtools";
 in {
   imports = [ ];
 
@@ -94,7 +96,7 @@ in {
             echo "$RESULT ms"
         }
 
-        test -e "$PRJ_ASSUMEROLE/alias.sh" && source "$PRJ_ASSUMEROLE/alias.sh"
+        test -e "$PRJ_DEVTOOLS/alias.sh" && source "$PRJ_DEVTOOLS/alias.sh"
 
         # function assume_role() {
         #   ~/ghq/github.com/cynapps/poc-devtools/aws-assume-role.sh $@
@@ -314,8 +316,9 @@ in {
         LESS_TERMCAP_ZO = "$(tput ssupm)";
         LESS_TERMCAP_ZW = "$(tput rsupm)";
 
-        PRJ_ASSUMEROLE="$HOME/ghq/github.com/cynapps/devtools";
-
+        PRJ_DEVTOOLS="${prj_devtools}";
+        PRJ_DEVTOOLS_DEFAULT_ROLE="admin";
+        AWS_CONFIG_FILE="${prj_devtools}/aws/aws_profiles.conf";
 
         # TODO
         # GNUPGHOME="${config.xdg.configHome}/gnupg";
