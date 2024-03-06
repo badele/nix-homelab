@@ -29,6 +29,7 @@
     bashmount # Terminal mount helper
     bluetuith # Bluetooth manager
     btop # Top alternative
+    procs # Top alternative
 
     bat # cat alternative
     httpie # curl alternative

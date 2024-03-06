@@ -13,10 +13,11 @@
 # 5) .zlogout is sometimes used to clear and reset the terminal. It is called when exiting, not when opening.
 
 { config, pkgs, lib, ... }:
-let 
-xprop = "${pkgs.xorg.xprop}/bin/xprop";
-prj_devtools = "${config.home.homeDirectory}/ghq/github.com/cynapps/devtools";
-in {
+let
+  xprop = "${pkgs.xorg.xprop}/bin/xprop";
+  prj_devtools = "${config.home.homeDirectory}/ghq/github.com/cynapps/devtools";
+in
+{
   imports = [ ];
 
   programs = {
@@ -183,6 +184,9 @@ in {
         dua = "dua i"; # | Interactive disk size(dua)
         dut = "dust"; # | Show tree disk size (ordered by big file) (dust)
 
+        zg = "lazygit"; # git alternative (lazygit)
+        zd = "lazydocker"; # docker alternative (lazydocker)
+
         # SSH
         sk = "sh -o StrictHostKeyChecking=no"; # ssh without host verification
 
@@ -316,9 +320,9 @@ in {
         LESS_TERMCAP_ZO = "$(tput ssupm)";
         LESS_TERMCAP_ZW = "$(tput rsupm)";
 
-        PRJ_DEVTOOLS="${prj_devtools}";
-        PRJ_DEVTOOLS_DEFAULT_ROLE="admin";
-        AWS_CONFIG_FILE="${prj_devtools}/aws/aws_profiles.conf";
+        PRJ_DEVTOOLS = "${prj_devtools}";
+        PRJ_DEVTOOLS_DEFAULT_ROLE = "admin";
+        AWS_CONFIG_FILE = "${prj_devtools}/aws/aws_profiles.conf";
 
         # TODO
         # GNUPGHOME="${config.xdg.configHome}/gnupg";
