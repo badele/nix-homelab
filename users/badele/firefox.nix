@@ -33,12 +33,11 @@
                 "stop-reload-button",
                 "home-button",
                 "urlbar-container",
-                "jid1-kt2kyygi32zpuw_jetpack-browser-action",
-                "_d634138d-c276-4fc8-924b-40a0ea21d284_-browser-action",
+                "simple-tab-groups_drive4ik-browser-action",
                 "browserpass_maximbaz_com-browser-action",
+                "_d634138d-c276-4fc8-924b-40a0ea21d284_-browser-action",
                 "_c0e1baea-b4cb-4b62-97f0-278392ff8c37_-browser-action",
                 "addon_darkreader_org-browser-action",
-                "simple-tab-groups_drive4ik-browser-action",
                 "languagetool-webextension_languagetool_org-browser-action",
                 "_0b457caa-602d-484a-8fe7-c1d894a011ba_-browser-action",
                 "ublock0_raymondhill_net-browser-action",
@@ -82,7 +81,6 @@
               "_testpilot-containers-browser-action",
               "_20fc2e06-e3e4-4b2b-812b-ab431220cada_-browser-action",
               "tranquility_ushnisha_com-browser-action",
-              "jid1-kt2kyygi32zpuw_jetpack-browser-action",
               "_0b457caa-602d-484a-8fe7-c1d894a011ba_-browser-action",
               "addon_darkreader_org-browser-action",
               "languagetool-webextension_languagetool_org-browser-action",
@@ -113,7 +111,7 @@
         onepassword-password-manager # Password manager
         simple-tab-groups # Tab group
         simple-translate # Translate
-        tomato-clock # Pomodoro timer
+        # tomato-clock # Pomodoro timer
         ublock-origin # addblocker
 
         # Install manually addons 
