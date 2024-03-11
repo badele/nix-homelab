@@ -202,13 +202,11 @@ in
         ".." = "cd ..";
         "..." = "cd ../..";
         "...." = "cd ../../..";
-        cdw = "cd ${config.programs.zsh.sessionVariables.WORK}";
-        cdp = "cd ${config.programs.zsh.sessionVariables.PRIVATE}";
         cdg = "cd ~/ghq";
         cdgh = "cd ~/ghq/github.com";
         cdgl = "cd ~/ghq/gitlab.com";
         cdb = "cd ~/ghq/github.com/badele";
-        cdn = "cd ~/ghq/github.com/badele/nix-config";
+        cdw = "cd ~/ghq/github.com/cynapps";
 
         # git
         gs = "git status"; # git status
