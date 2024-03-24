@@ -105,46 +105,6 @@ def getUsedRolesList(hostname=None):
     return allroles
 
 
-def generateNetworkGraph():
-    with open("homelab.json", "r") as f:
-        jhl = json.load(f)
-        hosts = jhl["hosts"]
-
-    # Header table
-    network_graph = """```mermaid
- graph BT
- linkStyle default interpolate basis
- internet((Internet))
-
- """
-
-    # Hosts loop
-    zones = {}
-    for hn in hosts:
-        if "zone" in hosts[hn]:
-            zone = hosts[hn]["zone"]
-            if zone not in zones:
-                zones[zone] = []
-            zones[zone].append(hn)
-
-        network_graph += f"{hn}[<center>{hosts[hn]['description']}</br>{hosts[hn]['ipv4']}</center>]"  # noqa: E501
-
-        if "parent" in hosts[hn]:
-            network_graph += f"---{hosts[hn]['parent']}"
-
-        network_graph += "\n"
-    network_graph += "\n"
-
-    for zn in zones:
-        network_graph += f"subgraph {zn}\n"
-        for zi in zones[zn]:
-            network_graph += f"{zi}\n"
-        network_graph += "end\n\n"
-
-    network_graph += "```"
-    return network_graph
-
-
 def generateUsedRoles(rootpath, hostname=None) -> str:
     # Get hosts infos
     with open("homelab.json", "r") as fhl:
@@ -217,12 +177,10 @@ def _doc_update_main_project_page() -> None:
     # Get generated contents
     hosts_table = generateHostsList()
     roles_table = generateUsedRoles(rootpath="./docs")
-    network_graph = generateNetworkGraph()
     commands = generateCommandsList()
 
     # Replace content
     newcontent = _replace_content(content, "HOSTS", hosts_table)
-    newcontent = _replace_content(content, "NETWORK", network_graph)
     newcontent = _replace_content(newcontent, "ROLES", roles_table)
     newcontent = _replace_content(newcontent, "COMMANDS", commands)
 
