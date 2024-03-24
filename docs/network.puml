@@ -58,7 +58,6 @@ nwdiag {
         rpi40;
         coredns;
         mosquitto
-        mqtt;
         ntp-r;
         zigbee2mqtt;
     }
