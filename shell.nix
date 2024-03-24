@@ -56,6 +56,9 @@ in
       python3.pkgs.xmltodict
       wireguard-tools
       openssl_3_0.bin
+
+      plantuml
+
     ] ++ lib.optional (stdenv.isLinux) mkpasswd;
 
     shellHook = (nix-pre-commit.lib.${system}.mkConfig {

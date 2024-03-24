@@ -1,0 +1,92 @@
+@startuml
+nwdiag {
+    internet [shape = cloud];
+  
+    network net-provider {
+    address = "81.64.x.x";
+    box-provider;
+    internet;
+    }
+
+    network int-provider{
+        address = "192.168.0.x";
+        color = "pink";
+        box-provider;
+        mikrotik254;
+        boxTV;
+    }
+
+    network vpn {
+    address = "10.123.21.x";
+    color = "LightBlue";
+    mikrotik254;
+    }
+
+    network net-livingroom {
+    address = "192.168.254.x";
+    color = "LightGreen";
+        mikrotik254;
+        mikrotik253;
+        mikrotik252;
+    }
+
+    network net-office {
+    address = "192.168.254.x";
+    color = "LightGreen";
+        bootstore;
+        rpi40;
+        badwork;
+        mikrotik252;
+    }
+
+    network bootstore-services {
+        color = "LightBlue";
+        bootstore;
+        adguard;
+        dashy;
+        grafana;
+        home-assistant;
+        ntp-b;
+        prometheus;
+        smokeping;
+        statping;
+        uptime;
+    }
+
+    network rpi-services {
+        color = "LightBlue";
+        rpi40;
+        coredns;
+        mosquitto
+        mqtt;
+        ntp-r;
+        zigbee2mqtt;
+    }
+    
+    network net-ladroom {
+    address = "192.168.254.x";
+    color = "LightGreen";
+        mikrotik253;
+        laddesktop;
+        hue-light;
+        AP;
+    }
+
+    network wifi {
+    address = "192.168.254.x";
+    color = "Orange";
+    AP;
+    badhome;
+    badphone;
+    ladphone;
+    loadphone;
+    sadhome;
+    sadphone;
+
+        google-tv;
+        google-room-a;
+        google-room-b;
+        google-room-c;
+    }
+}
+@enduml

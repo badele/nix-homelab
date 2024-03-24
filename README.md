@@ -260,67 +260,7 @@ This list generated with `inv docs.all-pages` command
 
 ## Network
 
-[comment]: (>>NETWORK)
-
-```mermaid
- graph BT
- linkStyle default interpolate basis
- internet((Internet))
-
- box[<center>SFR internet box</br>192.168.0.1</center>]---internet
-router-living[<center>Livingroom mikrotik router</br>192.168.254.254</center>]---box
-router-ladbedroom[<center>Bedroom mikrotik router</br>192.168.254.253</center>]---router-living
-router-homeoffice[<center>Office mikrotik router</br>192.168.254.252</center>]---router-living
-sadhome[<center>Stephanie's laptop</br>192.168.254.200</center>]---router-ladbedroom
-rpi40[<center>The RPI 4 server</br>192.168.254.101</center>]---router-homeoffice
-bootstore[<center>HP Microserver N40L server</br>192.168.254.100</center>]---router-homeoffice
-badwork[<center>A work thinkpad</br>192.168.254.189</center>]---router-ladbedroom
-badwork-eth[<center>A ethernet work thinkpad</br>192.168.254.102</center>]---router-homeoffice
-badphone[<center>Bruno's phone</br>192.168.254.194</center>]---router-ladbedroom
-ladphone[<center>Lucas's phone</br>192.168.254.184</center>]---router-ladbedroom
-sadphone[<center>Steph's phone</br>192.168.254.188</center>]---router-ladbedroom
-loadphone[<center>Lou's phone</br>192.168.254.199</center>]---router-ladbedroom
-tv-chromecast[<center>TV Chromecast</br>192.168.254.105</center>]---router-ladbedroom
-bedroom-googlemini-A[<center>Google Mini room A</br>192.168.254.197</center>]---router-ladbedroom
-bedroom-googlemini-C[<center>Google Mini room C</br>192.168.254.196</center>]---router-ladbedroom
-b4d14[<center>Dell XPS 9560 Latop</br>192.168.254.124</center>]---router-ladbedroom
-badxps[<center>Dell XPS 9570 Latop</br>192.168.254.114</center>]---router-ladbedroom
-badxps-eth[<center>Dell XPS 9570 Latop</br>192.168.254.179</center>]---router-ladbedroom
-bridge-hue[<center>Philips Hue bridge</br>192.168.254.191</center>]---router-ladbedroom
-
-subgraph livingroom
-box
-router-living
-sadhome
-tv-chromecast
-end
-
-subgraph ladbedroom
-router-ladbedroom
-bridge-hue
-end
-
-subgraph homeoffice
-router-homeoffice
-rpi40
-bootstore
-badwork
-badwork-eth
-b4d14
-badxps
-badxps-eth
-end
-
-subgraph badbedroom
-bedroom-googlemini-A
-end
-
-subgraph loadbedroom
-bedroom-googlemini-C
-end
-```
-
-[comment]: (<<NETWORK)
+![Network diagram](./docs/network.png)
 
 ## Structure
 
@@ -423,4 +363,3 @@ A big thank to the contributors of OpenSource projects in particular :
 - [longerHV](https://github.com/LongerHV/nixos-configuration) nix configuration
   file
 - [wikipedia](https://www.wikipedia.org) for logos inventories
-
