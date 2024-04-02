@@ -37,5 +37,8 @@
 
     # Deployment secrets tool
     sops
+
+    # Used by nix-homelab deployemnt
+    ghq
   ];
 }

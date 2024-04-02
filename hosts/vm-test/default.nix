@@ -10,6 +10,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./disks.nix
     #inputs.hardware.nixosModules.dell-xps-15-9560
     ../../nix/modules/nixos/host.nix
 
@@ -20,7 +21,7 @@
     # Commons
     ../../nix/nixos/features/commons
     ../../nix/nixos/features/homelab
-    ../../nix/nixos/features/system/containers.nix
+    # ../../nix/nixos/features/system/containers.nix
     ../../nix/nixos/features/system/virtualisation.nix
 
     # Desktop
@@ -32,44 +33,42 @@
   # Boot
   ####################################
 
+
   boot = {
     kernelParams = [
       "mem_sleep_default=deep"
-      "nouveau.blacklist=0"
-      "acpi_osi=!"
-      "acpi_osi=\"Windows 2015\""
-      "acpi_backlight=vendor"
     ];
-
-    blacklistedKernelModules = [ "nouveau" "bbswitch" ];
-
+    blacklistedKernelModules = [ ];
     kernelModules = [ "kvm-intel" ];
-    #extraModulePackages = [ pkgs.linuxPackages.nvidia_x11 ];
-    supportedFilesystems = [ "zfs" ];
-    zfs = {
-      requestEncryptionCredentials = true;
-      extraPools = [ "zroot" ];
-    };
+    supportedFilesystems = [ "btrfs" ];
 
-    # EFI boot loader
+    # Grub EFI boot loader
     loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
+      grub = {
+        enable = true;
+        devices = [ "nodev" ];
+        efiInstallAsRemovable = true;
+        efiSupport = true;
+        useOSProber = true;
+      };
     };
 
+    # Qemu support
     initrd = {
-      availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" "sr_mod" "rtsx_pci_sdmmc" ];
-      kernelModules = [ ];
+      availableKernelModules = [ "virtio_net" "virtio_pci" "virtio_mmio" "virtio_blk" "virtio_scsi" "9p" "9pnet_virtio" ];
+      kernelModules = [ "virtio_balloon" "virtio_console" "virtio_rng" ];
+      postDeviceCommands = lib.mkIf (!config.boot.initrd.systemd.enable)
+        ''
+          # Set the system time from the hardware clock to work around a
+          # bug in qemu-kvm > 1.5.2 (where the VM clock is initialised
+          # to the *boot time* of the host).
+          hwclock -s
+        '';
     };
   };
 
   # xorg
-  videoDrivers = [ "intel" "i965" "nvidia" ];
-  #services.xserver.videoDrivers = [ "nvidia" ];
-  #hardware.opengl.enable = true;
-  #hardware.nvidia.package = boot.kernelPackages.nvidiaPackages.stable;
-  #hardware.nvidia.modesetting.enable = true;
-
+  # videoDrivers = [ "intel" "i965" "nvidia" ];
 
   ####################################
   # host profile
@@ -86,19 +85,6 @@
   # Hardware
   ####################################
 
-
-  # Nvidia
-  hardware.opengl.enable = true;
-  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
-  hardware.nvidia.modesetting.enable = true;
-  hardware.bumblebee.enable = true;
-  hardware.bumblebee.pmMethod = "none"; # Needs nixos-unstable
-  nixpkgs.config.nvidia.acceptLicense = true;
-  # hardware.nvidia.optimus_prime = {
-  #   intelBusId = "PCI:0:2:0";
-  #   nvidiaBusId = "PCI:1:0:0";
-  # };
-
   # Pulseaudio
   hardware.pulseaudio = {
     enable = true;
@@ -106,7 +92,7 @@
     #extraConfig = "load-module module-combine-sink";
   };
 
-  networking.hostName = "badxps";
+  networking.hostName = "vm-test";
   networking.useDHCP = lib.mkDefault true;
 
   ####################################

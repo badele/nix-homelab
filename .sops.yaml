@@ -3,13 +3,14 @@ keys:
   - &users: # nix-shell -p age --run 'age-keygen'
     - &badele age15js628ku59g94njn0vup20r4xx34guesgsj5dqsken5hma2zqg2szjed66
   # Hosts
-  - &hosts: # inv ssh-init-host-key
+  - &hosts: # j nixos-init-host <HOST>
     - &rpi40 age152ud7upe5xylsvf7kkfpdz6x99r6hcmkam8gwntfdv0px70f0u0sqzc8qe 
     - &sadhome age1qfarvkm9ejyfu785vmawj5vve3uffsh7r78pef4ec3njl9vfgs2sx3524g
     - &sam age1x363tjjzx6j77j3m4zynkjgyj38qcyf4wah5mc8mtjt5yt6zvgxqr3z7px
     - &bootstore age1ejza6f2xzycq7jj2eu8fyg5vjdctljttm67mfteyd4k7wzvdyc8s7sc8jh
     - &badxps age1w9v05mvydywp39cq8tmgxjh8yc2w86qpp9aa4zt9ukf0qq8n5y4s5tkn7z
     - &b4d14 age1r7d0v4nudrv9wy7rvh784lnmzspm24uja6c6hrhhwjy7qf4e5d5q04gf3x
+    - &vm-test age15p929p3zqcezwqexhgu2p7rvx7luapmp70lex0lh8s5pelwsj4qsach7a8
 
 creation_rules:
   - path_regex: users/badele/secrets.yml$
@@ -29,6 +30,7 @@ creation_rules:
           - *sadhome
           - *sam
           - *b4d14
+          - *vm-test
 
   - path_regex: hosts/rpi40/secrets.yml$
     key_groups:
@@ -65,3 +67,10 @@ creation_rules:
       - age:
           - *badele
           - *b4d14
+
+  - path_regex: hosts/vm-test/secrets.yml$
+    key_groups:
+      - age:
+          - *badele
+          - *vm-test
+

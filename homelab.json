@@ -294,6 +294,14 @@
       "parent": "router-ladbedroom",
       "description": "Philips Hue bridge",
       "os": "Bridge"
+    },
+    "vm-test": {
+      "icon": "https://icons-for-free.com/download-icon-qemu-1331550892741477394_32.ico?m=1712055468",
+      "ipv4": "127.0.0.1",
+      "zone": "unknown",
+      "parent": "none",
+      "description": "qemu VM (SSH on port 2222)",
+      "os": "NixOS"
     }
   }
 }

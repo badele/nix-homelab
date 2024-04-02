@@ -1,40 +1,9 @@
 # Shell for bootstrapping flake-enabled nix and home-manager
 # You can enter it through 'nix develop' or (legacy) 'nix-shell'
 
-{ pkgs ? (import ./nixpkgs.nix) { }, nix-pre-commit, system }:
+{ pkgs ? (import ./nixpkgs.nix) { }, system }:
 let
-  # Precomit configuration
-  config = {
-    repos = [
-      {
-        repo = "local";
-        hooks = [
-
-          {
-            id = "reorder-python-imports";
-            entry = "${pkgs.python310Packages.reorder-python-imports}/bin/reorder-python-imports";
-            language = "system";
-            types = [ "python" ];
-          }
-          {
-            id = "black";
-            entry = "${pkgs.python310Packages.black}/bin/black";
-            language = "system";
-            types = [ "python" ];
-            "args" = [
-              "--line-length=79"
-            ];
-          }
-          {
-            id = "flake8";
-            entry = "${pkgs.python310Packages.flake8}/bin/flake8";
-            language = "system";
-            types = [ "python" ];
-          }
-        ];
-      }
-    ];
-  };
+  uefi_file = "${pkgs.OVMF.fd}/FV/OVMF.fd";
 in
 {
   default = pkgs.mkShell {
@@ -44,12 +13,14 @@ in
       nix
       git
       home-manager
+      pass
       borgbackup
       vim
 
       sops
       gnupg
       age
+      ssh-to-age
 
       python3.pkgs.invoke
       python3.pkgs.deploykit
@@ -59,10 +30,15 @@ in
 
       plantuml
 
+      just
+
+      qemu
+      qemu_kvm
+      OVMF
     ] ++ lib.optional (stdenv.isLinux) mkpasswd;
 
-    shellHook = (nix-pre-commit.lib.${system}.mkConfig {
-      inherit pkgs config;
-    }).shellHook;
+    shellHook = ''
+      export UEFI_FILE=${uefi_file};
+    '';
   };
 }

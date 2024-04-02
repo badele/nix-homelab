@@ -12,6 +12,11 @@
     # You can access packages and modules from different nixpkgs revs
     # at the same time. Here's an working example:
 
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Home manager
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -38,10 +43,10 @@
     };
 
     # Precomit local generator
-    nix-pre-commit = {
-      url = "github:jmgilman/nix-pre-commit";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # nix-pre-commit = {
+    #   url = "github:jmgilman/nix-pre-commit";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
   };
 
   outputs =
@@ -50,7 +55,7 @@
     , home-manager
     , sops-nix
     , hardware
-    , nix-pre-commit
+      # , nix-pre-commit
     , nix-rice
     , nur
     , ...
@@ -80,7 +85,7 @@
       # Acessible through 'nix develop' or 'nix-shell' (legacy)
       devShells = forAllSystems (system:
         let pkgs = nixpkgs.legacyPackages.${system};
-        in import ./shell.nix { inherit pkgs system nix-pre-commit; });
+        in import ./shell.nix { inherit pkgs system; });
 
       # Your custom packages and modifications, exported as overlays
       overlays = import ./nix/overlays { inherit inputs; };
@@ -95,6 +100,29 @@
       # Available through 'nixos-rebuild --flake .#your-hostname'
       # or 'nixos-rebuild --flake .' for current hostname
       nixosConfigurations = {
+        # Build a iso image (NixOS installer)
+        iso = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs outputs; };
+          modules = [
+            # "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-gnome.nix"
+            "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+            "${nixpkgs}/nixos/modules/installer/cd-dvd/channel.nix"
+            inputs.sops-nix.nixosModules.sops
+            ./hosts/iso
+          ];
+        };
+
+        vm-test = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs outputs; };
+          modules = [
+            inputs.sops-nix.nixosModules.sops
+            ./hosts/vm-test
+
+            # inputs.home-manager.nixosModules.home-manager
+            # ./users/badele/vm-test.nix
+          ];
+        };
+
         b4d14 = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
           modules = [ inputs.sops-nix.nixosModules.sops ./hosts/b4d14 ];
@@ -226,6 +254,33 @@
             ./users/badele/rpi40.nix
           ];
         };
+
+        ########################################################################
+        # vm-test
+        ########################################################################
+        "root@vm-test" = home-manager.lib.homeManagerConfiguration {
+          pkgs =
+            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [
+            # > Our main home-manager configuration file <
+            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
+            ./users/root/vm-test.nix
+          ];
+        };
+
+        "badele@vm-test" = home-manager.lib.homeManagerConfiguration {
+          pkgs =
+            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [
+            # > Our main home-manager configuration file <
+            nur.hmModules.nur
+            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
+            ./users/badele/vm-test.nix
+          ];
+        };
+
       };
     };
 }

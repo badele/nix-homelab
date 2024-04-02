@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 {
 
   imports = [
@@ -11,7 +11,6 @@
     #xkbVariant = "";
     xkbOptions = "caps:shiftlock";
     layout = "fr";
-    videoDrivers = [ "intel" "i965" "nvidia" ];
     displayManager = {
       lightdm.enable = true;
       defaultSession = config.hostprofile.autologin.session;
