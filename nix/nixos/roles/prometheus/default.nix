@@ -54,7 +54,7 @@ lib.mkIf (roleEnabled)
 
       # Secret content all variables content
       # example:
-      # alertmanager: | 
+      # alertmanager: |
       #  var_name1=value1
       #  var_name2=value2
       environmentFile = config.sops.secrets.alertmanager.path;
@@ -137,7 +137,7 @@ lib.mkIf (roleEnabled)
         proxy_pass http://127.0.0.1:${toString cfg.port};
         proxy_set_header Host $host;
         proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection $connection_upgrade;      
+        proxy_set_header Connection $connection_upgrade;
       '';
     };
   };

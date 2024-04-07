@@ -93,7 +93,7 @@
       # renders diagnostics using virtual lines on top of the real line of code.
       lsp_lines-nvim
 
-      # Show function information 
+      # Show function information
       lspsaga-nvim
 
       # Language server to inject LSP diagnostics, code actions, and more via Lua.

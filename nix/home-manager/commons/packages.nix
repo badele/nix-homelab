@@ -17,7 +17,7 @@
     # Colors
     pastel ## Colors generator
     # grc ## colorize some commands results
-    # TODO: Colout with 
+    # TODO: Colout with
 
     # Disk & File
     du-dust # du rust version

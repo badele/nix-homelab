@@ -164,7 +164,7 @@ U               - restore (undo) last changed line
 Ctrl + r        - redo
 .               - repeat last command
 
-== Visual Commands 
+== Visual Commands
 
 >               - shift text right
 <               - shift text left

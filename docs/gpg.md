@@ -3,7 +3,7 @@
 ## debugging GPG commit error
 
 
-### gpg failed to sign the data 
+### gpg failed to sign the data
 
 Generally you
 
@@ -21,7 +21,7 @@ gpg: signing failed: Unusable secret key
 With below command, you can verify if you can sign the text
 
 ```shell
-echo "test" | gpg --clearsign 
+echo "test" | gpg --clearsign
 ```
 
 Verify if the GPG ID is same of your private GPG key

@@ -12,7 +12,7 @@ in
   # nixpkgs.config.enableParallelBuildingByDefault = true;
 
   nix = {
-    # Add all flake inputs to registry / CMD: nix registry list 
+    # Add all flake inputs to registry / CMD: nix registry list
     registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
 
     # Add all flake inputs to legacy / CMD: echo $NIX_PATH | tr ":" "\n"

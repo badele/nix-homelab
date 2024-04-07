@@ -2,12 +2,12 @@
 -- which-key mappings
 --------------------------------------------------------------------------------
 -- Keymap Modes
--- c = command_mode 
--- i = insert_mode 
--- n = normal_mode 
--- t = term_mode 
--- v = visual_mode 
--- x = visual_block_mode 
+-- c = command_mode
+-- i = insert_mode
+-- n = normal_mode
+-- t = term_mode
+-- v = visual_mode
+-- x = visual_block_mode
 
 local opt = {silent = true}
 local map = vim.api.nvim_set_keymap

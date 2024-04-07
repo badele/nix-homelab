@@ -1,17 +1,30 @@
 #!/usr/bin/env just -f
 
 # This help
+# Help it showed if just is called without arguments
 @help:
-    just -lu --list-heading=$'{{ file_name(justfile()) }} commands:\n'
+    just -lu | column -s '#' -t | sed -i 's/[ \t]*$//'
 
 # Setup pre-commit
-@precommit-install:
+precommit-install:
     #!/usr/bin/env bash
     test ! -f .git/hooks/pre-commit && pre-commit install || true
 
 # Update pre-commit
 @precommit-update:
     pre-commit autoupdate
+
+# precommit check
+@precommit-check:
+    pre-commit run --all-files
+
+###############################################################################
+# Documentation
+###############################################################################
+
+# Update documentation
+@doc-update FAKEFILENAME:
+    ./updatedoc.ts
 
 # Lint the project
 @lint:
@@ -29,7 +42,7 @@
 @passwd-generate:
     pwgen -s 12 1
 
-# Update secrets SOPS 
+# Update secrets SOPS
 @secret-update FILE:
     sops updatekeys {{ FILE }}
 
@@ -70,7 +83,7 @@ nixos-install hostname targetip port="22":
     rm -rf "/tmp/nix-homelab"
     }
     trap cleanup EXIT
- 
+
     # Decrypt ssh keys
     install -d -m755 "/tmp/nix-homelab/etc/ssh"
     pass nix-homelab/hosts/vm-test/ssh_host_ed25519_key > "/tmp/nix-homelab/etc/ssh/ssh_host_ed25519_key"
@@ -85,10 +98,11 @@ nixos-command action hostname="" options="":
 @nixos-build hostname="" options="":
     just nixos-command build {{ hostname }} {{ options }}
 
-# Nixos deploy local host
+# Deploy NixOS on local host
 @nixos-deploy hostname="" options="":
     just nixos-command switch {{ hostname }} {{ options }}
 
+# Deploy NixOS on remote host
 @nixos-remote-deploy hostname targetip:
     just nixos-command switch {{ hostname }} "--target-host root@{ targetip }}"
 

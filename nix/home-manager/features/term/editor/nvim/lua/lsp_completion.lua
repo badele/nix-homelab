@@ -87,7 +87,7 @@ require "lspconfig".lua_ls.setup {
     }
 }
 
-require "lspconfig".jsonls.setup { 
+require "lspconfig".jsonls.setup {
     cmd = {"json-languageserver"},
     root_dir = function()
         return vim.loop.cwd()
@@ -95,7 +95,7 @@ require "lspconfig".jsonls.setup {
     on_attach = on_attach,
 }
 
-require "lspconfig".html.setup { 
+require "lspconfig".html.setup {
     cmd = {"html-languageserver"},
     root_dir = function()
         return vim.loop.cwd()
@@ -103,7 +103,7 @@ require "lspconfig".html.setup {
     on_attach = on_attach,
 }
 
-require "lspconfig".cssls.setup { 
+require "lspconfig".cssls.setup {
     cmd = {"css-languageserver"},
     root_dir = function()
         return vim.loop.cwd()
@@ -146,4 +146,3 @@ cmd 'packadd coq_nvim'
 --------------------------------------------------------------------------------
 -- Treesitter
 --------------------------------------------------------------------------------
-

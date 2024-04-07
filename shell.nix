@@ -10,32 +10,39 @@ in
     # Enable experimental features without having to specify the argument
     NIX_CONFIG = "experimental-features = nix-command flakes";
     nativeBuildInputs = with pkgs; [
-      nix
+
+      # Required by nix-homelab project
+      borgbackup
+      deno
       git
       home-manager
-      pass
-      borgbackup
-      vim
-
-      sops
-      gnupg
-      age
-      ssh-to-age
-      pwgen
-
-      python3.pkgs.invoke
-      python3.pkgs.deploykit
-      python3.pkgs.xmltodict
-      wireguard-tools
-      openssl_3_0.bin
-
-      plantuml
-
       just
+      nix
+      plantuml
+      pre-commit
 
+      # Testing nix-homelab
       qemu
       qemu_kvm
       OVMF
+
+      # Credentials
+      age
+      gnupg
+      pass
+      pwgen
+      sops
+      ssh-to-age
+
+      # Required by invoke
+      python3.pkgs.invoke
+      python3.pkgs.deploykit
+      python3.pkgs.xmltodict
+
+      # Wireguard
+      openssl_3_0.bin
+      wireguard-tools
+
     ] ++ lib.optional (stdenv.isLinux) mkpasswd;
 
     shellHook = ''

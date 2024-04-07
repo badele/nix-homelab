@@ -38,7 +38,8 @@ let
   xidlehook = "${pkgs.xidlehook}/bin/xidlehook";
   lockCmd = "${i3lock} --blur 5";
   terminal = "${pkgs.wezterm}/bin/wezterm";
-in {
+in
+{
 
   imports = [
     # ./py3status.nix
@@ -298,7 +299,7 @@ in {
         assigns = {
           "${w2}" = [{ class = "Spotify"; }];
           "${w3}" = [{ class = "Discord"; }];
-          "${w7}" = [ { class = "Google-chrome"; } { class = "firefox"; } ];
+          "${w7}" = [{ class = "Google-chrome"; } { class = "firefox"; }];
           "${w9}" = [{ class = "VSCodium"; }];
         };
 

@@ -128,7 +128,7 @@
         bind=CONTROL,Print,exec,${grimblast} --notify copysave screen
         bind=SUPER,Print,exec,${grimblast} --notify copysave window
         bind=ALT,Print,exec,${grimblast} --notify copysave output
-        
+
         bind=SUPER,space,exec,${wofi} -S drun -x 10 -y 10 -W 25% -H 60%
         bind=SUPER,d,exec,${wofi} -S run
 
@@ -247,7 +247,7 @@
         windowrule=workspace 1,class:ncspot
         windowrule=workspace 3 silent,Discord
         windowrule=workspace 7 silent,firefox
-        windowrule=workspace 9 silent,codium-url-handler        
+        windowrule=workspace 9 silent,codium-url-handler
       '';
     };
 }

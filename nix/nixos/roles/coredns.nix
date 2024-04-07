@@ -47,18 +47,18 @@ let
             30        ; Zone update retry timeout
             180       ; Zone TTL
             3600)     ; Negative response TTL
-  
+
     h. IN NS ns.${config.homelab.domain}.
 
     ns ${toString ttl} IN A ${config.homelab.currentHost.ipv4}
 
     ; hosts
-    ${lib.concatMapStringsSep "\n" (host: 
+    ${lib.concatMapStringsSep "\n" (host:
         "${host.name}.${config.homelab.domain}. ${toString ttl} IN A ${host.ip}")
       hostsIps}
 
     ; alias
-    ${lib.concatMapStringsSep "\n" (host: 
+    ${lib.concatMapStringsSep "\n" (host:
         "${host.name}.${config.homelab.domain}. ${toString ttl} IN A ${host.ip}")
       aliasIps}
   '';

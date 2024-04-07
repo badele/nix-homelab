@@ -94,7 +94,7 @@ lib.mkIf (roleEnabled)
       ++ all-numericable
       menu = all-numericable
       title = All numericable DNS
-      host = /DNS/numericable1 /DNS/numericable2 
+      host = /DNS/numericable1 /DNS/numericable2
 
       ++ all-cloudflare
       menu = all-cloudflare
@@ -115,7 +115,7 @@ lib.mkIf (roleEnabled)
       menu = all-google
       title = All google DNS
       host = /DNS/google8 /DNS/google4
-   
+
       ++ numericable1
       menu = numericable1
       title = numericable ns1.numericable.net DNS performance

@@ -345,8 +345,8 @@ in
     style =
       let inherit (config.colorscheme) colors; in
       ''
-          
-          
+
+
           * {
             border: none;
             border-radius: 0;
@@ -379,7 +379,7 @@ in
           #workspaces button.active {
             background: #${colors.base0F};
             color: #${colors.base07};
-          }          
+          }
 
           #pulseaudio,
           #network,
@@ -403,7 +403,7 @@ in
             border-radius: 10px 0px 0px 10px;
             color: #${colors.base07};
             background: #${colors.base02};
-          }          
+          }
 
           #custom-weather,
           #memory {
@@ -412,7 +412,7 @@ in
             /*transition: none;*/
             color: #${colors.base07};
             background: #${colors.base02};
-          }        
+          }
 
           #custom-currentplayer
           {
@@ -422,7 +422,7 @@ in
             font-size: 24px;
             color: #${colors.base07};
             background: #${colors.base02};
-          }          
+          }
 
           #custom-player
           {
@@ -431,7 +431,7 @@ in
             /*transition: none;*/
             color: #${colors.base07};
             background: #${colors.base02};
-          }        
+          }
 
           #custom-cava
           {
@@ -440,7 +440,7 @@ in
             /*transition: none;*/
             color: #${colors.base07};
             background: #${colors.base02};
-          }        
+          }
 
 
           #cpu {
@@ -449,15 +449,15 @@ in
             border-radius: 0px 0px 0px 0px;
             color: #${colors.base07};
             background: #${colors.base02};
-          }          
+          }
 
           #cpu.warning {
             color: #${colors.base09};
-          }          
+          }
 
           #cpu.critical {
             color: #${colors.base08};
-          }          
+          }
 
           #temperature {
             padding-left: 16px;
@@ -465,15 +465,15 @@ in
             border-radius: 10px 0px 0px 10px;
             color: #${colors.base07};
             background: #${colors.base02};
-          }          
+          }
 
           #memory.warning {
             color: #${colors.base09};
-          }          
+          }
 
           #memory.critical {
             color: #${colors.base08};
-          }          
+          }
 
 
           #battery.charging {
@@ -523,4 +523,3 @@ in
       '';
   };
 }
-

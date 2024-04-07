@@ -321,38 +321,12 @@ Home lab commands list
 
 This list generated with `inv docs.all-pages` command
 
-[comment]: (>>COMMANDS)
+<!-- COMMANDS -->
 
-```
-Available tasks:
-
-  docs.all-pages               generate all homelab documentation
-  docs.host-pages              generate all homelab hosts page
-  docs.main-page               generate main homelab page
-  docs.scan-all-hosts          Retrieve all hosts system infromations
-  home.build                   Test to <hostnames> server
-  home.deploy                  Deploy to <hostnames> server
-  init.disk-format             Format disks with zfs
-  init.disk-mount              Mount disks from the installer
-  init.domain-cert             Init domain certificate
-  init.nix-serve               Init nix binary cache server <hostname> nix-
-                               serve private & public key
-  init.nixos-generate-config   Generate hardware configuration for the host
-  init.nixos-install           install nixos
-  init.ssh-init-host-key       Init ssh host key from nixos installation
-  nixos.boot                   rebuild boot to <hostnames> server
-  nixos.build                  Test to <hostnames> server
-  nixos.deploy                 Deploy to <hostnames> server
-  nixos.test                   Test to <hostnames> server
-  role.build                   Build for all hosts contains the role
-  role.deploy                  Deploy for all hosts contains the role
-  role.test                    Test for all hosts contains the role
-
-
+```text
 ```
 
-
-[comment]: (<<COMMANDS)
+<!-- /COMMANDS -->
 
 # A big thanks ❤️
 

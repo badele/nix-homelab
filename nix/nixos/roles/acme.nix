@@ -5,7 +5,7 @@ let
 in
 lib.mkIf (roleEnabled)
 {
-  # Configure sops secret 
+  # Configure sops secret
   sops.secrets.gandi-apikey = { };
 
   # acme must nginx user

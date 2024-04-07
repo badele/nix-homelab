@@ -69,7 +69,7 @@ in
     }
     audiosink {
         display_name_mapping = {
-            "Nor-Tec streaming mic Stéréo analogique": "USB", 
+            "Nor-Tec streaming mic Stéréo analogique": "USB",
             "Audio interne Stéréo analogique": "INT"
         }
         format = "🎧 {audiosink}"
@@ -106,4 +106,3 @@ in
     }
   '';
 }
-

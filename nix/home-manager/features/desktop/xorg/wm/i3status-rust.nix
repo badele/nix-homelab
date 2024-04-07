@@ -17,7 +17,7 @@ in
       #!${bash}
 
       echo "ON ENTER" >> /tmp/audio.log
-  
+
 
       set -e
 
@@ -89,7 +89,7 @@ in
             #              theme_overrides = {
             #                 idle_bg = "${hexPalette.dark-bright.blue}";
             #                 idle_fg = "${hexPalette.bright.blue}";
-            #               }; 
+            #               };
             merge_with_next = true;
           }
           {

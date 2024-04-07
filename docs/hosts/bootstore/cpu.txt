@@ -5,7 +5,7 @@ Byte Order:                      Little Endian
 CPU(s):                          2
 On-line CPU(s) list:             0,1
 Vendor ID:                       AuthenticAMD
-BIOS Vendor ID:                  AMD              
+BIOS Vendor ID:                  AMD
 Model name:                      AMD Turion(tm) II Neo N40L Dual-Core Processor
 BIOS Model name:                 AMD Turion(tm) II Neo N40L Dual-Core Processor       To Be Filled By O.E.M. CPU @ 1.5GHz
 BIOS CPU family:                 1

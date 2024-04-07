@@ -8,7 +8,7 @@
       "oncbjlgldmiagjophlhobkogeladjijl" # Bookmark cleaner
       "hmbkmkdhhlgemdgeefnhfaffdpddohpa" # Crypto Tab
       "fihnjjcciajhdojfnbdddfaoknhalnja" # I don't care cookies
-      "gccahjgcckaemgpliioopngfgdaceffo" # Spell Merci App 
+      "gccahjgcckaemgpliioopngfgdaceffo" # Spell Merci App
       "noaijdpnepcgjemiklgfkcfbkokogabh" # Translation
       "fiabciakcmgepblmdkmemdbbkilneeeh" # Tab suspender
       "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin

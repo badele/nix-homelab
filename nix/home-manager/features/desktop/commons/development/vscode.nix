@@ -7,7 +7,7 @@
     # package = pkgs.vscodium;
     extensions = with pkgs.vscode-extensions; [
       bbenoist.nix
-      github.copilot 
+      github.copilot
       golang.go
       gruntfuggly.todo-tree
       jebbs.plantuml
@@ -85,4 +85,3 @@
     };
   };
 }
-

@@ -1,70 +1,70 @@
-System:    Kernel: 5.15.84 aarch64 bits: 64 compiler: gcc v: 12.2.0 
-           parameters: coherent_pool=1M 8250.nr_uarts=1 snd_bcm2835.enable_compat_alsa=0 
-           snd_bcm2835.enable_hdmi=1 bcm2708_fb.fbwidth=0 bcm2708_fb.fbheight=0 
-           bcm2708_fb.fbswap=1 smsc95xx.macaddr=DC:A6:32:F0:05:16 vc_mem.mem_base=0x3eb00000 
-           vc_mem.mem_size=0x3ff00000 nohibernate loglevel=4 
-           init=/nix/store/xnr2z5ivp0imfkkvd37p2h0nd3vmcqqn-nixos-system-rpi40-23.05.20230420.1dc2054/init 
-           Console: N/A Distro: NixOS 23.05 (Stoat) 
-Machine:   Type: ARM Device System: Raspberry Pi 4 Model B Rev 1.4 details: BCM2835 rev: d03114 
-           serial: <filter> 
-Memory:    RAM: total: 7.62 GiB used: 4.99 GiB (65.4%) 
-           RAM Report: smbios: No SMBIOS data for dmidecode to process 
-PCI Slots: ARM: No ARM data found for this feature. 
-CPU:       Info: Quad Core model: N/A variant: cortex-a72 bits: 64 type: MCP arch: ARMv8 family: 8 
-           model-id: 0 stepping: 3 
-           features: Use -f option to see features bogomips: 432 
-           Speed: 600 MHz min/max: 600/1500 MHz Core speeds (MHz): 1: 600 2: 600 3: 600 4: 600 
-           Vulnerabilities: Type: itlb_multihit status: Not affected 
-           Type: l1tf status: Not affected 
-           Type: mds status: Not affected 
-           Type: meltdown status: Not affected 
-           Type: mmio_stale_data status: Not affected 
-           Type: retbleed status: Not affected 
-           Type: spec_store_bypass status: Vulnerable 
-           Type: spectre_v1 mitigation: __user pointer sanitization 
-           Type: spectre_v2 status: Vulnerable 
-           Type: srbds status: Not affected 
-           Type: tsx_async_abort status: Not affected 
-Graphics:  Device-1: bcm2708-fb driver: N/A bus-ID: N/A chip-ID: brcm:soc class-ID: fb 
-           Device-2: bcm2711-hdmi0 driver: N/A bus-ID: N/A chip-ID: brcm:soc class-ID: hdmi 
-           Device-3: bcm2711-hdmi1 driver: N/A bus-ID: N/A chip-ID: brcm:soc class-ID: hdmi 
-           Display: server: No display server data found. Headless machine? tty: N/A 
-           Message: Advanced graphics data unavailable in console for root. 
-Audio:     Device-1: bcm2711-hdmi0 driver: N/A bus-ID: N/A chip-ID: brcm:soc class-ID: hdmi 
-           Device-2: bcm2711-hdmi1 driver: N/A bus-ID: N/A chip-ID: brcm:soc class-ID: hdmi 
-Network:   Device-1: bcm2835-mmc driver: mmc_bcm2835 v: N/A port: N/A bus-ID: N/A 
-           chip-ID: brcm:fe300000 class-ID: mmcnr 
-           IF: wlan0 state: down mac: <filter> 
-           Device-2: bcm2711-genet-v5 driver: bcmgenet v: N/A port: N/A bus-ID: N/A 
-           chip-ID: brcm:fd580000 class-ID: ethernet 
-           IF: end0 state: up speed: 1000 Mbps duplex: full mac: <filter> 
-           IP v4: <filter> type: dynamic noprefixroute scope: global broadcast: <filter> 
-           IP v6: <filter> type: noprefixroute scope: link 
-           IF-ID-1: docker0 state: down mac: <filter> 
-           IP v4: <filter> scope: global broadcast: <filter> 
-           WAN IP: <filter> 
-RAID:      Device-1: zroot type: zfs status: ONLINE level: linear size: 464 GiB free: 442 GiB 
-           allocated: 22.5 GiB 
-           Components: Online: N/A 
-Drives:    Local Storage: total: raw: 495.48 GiB usable: 959.48 GiB used: 20 GiB (2.1%) 
-           ID-1: /dev/mmcblk0 maj-min: 179:0 vendor: SanDisk model: SL32G size: 29.72 GiB 
-           block-size: physical: 512 B logical: 512 B rotation: SSD serial: <filter> scheme: MBR 
-           SMART Message: Unknown smartctl error. Unable to generate data. 
-           ID-2: /dev/sda maj-min: 8:0 type: USB vendor: Hitachi model: HTS547550A9E384 
-           family: HGST Travelstar 5K750 size: 465.76 GiB block-size: physical: 4096 B 
-           logical: 512 B sata: 2.6 speed: 3.0 Gb/s rotation: 5400 rpm serial: <filter> rev: JE3O 
-           temp: 37 C scheme: GPT 
-           SMART: yes state: enabled health: PASSED on: 1y 276d 7h cycles: 69605 Old-Age: 
-           g-sense error rate: 1061 Pre-Fail: reallocated sector: 100 threshold: 5 
-Partition: ID-1: / raw-size: N/A size: 431.85 GiB used: 4.69 GiB (1.1%) fs: zfs 
-           logical: zroot/private/root 
-           ID-2: /boot raw-size: 1024 MiB size: 1022 MiB (99.80%) used: 267.2 MiB (26.1%) fs: vfat 
-           block-size: 512 B dev: /dev/sda1 maj-min: 8:1 
-Swap:      Alert: No swap data was found. 
-Sensors:   System Temperatures: cpu: 75.0 C mobo: N/A 
-           Fan Speeds (RPM): N/A 
-Info:      Processes: 197 
-           Uptime: 07:24:27  up 4 days  9:51,  1 user,  load average: 3.85, 3.02, 2.69 
-           Init: systemd v: 253 target: multi-user.target tool: systemctl Compilers: gcc: 9.5.0 
-           Packages: 1492 nix-default: 431 lib: 2 nix-sys: 630 lib: 143 nix-usr: 431 lib: 71 
-           Client: Sudo v: 1.9.13p3 inxi: 3.3.04 
+System:    Kernel: 5.15.84 aarch64 bits: 64 compiler: gcc v: 12.2.0
+           parameters: coherent_pool=1M 8250.nr_uarts=1 snd_bcm2835.enable_compat_alsa=0
+           snd_bcm2835.enable_hdmi=1 bcm2708_fb.fbwidth=0 bcm2708_fb.fbheight=0
+           bcm2708_fb.fbswap=1 smsc95xx.macaddr=DC:A6:32:F0:05:16 vc_mem.mem_base=0x3eb00000
+           vc_mem.mem_size=0x3ff00000 nohibernate loglevel=4
+           init=/nix/store/xnr2z5ivp0imfkkvd37p2h0nd3vmcqqn-nixos-system-rpi40-23.05.20230420.1dc2054/init
+           Console: N/A Distro: NixOS 23.05 (Stoat)
+Machine:   Type: ARM Device System: Raspberry Pi 4 Model B Rev 1.4 details: BCM2835 rev: d03114
+           serial: <filter>
+Memory:    RAM: total: 7.62 GiB used: 4.99 GiB (65.4%)
+           RAM Report: smbios: No SMBIOS data for dmidecode to process
+PCI Slots: ARM: No ARM data found for this feature.
+CPU:       Info: Quad Core model: N/A variant: cortex-a72 bits: 64 type: MCP arch: ARMv8 family: 8
+           model-id: 0 stepping: 3
+           features: Use -f option to see features bogomips: 432
+           Speed: 600 MHz min/max: 600/1500 MHz Core speeds (MHz): 1: 600 2: 600 3: 600 4: 600
+           Vulnerabilities: Type: itlb_multihit status: Not affected
+           Type: l1tf status: Not affected
+           Type: mds status: Not affected
+           Type: meltdown status: Not affected
+           Type: mmio_stale_data status: Not affected
+           Type: retbleed status: Not affected
+           Type: spec_store_bypass status: Vulnerable
+           Type: spectre_v1 mitigation: __user pointer sanitization
+           Type: spectre_v2 status: Vulnerable
+           Type: srbds status: Not affected
+           Type: tsx_async_abort status: Not affected
+Graphics:  Device-1: bcm2708-fb driver: N/A bus-ID: N/A chip-ID: brcm:soc class-ID: fb
+           Device-2: bcm2711-hdmi0 driver: N/A bus-ID: N/A chip-ID: brcm:soc class-ID: hdmi
+           Device-3: bcm2711-hdmi1 driver: N/A bus-ID: N/A chip-ID: brcm:soc class-ID: hdmi
+           Display: server: No display server data found. Headless machine? tty: N/A
+           Message: Advanced graphics data unavailable in console for root.
+Audio:     Device-1: bcm2711-hdmi0 driver: N/A bus-ID: N/A chip-ID: brcm:soc class-ID: hdmi
+           Device-2: bcm2711-hdmi1 driver: N/A bus-ID: N/A chip-ID: brcm:soc class-ID: hdmi
+Network:   Device-1: bcm2835-mmc driver: mmc_bcm2835 v: N/A port: N/A bus-ID: N/A
+           chip-ID: brcm:fe300000 class-ID: mmcnr
+           IF: wlan0 state: down mac: <filter>
+           Device-2: bcm2711-genet-v5 driver: bcmgenet v: N/A port: N/A bus-ID: N/A
+           chip-ID: brcm:fd580000 class-ID: ethernet
+           IF: end0 state: up speed: 1000 Mbps duplex: full mac: <filter>
+           IP v4: <filter> type: dynamic noprefixroute scope: global broadcast: <filter>
+           IP v6: <filter> type: noprefixroute scope: link
+           IF-ID-1: docker0 state: down mac: <filter>
+           IP v4: <filter> scope: global broadcast: <filter>
+           WAN IP: <filter>
+RAID:      Device-1: zroot type: zfs status: ONLINE level: linear size: 464 GiB free: 442 GiB
+           allocated: 22.5 GiB
+           Components: Online: N/A
+Drives:    Local Storage: total: raw: 495.48 GiB usable: 959.48 GiB used: 20 GiB (2.1%)
+           ID-1: /dev/mmcblk0 maj-min: 179:0 vendor: SanDisk model: SL32G size: 29.72 GiB
+           block-size: physical: 512 B logical: 512 B rotation: SSD serial: <filter> scheme: MBR
+           SMART Message: Unknown smartctl error. Unable to generate data.
+           ID-2: /dev/sda maj-min: 8:0 type: USB vendor: Hitachi model: HTS547550A9E384
+           family: HGST Travelstar 5K750 size: 465.76 GiB block-size: physical: 4096 B
+           logical: 512 B sata: 2.6 speed: 3.0 Gb/s rotation: 5400 rpm serial: <filter> rev: JE3O
+           temp: 37 C scheme: GPT
+           SMART: yes state: enabled health: PASSED on: 1y 276d 7h cycles: 69605 Old-Age:
+           g-sense error rate: 1061 Pre-Fail: reallocated sector: 100 threshold: 5
+Partition: ID-1: / raw-size: N/A size: 431.85 GiB used: 4.69 GiB (1.1%) fs: zfs
+           logical: zroot/private/root
+           ID-2: /boot raw-size: 1024 MiB size: 1022 MiB (99.80%) used: 267.2 MiB (26.1%) fs: vfat
+           block-size: 512 B dev: /dev/sda1 maj-min: 8:1
+Swap:      Alert: No swap data was found.
+Sensors:   System Temperatures: cpu: 75.0 C mobo: N/A
+           Fan Speeds (RPM): N/A
+Info:      Processes: 197
+           Uptime: 07:24:27  up 4 days  9:51,  1 user,  load average: 3.85, 3.02, 2.69
+           Init: systemd v: 253 target: multi-user.target tool: systemctl Compilers: gcc: 9.5.0
+           Packages: 1492 nix-default: 431 lib: 2 nix-sys: 630 lib: 143 nix-usr: 431 lib: 71
+           Client: Sudo v: 1.9.13p3 inxi: 3.3.04

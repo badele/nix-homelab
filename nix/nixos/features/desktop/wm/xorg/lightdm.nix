@@ -5,7 +5,7 @@
     ../../../../../modules/nixos/host.nix
   ];
 
-  environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw 
+  environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw
   services.xserver = {
     enable = true;
     #xkbVariant = "";

@@ -3,13 +3,13 @@
 { lib }:
 lib.mapAttrsToList
   (name: opts: # Params
-    {
-      alert = name;
-      expr = opts.condition;
-      for = opts.time or "2m";
-      labels = { };
-      annotations.description = opts.description;
-    }
+  {
+    alert = name;
+    expr = opts.condition;
+    for = opts.time or "2m";
+    labels = { };
+    annotations.description = opts.description;
+  }
   )
   (
     {

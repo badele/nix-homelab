@@ -4,4 +4,3 @@
  - sandbox: `yes`
  - version: `nix-env (Nix) 2.12.0`
  - nixpkgs: `/nix/store/as4rk0fwhkycnh5gzjbfhk21hkrkcs5c-bkxnsyy1bdr7rl2ll5icc10crspwqqxj-source`
-
