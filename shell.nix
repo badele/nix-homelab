@@ -21,6 +21,7 @@ in
       gnupg
       age
       ssh-to-age
+      pwgen
 
       python3.pkgs.invoke
       python3.pkgs.deploykit

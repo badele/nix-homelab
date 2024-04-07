@@ -46,7 +46,7 @@ This list generated with `inv docs.all-pages` command
         <tr>
             <td><img width="32" src="https://freesvg.org/img/ftntp-client.png"></td>
             <td>ntp</td>
-            <td>rpi40, bootstore</td>
+            <td>rpi40, bootstore, srvhoma</td>
         <td>Network Time Protocol</td>
         <tr>
             <td><img width="32" src="https://developer.community.boschrexroth.com/t5/image/serverpage/image-id/13467i19FDFA6E5DC7C260?v=v2"></td>
@@ -163,47 +163,32 @@ This list generated with `inv docs.all-pages` command
             <td><a href="./docs/hosts/router-living.md"><img width="32" src="https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32"></a></td>
             <td><a href="./docs/hosts/router-living.md">router-living</a>&nbsp;(192.168.254.254)</td>
             <td>MikroTik</td>
-            <td>Livingroom home mikrotik router</td>
+            <td>Livingroom mikrotik router</td>
         </tr><tr>
-            <td><a href="./docs/hosts/router-bedroom.md"><img width="32" src="https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32"></a></td>
-            <td><a href="./docs/hosts/router-bedroom.md">router-bedroom</a>&nbsp;(192.168.254.253)</td>
+            <td><a href="./docs/hosts/router-ladbedroom.md"><img width="32" src="https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32"></a></td>
+            <td><a href="./docs/hosts/router-ladbedroom.md">router-ladbedroom</a>&nbsp;(192.168.254.253)</td>
             <td>MikroTik</td>
-            <td>Bedroom home mikrotik router</td>
+            <td>Bedroom mikrotik router</td>
         </tr><tr>
             <td><a href="./docs/hosts/router-homeoffice.md"><img width="32" src="https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32"></a></td>
             <td><a href="./docs/hosts/router-homeoffice.md">router-homeoffice</a>&nbsp;(192.168.254.252)</td>
             <td>MikroTik</td>
-            <td>Office home mikrotik router</td>
+            <td>Office mikrotik router</td>
         </tr><tr>
-            <td><a href="./docs/hosts/sam.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Xfce_logo-footprint.svg/32px-Xfce_logo-footprint.svg.png"></a></td>
-            <td><a href="./docs/hosts/sam.md">sam</a>&nbsp;(192.168.0.18)</td>
+            <td><a href="./docs/hosts/sadhome.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
+            <td><a href="./docs/hosts/sadhome.md">sadhome</a>&nbsp;(192.168.254.200)</td>
             <td>NixOS</td>
-            <td>Samsung N110 Latop</td>
+            <td>Stephanie's laptop</td>
         </tr><tr>
-            <td><a href="./docs/hosts/latino.md"><img width="32" src="https://styles.redditmedia.com/t5_6sciw0/styles/communityIcon_h3cvittvupi91.png"></a></td>
-            <td><a href="./docs/hosts/latino.md">latino</a>&nbsp;(192.168.254.200)</td>
-            <td>NixOS</td>
-            <td>Dell Latitude E5540 Latop</td>
-        </tr><tr>
-            <td><a href="./docs/hosts/rpi40.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Raspberry_Pi_logo.svg/32px-Raspberry_Pi_logo.svg.png"></a></td>
+            <td><a href="./docs/hosts/rpi40.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
             <td><a href="./docs/hosts/rpi40.md">rpi40</a>&nbsp;(192.168.254.101)</td>
             <td>NixOS</td>
-            <td>The Raspberry PI 4 storage server</td>
+            <td>The RPI 4 server</td>
         </tr><tr>
-            <td><a href="./docs/hosts/bootstore.md"><img width="32" src="https://simpleicons.org/icons/databricks.svg"></a></td>
+            <td><a href="./docs/hosts/bootstore.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
             <td><a href="./docs/hosts/bootstore.md">bootstore</a>&nbsp;(192.168.254.100)</td>
             <td>NixOS</td>
-            <td>HP Proliant Microserver N40L storage server</td>
-        </tr><tr>
-            <td><a href="./docs/hosts/badwork.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png"></a></td>
-            <td><a href="./docs/hosts/badwork.md">badwork</a>&nbsp;(192.168.254.189)</td>
-            <td>Nix</td>
-            <td>A work thinkpad</td>
-        </tr><tr>
-            <td><a href="./docs/hosts/badwork-eth.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png"></a></td>
-            <td><a href="./docs/hosts/badwork-eth.md">badwork-eth</a>&nbsp;(192.168.254.102)</td>
-            <td>Nix</td>
-            <td>A ethernet work thinkpad</td>
+            <td>HP Microserver N40L server</td>
         </tr><tr>
             <td><a href="./docs/hosts/badphone.md"><img width="32" src="https://cdn-icons-png.flaticon.com/512/38/38002.png"></a></td>
             <td><a href="./docs/hosts/badphone.md">badphone</a>&nbsp;(192.168.254.194)</td>
@@ -240,8 +225,18 @@ This list generated with `inv docs.all-pages` command
             <td>GoogleMini</td>
             <td>Google Mini room C</td>
         </tr><tr>
-            <td><a href="./docs/hosts/badxps.md"><img width="32" src="https://ih1.redbubble.net/image.201056839.4943/flat,32x32,075,t.jpg"></a></td>
+            <td><a href="./docs/hosts/b4d14.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
+            <td><a href="./docs/hosts/b4d14.md">b4d14</a>&nbsp;(192.168.254.124)</td>
+            <td>NixOS</td>
+            <td>Dell XPS 9560 Latop</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/badxps.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
             <td><a href="./docs/hosts/badxps.md">badxps</a>&nbsp;(192.168.254.114)</td>
+            <td>NixOS</td>
+            <td>Dell XPS 9570 Latop</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/badxps-eth.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
+            <td><a href="./docs/hosts/badxps-eth.md">badxps-eth</a>&nbsp;(192.168.254.179)</td>
             <td>NixOS</td>
             <td>Dell XPS 9570 Latop</td>
         </tr><tr>
@@ -250,10 +245,15 @@ This list generated with `inv docs.all-pages` command
             <td>Bridge</td>
             <td>Philips Hue bridge</td>
         </tr><tr>
-            <td><a href="./docs/hosts/sadhome.md"><img width="32" src="https://cdn.icon-icons.com/icons2/2699/PNG/512/archlinux_logo_icon_167835.png"></a></td>
-            <td><a href="./docs/hosts/sadhome.md">sadhome</a>&nbsp;(192.168.254.185)</td>
-            <td>ArchLinux</td>
-            <td>Stephanie's laptop</td>
+            <td><a href="./docs/hosts/srvhoma.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
+            <td><a href="./docs/hosts/srvhoma.md">srvhoma</a>&nbsp;(192.168.254.116)</td>
+            <td>NixOS</td>
+            <td>First NUC homelab server</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/vm-test.md"><img width="32" src="https://cdn.icon-icons.com/icons2/2699/PNG/512/qemu_logo_icon_169821.png"></a></td>
+            <td><a href="./docs/hosts/vm-test.md">vm-test</a>&nbsp;(127.0.0.1)</td>
+            <td>NixOS</td>
+            <td>qemu VM (SSH on port 2222)</td>
         </tr></table>
 
 [comment]: (<<HOSTS)
@@ -347,7 +347,10 @@ Available tasks:
   role.build                   Build for all hosts contains the role
   role.deploy                  Deploy for all hosts contains the role
   role.test                    Test for all hosts contains the role
+
+
 ```
+
 
 [comment]: (<<COMMANDS)
 

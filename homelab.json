@@ -126,15 +126,15 @@
       "os": "MikroTik"
     },
     "sadhome": {
-      "icon": "https://cdn.icon-icons.com/icons2/2699/PNG/512/archlinux_logo_icon_167835.png",
+      "icon": "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png",
       "ipv4": "192.168.254.200",
       "zone": "livingroom",
       "parent": "router-ladbedroom",
       "description": "Stephanie's laptop",
-      "os": "ArchLinux"
+      "os": "NixOS"
     },
     "rpi40": {
-      "icon": "https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Raspberry_Pi_logo.svg/32px-Raspberry_Pi_logo.svg.png",
+      "icon": "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png",
       "ipv4": "192.168.254.101",
       "zone": "homeoffice",
       "parent": "router-homeoffice",
@@ -155,7 +155,7 @@
       ]
     },
     "bootstore": {
-      "icon": "https://simpleicons.org/icons/databricks.svg",
+      "icon": "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png",
       "description": "HP Microserver N40L server",
       "os": "NixOS",
       "ipv4": "192.168.254.100",
@@ -190,22 +190,6 @@
         "uptime",
         "home-assistant"
       ]
-    },
-    "badwork": {
-      "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png",
-      "ipv4": "192.168.254.189",
-      "zone": "homeoffice",
-      "parent": "router-ladbedroom",
-      "description": "A work thinkpad",
-      "os": "Nix"
-    },
-    "badwork-eth": {
-      "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png",
-      "ipv4": "192.168.254.102",
-      "zone": "homeoffice",
-      "parent": "router-homeoffice",
-      "description": "A ethernet work thinkpad",
-      "os": "Nix"
     },
     "badphone": {
       "icon": "https://cdn-icons-png.flaticon.com/512/38/38002.png",
@@ -264,7 +248,7 @@
       "os": "GoogleMini"
     },
     "b4d14": {
-      "icon": "https://ih1.redbubble.net/image.201056839.4943/flat,32x32,075,t.jpg",
+      "icon": "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png",
       "ipv4": "192.168.254.124",
       "zone": "homeoffice",
       "parent": "router-ladbedroom",
@@ -272,7 +256,7 @@
       "os": "NixOS"
     },
     "badxps": {
-      "icon": "https://ih1.redbubble.net/image.201056839.4943/flat,32x32,075,t.jpg",
+      "icon": "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png",
       "ipv4": "192.168.254.114",
       "zone": "homeoffice",
       "parent": "router-ladbedroom",
@@ -280,7 +264,7 @@
       "os": "NixOS"
     },
     "badxps-eth": {
-      "icon": "https://ih1.redbubble.net/image.201056839.4943/flat,32x32,075,t.jpg",
+      "icon": "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png",
       "ipv4": "192.168.254.179",
       "zone": "homeoffice",
       "parent": "router-ladbedroom",
@@ -295,8 +279,20 @@
       "description": "Philips Hue bridge",
       "os": "Bridge"
     },
+    "srvhoma": {
+      "icon": "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png",
+      "ipv4": "192.168.254.116",
+      "zone": "office",
+      "parent": "router-homeoffice",
+      "dnsalias": [],
+      "description": "First NUC homelab server",
+      "os": "NixOS",
+      "roles": [
+        "ntp"
+      ]
+    },
     "vm-test": {
-      "icon": "https://icons-for-free.com/download-icon-qemu-1331550892741477394_32.ico?m=1712055468",
+      "icon": "https://cdn.icon-icons.com/icons2/2699/PNG/512/qemu_logo_icon_169821.png",
       "ipv4": "127.0.0.1",
       "zone": "unknown",
       "parent": "none",

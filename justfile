@@ -25,6 +25,14 @@
 # NIXOS installer
 ###############################################################################
 
+# Generate random password
+@passwd-generate:
+    pwgen -s 12 1
+
+# Update secrets SOPS 
+@secret-update FILE:
+    sops updatekeys {{ FILE }}
+
 # Init nixos host if not exists
 nixos-init-host host:
     #!/usr/bin/env bash
@@ -49,6 +57,9 @@ nixos-init-host host:
 
         # Create age key from host ssh key
         ssh-to-age -i ./hosts/{{host}}/ssh_host_ed25519_key.pub -o ./hosts/{{host}}/ssh-to-age.txt
+
+        # Generate root password
+        just passwd-generate | pass insert -m nix-homelab/hosts/{{host}}/accounts/root
     fi
 
 # Install new <hostname> to <target>:<port> system wide
@@ -119,7 +130,6 @@ home-command action:
 # Test NixOS update deployment with custom ISO image (ESC for select boot device)
 iso-test-remote-deploy:
     sudo NIX_SSHOPTS="-p 2222" nixos-rebuild switch --fast --option accept-flake-config true --target-host 127.0.0.1 --flake .#vm-test
-
 
 # Stop ISO vm test
 @iso-stop:

@@ -147,6 +147,11 @@
           specialArgs = { inherit inputs outputs; };
           modules = [ inputs.sops-nix.nixosModules.sops ./hosts/rpi40 ];
         };
+
+        srvhoma = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs outputs; };
+          modules = [ inputs.sops-nix.nixosModules.sops ./hosts/srvhoma ];
+        };
       };
 
       # Standalone home-manager configuration entrypoint
@@ -252,6 +257,32 @@
             # > Our main home-manager configuration file <
             { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
             ./users/badele/rpi40.nix
+          ];
+        };
+
+        ########################################################################
+        # srvhoma
+        ########################################################################
+        "root@srvhoma" = home-manager.lib.homeManagerConfiguration {
+          pkgs =
+            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [
+            # > Our main home-manager configuration file <
+            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
+            ./users/root/srvhoma.nix
+          ];
+        };
+
+        "badele@srvhoma" = home-manager.lib.homeManagerConfiguration {
+          pkgs =
+            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [
+            # > Our main home-manager configuration file <
+            nur.hmModules.nur
+            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
+            ./users/badele/srvhoma.nix
           ];
         };
 
