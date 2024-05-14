@@ -276,6 +276,9 @@
       "ipv4": "192.168.254.114",
       "zone": "homeoffice",
       "parent": "router-ladbedroom",
+      "roles": [
+        "virtualization"
+      ],
       "description": "Dell XPS 9570 Latop",
       "os": "NixOS"
     },
