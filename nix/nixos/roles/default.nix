@@ -21,6 +21,7 @@
     ./smokeping.nix
     ./statping.nix
     ./uptime.nix
+    ./virtualization.nix
     ./zigbee2mqtt.nix
   ];
 }

@@ -11,7 +11,7 @@
 
   home.packages = with pkgs; [
     spotify
-    spotify-tui
+    # spotify-tui
     ncspot
     playerctl
   ];

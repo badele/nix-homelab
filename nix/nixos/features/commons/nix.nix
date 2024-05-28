@@ -35,7 +35,7 @@ in
       warn-dirty = false;
     };
 
-    package = pkgs.nixUnstable;
+    # package = pkgs.nix;
     gc = {
       automatic = true;
       dates = "weekly";

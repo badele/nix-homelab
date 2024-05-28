@@ -48,7 +48,7 @@
     - `./hosts/<HOSTNAME>/hardware-configuration.nix`
   - Deploy system wide environment
     - `just nixos-install <HOSTNAME> <TARGETIP> <PORT=22>` or
-      `just iso-test-install` for testing in vm-test on qemu
+      `just demo-test-install` for testing an ISO image on qemu
   - Deploy user environment (logon on new host)
     - `ghq get git@github.com:badele/nix-homelab.git`
     - `cd ~/ghq/github.com/badele/nix-homelab/`

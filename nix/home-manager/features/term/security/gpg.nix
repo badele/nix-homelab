@@ -3,23 +3,16 @@ let
   fetchKey = { url, sha256 ? lib.fakeSha256 }:
     builtins.fetchurl { inherit sha256 url; };
 
-  pinentry =
-    if config.gtk.enable then {
-      packages = [ pkgs.pinentry-qt ];
-      name = "qt";
-    } else {
-      packages = [ pkgs.pinentry-curses ];
-      name = "curses";
-    };
 in
 {
-  home.packages = pinentry.packages;
-
   services.gpg-agent = {
     enable = true;
     enableSshSupport = true;
     sshKeys = [ config.home.userconf.user.gpg.id ];
-    pinentryFlavor = pinentry.name;
+    pinentryPackage =
+      if config.gtk.enable
+      then pkgs.pinentry-qt
+      else pkgs.pinentry-curses;
     enableExtraSocket = true;
   };
 

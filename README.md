@@ -281,6 +281,40 @@ This list generated with `inv docs.all-pages` command
     - `overlays`: overlays **nix derivations**
     - `pkgs`: custom nix packages
 
+## Demo
+
+You can test an image in a **qemu vm** with the following commands:
+
+- Boot on livecd on your new installation device
+- From your desktop
+  - `j iso-build`
+  - `j demo-qemu-nixos-install` Go for a walk or have a coffee, when the
+    installation is completed, reboot the virtual machine and select
+    `Firmware Setup => Boot Manager => UEFI QEMU HardDisk`
+  - `j demo-test-update`
+
+- From a new installed desktop
+  - `ssh test@localhost -p 2222` (`mytestpass` password)
+  - `ghq clone https://github.com/badele/nix-homelab.git`
+  - `cd ghq/github.com/badele/nix-homelab`
+  - `nix shell nixpkgs#just`
+
+**Note:** passwords
+
+- `root:demopass`
+- `test:demopass`
+
+## AGE & SOPS initialisation
+
+Your `pass` (passwordstore) configuration must be correctly configured.
+
+In order to be able to encrypt your credentials, you first need initialize an
+`age` key. It is this key that will subsequently have to be added in the
+`.sops.yaml` file
+
+- `age-keygen | pass insert -m nix-homelab/users/your_username`
+- `pass show nix-homelab/users/your_username | grep AGE-SECRET-KEY >> ~/.config/sops/age/keys.txt`
+
 ## Homelab initialisation
 
 ```
@@ -324,6 +358,32 @@ This list generated with `inv docs.all-pages` command
 <!-- COMMANDS -->
 
 ```text
+Available recipes:
+    help                                              Help it showed if just is called without arguments
+    precommit-install                                 Setup pre-commit
+    precommit-update                                  Update pre-commit
+    precommit-check                                   precommit check
+    doc-update FAKEFILENAME                           Update documentation
+    lint                                              Lint the project
+    debug-repl                                        Repl the project
+    passwd-generate                                   Generate random password
+    secret-update FILE                                Update secrets SOPS
+    nixos-init-host host                              Init nixos host if not exists
+    nixos-install hostname targetip port="22"         Install new <hostname> to <target>:<port> system wide
+    demo-nixos-install hostname targetip port="22"    Install new <hostname> to <target>:<port> system wide
+    nixos-build hostname="" options=""                Nixos build local host
+    nixos-deploy hostname="" options=""               Deploy NixOS on local host
+    nixos-remote-deploy hostname targetip             Deploy NixOS on remote host
+    home-build                                        Home build for local user
+    home-deploy                                       Home deploy local user
+    iso-build                                         Build NixOS ISO image
+    demo-init-credentials passwd="demopass"           Init demo credentials
+    demo-start                                        Start NixOS demo from ISO image
+    demo-qemu-nixos-install                           Test NixOS installation deployment on qemu virutal machine
+    demo-qemu-nixos-update                            Test NixOS update deployment on qemu virutal machine
+    demo-stop                                         Stop demo vm test
+    demo-clean                                        Clean demo vm test
+    packages                                          Show installed packages
 ```
 
 <!-- /COMMANDS -->

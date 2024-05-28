@@ -6,7 +6,7 @@
 
   inputs = {
     # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
     # nixpkgs.url = "path:/home/badele/ghq/github.com/badele/fork-nixpkgs";
     # nixpkgs.url = "github:badele/fork-nixpkgs/unstable-fix-smokeping-symbolic-links";
     # You can access packages and modules from different nixpkgs revs
@@ -19,7 +19,7 @@
 
     # Home manager
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -38,9 +38,7 @@
     };
 
     # Color scheme
-    nix-rice = {
-      url = "github:bertof/nix-rice";
-    };
+    stylix.url = "github:danth/stylix";
 
     # Precomit local generator
     # nix-pre-commit = {
@@ -56,7 +54,7 @@
     , sops-nix
     , hardware
       # , nix-pre-commit
-    , nix-rice
+    , stylix
     , nur
     , ...
     }@inputs:
@@ -77,7 +75,6 @@
         let
           pkgs = import nixpkgs {
             inherit system;
-            overlays = [ nix-rice.overlays.default ];
           };
         in
         import ./nix/pkgs { inherit pkgs; });
@@ -94,7 +91,7 @@
       nixosModules = import ./nix/modules/nixos;
       # Reusable home-manager modules you might want to export
       # These are usually stuff you would upstream into home-manager
-      homeManagerModules = import ./nix/modules/home-manager;
+      # homeManagerModules = import ./nix/modules/home-manager;
 
       # NixOS configuration entrypoint
       # Available through 'nixos-rebuild --flake .#your-hostname'
@@ -112,14 +109,29 @@
           ];
         };
 
-        vm-test = nixpkgs.lib.nixosSystem {
+        demovm = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
           modules = [
             inputs.sops-nix.nixosModules.sops
-            ./hosts/vm-test
+            ./hosts/demovm
 
-            # inputs.home-manager.nixosModules.home-manager
-            # ./users/badele/vm-test.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                verbose = true;
+                users = {
+                  root = import ./users/root/demovm.nix;
+                  demo = {
+                    imports = [
+                      stylix.homeManagerModules.stylix
+                      ./users/demo/demovm.nix
+                    ];
+                  };
+                };
+              };
+            }
           ];
         };
 
@@ -167,7 +179,6 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
-            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
             ./users/root/b4d14.nix
           ];
         };
@@ -179,7 +190,6 @@
           modules = [
             # > Our main home-manager configuration file <
             nur.hmModules.nur
-            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
             ./users/badele/b4d14.nix
           ];
         };
@@ -193,7 +203,6 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
-            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
             ./users/root/badxps.nix
           ];
         };
@@ -205,7 +214,6 @@
           modules = [
             # > Our main home-manager configuration file <
             nur.hmModules.nur
-            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
             ./users/badele/badxps.nix
           ];
         };
@@ -219,7 +227,6 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
-            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
             ./nix/home-manager/users/root/sadhome.nix
           ];
         };
@@ -230,7 +237,6 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
-            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
             ./users/badele/sadhome.nix
           ];
         };
@@ -241,7 +247,6 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
-            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
             ./users/sadele/sadhome.nix
           ];
         };
@@ -255,7 +260,6 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
-            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
             ./users/badele/rpi40.nix
           ];
         };
@@ -269,7 +273,6 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
-            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
             ./users/root/srvhoma.nix
           ];
         };
@@ -281,34 +284,31 @@
           modules = [
             # > Our main home-manager configuration file <
             nur.hmModules.nur
-            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
             ./users/badele/srvhoma.nix
           ];
         };
 
         ########################################################################
-        # vm-test
+        # demo
         ########################################################################
-        "root@vm-test" = home-manager.lib.homeManagerConfiguration {
+        "root@demovm" = home-manager.lib.homeManagerConfiguration {
           pkgs =
             nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
-            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
-            ./users/root/vm-test.nix
+            ./users/root/demo.nix
           ];
         };
 
-        "badele@vm-test" = home-manager.lib.homeManagerConfiguration {
+        "badele@demovm" = home-manager.lib.homeManagerConfiguration {
           pkgs =
             nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
             nur.hmModules.nur
-            { nixpkgs.overlays = [ nix-rice.overlays.default ]; }
-            ./users/badele/vm-test.nix
+            ./users/badele/demo.nix
           ];
         };
 

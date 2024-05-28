@@ -47,7 +47,7 @@
     ];
 
     userSettings = {
-      "editor.fontFamily" = "'Source Code Pro','Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'";
+      # "editor.fontFamily" = "'Source Code Pro','Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'";
       "explorer.confirmDragAndDrop" = false;
       "explorer.confirmDelete" = false;
       "workspace-manager.includeGlobPattern" = [

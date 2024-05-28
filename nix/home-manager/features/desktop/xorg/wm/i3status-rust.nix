@@ -1,6 +1,6 @@
-{ config, lib, pkgs, inputs, ... }:
+{ config, lib, pkgs, ... }:
 let
-  hexPalette = with inputs.nix-rice.lib; palette.toRGBHex pkgs.rice.colorPalette;
+  # hexPalette = with inputs.nix-rice.lib; palette.toRGBHex pkgs.rice.colorPalette;
 
   grep = (lib.getBin pkgs.gnugrep) + "/bin/grep";
   bash = (lib.getBin pkgs.bash) + "/bin/bash";
@@ -42,27 +42,27 @@ in
       top = {
         theme = "modern";
         icons = "awesome6";
-        settings.theme = {
-          overrides = {
-            idle_bg = "${hexPalette.dark-bright.blue}";
-            idle_fg = "${hexPalette.bright.blue}";
-            info_bg = "${hexPalette.dark-bright.blue}";
-            info_fg = "${hexPalette.bright.white}";
-            good_bg = "${hexPalette.dark-normal.green}";
-            good_fg = "${hexPalette.bright.white}";
-            warning_bg = "${hexPalette.dark-bright.yellow}";
-            warning_fg = "${hexPalette.bright.white}";
-            critical_bg = "${hexPalette.dark-bright.red}";
-            critical_fg = "${hexPalette.bright.white}";
-
-            separator = "";
-            #     #separator = "\ue0b2";
-            #     separator_bg = "auto";
-            #     separator_fg = "auto";
-            alternating_tint_bg = "#222222";
-            alternating_tint_fg = "#222222";
-          };
-        };
+        # settings.theme = {
+        #   overrides = {
+        #     idle_bg = "${hexPalette.dark-bright.blue}";
+        #     idle_fg = "${hexPalette.bright.blue}";
+        #     info_bg = "${hexPalette.dark-bright.blue}";
+        #     info_fg = "${hexPalette.bright.white}";
+        #     good_bg = "${hexPalette.dark-normal.green}";
+        #     good_fg = "${hexPalette.bright.white}";
+        #     warning_bg = "${hexPalette.dark-bright.yellow}";
+        #     warning_fg = "${hexPalette.bright.white}";
+        #     critical_bg = "${hexPalette.dark-bright.red}";
+        #     critical_fg = "${hexPalette.bright.white}";
+        #
+        #     separator = "";
+        #     #     #separator = "\ue0b2";
+        #     #     separator_bg = "auto";
+        #     #     separator_fg = "auto";
+        #     alternating_tint_bg = "#222222";
+        #     alternating_tint_fg = "#222222";
+        #   };
+        # };
 
         blocks = [
           # Spotify

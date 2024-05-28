@@ -2,6 +2,7 @@ keys:
   # Users
   - &users: # nix-shell -p age --run 'age-keygen'
     - &badele age15js628ku59g94njn0vup20r4xx34guesgsj5dqsken5hma2zqg2szjed66
+    - &demo age1x703g2zquc2uv5lzz79rvj3m9g868wft6lp8g5sp9qsnaa3ld5esas4nqk
   # Hosts
   - &hosts: # j nixos-init-host <HOST>
     - &rpi40 age152ud7upe5xylsvf7kkfpdz6x99r6hcmkam8gwntfdv0px70f0u0sqzc8qe
@@ -11,7 +12,7 @@ keys:
     - &badxps age1w9v05mvydywp39cq8tmgxjh8yc2w86qpp9aa4zt9ukf0qq8n5y4s5tkn7z
     - &b4d14 age1r7d0v4nudrv9wy7rvh784lnmzspm24uja6c6hrhhwjy7qf4e5d5q04gf3x
     - &srvhoma age1jldv57mqz6ahwcm62efelumv22ngyvxjff8736shx9kycu9z7a4q7a3xdl
-    - &vm-test age15p929p3zqcezwqexhgu2p7rvx7luapmp70lex0lh8s5pelwsj4qsach7a8
+    - &demovm age1j9szuan8nt709ewa5f6vlkhde0zg2kmlfccqarfu74dhg2a5h3jsrhxg2g
 
 creation_rules:
   - path_regex: users/badele/secrets.yml$
@@ -32,7 +33,6 @@ creation_rules:
           - *sam
           - *b4d14
           - *srvhoma
-          - *vm-test
 
   - path_regex: hosts/rpi40/secrets.yml$
     key_groups:
@@ -76,8 +76,15 @@ creation_rules:
           - *badele
           - *srvhoma
 
-  - path_regex: hosts/vm-test/secrets.yml$
+  # Tempory test credential before encryption
+  - path_regex: hosts/demovm/secrets.tmp$
     key_groups:
       - age:
-          - *badele
-          - *vm-test
+          - *demo
+          - *demovm
+
+  - path_regex: hosts/demovm/secrets.yml$
+    key_groups:
+      - age:
+          - *demo
+          - *demovm

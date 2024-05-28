@@ -32,6 +32,14 @@ repos:
         stages:
           - commit
         files: ^README\.md$
+      - id: check-secrets
+        name: check-test-age-public-key
+        description: Check test age public key
+        language: python
+        entry: ./.pre-commit-scripts/check-public-test-age-key.py
+        stages:
+          - commit
+        files: secrets\.yml$
       - id: deno-fmt
         name: deno-fmt
         description: Format deno code with deno fmt.

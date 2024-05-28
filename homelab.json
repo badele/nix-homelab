@@ -291,7 +291,7 @@
         "ntp"
       ]
     },
-    "vm-test": {
+    "demovm": {
       "icon": "https://cdn.icon-icons.com/icons2/2699/PNG/512/qemu_logo_icon_169821.png",
       "ipv4": "127.0.0.1",
       "zone": "unknown",

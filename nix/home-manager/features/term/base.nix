@@ -11,10 +11,10 @@
     ./tools/inxi.nix
 
     # Shell
-    ./tools/starship.nix
+    # ./tools/starship.nix
     ./tools/zsh.nix
 
-    # Misc
+    # # Misc
     ./tools/broot.nix
     ./tools/htop.nix
     ./tools/neofetch.nix
@@ -25,7 +25,7 @@
   systemd.user.startServices = "sd-switch";
 
   nixpkgs = {
-    overlays = builtins.attrValues outputs.overlays;
+    # overlays = builtins.attrValues outputs.overlays;
     config = {
       allowUnfree = true;
       allowUnfreePredicate = (_: true);
@@ -33,7 +33,7 @@
   };
 
   nix = {
-    package = pkgs.nix;
+    package = lib.mkForce pkgs.nix;
     settings = {
       experimental-features = [ "nix-command" "flakes" "repl-flake" ];
       warn-dirty = false;
@@ -41,7 +41,7 @@
   };
 
 
-  # NOTE: By default all programs enabled for the all shells
+  # # NOTE: By default all programs enabled for the all shells
   programs = {
     home-manager.enable = true;
     git.enable = true;

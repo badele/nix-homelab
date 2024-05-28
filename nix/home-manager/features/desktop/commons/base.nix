@@ -2,6 +2,7 @@
 {
   imports = [
     # Theme
+    ./fonts.nix
     ./gtk.nix
     ./qt.nix
 
@@ -10,7 +11,6 @@
     ./pulseaudio.nix
 
     # Misc
-    ./fonts.nix
     ./wezterm.nix
     ./wpa-gui.nix
   ];

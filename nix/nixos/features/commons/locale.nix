@@ -14,10 +14,13 @@
   time.timeZone = lib.mkDefault "Europe/Paris";
 
   # Xorg keyboad layout if Xorg is enabled
-  services.xserver = {
-    xkb = {
-      options = "caps:shiftlock";
-      layout = "fr";
+  services = {
+    xserver = {
+      xkb = {
+        options = "caps:shiftlock";
+        layout = "fr";
+      };
+
     };
 
     # Touchpad
@@ -29,6 +32,7 @@
         naturalScrolling = true;
       };
     };
+
   };
 
   # Console keyboard layout

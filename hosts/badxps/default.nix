@@ -26,6 +26,9 @@
     # Desktop
     ../../nix/nixos/features/system/bluetooth.nix
     ../../nix/nixos/features/desktop/wm/xorg/lightdm.nix
+
+    # Roles
+    ../../nix/nixos/roles # Automatically load service from <host.modules> sectionn from `homelab.json` file
   ];
 
   ####################################
@@ -64,7 +67,8 @@
   };
 
   # xorg
-  videoDrivers = [ "intel" "i965" "nvidia" ];
+  #videoDrivers = [ "intel" "i965" "nvidia" ];
+  services.xserver.videoDrivers = [ "intel" "i965" "nvidia" ];
   #services.xserver.videoDrivers = [ "nvidia" ];
   #hardware.opengl.enable = true;
   #hardware.nvidia.package = boot.kernelPackages.nvidiaPackages.stable;

@@ -9,7 +9,6 @@
 {
   sops.secrets = {
     "system/user/root-hash" = {
-      sopsFile = ./secrets.yml;
       neededForUsers = true;
     };
   };

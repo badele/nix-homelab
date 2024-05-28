@@ -1,6 +1,6 @@
-{ config, lib, pkgs, inputs, ... }:
+{ config, lib, pkgs, ... }:
 let
-  hexPalette = with inputs.nix-rice.lib; palette.toRGBHex pkgs.rice.colorPalette;
+  # hexPalette = with inputs.nix-rice.lib; palette.toRGBHex pkgs.rice.colorPalette;
 in
 {
 
@@ -18,13 +18,13 @@ in
         offset = "30x50";
         origin = "top-right";
         transparency = 10;
-        frame_color = hexPalette.bright.magenta;
-        font = "${config.fontProfiles.monospace.family} 12";
+        # frame_color = hexPalette.bright.magenta;
+        # font = "${config.fontProfiles.monospace.family} 12";
       };
 
       urgency_normal = {
-        background = hexPalette.normal.black;
-        foreground = hexPalette.bright.magenta;
+        # background = hexPalette.normal.black;
+        # foreground = hexPalette.bright.magenta;
         timeout = 10;
       };
     };

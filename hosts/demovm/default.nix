@@ -16,17 +16,19 @@
 
     # Users
     ../root.nix
-    ../badele.nix
+    ../demo.nix
 
     # Commons
     ../../nix/nixos/features/commons
     ../../nix/nixos/features/homelab
     # ../../nix/nixos/features/system/containers.nix
-    ../../nix/nixos/features/system/virtualisation.nix
+    # ../../nix/nixos/features/system/virtualisation.nix
 
-    # Desktop
-    ../../nix/nixos/features/system/bluetooth.nix
+    # i3
     ../../nix/nixos/features/desktop/wm/xorg/lightdm.nix
+
+    # Gnome
+    # ../../nix/nixos/features/desktop/wm/xorg/gdm.nix # Gnome
   ];
 
   ####################################
@@ -76,7 +78,7 @@
   hostprofile = {
     nproc = 12;
     autologin = {
-      user = "badele";
+      user = "demo";
       session = "none+i3";
     };
   };
@@ -92,7 +94,7 @@
     #extraConfig = "load-module module-combine-sink";
   };
 
-  networking.hostName = "vm-test";
+  networking.hostName = "demovm";
   networking.useDHCP = lib.mkDefault true;
 
   ####################################
@@ -103,22 +105,6 @@
     dconf.enable = true;
   };
 
-  ####################################
-  # Secrets
-  ####################################
-
-  sops.secrets = {
-    "spotify/user" = {
-      mode = "0400";
-      owner = config.users.users.badele.name;
-    };
-
-    "spotify/password" = {
-      mode = "0400";
-      owner = config.users.users.badele.name;
-    };
-  };
-
   nixpkgs.hostPlatform.system = "x86_64-linux";
-  system.stateVersion = "22.11";
+  system.stateVersion = "24.05";
 }
