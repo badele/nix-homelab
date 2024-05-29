@@ -283,26 +283,35 @@ This list generated with `inv docs.all-pages` command
 
 ## Demo
 
-You can test an image in a **qemu vm** with the following commands:
+To test `nix-homelab` as well as the configuration of a workstation,
+`nix-homelab` offers a demo that runs on a virtual machine based on QEMU.
+
+![usb-installer](./docs/usb-installer.png)
+
+**Install**
 
 - Boot on livecd on your new installation device
 - From your desktop
+  - `nix develop`
   - `j iso-build`
-  - `j demo-qemu-nixos-install` Go for a walk or have a coffee, when the
-    installation is completed, reboot the virtual machine and select
-    `Firmware Setup => Boot Manager => UEFI QEMU HardDisk`
-  - `j demo-test-update`
+  - `j demo-qemu-nixos-install` (`demopass` password) Go for a walk or have a
+    coffee, when the installation is completed, reboot the virtual machine and
+    select `Firmware Setup => Boot Manager => UEFI QEMU HardDisk`
+
+**Update**
+
+You can update from your remote desktop or directly from your recent installed
+desktop
+
+- From remote
+  - `j demo-qemu-nixos-update`
 
 - From a new installed desktop
-  - `ssh test@localhost -p 2222` (`mytestpass` password)
+  - `ssh root@localhost -p 2222` (`demopass` password)
   - `ghq clone https://github.com/badele/nix-homelab.git`
   - `cd ghq/github.com/badele/nix-homelab`
-  - `nix shell nixpkgs#just`
-
-**Note:** passwords
-
-- `root:demopass`
-- `test:demopass`
+  - `nix develop`
+  - `just nixos-update`
 
 ## AGE & SOPS initialisation
 
@@ -370,9 +379,9 @@ Available recipes:
     secret-update FILE                                Update secrets SOPS
     nixos-init-host host                              Init nixos host if not exists
     nixos-install hostname targetip port="22"         Install new <hostname> to <target>:<port> system wide
-    demo-nixos-install hostname targetip port="22"    Install new <hostname> to <target>:<port> system wide
     nixos-build hostname="" options=""                Nixos build local host
-    nixos-deploy hostname="" options=""               Deploy NixOS on local host
+    demo-nixos-install hostname targetip port="22"    Install new <hostname> to <target>:<port> system wide
+    nixos-update hostname="" options=""               Update NixOS on local host
     nixos-remote-deploy hostname targetip             Deploy NixOS on remote host
     home-build                                        Home build for local user
     home-deploy                                       Home deploy local user

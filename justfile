@@ -116,6 +116,14 @@ nixos-install hostname targetip port="22":
     chmod 600 "/tmp/nix-homelab/etc/ssh/ssh_host_ed25519_key"
     nixos-anywhere --extra-files /tmp/nix-homelab -p {{port}} --flake .#{{hostname}} root@{{targetip}}
 
+[private]
+nixos-command action hostname="" options="":
+    echo sudo nixos-rebuild {{ action }} {{ options }} --fast --option accept-flake-config true --flake .#{{ hostname }}
+
+# Nixos build local host
+@nixos-build hostname="" options="":
+    just nixos-command build {{ hostname }} {{ options }}
+
 # Install new <hostname> to <target>:<port> system wide
 demo-nixos-install hostname targetip port="22":
     #!/usr/bin/env bash
@@ -137,17 +145,8 @@ demo-nixos-install hostname targetip port="22":
     chmod 600 "/tmp/nix-homelab/etc/ssh/ssh_host_ed25519_key" "/tmp/nix-homelab/root/.config/sops/age/keys.txt"
     nixos-anywhere --env-password --extra-files /tmp/nix-homelab -p {{port}} --flake .#{{hostname}} root@{{targetip}}
 
-
-[private]
-nixos-command action hostname="" options="":
-    echo sudo nixos-rebuild {{ action }} {{ options }} --fast --option accept-flake-config true --flake .#{{ hostname }}
-
-# Nixos build local host
-@nixos-build hostname="" options="":
-    just nixos-command build {{ hostname }} {{ options }}
-
-# Deploy NixOS on local host
-@nixos-deploy hostname="" options="":
+# Update NixOS on local host
+@nixos-update hostname="" options="":
     just nixos-command switch {{ hostname }} {{ options }}
 
 # Deploy NixOS on remote host
