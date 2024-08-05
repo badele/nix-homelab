@@ -4,6 +4,12 @@
 
   services.udisks2.enable = true;
 
+  # LD_LIBRARY_PATH
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [ zlib ];
+  };
+
   environment.systemPackages = with pkgs; [
 
     # System diagnose
