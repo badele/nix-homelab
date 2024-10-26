@@ -9,7 +9,7 @@ let
 in
 lib.mkIf (roleEnabled)
 {
-  # Configure sops secret 
+  # Configure sops secret
   sops.secrets."mqtt/pass/zigbee2mqtt" = { owner = "mosquitto"; group = "mosquitto"; };
   sops.secrets."mqtt/pass/hass" = { owner = "mosquitto"; group = "mosquitto"; };
 

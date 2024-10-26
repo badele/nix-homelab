@@ -11,28 +11,23 @@
     displayManager = {
       gdm.enable = true;
       defaultSession = config.hostprofile.autologin.session;
-      autoLogin.user = config.hostprofile.autologin.user;
+      autoLogin = {
+        enable = true;
+        user = config.hostprofile.autologin.user;
+      };
     };
-    xkbOptions = "caps:shiftlock";
-    layout = "fr";
 
-# Touchpad
-    libinput = {
-      enable = true;
-      naturalScrolling = true;
-      middleEmulation = false;
-      tapping = true;
-    };
+    # INFO: Keyboard layout and touchpad are configured in ./nixos/features/commons/locale.nix
   };
 
   environment.gnome.excludePackages = (with pkgs; [
-      gnome-photos
-      gnome-tour
+    gnome-photos
+    gnome-tour
+    gedit # text editor
   ]) ++ (with pkgs.gnome; [
     cheese # webcam tool
     gnome-music
     gnome-terminal
-    gedit # text editor
     epiphany # web browser
     geary # email reader
     evince # document viewer

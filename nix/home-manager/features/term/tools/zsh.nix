@@ -15,6 +15,7 @@
 { config, pkgs, lib, ... }:
 let
   xprop = "${pkgs.xorg.xprop}/bin/xprop";
+  hexyl = "${pkgs.xorg.xprop}/bin/hexyl";
   prj_devtools = "${config.home.homeDirectory}/ghq/github.com/cynapps/devtools";
 in
 {
@@ -48,8 +49,6 @@ in
           "golang"
           "sudo"
           "docker"
-          "ripgrep"
-          "fd"
           "kubectl"
           "helm"
           "terraform"
@@ -105,20 +104,6 @@ in
         #   rm -f /tpm/.sso_exported
         # }
 
-        ##############################################################################
-        # broot
-        ##############################################################################
-
-        # Wallpapers selector
-        function brw () {
-         br -c ":gw"
-        }
-
-        # Filter
-        function brf () {
-         br -h -c "/$1"
-        }
-
         # Load some files if exists
         test -d "~/.kube" && export KUBECONFIG=$(ls -1 ~/.kube/*.yml | tr " " ":") # Kubernetes contexts
         test -f ~/.nix-profile/etc/grc.zsh  && source ~/.nix-profile/etc/grc.zsh
@@ -163,7 +148,6 @@ in
         fd = "fd"; # find files alternative (fd)
         # pup = "up"; # pipe output (we can run linux command in realtime)
         hexyl = "hexyl --border none"; # hexdump alternative
-        #br="broot"; # File manager
 
         # ZSH
         my-zkeys =
@@ -209,20 +193,21 @@ in
         cdw = "cd ~/ghq/github.com/cynapps";
 
         # git
-        gs = "git status"; # git status
-        gl = "git log"; # git log
-        gd = "git diff"; # git diff
-        gds = "git diff --staged"; # git diff
-        gcb = "git checkout";
-        gbl = "git branch"; # git branch
-        gbm = "git blame"; # git blame
-        ga = "git add"; # git add
-        gc = "git commit -m"; # git commit
-        gss = "git stash"; # git stash
-        gsl = "git stash list"; # git stash list
-        gsp = "git stash pop"; # git stash pop
-        gpl = "git pull"; # git pull
-        gph = "git push"; # git push
+        gs = "git status";
+        gl = "git log";
+        gd = "git diff";
+        gds = "git diff --staged";
+        gbl = "git branch";
+        gbm = "git blame";
+        ga = "git add";
+        gc = "git commit -m";
+        gcb = "git checkout -b";
+        gcm = "git checkout main";
+        gss = "git stash";
+        gsl = "git stash list";
+        gsp = "git stash pop";
+        gpl = "git pull";
+        gph = "git push";
 
         # pass
         pps = "pass git status"; # pass status
@@ -247,6 +232,7 @@ in
         #unalias kubectl # Disable clourify for using P10K plugin
         a = "aws"; # aws alias
         g = "gcloud"; # gcloud alias
+        i = "incus"; # LXD & VM
         j = "just"; # just
         k = "kubectl"; # kubectl alias
         t = "terraform"; # terraform alias

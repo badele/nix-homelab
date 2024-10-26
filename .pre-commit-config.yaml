@@ -1,0 +1,58 @@
+repos:
+  - repo: 'https://github.com/pre-commit/pre-commit-hooks'
+    rev: v4.5.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-executables-have-shebangs
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: detect-aws-credentials
+        args: [--allow-missing-credentials]
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: no-commit-to-branch
+        args: ['--branch', 'main']
+      - id: trailing-whitespace
+  - repo: local
+    hooks:
+      - id: nixpkgs-fmt
+        name: nixpkgs-fmt
+        description: Format nix code with nixpkgs-fmt.
+        language: system
+        entry: nixpkgs-fmt
+        files: \.nix$
+        stages:
+          - commit
+      - id: docupdate
+        name: docupdate
+        description: Update documentation.
+        language: system
+        entry: just doc-update
+        stages:
+          - commit
+        files: ^README\.md$
+      - id: check-secrets
+        name: check-test-age-public-key
+        description: Check test age public key
+        language: python
+        entry: ./.pre-commit-scripts/check-public-test-age-key.py
+        stages:
+          - commit
+        files: secrets\.yml$
+      - id: deno-fmt
+        name: deno-fmt
+        description: Format deno code with deno fmt.
+        language: system
+        entry: deno fmt
+        stages:
+          - commit
+        files: \.ts$
+      - id: deno-lint
+        name: deno-lint
+        description: Lint deno code with deno lint.
+        language: system
+        entry: deno lint
+        stages:
+          - commit
+        files: \.ts$

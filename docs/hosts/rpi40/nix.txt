@@ -4,4 +4,3 @@
  - sandbox: `yes`
  - version: `nix-env (Nix) 2.15.0`
  - nixpkgs: `/nix/var/nix/profiles/per-user/root/channels/nixos`
-

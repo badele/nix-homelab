@@ -9,7 +9,7 @@ let
 in
 lib.mkIf (roleEnabled)
 {
-  # Configure sops secret 
+  # Configure sops secret
   sops.secrets."mqtt/secret/zigbee2mqtt" = {
     path = "/var/lib/zigbee2mqtt/secret.yaml";
     owner = "${config.systemd.services.zigbee2mqtt.serviceConfig.User}";

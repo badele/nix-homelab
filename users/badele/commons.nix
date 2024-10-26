@@ -40,50 +40,58 @@
   };
 
   ##############################################################################
-  # Packages
+  # User packages
   ##############################################################################
   home.packages = with pkgs; [
-    # MQTT
-    mosquitto
-    mqttui
+    ##################################"
+    # Tool
+    ##################################"
 
+    atop # Top alternative
+    bat # cat alternative
+    curl # HTTP client
+    du-dust # du rust version
+    duf # df go version
+    eva # Calculator
+    eza # ls alternative
+    fd # find alternative
+    httpie # curl alternative
+    jq # JSON pretty printer and manipulator
+    pastel # Colors generator
+    ripgrep # Better grep
+    tmux # Terminal multiplexer
+    unzip # Unzip files
+    up # UI interactively pipe
+    wget # HTTP client
+
+    # Floating apps (used in i3)
+    bashmount # Terminal mount helper
+    bluetuith # Bluetooth manager
+    btop # Top alternative
+    procs # Top alternative
+
+    ##################################"
     # Development
-    go
-    lua54Packages.luarocks
-    nano
-    nodejs
-    stylua
-    tree-sitter
-    gh # Github CLI
-    meld # Awesome diff tool
+    ##################################"
 
-    # Cloud & co
-    awscli2 # AWS CLI
-    kubectl # Kubernetes CLI
-    kubectx # Kubernetes CLI
-    k9s # Kubernetes CLI
-    kubernetes-helm # Helm
-    argocd # ArgoCD CLI
+    # Makefile like
+    just # justfile (Makefile like)
 
-    # Network
-    ipcalc # IP subnetcalculator
-    trippy # mtr traceroute alternative
+    # Git
+    meld # Visual diff and merge tool
+    lazygit # git terminal UI
 
-    # Graphics
-    geeqie
-    gifsicle
-    gimp
-    imagemagick
-    inkscape
+    # Nix
+    haskellPackages.nix-derivation # Analyse derivation with pretty-derivation < packagename.drv
+    nix-prefetch-github # Compute SHA256 github repository
+    nixpkgs-fmt # Nix formatter
+    nix-diff # Check derivation differences
+    nvd # Show diff nix packages
 
-    # Office
-    discord
-    libreoffice
-
-    # Misc
-    xclip
-
-    # VPN
-    wireguard-tools
+    ##################################"
+    # Container / Virtualization
+    ##################################"
+    lazydocker # docker terminal UI
+    qemu # Virtual machine manager
   ];
 }

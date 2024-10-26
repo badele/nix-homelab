@@ -1,7 +1,7 @@
 @startuml
 nwdiag {
     internet [shape = cloud];
-  
+
     network net-provider {
     address = "81.64.x.x";
     box-provider;
@@ -61,7 +61,7 @@ nwdiag {
         ntp-r;
         zigbee2mqtt;
     }
-    
+
     network net-ladroom {
     address = "192.168.254.x";
     color = "LightGreen";

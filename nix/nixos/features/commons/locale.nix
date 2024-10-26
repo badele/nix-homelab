@@ -1,6 +1,6 @@
 { lib, ... }: {
-  console.keyMap = "fr";
 
+  # Common locales
   i18n = {
     defaultLocale = lib.mkDefault "fr_FR.UTF-8";
     extraLocaleSettings = {
@@ -12,4 +12,29 @@
     ];
   };
   time.timeZone = lib.mkDefault "Europe/Paris";
+
+  # Xorg keyboad layout if Xorg is enabled
+  services = {
+    xserver = {
+      xkb = {
+        options = "caps:shiftlock";
+        layout = "fr";
+      };
+
+    };
+
+    # Touchpad
+    libinput = {
+      enable = true;
+      touchpad = {
+        tapping = true;
+        middleEmulation = false;
+        naturalScrolling = true;
+      };
+    };
+
+  };
+
+  # Console keyboard layout
+  console.keyMap = "fr";
 }

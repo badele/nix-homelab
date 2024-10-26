@@ -2,8 +2,10 @@
 {
   services.openssh = {
     enable = true;
-    passwordAuthentication = true;
-    permitRootLogin = "yes";
+    settings = {
+      PasswordAuthentication = true;
+      PermitRootLogin = "yes";
+    };
 
     hostKeys = [{
       path = "/etc/ssh/ssh_host_ed25519_key";
@@ -12,5 +14,5 @@
   };
 
   # Passwordless sudo when SSH'ing with keys
-  security.pam.enableSSHAgentAuth = true;
+  security.pam.sshAgentAuth.enable = true;
 }

@@ -6,8 +6,14 @@ docs/nvim/tags
 # direnv
 .direnv
 
-# Devenv
-.devenv*
-devenv.local.nix
+# Private keys
+hosts/*/ssh_host_rsa_key
+hosts/*/ssh_host_ed25519_key
 
-.pre-commit-config.yaml
+# demo user
+users/demo/age-key.txt
+hosts/demovm/secrets.tmp
+hosts/demovm/ssh_host_rsa_key.pub
+hosts/demovm/ssh_host_ed25519_key.pub
+disk-demo.raw
+result

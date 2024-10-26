@@ -7,7 +7,7 @@ let
   # Hass config
   hass_config = pkgs.writeText "configuration.yaml" ''
     # Discovery
-    default_config: 
+    default_config:
 
     # Web Server configuration
     http:
@@ -30,7 +30,7 @@ let
       default: warning
       logs:
         homeassistant.components.rfxtrx: debug
-        RFXtrx: debug      
+        RFXtrx: debug
   '';
 
 in
@@ -177,7 +177,7 @@ lib.mkIf (roleEnabled)
 #         proxy_pass http://127.0.0.1:${toString cfg.config.http.server_port};
 #         proxy_set_header Host $host;
 #         proxy_set_header Upgrade $http_upgrade;
-#         proxy_set_header Connection $connection_upgrade;      
+#         proxy_set_header Connection $connection_upgrade;
 #       '';
 # };
 # };

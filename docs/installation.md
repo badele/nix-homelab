@@ -10,7 +10,7 @@ Boot from NixOS live cd
 # Change keymap & root password
 sudo -i
 loadkeys fr
-passwd 
+passwd
 
 # [Optional] WI-FI
 systemctl start wpa_supplicant
@@ -38,8 +38,8 @@ ssh-copy-id root@${TARGETIP}
 inv init.disk-format --hosts ${TARGETIP} --disk /dev/sda --mirror /dev/sdb --mode MBR --password <PASSWORD> # encrypt ZFS
 inv init.disk-format --hosts ${TARGETIP} --disk /dev/sda --mirror /dev/sdb --mode MBR
 inv init.disk-format --hosts ${TARGETIP} --disk /dev/nvme0n1  --mode EFI
-or 
-inv init.disk-mount --hosts ${TARGETIP} --password "<zfspassword>" [--mirror /dev/sdb] 
+or
+inv init.disk-mount --hosts ${TARGETIP} --password "<zfspassword>" [--mirror /dev/sdb]
 
 inv init.ssh-init-host-key --hosts ${TARGETIP} --hostnames ${TARGETNAME}
 inv init.nixos-generate-config --hosts ${TARGETIP} --hostnames ${TARGETNAME}
@@ -64,7 +64,7 @@ sops ./hosts/${TARGETNAME}/secrets.yml
 ####################################################
 
 # Add hostname in configurations.nix with minimalModules
-# Configure hosts/<hostname>/default.nix and hosts/<hostname>/hardware-configuration.nix 
+# Configure hosts/<hostname>/default.nix and hosts/<hostname>/hardware-configuration.nix
 
 # NixOS installation
 inv init.nixos-install --hostnames ${TARGETIP} --flakeattr ${TARGETNAME}

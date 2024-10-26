@@ -1,6 +1,6 @@
-# Run on destination nixos installation 
+# Run on destination nixos installation
 # export DIR_NIXSERVE=/persist/host/data/nix-serve
-# mkdir -p $DIR_NIXSERVE && cd $DIR_NIXSERVE  
+# mkdir -p $DIR_NIXSERVE && cd $DIR_NIXSERVE
 # nix-store --generate-binary-cache-key $(hostname).$(hostname -d) cache-priv-key.pem cache-pub-key.pem
 #
 # curl https://nixcache.adele.im:5000/nix-cache-info
@@ -14,7 +14,7 @@ let
 in
 lib.mkIf (roleEnabled)
 {
-  # Configure sops secret 
+  # Configure sops secret
   sops.secrets.nixserve-private-key = { };
 
   networking.firewall.allowedTCPPorts = [

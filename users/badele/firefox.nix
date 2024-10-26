@@ -114,7 +114,7 @@
         # tomato-clock # Pomodoro timer
         ublock-origin # addblocker
 
-        # Install manually addons 
+        # Install manually addons
         # Search AddonId with about:support
         # Fireshot
 

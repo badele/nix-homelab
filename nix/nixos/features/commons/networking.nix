@@ -39,7 +39,7 @@ in
             config.homelab.hosts)}
 
       # Alias
-      ${lib.concatMapStringsSep "\n" (host: 
+      ${lib.concatMapStringsSep "\n" (host:
           "${host.ip} ${host.name}.${domain} ${host.name}" )
         aliasIps}
     '';

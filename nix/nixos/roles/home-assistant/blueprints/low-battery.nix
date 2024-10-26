@@ -11,7 +11,7 @@ let
       };
 
       installPhase = ''
-        mkdir -p "$out/sbyx" 
+        mkdir -p "$out/sbyx"
         install -Dm444 "${src}/low-battery-level-detection-notification-for-all-battery-sensors.yaml" "$out/sbyx/"
       '';
     };

@@ -1,9 +1,9 @@
-{ config, lib, pkgs, inputs, ... }:
+{ config, pkgs, ... }:
 
 let
   cfg = config.xsession.windowManager.i3.config;
-  hexPalette = with inputs.nix-rice.lib;
-    palette.toRGBHex pkgs.rice.colorPalette;
+  # hexPalette = with inputs.nix-rice.lib;
+  # palette.toRGBHex pkgs.rice.colorPalette;
   lockTime = 4 * 60; # TODO: configurable desktop (10 min)/laptop (4 min)
   execAndNotify = cmd: mess: ''exec "${cmd}; notify-send '${mess}'"'';
 
@@ -37,8 +37,10 @@ let
   i3lock = "${pkgs.i3lock-color}/bin/i3lock-color";
   xidlehook = "${pkgs.xidlehook}/bin/xidlehook";
   lockCmd = "${i3lock} --blur 5";
-  terminal = "${pkgs.wezterm}/bin/wezterm";
-in {
+  # terminal = "${pkgs.wezterm}/bin/wezterm";
+  terminal = "${pkgs.kitty}/bin/kitty";
+in
+{
 
   imports = [
     # ./py3status.nix
@@ -54,31 +56,31 @@ in {
         modifier = mod;
         terminal = terminal;
 
-        fonts = {
-          names = [
-            "${config.fontProfiles.monospace.family}"
-            "${config.fontProfiles.fontawesome.family}"
-          ];
-          style = "Bold Semi-Condensed";
-          size = 12.0;
-        };
+        # fonts = {
+        #   names = [
+        #     "${config.fontProfiles.monospace.family}"
+        #     "${config.fontProfiles.fontawesome.family}"
+        #   ];
+        #   style = "Bold Semi-Condensed";
+        #   size = 12.0;
+        # };
 
-        colors = {
-          focused = {
-            background = hexPalette.background;
-            border = hexPalette.normal.magenta;
-            childBorder = hexPalette.normal.magenta;
-            indicator = hexPalette.normal.magenta;
-            text = hexPalette.bright.white;
-          };
-          unfocused = {
-            background = hexPalette.background;
-            border = hexPalette.dark-normal.white;
-            childBorder = hexPalette.dark-normal.white;
-            indicator = hexPalette.dark-normal.white;
-            text = hexPalette.bright.white;
-          };
-        };
+        # colors = {
+        #   focused = {
+        #     background = hexPalette.background;
+        #     border = hexPalette.normal.magenta;
+        #     childBorder = hexPalette.normal.magenta;
+        #     indicator = hexPalette.normal.magenta;
+        #     text = hexPalette.bright.white;
+        #   };
+        #   unfocused = {
+        #     background = hexPalette.background;
+        #     border = hexPalette.dark-normal.white;
+        #     childBorder = hexPalette.dark-normal.white;
+        #     indicator = hexPalette.dark-normal.white;
+        #     text = hexPalette.bright.white;
+        #   };
+        # };
 
         window = {
           titlebar = false;
@@ -139,11 +141,11 @@ in {
           "${mod}+p" = "exec --no-startup-id ${playerctl} play-pause";
           "${mod}+s" = "exec --no-startup-id ${playerctl} next";
           "${mod}+a" = "exec --no-startup-id autorandr -c";
-          "${mod}+b" = "exec --no-startup-id ${cfg.terminal} start --class winfloat  -- bluetuith";
-          "${mod}+d" = "exec --no-startup-id ${cfg.terminal} start --class winfloat  -- bashmount";
-          "${mod}+m" = "exec --no-startup-id ${cfg.terminal} start --class winfloat -- pulsemixer";
-          "${mod}+n" = "exec --no-startup-id ${cfg.terminal} start --class winfloat -- nmtui";
-          "${mod}+t" = "exec --no-startup-id ${cfg.terminal} start --class winfloat -- btop";
+          "${mod}+b" = "exec --no-startup-id ${cfg.terminal} --class winfloat -- bluetuith";
+          "${mod}+d" = "exec --no-startup-id ${cfg.terminal} --class winfloat -- bashmount";
+          "${mod}+m" = "exec --no-startup-id ${cfg.terminal} --class winfloat -- pulsemixer";
+          "${mod}+n" = "exec --no-startup-id ${cfg.terminal} --class winfloat -- nmtui";
+          "${mod}+t" = "exec --no-startup-id ${cfg.terminal} --class winfloat -- btop";
 
           # # Screen brightness controls
           "XF86MonBrightnessUp" =
@@ -252,26 +254,26 @@ in {
           statusCommand =
             "${i3status-rust} ~/.config/i3status-rust/config-top.toml";
 
-          colors = {
-            background = hexPalette.background;
-            statusline = hexPalette.normal.white;
-
-            inactiveWorkspace = {
-              border = hexPalette.normal.black;
-              background = hexPalette.background;
-              text = hexPalette.bright.black;
-            };
-            focusedWorkspace = {
-              border = hexPalette.normal.blue;
-              background = hexPalette.normal.blue;
-              text = hexPalette.bright.white;
-            };
-            urgentWorkspace = {
-              border = hexPalette.bright.red;
-              background = hexPalette.normal.red;
-              text = hexPalette.bright.white;
-            };
-          };
+          # colors = {
+          #   background = hexPalette.background;
+          #   statusline = hexPalette.normal.white;
+          #
+          #   inactiveWorkspace = {
+          #     border = hexPalette.normal.black;
+          #     background = hexPalette.background;
+          #     text = hexPalette.bright.black;
+          #   };
+          #   focusedWorkspace = {
+          #     border = hexPalette.normal.blue;
+          #     background = hexPalette.normal.blue;
+          #     text = hexPalette.bright.white;
+          #   };
+          #   urgentWorkspace = {
+          #     border = hexPalette.bright.red;
+          #     background = hexPalette.normal.red;
+          #     text = hexPalette.bright.white;
+          #   };
+          # };
         }];
 
         startup = [
@@ -283,7 +285,7 @@ in {
             notification = false;
           }
           {
-            command = "${feh} --bg-scale '${config.wallpaper}'";
+            command = "${feh} --bg-scale '${config.stylix.image}'";
             always = false;
             notification = false;
           }
@@ -298,7 +300,7 @@ in {
         assigns = {
           "${w2}" = [{ class = "Spotify"; }];
           "${w3}" = [{ class = "Discord"; }];
-          "${w7}" = [ { class = "Google-chrome"; } { class = "firefox"; } ];
+          "${w7}" = [{ class = "Google-chrome"; } { class = "firefox"; }];
           "${w9}" = [{ class = "VSCodium"; }];
         };
 
@@ -307,8 +309,6 @@ in {
           border = 1;
           titlebar = false;
           criteria = [
-            { class = "winfloat"; }
-
             # SDR
             { class = ".gnuradio-companion-wrapped"; }
             { class = "gqrx"; }
@@ -330,6 +330,10 @@ in {
 
         #for_window [class="pulsemixer"] floating enable border pixel $border
       };
+
+      extraConfig = ''
+        for_window [class="winfloat"] floating enable resize set 640 480 move absolute position center
+      '';
     };
   };
 }

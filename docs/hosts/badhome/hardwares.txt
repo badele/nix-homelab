@@ -1,92 +1,92 @@
-System:    Kernel: 6.0.17 x86_64 bits: 64 compiler: gcc v: 11.3.0 
-           parameters: initrd=\efi\nixos\9r5a9briz9xy0q7k3cfxl960qmxxb08j-initrd-linux-6.0.17-initrd.efi 
-           init=/nix/store/dzly5bnnnl5nlb50aky296bdmp2z373z-nixos-system-badhome-23.05.20230105.a518c77/init 
-           nohibernate loglevel=4 
-           Console: N/A DM: LightDM Distro: NixOS 23.05 (Stoat) 
-Machine:   Type: Laptop System: Dell product: XPS 15 9570 v: N/A serial: <filter> Chassis: 
-           type: 10 serial: <filter> 
-           Mobo: Dell model: 02MJVY v: A00 serial: <filter> UEFI: Dell v: 1.2.2 date: 06/07/2018 
-Memory:    RAM: total: 15.28 GiB used: 2.13 GiB (14.0%) 
-           Array-1: capacity: 32 GiB slots: 2 EC: None max-module-size: 16 GiB note: est. 
-           Device-1: DIMM A size: 8 GiB speed: 2667 MT/s type: DDR4 detail: synchronous 
-           bus-width: 64 bits total: 64 bits manufacturer: 80AD000080AD part-no: HMA81GS6AFR8N-VK 
-           serial: <filter> 
-           Device-2: DIMM B size: 8 GiB speed: 2667 MT/s type: DDR4 detail: synchronous 
-           bus-width: 64 bits total: 64 bits manufacturer: 80AD000080AD part-no: HMA81GS6AFR8N-VK 
-           serial: <filter> 
-PCI Slots: Slot: 0 type: x16 PCI Express J6B2 status: In Use length: Long 
-           Slot: 1 type: x1 PCI Express J6B1 status: Available length: Short 
-           Slot: 2 type: x1 PCI Express J6D1 status: Available length: Short 
-           Slot: 3 type: x1 PCI Express J7B1 status: Available length: Short 
-           Slot: 4 type: x1 PCI Express J8B4 status: In Use length: Short 
-           Slot: 5 type: x1 PCI Express J8D1 status: Available length: Short 
-           Slot: 6 type: x1 PCI Express J8D2 status: Available length: Short 
-           Slot: 7 type: 32-bit PCI J8B3 status: Available length: Short 
-CPU:       Info: 6-Core model: Intel Core i7-8750H socket: U3E1 bits: 64 type: MT MCP 
-           arch: Kaby Lake note: check family: 6 model-id: 9E (158) stepping: A (10) microcode: F0 
-           cache: L2: 9 MiB 
-           flags: avx avx2 lm nx pae sse sse2 sse3 sse4_1 sse4_2 ssse3 vmx bogomips: 52799 
-           Speed: 2200 MHz min/max: 800/4100 MHz base/boost: 2300/8300 volts: 0.9 V 
-           ext-clock: 100 MHz Core speeds (MHz): 1: 1405 2: 2200 3: 2200 4: 2200 5: 2200 6: 2200 
-           7: 2106 8: 2200 9: 1455 10: 2200 11: 2200 12: 2200 
-           Vulnerabilities: Type: itlb_multihit status: KVM: VMX disabled 
-           Type: l1tf mitigation: PTE Inversion; VMX: conditional cache flushes, SMT vulnerable 
-           Type: mds mitigation: Clear CPU buffers; SMT vulnerable 
-           Type: meltdown mitigation: PTI 
-           Type: mmio_stale_data mitigation: Clear CPU buffers; SMT vulnerable 
-           Type: retbleed mitigation: IBRS 
-           Type: spec_store_bypass mitigation: Speculative Store Bypass disabled via prctl 
-           Type: spectre_v1 mitigation: usercopy/swapgs barriers and __user pointer sanitization 
-           Type: spectre_v2 
-           mitigation: IBRS, IBPB: conditional, RSB filling, PBRSB-eIBRS: Not affected 
-           Type: srbds mitigation: Microcode 
-           Type: tsx_async_abort status: Not affected 
-Graphics:  Device-1: Intel CoffeeLake-H GT2 [UHD Graphics 630] vendor: Dell driver: i915 v: kernel 
-           bus-ID: 00:02.0 chip-ID: 8086:3e9b class-ID: 0300 
-           Device-2: NVIDIA GP107M [GeForce GTX 1050 Ti Mobile] vendor: Dell driver: N/A 
-           alternate: nvidiafb, nouveau bus-ID: 01:00.0 chip-ID: 10de:1c8c class-ID: 0302 
-           Device-3: Microdia Integrated_Webcam_HD type: USB driver: uvcvideo bus-ID: 1-12:4 
-           chip-ID: 0c45:671d class-ID: 0e02 
-           Display: server: X.org 1.20.14 driver: loaded: N/A tty: N/A 
-           Message: Advanced graphics data unavailable in console for root. 
-Audio:     Device-1: Intel Cannon Lake PCH cAVS vendor: Dell driver: snd_hda_intel v: kernel 
-           alternate: snd_soc_skl,snd_sof_pci_intel_cnl bus-ID: 00:1f.3 chip-ID: 8086:a348 
-           class-ID: 0403 
-           Sound Server-1: ALSA v: k6.0.17 running: yes 
-Network:   Device-1: Qualcomm Atheros QCA6174 802.11ac Wireless Network Adapter 
-           vendor: Rivet Networks Killer Wireless-n/a/ac 1535 driver: ath10k_pci v: kernel 
-           port: 3000 bus-ID: 3b:00.0 chip-ID: 168c:003e class-ID: 0280 
-           IF: wlp59s0 state: up mac: <filter> 
-           IP v4: <filter> type: dynamic noprefixroute scope: global broadcast: <filter> 
-           IP v6: <filter> type: noprefixroute scope: link 
-           WAN IP: <filter> 
-Bluetooth: Device-1: Qualcomm Atheros QCA61x4 Bluetooth 4.0 type: USB driver: btusb v: 0.8 
-           bus-ID: 1-4:2 chip-ID: 0cf3:e300 class-ID: e001 
-           Report: rfkill ID: hci0 rfk-id: 0 state: down bt-service: not found rfk-block: 
-           hardware: no software: no address: see --recommends 
-RAID:      Device-1: zroot type: zfs status: ONLINE level: linear size: 464 GiB free: 459 GiB 
-           allocated: 5.41 GiB 
-           Components: Online: N/A 
-Drives:    Local Storage: total: raw: 942.7 GiB usable: 1.37 TiB used: 5.48 GiB (0.4%) 
-           ID-1: /dev/nvme0n1 maj-min: 259:0 vendor: Toshiba model: KXG50ZNV512G NVMe 512GB 
-           size: 476.94 GiB block-size: physical: 512 B logical: 512 B speed: 31.6 Gb/s lanes: 4 
-           rotation: SSD serial: <filter> rev: AADA4105 temp: 31 Celsius C scheme: GPT 
-           SMART: yes health: PASSED on: 1y 87d 19h cycles: 1,665 read-units: 15,570,354 [7.97 TB] 
-           written-units: 38,380,319 [19.6 TB] 
-           ID-2: /dev/sda maj-min: 8:0 type: USB vendor: Western Digital model: WD5000BPVT-00HXZT3 
-           family: Scorpio Blue Serial ATA (AF) size: 465.76 GiB block-size: physical: 4096 B 
-           logical: 512 B sata: 2.6 speed: 3.0 Gb/s rotation: 5400 rpm serial: <filter> 
-           rev: 01.01A01 temp: 35 C scheme: MBR 
-           SMART: yes state: enabled health: PASSED on: 9d 20h cycles: 1018 
-Partition: ID-1: / raw-size: N/A size: 444.27 GiB used: 17.1 MiB (0.0%) fs: zfs 
-           logical: zroot/private/root 
-           ID-2: /boot raw-size: 1024 MiB size: 1022 MiB (99.80%) used: 111.3 MiB (10.9%) fs: vfat 
-           block-size: 512 B dev: /dev/nvme0n1p1 maj-min: 259:1 
-Swap:      Kernel: swappiness: 60 (default) cache-pressure: 100 (default) 
-           ID-1: swap-1 type: partition size: 8 GiB used: 0 KiB (0.0%) priority: -2 
-           dev: /dev/nvme0n1p2 maj-min: 259:2 
-Sensors:   System Temperatures: cpu: 54.0 C mobo: 33.0 C sodimm: SODIMM C 
-           Fan Speeds (RPM): cpu: 2493 
-Info:      Processes: 282 Uptime: 2h 19m wakeups: 1699 Init: systemd v: 252 
-           target: graphical.target tool: systemctl Compilers: gcc: 11.3.0 Packages: 
-           nix-default: 0 nix-sys: 656 lib: 152 nix-usr: 0 Client: Sudo v: 1.9.12p1 inxi: 3.3.04 
+System:    Kernel: 6.0.17 x86_64 bits: 64 compiler: gcc v: 11.3.0
+           parameters: initrd=\efi\nixos\9r5a9briz9xy0q7k3cfxl960qmxxb08j-initrd-linux-6.0.17-initrd.efi
+           init=/nix/store/dzly5bnnnl5nlb50aky296bdmp2z373z-nixos-system-badhome-23.05.20230105.a518c77/init
+           nohibernate loglevel=4
+           Console: N/A DM: LightDM Distro: NixOS 23.05 (Stoat)
+Machine:   Type: Laptop System: Dell product: XPS 15 9570 v: N/A serial: <filter> Chassis:
+           type: 10 serial: <filter>
+           Mobo: Dell model: 02MJVY v: A00 serial: <filter> UEFI: Dell v: 1.2.2 date: 06/07/2018
+Memory:    RAM: total: 15.28 GiB used: 2.13 GiB (14.0%)
+           Array-1: capacity: 32 GiB slots: 2 EC: None max-module-size: 16 GiB note: est.
+           Device-1: DIMM A size: 8 GiB speed: 2667 MT/s type: DDR4 detail: synchronous
+           bus-width: 64 bits total: 64 bits manufacturer: 80AD000080AD part-no: HMA81GS6AFR8N-VK
+           serial: <filter>
+           Device-2: DIMM B size: 8 GiB speed: 2667 MT/s type: DDR4 detail: synchronous
+           bus-width: 64 bits total: 64 bits manufacturer: 80AD000080AD part-no: HMA81GS6AFR8N-VK
+           serial: <filter>
+PCI Slots: Slot: 0 type: x16 PCI Express J6B2 status: In Use length: Long
+           Slot: 1 type: x1 PCI Express J6B1 status: Available length: Short
+           Slot: 2 type: x1 PCI Express J6D1 status: Available length: Short
+           Slot: 3 type: x1 PCI Express J7B1 status: Available length: Short
+           Slot: 4 type: x1 PCI Express J8B4 status: In Use length: Short
+           Slot: 5 type: x1 PCI Express J8D1 status: Available length: Short
+           Slot: 6 type: x1 PCI Express J8D2 status: Available length: Short
+           Slot: 7 type: 32-bit PCI J8B3 status: Available length: Short
+CPU:       Info: 6-Core model: Intel Core i7-8750H socket: U3E1 bits: 64 type: MT MCP
+           arch: Kaby Lake note: check family: 6 model-id: 9E (158) stepping: A (10) microcode: F0
+           cache: L2: 9 MiB
+           flags: avx avx2 lm nx pae sse sse2 sse3 sse4_1 sse4_2 ssse3 vmx bogomips: 52799
+           Speed: 2200 MHz min/max: 800/4100 MHz base/boost: 2300/8300 volts: 0.9 V
+           ext-clock: 100 MHz Core speeds (MHz): 1: 1405 2: 2200 3: 2200 4: 2200 5: 2200 6: 2200
+           7: 2106 8: 2200 9: 1455 10: 2200 11: 2200 12: 2200
+           Vulnerabilities: Type: itlb_multihit status: KVM: VMX disabled
+           Type: l1tf mitigation: PTE Inversion; VMX: conditional cache flushes, SMT vulnerable
+           Type: mds mitigation: Clear CPU buffers; SMT vulnerable
+           Type: meltdown mitigation: PTI
+           Type: mmio_stale_data mitigation: Clear CPU buffers; SMT vulnerable
+           Type: retbleed mitigation: IBRS
+           Type: spec_store_bypass mitigation: Speculative Store Bypass disabled via prctl
+           Type: spectre_v1 mitigation: usercopy/swapgs barriers and __user pointer sanitization
+           Type: spectre_v2
+           mitigation: IBRS, IBPB: conditional, RSB filling, PBRSB-eIBRS: Not affected
+           Type: srbds mitigation: Microcode
+           Type: tsx_async_abort status: Not affected
+Graphics:  Device-1: Intel CoffeeLake-H GT2 [UHD Graphics 630] vendor: Dell driver: i915 v: kernel
+           bus-ID: 00:02.0 chip-ID: 8086:3e9b class-ID: 0300
+           Device-2: NVIDIA GP107M [GeForce GTX 1050 Ti Mobile] vendor: Dell driver: N/A
+           alternate: nvidiafb, nouveau bus-ID: 01:00.0 chip-ID: 10de:1c8c class-ID: 0302
+           Device-3: Microdia Integrated_Webcam_HD type: USB driver: uvcvideo bus-ID: 1-12:4
+           chip-ID: 0c45:671d class-ID: 0e02
+           Display: server: X.org 1.20.14 driver: loaded: N/A tty: N/A
+           Message: Advanced graphics data unavailable in console for root.
+Audio:     Device-1: Intel Cannon Lake PCH cAVS vendor: Dell driver: snd_hda_intel v: kernel
+           alternate: snd_soc_skl,snd_sof_pci_intel_cnl bus-ID: 00:1f.3 chip-ID: 8086:a348
+           class-ID: 0403
+           Sound Server-1: ALSA v: k6.0.17 running: yes
+Network:   Device-1: Qualcomm Atheros QCA6174 802.11ac Wireless Network Adapter
+           vendor: Rivet Networks Killer Wireless-n/a/ac 1535 driver: ath10k_pci v: kernel
+           port: 3000 bus-ID: 3b:00.0 chip-ID: 168c:003e class-ID: 0280
+           IF: wlp59s0 state: up mac: <filter>
+           IP v4: <filter> type: dynamic noprefixroute scope: global broadcast: <filter>
+           IP v6: <filter> type: noprefixroute scope: link
+           WAN IP: <filter>
+Bluetooth: Device-1: Qualcomm Atheros QCA61x4 Bluetooth 4.0 type: USB driver: btusb v: 0.8
+           bus-ID: 1-4:2 chip-ID: 0cf3:e300 class-ID: e001
+           Report: rfkill ID: hci0 rfk-id: 0 state: down bt-service: not found rfk-block:
+           hardware: no software: no address: see --recommends
+RAID:      Device-1: zroot type: zfs status: ONLINE level: linear size: 464 GiB free: 459 GiB
+           allocated: 5.41 GiB
+           Components: Online: N/A
+Drives:    Local Storage: total: raw: 942.7 GiB usable: 1.37 TiB used: 5.48 GiB (0.4%)
+           ID-1: /dev/nvme0n1 maj-min: 259:0 vendor: Toshiba model: KXG50ZNV512G NVMe 512GB
+           size: 476.94 GiB block-size: physical: 512 B logical: 512 B speed: 31.6 Gb/s lanes: 4
+           rotation: SSD serial: <filter> rev: AADA4105 temp: 31 Celsius C scheme: GPT
+           SMART: yes health: PASSED on: 1y 87d 19h cycles: 1,665 read-units: 15,570,354 [7.97 TB]
+           written-units: 38,380,319 [19.6 TB]
+           ID-2: /dev/sda maj-min: 8:0 type: USB vendor: Western Digital model: WD5000BPVT-00HXZT3
+           family: Scorpio Blue Serial ATA (AF) size: 465.76 GiB block-size: physical: 4096 B
+           logical: 512 B sata: 2.6 speed: 3.0 Gb/s rotation: 5400 rpm serial: <filter>
+           rev: 01.01A01 temp: 35 C scheme: MBR
+           SMART: yes state: enabled health: PASSED on: 9d 20h cycles: 1018
+Partition: ID-1: / raw-size: N/A size: 444.27 GiB used: 17.1 MiB (0.0%) fs: zfs
+           logical: zroot/private/root
+           ID-2: /boot raw-size: 1024 MiB size: 1022 MiB (99.80%) used: 111.3 MiB (10.9%) fs: vfat
+           block-size: 512 B dev: /dev/nvme0n1p1 maj-min: 259:1
+Swap:      Kernel: swappiness: 60 (default) cache-pressure: 100 (default)
+           ID-1: swap-1 type: partition size: 8 GiB used: 0 KiB (0.0%) priority: -2
+           dev: /dev/nvme0n1p2 maj-min: 259:2
+Sensors:   System Temperatures: cpu: 54.0 C mobo: 33.0 C sodimm: SODIMM C
+           Fan Speeds (RPM): cpu: 2493
+Info:      Processes: 282 Uptime: 2h 19m wakeups: 1699 Init: systemd v: 252
+           target: graphical.target tool: systemctl Compilers: gcc: 11.3.0 Packages:
+           nix-default: 0 nix-sys: 656 lib: 152 nix-usr: 0 Client: Sudo v: 1.9.12p1 inxi: 3.3.04

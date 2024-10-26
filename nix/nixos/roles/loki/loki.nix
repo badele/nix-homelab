@@ -96,7 +96,7 @@ lib.mkIf (roleEnabled)
         proxy_pass http://127.0.0.1:${toString port_loki};
         proxy_set_header Host $host;
         proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection $connection_upgrade;      
+        proxy_set_header Connection $connection_upgrade;
       '';
     };
   };

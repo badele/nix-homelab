@@ -1,5 +1,33 @@
 # nix-homelab
 
+<!--toc:start-->
+
+- [nix-homelab](#nix-homelab)
+  - [Features](#features)
+    - [Roles](#roles)
+    - [User programs](#user-programs)
+    - [TUI floating panel configuration](#tui-floating-panel-configuration)
+  - [Documentation](#documentation)
+    - [Hosts](#hosts)
+    - [Network](#network)
+    - [Structure](#structure)
+  - [Usage](#usage)
+    - [Demo](#demo)
+      - [Installation](#installation)
+      - [Update](#update)
+      - [Re-use the demo](#re-use-the-demo)
+    - [Secrets initialisation (AGE & SOPS)](#secrets-initialisation-age-sops)
+    - [Homelab initialisation](#homelab-initialisation)
+    - [NixOS installation & update](#nixos-installation-update)
+      - [Update from you local computer/laptop](#update-from-you-local-computerlaptop)
+    - [Update roles or multiple hosts](#update-roles-or-multiple-hosts)
+  - [Commands](#commands)
+- [A big thanks ❤️](#a-big-thanks-️)
+
+<!--toc:end-->
+
+## Features
+
 This homelab entirelly managed by [NixOS](https://nixos.org/)
 
 All the configuration is stored on `homelab.json` file, you can do:
@@ -14,11 +42,11 @@ This documentation is generated from `homelab.json` file content
 
 <img width="100%" src="./docs/nixos.gif" />
 
-## Roles
+### Roles
 
 The main roles used in this home lab
 
-This list generated with `inv docs.all-pages` command
+This list generated with `just doc-update` command
 
 [comment]: (>>ROLES)
 
@@ -46,7 +74,7 @@ This list generated with `inv docs.all-pages` command
         <tr>
             <td><img width="32" src="https://freesvg.org/img/ftntp-client.png"></td>
             <td>ntp</td>
-            <td>rpi40, bootstore</td>
+            <td>rpi40, bootstore, srvhoma</td>
         <td>Network Time Protocol</td>
         <tr>
             <td><img width="32" src="https://developer.community.boschrexroth.com/t5/image/serverpage/image-id/13467i19FDFA6E5DC7C260?v=v2"></td>
@@ -117,7 +145,7 @@ This list generated with `inv docs.all-pages` command
 
 [comment]: (<<ROLES)
 
-## User programs
+### User programs
 
 | Logo                                                                                                                                                                                      | Name        | Description                                                                 |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------- |
@@ -130,7 +158,7 @@ This list generated with `inv docs.all-pages` command
 | [<img width="32" src="https://raw.githubusercontent.com/denisidoro/navi/master/assets/icon.png">](./nix/home-manager/features/term/base.nix)                                              | Navi        | [interactive cheatsheet tool](https://github.com/badele/vide)               |
 | [<img width="32" src="https://user-images.githubusercontent.com/28633984/66519056-2e840c80-eaef-11e9-8670-c767213c26ba.png">](https://github.com/badele/vide)                             | Neovim      | [**VIDE** (badele's customized nix neovim](https://github.com/badele/vide)  |
 
-## TUI floating panel configuration
+### TUI floating panel configuration
 
 | [<img width="320" src="./docs/floating_bluetooth.png">](./docs/floating_bluetooth.png) | [<img width="320" src="./docs/floating_disk.png">](./docs/floating_disk.png)       |
 | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
@@ -140,11 +168,13 @@ This list generated with `inv docs.all-pages` command
 | [<img width="320" src="./docs/floating_process.png">](./docs/floating_process.png)     |                                                                                    |
 | [Process](./docs/floating_process.gif) (`pulsemixer`)                                  |                                                                                    |
 
-## Hosts
+## Documentation
+
+### Hosts
 
 List of hosts composing the home lab
 
-This list generated with `inv docs.all-pages` command
+This list generated with `just doc-update` command
 
 [comment]: (>>HOSTS)
 
@@ -163,47 +193,32 @@ This list generated with `inv docs.all-pages` command
             <td><a href="./docs/hosts/router-living.md"><img width="32" src="https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32"></a></td>
             <td><a href="./docs/hosts/router-living.md">router-living</a>&nbsp;(192.168.254.254)</td>
             <td>MikroTik</td>
-            <td>Livingroom home mikrotik router</td>
+            <td>Livingroom mikrotik router</td>
         </tr><tr>
-            <td><a href="./docs/hosts/router-bedroom.md"><img width="32" src="https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32"></a></td>
-            <td><a href="./docs/hosts/router-bedroom.md">router-bedroom</a>&nbsp;(192.168.254.253)</td>
+            <td><a href="./docs/hosts/router-ladbedroom.md"><img width="32" src="https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32"></a></td>
+            <td><a href="./docs/hosts/router-ladbedroom.md">router-ladbedroom</a>&nbsp;(192.168.254.253)</td>
             <td>MikroTik</td>
-            <td>Bedroom home mikrotik router</td>
+            <td>Bedroom mikrotik router</td>
         </tr><tr>
             <td><a href="./docs/hosts/router-homeoffice.md"><img width="32" src="https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32"></a></td>
             <td><a href="./docs/hosts/router-homeoffice.md">router-homeoffice</a>&nbsp;(192.168.254.252)</td>
             <td>MikroTik</td>
-            <td>Office home mikrotik router</td>
+            <td>Office mikrotik router</td>
         </tr><tr>
-            <td><a href="./docs/hosts/sam.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Xfce_logo-footprint.svg/32px-Xfce_logo-footprint.svg.png"></a></td>
-            <td><a href="./docs/hosts/sam.md">sam</a>&nbsp;(192.168.0.18)</td>
+            <td><a href="./docs/hosts/sadhome.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
+            <td><a href="./docs/hosts/sadhome.md">sadhome</a>&nbsp;(192.168.254.200)</td>
             <td>NixOS</td>
-            <td>Samsung N110 Latop</td>
+            <td>Stephanie's laptop</td>
         </tr><tr>
-            <td><a href="./docs/hosts/latino.md"><img width="32" src="https://styles.redditmedia.com/t5_6sciw0/styles/communityIcon_h3cvittvupi91.png"></a></td>
-            <td><a href="./docs/hosts/latino.md">latino</a>&nbsp;(192.168.254.200)</td>
-            <td>NixOS</td>
-            <td>Dell Latitude E5540 Latop</td>
-        </tr><tr>
-            <td><a href="./docs/hosts/rpi40.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/fr/thumb/3/3b/Raspberry_Pi_logo.svg/32px-Raspberry_Pi_logo.svg.png"></a></td>
+            <td><a href="./docs/hosts/rpi40.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
             <td><a href="./docs/hosts/rpi40.md">rpi40</a>&nbsp;(192.168.254.101)</td>
             <td>NixOS</td>
-            <td>The Raspberry PI 4 storage server</td>
+            <td>The RPI 4 server</td>
         </tr><tr>
-            <td><a href="./docs/hosts/bootstore.md"><img width="32" src="https://simpleicons.org/icons/databricks.svg"></a></td>
+            <td><a href="./docs/hosts/bootstore.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
             <td><a href="./docs/hosts/bootstore.md">bootstore</a>&nbsp;(192.168.254.100)</td>
             <td>NixOS</td>
-            <td>HP Proliant Microserver N40L storage server</td>
-        </tr><tr>
-            <td><a href="./docs/hosts/badwork.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png"></a></td>
-            <td><a href="./docs/hosts/badwork.md">badwork</a>&nbsp;(192.168.254.189)</td>
-            <td>Nix</td>
-            <td>A work thinkpad</td>
-        </tr><tr>
-            <td><a href="./docs/hosts/badwork-eth.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/IBM_ThinkPad_logo_askew_badge.svg/32px-IBM_ThinkPad_logo_askew_badge.svg.png"></a></td>
-            <td><a href="./docs/hosts/badwork-eth.md">badwork-eth</a>&nbsp;(192.168.254.102)</td>
-            <td>Nix</td>
-            <td>A ethernet work thinkpad</td>
+            <td>HP Microserver N40L server</td>
         </tr><tr>
             <td><a href="./docs/hosts/badphone.md"><img width="32" src="https://cdn-icons-png.flaticon.com/512/38/38002.png"></a></td>
             <td><a href="./docs/hosts/badphone.md">badphone</a>&nbsp;(192.168.254.194)</td>
@@ -240,8 +255,18 @@ This list generated with `inv docs.all-pages` command
             <td>GoogleMini</td>
             <td>Google Mini room C</td>
         </tr><tr>
-            <td><a href="./docs/hosts/badxps.md"><img width="32" src="https://ih1.redbubble.net/image.201056839.4943/flat,32x32,075,t.jpg"></a></td>
+            <td><a href="./docs/hosts/b4d14.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
+            <td><a href="./docs/hosts/b4d14.md">b4d14</a>&nbsp;(192.168.254.124)</td>
+            <td>NixOS</td>
+            <td>Dell XPS 9560 Latop</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/badxps.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
             <td><a href="./docs/hosts/badxps.md">badxps</a>&nbsp;(192.168.254.114)</td>
+            <td>NixOS</td>
+            <td>Dell XPS 9570 Latop</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/badxps-eth.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
+            <td><a href="./docs/hosts/badxps-eth.md">badxps-eth</a>&nbsp;(192.168.254.179)</td>
             <td>NixOS</td>
             <td>Dell XPS 9570 Latop</td>
         </tr><tr>
@@ -250,15 +275,20 @@ This list generated with `inv docs.all-pages` command
             <td>Bridge</td>
             <td>Philips Hue bridge</td>
         </tr><tr>
-            <td><a href="./docs/hosts/sadhome.md"><img width="32" src="https://cdn.icon-icons.com/icons2/2699/PNG/512/archlinux_logo_icon_167835.png"></a></td>
-            <td><a href="./docs/hosts/sadhome.md">sadhome</a>&nbsp;(192.168.254.185)</td>
-            <td>ArchLinux</td>
-            <td>Stephanie's laptop</td>
+            <td><a href="./docs/hosts/srvhoma.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
+            <td><a href="./docs/hosts/srvhoma.md">srvhoma</a>&nbsp;(192.168.254.116)</td>
+            <td>NixOS</td>
+            <td>First NUC homelab server</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/vm-test.md"><img width="32" src="https://cdn.icon-icons.com/icons2/2699/PNG/512/qemu_logo_icon_169821.png"></a></td>
+            <td><a href="./docs/hosts/vm-test.md">vm-test</a>&nbsp;(127.0.0.1)</td>
+            <td>NixOS</td>
+            <td>qemu VM (SSH on port 2222)</td>
         </tr></table>
 
 [comment]: (<<HOSTS)
 
-## Network
+### Network
 
 |                                                          |
 | :------------------------------------------------------: |
@@ -268,7 +298,7 @@ This list generated with `inv docs.all-pages` command
 |       generated by `plantuml ./docs/network.puml`        |
 |          ![Network diagram](./docs/network.png)          |
 
-## Structure
+### Structure
 
 - **Configuration**
   - `homelab.json`: main homelab file configuration (roles servers, network,
@@ -287,75 +317,114 @@ This list generated with `inv docs.all-pages` command
     - `overlays`: overlays **nix derivations**
     - `pkgs`: custom nix packages
 
-## Homelab initialisation
+## Usage
+
+### Demo
+
+To test `nix-homelab` as well as the configuration of a workstation,
+`nix-homelab` offers a demo that runs on a virtual machine based on QEMU.
+
+![usb-installer](./docs/usb-installer.png)
+
+#### Installation
+
+- From your desktop
+  - `nix develop`
+  - `just iso-build`
+  - `just demo-qemu-nixos-install` (`demopass` password) Go for a walk or have a
+    coffee
+  - when the installation is completed, reboot the virtual machine (you can
+    write `reboot` on the terminal) and select
+    `Firmware Setup => Boot Manager => UEFI QEMU HardDisk`
+
+![reboot](docs/reboot.png)
+
+#### Update
+
+You can update from your remote desktop or directly from your recent installed
+desktop
+
+- From remote
+  - `just demo-qemu-nixos-update`
+
+- From your fresh installation
+  - `ssh root@localhost -p 2222` (`demopass` password)
+  - `ghq clone https://github.com/badele/nix-homelab.git`
+  - `cd ghq/github.com/badele/nix-homelab`
+  - `just nixos-update`
+
+#### Re-use the demo
+
+```bash
+just demo-start
+```
+
+### Secrets initialisation (AGE & SOPS)
+
+Your `pass` (passwordstore) configuration must be correctly configured.
+
+In order to be able to encrypt your credentials, you first need initialize an
+`age` key. It is this key that will subsequently have to be added in the
+`.sops.yaml` file
+
+- `age-keygen | pass insert -m nix-homelab/users/your_username`
+- `pass show nix-homelab/users/your_username | grep AGE-SECRET-KEY >> ~/.config/sops/age/keys.txt`
 
 ```
-inv init.domain-cert
-```
-
-## NixOS installation & update
+### NixOS installation & update
 
 See [Commons installation](docs//installation.md)
 
-### Update from you local computer/laptop
+#### Update from you local computer/laptop
 
-```
-# Local installation
-inv nixos.[build|test|deploy]
-inv home.[build|test|deploy]
-
-# Remote installation
-inv nixos.[build|test|deploy] --hostnames <hostname>,<hostname>,...
-inv home.[build|test|deploy] --username <username> --hostnames <hostname>,<hostname>,...
-```
-
-## Update roles or multiple hosts
-
-```
-# Simulate deployment(build)
-inv role.build --role <rolename>
-inv nixos.build --hosts <hostname>,<hostname>
-
-# Install
-inv role.deploy --role <rolename>
-inv nixos.deploy --hosts <hostname>,<hostname>
+- From your fresh installation
+  - `ghq clone https://github.com/badele/nix-homelab.git`
+  - `cd ghq/github.com/badele/nix-homelab`
+  - `just nixos-update`
 ```
 
 ## Commands
 
 Home lab commands list
 
-This list generated with `inv docs.all-pages` command
+This list generated with `just doc-update` command
 
-[comment]: (>>COMMANDS)
+<!-- COMMANDS -->
 
+```text
+Available recipes:
+    help                                              Help it showed if just is called without arguments
+    precommit-install                                 Setup pre-commit
+    precommit-update                                  Update pre-commit
+    precommit-check                                   precommit check
+    doc-update FAKEFILENAME                           Update documentation
+    lint                                              Lint the project
+    debug-repl                                        Repl the project
+    flake-metadata                                    Show flake metadata
+    flake-update                                      Update the flake
+    flake-check                                       Check the nix homelab configuration
+    passwd-generate                                   Generate random password
+    secret-update FILE                                Update secrets SOPS
+    nixos-init-host host                              Init nixos host if not exists
+    nixos-install hostname targetip port="22"         Install new <hostname> to <target>:<port> system wide
+    nixos-garbage                                     Nixos clean build cache and garbage unused derivations
+    nixos-build hostname="" options=""                Nixos build local host
+    demo-nixos-install hostname targetip port="22"    Install new <hostname> to <target>:<port> system wide
+    nixos-update hostname="" options=""               Update NixOS on local host
+    nixos-remote-deploy hostname targetip             Deploy NixOS on remote host
+    home-build                                        Home build for local user
+    home-deploy                                       Home deploy local user
+    iso-build                                         Build NixOS ISO image
+    demo-init-credentials passwd="demopass"           Init demo credentials
+    demo-start                                        Start NixOS demo from ISO image
+    demo-qemu-nixos-install                           Test NixOS installation deployment on qemu virutal machine
+    demo-qemu-nixos-update                            Test NixOS update deployment on qemu virutal machine
+    demo-stop                                         Stop demo vm test
+    demo-clean                                        Clean demo vm test
+    packages                                          Show installed packages
 ```
-Available tasks:
 
-  docs.all-pages               generate all homelab documentation
-  docs.host-pages              generate all homelab hosts page
-  docs.main-page               generate main homelab page
-  docs.scan-all-hosts          Retrieve all hosts system infromations
-  home.build                   Test to <hostnames> server
-  home.deploy                  Deploy to <hostnames> server
-  init.disk-format             Format disks with zfs
-  init.disk-mount              Mount disks from the installer
-  init.domain-cert             Init domain certificate
-  init.nix-serve               Init nix binary cache server <hostname> nix-
-                               serve private & public key
-  init.nixos-generate-config   Generate hardware configuration for the host
-  init.nixos-install           install nixos
-  init.ssh-init-host-key       Init ssh host key from nixos installation
-  nixos.boot                   rebuild boot to <hostnames> server
-  nixos.build                  Test to <hostnames> server
-  nixos.deploy                 Deploy to <hostnames> server
-  nixos.test                   Test to <hostnames> server
-  role.build                   Build for all hosts contains the role
-  role.deploy                  Deploy for all hosts contains the role
-  role.test                    Test for all hosts contains the role
-```
-
-[comment]: (<<COMMANDS)
+<!-- /COMMANDS -->
 
 # A big thanks ❤️
 

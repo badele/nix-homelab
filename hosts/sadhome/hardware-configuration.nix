@@ -5,7 +5,8 @@
 
 {
   imports =
-    [ (modulesPath + "/installer/scan/not-detected.nix")
+    [
+      (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "usb_storage" "sd_mod" "sr_mod" "sdhci_pci" ];
@@ -14,43 +15,49 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "zroot/private/root";
+    {
+      device = "zroot/private/root";
       fsType = "zfs";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/1EB0-D29C";
+    {
+      device = "/dev/disk/by-uuid/1EB0-D29C";
       fsType = "vfat";
     };
 
   fileSystems."/nix" =
-    { device = "zroot/public/nix";
+    {
+      device = "zroot/public/nix";
       fsType = "zfs";
     };
 
   fileSystems."/nix-homelab" =
-    { device = "zroot/public/nix-homelab";
+    {
+      device = "zroot/public/nix-homelab";
       fsType = "zfs";
     };
 
   fileSystems."/data" =
-    { device = "zroot/private/data";
+    {
+      device = "zroot/private/data";
       fsType = "zfs";
     };
 
   fileSystems."/persist/host" =
-    { device = "zroot/private/persist/host";
+    {
+      device = "zroot/private/persist/host";
       fsType = "zfs";
     };
 
   fileSystems."/persist/user" =
-    { device = "zroot/private/persist/user";
+    {
+      device = "zroot/private/persist/user";
       fsType = "zfs";
     };
 
   swapDevices =
-    [ { device = "/dev/disk/by-uuid/f00eba74-e309-4e50-bd7d-65191aa8c4c2"; }
-    ];
+    [{ device = "/dev/disk/by-uuid/f00eba74-e309-4e50-bd7d-65191aa8c4c2"; }];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's

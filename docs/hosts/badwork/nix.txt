@@ -5,4 +5,3 @@
  - version: `nix-env (Nix) 2.12.0`
  - channels(root): `"nixpkgs"`
  - nixpkgs: `/root/.nix-defexpr/channels/nixpkgs`
-

@@ -1,30 +1,41 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 {
 
   imports = [
     ../../../../../modules/nixos/host.nix
   ];
 
-  environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw 
-  services.xserver = {
-    enable = true;
-    #xkbVariant = "";
-    xkbOptions = "caps:shiftlock";
-    layout = "fr";
-    videoDrivers = [ "intel" "i965" "nvidia" ];
+  environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw
+  services = {
+    xserver = {
+      enable = true;
+      #xkbVariant = "";
+      xkb = {
+        options = "caps:shiftlock";
+        layout = "fr";
+      };
+      displayManager = {
+        lightdm.enable = true;
+        # defaultSession = config.hostprofile.autologin.session;
+      };
+
+      windowManager.i3.enable = true;
+    };
+
     displayManager = {
-      lightdm.enable = true;
-      defaultSession = config.hostprofile.autologin.session;
       autoLogin.user = config.hostprofile.autologin.user;
+      defaultSession = config.hostprofile.autologin.session;
     };
 
     # Touchpad
     libinput = {
       enable = true;
-      naturalScrolling = true;
-      middleEmulation = false;
-      tapping = true;
+      touchpad = {
+        naturalScrolling = true;
+        middleEmulation = false;
+        tapping = true;
+      };
     };
-    windowManager.i3.enable = true;
+
   };
 }
