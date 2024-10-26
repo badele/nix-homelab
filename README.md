@@ -3,18 +3,24 @@
 <!--toc:start-->
 
 - [nix-homelab](#nix-homelab)
-  - [Roles](#roles)
-  - [User programs](#user-programs)
-  - [TUI floating panel configuration](#tui-floating-panel-configuration)
-  - [Hosts](#hosts)
-  - [Network](#network)
-  - [Structure](#structure)
-  - [Demo](#demo)
-  - [AGE & SOPS initialisation](#age-sops-initialisation)
-  - [Homelab initialisation](#homelab-initialisation)
-  - [NixOS installation & update](#nixos-installation-update)
-    - [Update from you local computer/laptop](#update-from-you-local-computerlaptop)
-  - [Update roles or multiple hosts](#update-roles-or-multiple-hosts)
+  - [Features](#features)
+    - [Roles](#roles)
+    - [User programs](#user-programs)
+    - [TUI floating panel configuration](#tui-floating-panel-configuration)
+  - [Documentation](#documentation)
+    - [Hosts](#hosts)
+    - [Network](#network)
+    - [Structure](#structure)
+  - [Usage](#usage)
+    - [Demo](#demo)
+      - [Installation](#installation)
+      - [Update](#update)
+      - [Re-use the demo](#re-use-the-demo)
+    - [Secrets initialisation (AGE & SOPS)](#secrets-initialisation-age-sops)
+    - [Homelab initialisation](#homelab-initialisation)
+    - [NixOS installation & update](#nixos-installation-update)
+      - [Update from you local computer/laptop](#update-from-you-local-computerlaptop)
+    - [Update roles or multiple hosts](#update-roles-or-multiple-hosts)
   - [Commands](#commands)
 - [A big thanks ❤️](#a-big-thanks-️)
 
@@ -40,7 +46,7 @@ This documentation is generated from `homelab.json` file content
 
 The main roles used in this home lab
 
-This list generated with `inv docs.all-pages` command
+This list generated with `just doc-update` command
 
 [comment]: (>>ROLES)
 
@@ -168,7 +174,7 @@ This list generated with `inv docs.all-pages` command
 
 List of hosts composing the home lab
 
-This list generated with `inv docs.all-pages` command
+This list generated with `just doc-update` command
 
 [comment]: (>>HOSTS)
 
@@ -305,7 +311,7 @@ This list generated with `inv docs.all-pages` command
     - `overlays`: overlays **nix derivations**
     - `pkgs`: custom nix packages
 
-## Installation
+## Usage
 
 ### Demo
 
@@ -339,10 +345,15 @@ desktop
   - `ssh root@localhost -p 2222` (`demopass` password)
   - `ghq clone https://github.com/badele/nix-homelab.git`
   - `cd ghq/github.com/badele/nix-homelab`
-  - `nix develop` (optional)
   - `just nixos-update`
 
-## AGE & SOPS initialisation
+#### Re-use the demo
+
+```bash
+just demo-start
+```
+
+### Secrets initialisation (AGE & SOPS)
 
 Your `pass` (passwordstore) configuration must be correctly configured.
 
@@ -353,45 +364,24 @@ In order to be able to encrypt your credentials, you first need initialize an
 - `age-keygen | pass insert -m nix-homelab/users/your_username`
 - `pass show nix-homelab/users/your_username | grep AGE-SECRET-KEY >> ~/.config/sops/age/keys.txt`
 
-## Homelab initialisation
-
 ```
-inv init.domain-cert
-```
-
-## NixOS installation & update
+### NixOS installation & update
 
 See [Commons installation](docs//installation.md)
 
-### Update from you local computer/laptop
+#### Update from you local computer/laptop
 
-```
-# Local installation
-inv nixos.[build|test|deploy]
-inv home.[build|test|deploy]
-
-# Remote installation
-inv nixos.[build|test|deploy] --hostnames <hostname>,<hostname>,...
-inv home.[build|test|deploy] --username <username> --hostnames <hostname>,<hostname>,...
-```
-
-## Update roles or multiple hosts
-
-```
-# Simulate deployment(build)
-inv role.build --role <rolename>
-inv nixos.build --hosts <hostname>,<hostname>
-
-# Install
-inv role.deploy --role <rolename>
-inv nixos.deploy --hosts <hostname>,<hostname>
+- From your fresh installation
+  - `ghq clone https://github.com/badele/nix-homelab.git`
+  - `cd ghq/github.com/badele/nix-homelab`
+  - `just nixos-update`
 ```
 
 ## Commands
 
 Home lab commands list
 
-This list generated with `inv docs.all-pages` command
+This list generated with `just doc-update` command
 
 <!-- COMMANDS -->
 

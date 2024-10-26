@@ -9,7 +9,8 @@
 }:
 {
   imports = [
-    #inputs.sops-nix.nixosModules.sops
+    # Common tools and packages for all root user hosts
+    ./commons.nix
   ];
 
   home = {
