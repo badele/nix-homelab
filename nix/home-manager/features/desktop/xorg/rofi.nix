@@ -3,7 +3,7 @@
   programs.rofi =
     {
       enable = true;
-      theme = "solarized";
+      # theme = "solarized";
       extraConfig = {
         modi = "drun";
         font = "Source Code Pro 18";

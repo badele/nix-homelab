@@ -11,18 +11,18 @@
   imports = [
     ./hardware-configuration.nix
     ./disks.nix
-    #inputs.hardware.nixosModules.dell-xps-15-9560
     ../../nix/modules/nixos/host.nix
 
     # Users
+    # /home/badele/ghq/github.com/badele/nix-homelab/nix/nixos/features/commons/sops.nix
+    # Secret loaded from hosts/${config.networking.hostName}/secrets.yml";
+
     ../root.nix
     ../demo.nix
 
     # Commons
     ../../nix/nixos/features/commons
     ../../nix/nixos/features/homelab
-    # ../../nix/nixos/features/system/containers.nix
-    # ../../nix/nixos/features/system/virtualisation.nix
 
     # i3
     ../../nix/nixos/features/desktop/wm/xorg/lightdm.nix
@@ -88,6 +88,7 @@
   ####################################
 
   # Pulseaudio
+  services.pipewire.enable = false;
   hardware.pulseaudio = {
     enable = true;
     support32Bit = true; ## If compatibility with 32-bit applications is desired

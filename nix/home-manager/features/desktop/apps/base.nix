@@ -11,7 +11,7 @@
     ./pulseaudio.nix
 
     # Misc
-    ./wezterm.nix
+    ./kitty.nix
     ./wpa-gui.nix
   ];
 

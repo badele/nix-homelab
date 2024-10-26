@@ -9,11 +9,13 @@
 }:
 {
   imports = [
+    inputs.hardware.nixosModules.dell-xps-15-9570-intel
     ./hardware-configuration.nix
-    #inputs.hardware.nixosModules.dell-xps-15-9560
+
+    # homelab modules
     ../../nix/modules/nixos/host.nix
 
-    # Users
+    # Users account
     ../root.nix
     ../badele.nix
 
@@ -21,13 +23,16 @@
     ../../nix/nixos/features/commons
     ../../nix/nixos/features/homelab
     ../../nix/nixos/features/system/containers.nix
-    ../../nix/nixos/features/system/virtualisation.nix
+
+    # Virtualisation
+    ../../nix/nixos/features/virtualisation/incus.nix
+    ../../nix/nixos/features/virtualisation/libvirt.nix
 
     # Desktop
     ../../nix/nixos/features/system/bluetooth.nix
     ../../nix/nixos/features/desktop/wm/xorg/lightdm.nix
-
-    # Roles
+    #
+    # # Roles
     ../../nix/nixos/roles # Automatically load service from <host.modules> sectionn from `homelab.json` file
   ];
 
@@ -35,10 +40,16 @@
   # Boot
   ####################################
 
+  nixpkgs.config = {
+    # allowBroken = true;
+    # nvidia.acceptLicense = true;
+  };
+
   boot = {
+    kernelPackages = pkgs.linuxPackages_6_6;
     kernelParams = [
+      "i915.force_probe=3e9b"
       "mem_sleep_default=deep"
-      "nouveau.blacklist=0"
       "acpi_osi=!"
       "acpi_osi=\"Windows 2015\""
       "acpi_backlight=vendor"
@@ -48,7 +59,7 @@
 
     kernelModules = [ "kvm-intel" ];
     #extraModulePackages = [ pkgs.linuxPackages.nvidia_x11 ];
-    supportedFilesystems = [ "zfs" ];
+    supportedFilesystems = [ "zfs" "ntfs" ];
     zfs = {
       requestEncryptionCredentials = true;
       extraPools = [ "zroot" ];
@@ -67,8 +78,8 @@
   };
 
   # xorg
-  #videoDrivers = [ "intel" "i965" "nvidia" ];
-  services.xserver.videoDrivers = [ "intel" "i965" "nvidia" ];
+  # services.xserver.videoDrivers = [ "intel" "i965" "nvidia" ];
+  services.xserver.videoDrivers = [ "modesetting" ];
   #services.xserver.videoDrivers = [ "nvidia" ];
   #hardware.opengl.enable = true;
   #hardware.nvidia.package = boot.kernelPackages.nvidiaPackages.stable;
@@ -91,19 +102,43 @@
   ####################################
 
 
+  # Enable OpenGL acceleration
+  hardware.graphics.enable = true;
+
+  # intel
+  hardware.opengl = {
+    enable = true;
+    extraPackages = with pkgs; [
+      vpl-gpu-rt # for newer GPUs on NixOS >24.05 or unstable
+    ];
+  };
+
   # Nvidia
-  hardware.opengl.enable = true;
-  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
-  hardware.nvidia.modesetting.enable = true;
-  hardware.bumblebee.enable = true;
-  hardware.bumblebee.pmMethod = "none"; # Needs nixos-unstable
-  nixpkgs.config.nvidia.acceptLicense = true;
+  # hardware.nvidia = {
+  #   open = false;
+  #   # modesetting.enable = true;
+  #   # powerManagement.enable = false;
+  #   # powerManagement.finegrained = false;
+  #   # nvidiaSettings = true;
+  #   package = config.boot.kernelPackages.nvidiaPackages.production; # 550.90.07
+  #   #
+  #   # # sudo lshw -c display
+  #   # # Convert the hex result to decimal bus PCI, ex: 0e:00:00 to 14:0:0
+  #   # prime = {
+  #   #   intelBusId = "PCI:0:2:0";
+  #   #   nvidiaBusId = "PCI:1:0:0";
+  #   # };
+  # };
+
+  # hardware.bumblebee.enable = true;
+  # hardware.bumblebee.pmMethod = "none"; # Needs nixos-unstable
   # hardware.nvidia.optimus_prime = {
   #   intelBusId = "PCI:0:2:0";
   #   nvidiaBusId = "PCI:1:0:0";
   # };
 
   # Pulseaudio
+  services.pipewire.enable = false;
   hardware.pulseaudio = {
     enable = true;
     support32Bit = true; ## If compatibility with 32-bit applications is desired
@@ -138,5 +173,5 @@
   };
 
   nixpkgs.hostPlatform.system = "x86_64-linux";
-  system.stateVersion = "22.11";
+  system.stateVersion = "24.05";
 }

@@ -1,5 +1,27 @@
 # nix-homelab
 
+<!--toc:start-->
+
+- [nix-homelab](#nix-homelab)
+  - [Roles](#roles)
+  - [User programs](#user-programs)
+  - [TUI floating panel configuration](#tui-floating-panel-configuration)
+  - [Hosts](#hosts)
+  - [Network](#network)
+  - [Structure](#structure)
+  - [Demo](#demo)
+  - [AGE & SOPS initialisation](#age-sops-initialisation)
+  - [Homelab initialisation](#homelab-initialisation)
+  - [NixOS installation & update](#nixos-installation-update)
+    - [Update from you local computer/laptop](#update-from-you-local-computerlaptop)
+  - [Update roles or multiple hosts](#update-roles-or-multiple-hosts)
+  - [Commands](#commands)
+- [A big thanks ❤️](#a-big-thanks-️)
+
+<!--toc:end-->
+
+## Features
+
 This homelab entirelly managed by [NixOS](https://nixos.org/)
 
 All the configuration is stored on `homelab.json` file, you can do:
@@ -14,7 +36,7 @@ This documentation is generated from `homelab.json` file content
 
 <img width="100%" src="./docs/nixos.gif" />
 
-## Roles
+### Roles
 
 The main roles used in this home lab
 
@@ -117,7 +139,7 @@ This list generated with `inv docs.all-pages` command
 
 [comment]: (<<ROLES)
 
-## User programs
+### User programs
 
 | Logo                                                                                                                                                                                      | Name        | Description                                                                 |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------- |
@@ -130,7 +152,7 @@ This list generated with `inv docs.all-pages` command
 | [<img width="32" src="https://raw.githubusercontent.com/denisidoro/navi/master/assets/icon.png">](./nix/home-manager/features/term/base.nix)                                              | Navi        | [interactive cheatsheet tool](https://github.com/badele/vide)               |
 | [<img width="32" src="https://user-images.githubusercontent.com/28633984/66519056-2e840c80-eaef-11e9-8670-c767213c26ba.png">](https://github.com/badele/vide)                             | Neovim      | [**VIDE** (badele's customized nix neovim](https://github.com/badele/vide)  |
 
-## TUI floating panel configuration
+### TUI floating panel configuration
 
 | [<img width="320" src="./docs/floating_bluetooth.png">](./docs/floating_bluetooth.png) | [<img width="320" src="./docs/floating_disk.png">](./docs/floating_disk.png)       |
 | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
@@ -140,7 +162,9 @@ This list generated with `inv docs.all-pages` command
 | [<img width="320" src="./docs/floating_process.png">](./docs/floating_process.png)     |                                                                                    |
 | [Process](./docs/floating_process.gif) (`pulsemixer`)                                  |                                                                                    |
 
-## Hosts
+## Documentation
+
+### Hosts
 
 List of hosts composing the home lab
 
@@ -258,11 +282,11 @@ This list generated with `inv docs.all-pages` command
 
 [comment]: (<<HOSTS)
 
-## Network
+### Network
 
 ![Network diagram](./docs/network.png)
 
-## Structure
+### Structure
 
 - **Configuration**
   - `homelab.json`: main homelab file configuration (roles servers, network,
@@ -281,36 +305,41 @@ This list generated with `inv docs.all-pages` command
     - `overlays`: overlays **nix derivations**
     - `pkgs`: custom nix packages
 
-## Demo
+## Installation
+
+### Demo
 
 To test `nix-homelab` as well as the configuration of a workstation,
 `nix-homelab` offers a demo that runs on a virtual machine based on QEMU.
 
 ![usb-installer](./docs/usb-installer.png)
 
-**Install**
+#### Installation
 
-- Boot on livecd on your new installation device
 - From your desktop
   - `nix develop`
-  - `j iso-build`
-  - `j demo-qemu-nixos-install` (`demopass` password) Go for a walk or have a
-    coffee, when the installation is completed, reboot the virtual machine and
-    select `Firmware Setup => Boot Manager => UEFI QEMU HardDisk`
+  - `just iso-build`
+  - `just demo-qemu-nixos-install` (`demopass` password) Go for a walk or have a
+    coffee
+  - when the installation is completed, reboot the virtual machine (you can
+    write `reboot` on the terminal) and select
+    `Firmware Setup => Boot Manager => UEFI QEMU HardDisk`
 
-**Update**
+![reboot](docs/reboot.png)
+
+#### Update
 
 You can update from your remote desktop or directly from your recent installed
 desktop
 
 - From remote
-  - `j demo-qemu-nixos-update`
+  - `just demo-qemu-nixos-update`
 
-- From a new installed desktop
+- From your fresh installation
   - `ssh root@localhost -p 2222` (`demopass` password)
   - `ghq clone https://github.com/badele/nix-homelab.git`
   - `cd ghq/github.com/badele/nix-homelab`
-  - `nix develop`
+  - `nix develop` (optional)
   - `just nixos-update`
 
 ## AGE & SOPS initialisation
@@ -375,10 +404,14 @@ Available recipes:
     doc-update FAKEFILENAME                           Update documentation
     lint                                              Lint the project
     debug-repl                                        Repl the project
+    flake-metadata                                    Show flake metadata
+    flake-update                                      Update the flake
+    flake-check                                       Check the nix homelab configuration
     passwd-generate                                   Generate random password
     secret-update FILE                                Update secrets SOPS
     nixos-init-host host                              Init nixos host if not exists
     nixos-install hostname targetip port="22"         Install new <hostname> to <target>:<port> system wide
+    nixos-garbage                                     Nixos clean build cache and garbage unused derivations
     nixos-build hostname="" options=""                Nixos build local host
     demo-nixos-install hostname targetip port="22"    Install new <hostname> to <target>:<port> system wide
     nixos-update hostname="" options=""               Update NixOS on local host

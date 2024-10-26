@@ -7,7 +7,7 @@ SSHPASS := "nixosusb"
 # This help
 # Help it showed if just is called without arguments
 @help:
-    just -lu | column -s '#' -t | sed 's/[ \t]*$//'
+    just -l -u | column -s '#' -t | sed 's/[ \t]*$//'
 
 ###############################################################################
 # Pre-commit
@@ -46,6 +46,25 @@ precommit-install:
 @debug-repl:
     nix repl --extra-experimental-features repl-flake .#
 
+###############################################################################
+# Flake
+###############################################################################
+
+# Show flake metadata
+@flake-metadata:
+    nix flake metadata
+
+# Update the flake
+@flake-update:
+    nix flake update
+
+# @flake-sync-registry:
+#     nix flake metadata --json | jq -r '.locks.nodes."nixpkgs".locked.rev'
+#     nix flake metadata --json | jq -r '.locks.nodes."home-manager".locked.rev'
+
+# Check the nix homelab configuration
+@flake-check:
+    nix flake check
 
 ###############################################################################
 # NIXOS installer
@@ -118,7 +137,11 @@ nixos-install hostname targetip port="22":
 
 [private]
 nixos-command action hostname="" options="":
-    echo sudo nixos-rebuild {{ action }} {{ options }} --fast --option accept-flake-config true --flake .#{{ hostname }}
+    sudo nixos-rebuild {{ action }} {{ options }} --fast --option accept-flake-config true --flake .#{{ hostname }}
+
+# Nixos clean build cache and garbage unused derivations
+@nixos-garbage:
+    sudo nix-collect-garbage -d
 
 # Nixos build local host
 @nixos-build hostname="" options="":

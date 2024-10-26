@@ -2,10 +2,10 @@
 rec {
   gtk = {
     enable = true;
-    font = {
-      name = config.fontProfiles.regular.family;
-      size = 12;
-    };
+    # font = {
+    #   name = config.fontProfiles.regular.family;
+    #   size = 12;
+    # };
     # theme = {
     #   name = "${config.colorscheme.slug}";
     #   package = gtkThemeFromScheme { scheme = config.colorscheme; };

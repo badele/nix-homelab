@@ -3,24 +3,31 @@
 ##########################################################
 { config
 , inputs
-, outputs
 , pkgs
 , lib
 , ...
 }:
 let
   feh = "${pkgs.feh}/bin/feh";
+  theme = "${pkgs.base16-schemes}/share/themes/catppuccin-latte.yaml";
+  wallpaper = pkgs.runCommand "image.png" { } ''
+    COLOR=$(${pkgs.yq}/bin/yq -r .base00 ${theme})
+    COLOR="#"$COLOR
+    ${pkgs.imagemagick}/bin/magick convert -size 1920x1080 xc:$COLOR $out
+  '';
 in
 {
   imports = [
-    # User
+    # homelab Modules
+    ../../nix/modules/home-manager/font.nix
+    ../../nix/modules/home-manager/userconf.nix
+
+    # Common tools and packages for all badele user hosts
     ./commons.nix
 
-    # Commons packages
-    ../../nix/home-manager/commons/packages.nix
-
     # Editor
-    ../../nix/home-manager/features/term/editor/lazyvim.nix
+    # INFO: I use my independant neovim configuration => https://github.com/badele/vides
+    # ../../nix/home-manager/features/term/editor/lazyvim.nix
 
     # Term
     ../../nix/home-manager/features/term/base.nix
@@ -32,28 +39,23 @@ in
     ../../nix/home-manager/features/language/python.nix
 
     # Desktop
-    ../../nix/home-manager/features/desktop/commons/base.nix
+    ../../nix/home-manager/features/desktop/apps/base.nix
     ../../nix/home-manager/features/desktop/xorg/base.nix
     ../../nix/home-manager/features/desktop/xorg/wm/i3.nix
 
     # Web browser
-    ../../nix/home-manager/features/desktop/commons/google-chrome.nix
+    ../../nix/home-manager/features/desktop/apps/google-chrome.nix
     ../../users/badele/firefox.nix
 
     # Multimedia
-    ../../nix/home-manager/features/desktop/commons/spotify.nix
-
-    # Development term
-    ../../nix/home-manager/features/term/development/base.nix
+    ../../nix/home-manager/features/desktop/apps/spotify.nix
 
     # Development desktop
-    ../../nix/home-manager/features/desktop/commons/development/packages.nix
-    ../../nix/home-manager/features/desktop/commons/development/vscode.nix
+    ../../nix/home-manager/features/desktop/apps/development/vscode.nix
 
     # Virtualisation
     ../../nix/home-manager/features/desktop/xorg/virtualisation.nix
-
-  ] ++ (builtins.attrValues outputs.homeManagerModules);
+  ];
 
 
   ###############################################################################
@@ -64,6 +66,52 @@ in
     openscad
     librecad
     solvespace
+
+    # MQTT
+    mosquitto
+    mqttui
+
+    ##################################"
+    # Development
+    ##################################"
+
+    # TypeScript / JavaScript
+    # deno # javascript engine
+    # nodejs
+
+    # Go
+    # go
+
+    ##################################"
+    # Cloud & co
+    ##################################"
+    awscli2 # AWS CLI
+    kubectl # Kubernetes CLI
+    kubectx # Kubernetes CLI
+    k9s # Kubernetes CLI
+    kubernetes-helm # Helm
+    argocd # ArgoCD CLI
+
+    # Network
+    ipcalc # IP subnetcalculator
+    trippy # mtr traceroute alternative
+
+    # Graphics
+    geeqie
+    gifsicle
+    gimp
+    imagemagick
+    inkscape
+
+    # Office
+    discord
+    libreoffice
+
+    # Misc
+    xclip
+
+    # VPN
+    wireguard-tools
   ];
 
 
@@ -101,13 +149,45 @@ in
           };
           hooks.postswitch = ''
             ${pkgs.i3}/bin/i3-msg restart
-            ${feh} --bg-scale '${config.wallpaper}'
+            ${feh} --bg-scale '${config.stylix.image}'
           '';
         };
       };
     };
   };
 
-  # inv home.deploy ; neofetch ; ll
-  wallpaper = pkgs.wallpapers.forest-deer-landscape;
+  # You can preview the palette at ~/.config/stylix/palette.html
+  stylix.enable = true;
+  stylix.autoEnable = true;
+
+  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+  stylix.image = pkgs.fetchurl {
+    url = "https://w.wallhaven.cc/full/0w/wallhaven-0w3pdr.jpg";
+    sha256 = "sha256-xrLfcRkr6TjTW464GYf9XNFHRe5HlLtjpB0LQAh/l6M=";
+  };
+
+  # Disable neovim, it managed by https://github.com/badele/vide
+  stylix.targets.neovim.enable = false;
+
+  stylix.fonts = {
+    serif = {
+      package = pkgs.dejavu_fonts;
+      name = "DejaVu Serif";
+    };
+
+    sansSerif = {
+      package = pkgs.dejavu_fonts;
+      name = "DejaVu Sans";
+    };
+
+    monospace = {
+      package = pkgs.dejavu_fonts;
+      name = "DejaVu Sans Mono";
+    };
+
+    emoji = {
+      package = pkgs.noto-fonts-emoji;
+      name = "Noto Color Emoji";
+    };
+  };
 }

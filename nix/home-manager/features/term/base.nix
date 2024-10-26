@@ -8,14 +8,13 @@
 {
 
   imports = [
+    # Hardware informations
     ./tools/inxi.nix
 
     # Shell
-    # ./tools/starship.nix
     ./tools/zsh.nix
 
     # # Misc
-    ./tools/broot.nix
     ./tools/htop.nix
     ./tools/neofetch.nix
     ./tools/top
@@ -43,6 +42,8 @@
 
   # # NOTE: By default all programs enabled for the all shells
   programs = {
+    yazi.enable = true; # Filemanager
+    starship.enable = true; # Terminal prompt
     home-manager.enable = true;
     git.enable = true;
     nix-index.enable = true; # command not found and nix-locate
@@ -62,6 +63,7 @@
     };
 
     # Cheats navigators
+    # alias: lnavi (local search)
     navi = {
       enable = true;
       settings = {
@@ -87,5 +89,11 @@
     };
   };
 
-  home.packages = with pkgs ; [ ];
+  home.packages = with pkgs; [
+    act # Run your GitHub Actions locally
+    delta # A syntax-highlighting pager for git
+    ghq # Remote repository management made easy
+    direnv # load environment when on the current directory
+  ];
+
 }

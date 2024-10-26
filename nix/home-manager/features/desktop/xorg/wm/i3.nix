@@ -37,7 +37,8 @@ let
   i3lock = "${pkgs.i3lock-color}/bin/i3lock-color";
   xidlehook = "${pkgs.xidlehook}/bin/xidlehook";
   lockCmd = "${i3lock} --blur 5";
-  terminal = "${pkgs.wezterm}/bin/wezterm";
+  # terminal = "${pkgs.wezterm}/bin/wezterm";
+  terminal = "${pkgs.kitty}/bin/kitty";
 in
 {
 
@@ -140,11 +141,11 @@ in
           "${mod}+p" = "exec --no-startup-id ${playerctl} play-pause";
           "${mod}+s" = "exec --no-startup-id ${playerctl} next";
           "${mod}+a" = "exec --no-startup-id autorandr -c";
-          "${mod}+b" = "exec --no-startup-id ${cfg.terminal} start --class winfloat  -- bluetuith";
-          "${mod}+d" = "exec --no-startup-id ${cfg.terminal} start --class winfloat  -- bashmount";
-          "${mod}+m" = "exec --no-startup-id ${cfg.terminal} start --class winfloat -- pulsemixer";
-          "${mod}+n" = "exec --no-startup-id ${cfg.terminal} start --class winfloat -- nmtui";
-          "${mod}+t" = "exec --no-startup-id ${cfg.terminal} start --class winfloat -- btop";
+          "${mod}+b" = "exec --no-startup-id ${cfg.terminal} --class winfloat -- bluetuith";
+          "${mod}+d" = "exec --no-startup-id ${cfg.terminal} --class winfloat -- bashmount";
+          "${mod}+m" = "exec --no-startup-id ${cfg.terminal} --class winfloat -- pulsemixer";
+          "${mod}+n" = "exec --no-startup-id ${cfg.terminal} --class winfloat -- nmtui";
+          "${mod}+t" = "exec --no-startup-id ${cfg.terminal} --class winfloat -- btop";
 
           # # Screen brightness controls
           "XF86MonBrightnessUp" =
@@ -308,8 +309,6 @@ in
           border = 1;
           titlebar = false;
           criteria = [
-            { class = "winfloat"; }
-
             # SDR
             { class = ".gnuradio-companion-wrapped"; }
             { class = "gqrx"; }
@@ -331,6 +330,10 @@ in
 
         #for_window [class="pulsemixer"] floating enable border pixel $border
       };
+
+      extraConfig = ''
+        for_window [class="winfloat"] floating enable resize set 640 480 move absolute position center
+      '';
     };
   };
 }
