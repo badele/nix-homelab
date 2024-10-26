@@ -4,7 +4,7 @@ keys:
     - &badele age15js628ku59g94njn0vup20r4xx34guesgsj5dqsken5hma2zqg2szjed66
     - &demo age1x703g2zquc2uv5lzz79rvj3m9g868wft6lp8g5sp9qsnaa3ld5esas4nqk
   # Hosts
-  - &hosts: # j nixos-init-host <HOST>
+  - &hosts: # just nixos-init-host <HOST>
     - &rpi40 age152ud7upe5xylsvf7kkfpdz6x99r6hcmkam8gwntfdv0px70f0u0sqzc8qe
     - &sadhome age1qfarvkm9ejyfu785vmawj5vve3uffsh7r78pef4ec3njl9vfgs2sx3524g
     - &sam age1x363tjjzx6j77j3m4zynkjgyj38qcyf4wah5mc8mtjt5yt6zvgxqr3z7px

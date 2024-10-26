@@ -43,12 +43,6 @@
 
     # Color scheme
     stylix.url = "github:danth/stylix";
-
-    # Precomit local generator
-    # nix-pre-commit = {
-    #   url = "github:jmgilman/nix-pre-commit";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
   };
 
   outputs =
@@ -144,11 +138,6 @@
           modules = [ inputs.sops-nix.nixosModules.sops ./hosts/b4d14 ];
         };
 
-        # badxps = nixpkgs.lib.nixosSystem {
-        #   specialArgs = { inherit inputs outputs; };
-        #   modules = [ inputs.sops-nix.nixosModules.sops ./hosts/badxps ];
-        # };
-
         badxps = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
           modules = [
@@ -225,30 +214,6 @@
           ];
         };
 
-        ########################################################################
-        # badxps
-        ########################################################################
-        # "root@badxps" = home-manager.lib.homeManagerConfiguration {
-        #   pkgs =
-        #     nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        #   extraSpecialArgs = { inherit inputs outputs; };
-        #   modules = [
-        #     # > Our main home-manager configuration file <
-        #     ./users/root/badxps.nix
-        #   ];
-        # };
-        #
-        # "badele@badxps" = home-manager.lib.homeManagerConfiguration {
-        #   pkgs =
-        #     nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        #   extraSpecialArgs = { inherit inputs outputs; };
-        #   modules = [
-        #     # > Our main home-manager configuration file <
-        #     nur.hmModules.nur
-        #     ./users/badele/badxps.nix
-        #   ];
-        # };
-        #
         ########################################################################
         # sadhome
         ########################################################################
@@ -342,7 +307,6 @@
             ./users/badele/demo.nix
           ];
         };
-
       };
     };
 }
