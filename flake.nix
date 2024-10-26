@@ -180,9 +180,31 @@
           modules = [ inputs.sops-nix.nixosModules.sops ./hosts/rpi40 ];
         };
 
-        srvhoma = nixpkgs.lib.nixosSystem {
+        hypea = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
-          modules = [ inputs.sops-nix.nixosModules.sops ./hosts/srvhoma ];
+          modules = [
+            inputs.sops-nix.nixosModules.sops
+            ./hosts/hypea
+
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                verbose = true;
+                users = {
+                  root = import ./users/root/hypea.nix;
+                  badele = {
+                    imports = [
+                      nur.nixosModules.nur
+                      stylix.homeManagerModules.stylix
+                      ./users/badele/hypea.nix
+                    ];
+                  };
+                };
+              };
+            }
+          ];
         };
       };
 
@@ -260,29 +282,6 @@
           ];
         };
 
-        ########################################################################
-        # srvhoma
-        ########################################################################
-        "root@srvhoma" = home-manager.lib.homeManagerConfiguration {
-          pkgs =
-            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = { inherit inputs outputs; };
-          modules = [
-            # > Our main home-manager configuration file <
-            ./users/root/srvhoma.nix
-          ];
-        };
-
-        "badele@srvhoma" = home-manager.lib.homeManagerConfiguration {
-          pkgs =
-            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = { inherit inputs outputs; };
-          modules = [
-            # > Our main home-manager configuration file <
-            nur.hmModules.nur
-            ./users/badele/srvhoma.nix
-          ];
-        };
 
         ########################################################################
         # demo

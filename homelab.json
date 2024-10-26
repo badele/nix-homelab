@@ -260,12 +260,11 @@
       "ipv4": "192.168.254.114",
       "zone": "homeoffice",
       "parent": "router-ladbedroom",
-      "roles": [
-        "virtualization"
-      ],
       "description": "Dell XPS 9570 Latop",
       "os": "NixOS",
-      "roles": []
+      "roles": [
+        "virtualization"
+      ]
     },
     "badxps-eth": {
       "icon": "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png",
@@ -283,13 +282,13 @@
       "description": "Philips Hue bridge",
       "os": "Bridge"
     },
-    "srvhoma": {
+    "hypea": {
       "icon": "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png",
       "ipv4": "192.168.254.116",
       "zone": "office",
       "parent": "router-homeoffice",
       "dnsalias": [],
-      "description": "First NUC homelab server",
+      "description": "Incus hypervisor A",
       "os": "NixOS",
       "roles": [
         "ntp"

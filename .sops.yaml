@@ -11,7 +11,7 @@ keys:
     - &bootstore age1ejza6f2xzycq7jj2eu8fyg5vjdctljttm67mfteyd4k7wzvdyc8s7sc8jh
     - &badxps age1w9v05mvydywp39cq8tmgxjh8yc2w86qpp9aa4zt9ukf0qq8n5y4s5tkn7z
     - &b4d14 age1r7d0v4nudrv9wy7rvh784lnmzspm24uja6c6hrhhwjy7qf4e5d5q04gf3x
-    - &srvhoma age1jldv57mqz6ahwcm62efelumv22ngyvxjff8736shx9kycu9z7a4q7a3xdl
+    - &hypea age1atc7mzjz8k58l7wh5na8d9k5y5fl5qf75m5dtl53l6wvwmrr7pvqxchgtf
     - &demovm age1j9szuan8nt709ewa5f6vlkhde0zg2kmlfccqarfu74dhg2a5h3jsrhxg2g
 
 creation_rules:
@@ -32,7 +32,7 @@ creation_rules:
           - *sadhome
           - *sam
           - *b4d14
-          - *srvhoma
+          - *hypea
 
   - path_regex: hosts/rpi40/secrets.yml$
     key_groups:
@@ -70,11 +70,11 @@ creation_rules:
           - *badele
           - *b4d14
 
-  - path_regex: hosts/srvhoma/secrets.yml$
+  - path_regex: hosts/hypea/secrets.yml$
     key_groups:
       - age:
           - *badele
-          - *srvhoma
+          - *hypea
 
   # Tempory test credential before encryption
   - path_regex: hosts/demovm/secrets.tmp$
