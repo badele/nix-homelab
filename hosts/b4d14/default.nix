@@ -1,18 +1,12 @@
-##########################################################
+# #########################################################
 # NIXOS (hosts)
 ##########################################################
-{ inputs
-, config
-, pkgs
-, lib
-, ...
-}:
-{
+{ inputs, config, pkgs, lib, ... }: {
   imports = [
     ./hardware-configuration.nix
 
-    # https://github.com/NixOS/nixos-hardware/tree/master/dell/xps/15-9530
-    inputs.hardware.nixosModules.dell-xps-15-9530-intel
+    # https://github.com/NixOS/nixos-hardware/tree/master/dell/xps/15-9520
+    inputs.hardware.nixosModules.dell-xps-15-9520
     ../../nix/modules/nixos/host.nix
 
     # Users
@@ -59,7 +53,15 @@
     };
 
     initrd = {
-      availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" "sr_mod" "rtsx_pci_sdmmc" ];
+      availableKernelModules = [
+        "xhci_pci"
+        "ahci"
+        "nvme"
+        "usb_storage"
+        "sd_mod"
+        "sr_mod"
+        "rtsx_pci_sdmmc"
+      ];
       kernelModules = [ "zfs" ];
     };
   };
@@ -78,8 +80,7 @@
   ####################################
   # Hardware
   ####################################
-  videoDrivers = [ "intel" "i965" "nvidia" ];
-
+  # videoDrivers = [ "intel" "i965" "nvidia" ];
 
   # Nvidia
   # hardware.opengl.enable = true;
@@ -89,9 +90,11 @@
   # hardware.bumblebee.pmMethod = See dell-xps-15-9530
 
   # Pulseaudio
+  services.pipewire.enable = false;
   hardware.pulseaudio = {
     enable = true;
-    support32Bit = true; ## If compatibility with 32-bit applications is desired
+    support32Bit =
+      true; # # If compatibility with 32-bit applications is desired
     #extraConfig = "load-module module-combine-sink";
   };
 
@@ -102,9 +105,7 @@
   # Programs
   ####################################
   powerManagement.powertop.enable = true;
-  programs = {
-    dconf.enable = true;
-  };
+  programs = { dconf.enable = true; };
 
   ####################################
   # Secrets
