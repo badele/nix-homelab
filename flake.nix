@@ -27,9 +27,7 @@
     # hardware.url = "github:badele/fork-nixos-hardware/xps-15-9530";
     hardware.url = "github:NixOS/nixos-hardware/master";
 
-    impermanence = {
-      url = "github:nix-community/impermanence";
-    };
+    impermanence = { url = "github:nix-community/impermanence"; };
 
     nur = {
       url = "github:nix-community/NUR";
@@ -70,12 +68,8 @@
       # Your custom packages
       # Acessible through 'nix build', 'nix shell', etc
       packages = forAllSystems (system:
-        let
-          pkgs = import nixpkgs {
-            inherit system;
-          };
-        in
-        import ./nix/pkgs { inherit pkgs; });
+        let pkgs = import nixpkgs { inherit system; };
+        in import ./nix/pkgs { inherit pkgs; });
       # Devshell for bootstrapping
       # Acessible through 'nix develop' or 'nix-shell' (legacy)
       devShells = forAllSystems (system:
@@ -135,7 +129,29 @@
 
         b4d14 = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
-          modules = [ inputs.sops-nix.nixosModules.sops ./hosts/b4d14 ];
+          modules = [
+            inputs.sops-nix.nixosModules.sops
+            ./hosts/b4d14
+
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                verbose = true;
+                users = {
+                  root = import ./users/root/b4d14.nix;
+                  badele = {
+                    imports = [
+                      nur.nixosModules.nur
+                      stylix.homeManagerModules.stylix
+                      ./users/badele/b4d14.nix
+                    ];
+                  };
+                };
+              };
+            }
+          ];
         };
 
         badxps = nixpkgs.lib.nixosSystem {
