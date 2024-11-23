@@ -101,7 +101,7 @@ in
           };
           hooks.postswitch = ''
             ${pkgs.i3}/bin/i3-msg restart
-            ${feh} --bg-scale '${config.wallpaper}'
+            ${feh} --bg-scale '${config.stylix.image}'
           '';
         };
       };
