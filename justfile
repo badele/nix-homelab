@@ -58,9 +58,11 @@ precommit-install:
 @flake-update:
     nix flake update
 
-# @flake-sync-registry:
-#     nix flake metadata --json | jq -r '.locks.nodes."nixpkgs".locked.rev'
-#     nix flake metadata --json | jq -r '.locks.nodes."home-manager".locked.rev'
+# Sync the nix registry with the current running nix version
+@flake-sync-registry:
+    nix registry pin nixpkgs github:NixOS/nixpkgs/$(nix flake metadata --json | jq -r '.locks.nodes."nixpkgs".locked.rev')
+    # nix flake metadata --json | jq -r '.locks.nodes."nixpkgs".locked.rev'
+    # nix flake metadata --json | jq -r '.locks.nodes."home-manager".locked.rev'
 
 # Check the nix homelab configuration
 @flake-check:

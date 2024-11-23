@@ -1,8 +1,6 @@
 { pkgs, inputs, lib, config, ... }:
-let
-  domain = config.networking.domain;
-in
-{
+let domain = config.networking.domain;
+in {
   # Proprietary software
   nixpkgs.config.unfree = true;
   nixpkgs.config.allowUnfree = true;
@@ -16,7 +14,8 @@ in
     registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
 
     # Add all flake inputs to legacy / CMD: echo $NIX_PATH | tr ":" "\n"
-    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
+    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}")
+      config.nix.registry;
 
     settings = {
       substituters = [
@@ -31,7 +30,7 @@ in
       ];
       trusted-users = [ "root" "@wheel" ];
       auto-optimise-store = lib.mkDefault true;
-      experimental-features = [ "nix-command" "flakes" "repl-flake" ];
+      experimental-features = [ "nix-command" "flakes" ];
       warn-dirty = false;
     };
 
