@@ -1,11 +1,4 @@
-{ config
-, inputs
-, lib
-, outputs
-, pkgs
-, ...
-}:
-{
+{ config, inputs, lib, outputs, pkgs, ... }: {
 
   imports = [
     # Hardware informations
@@ -34,11 +27,10 @@
   nix = {
     package = lib.mkForce pkgs.nix;
     settings = {
-      experimental-features = [ "nix-command" "flakes" "repl-flake" ];
+      experimental-features = [ "nix-command" "flakes" ];
       warn-dirty = false;
     };
   };
-
 
   # # NOTE: By default all programs enabled for the all shells
   programs = {
@@ -57,7 +49,7 @@
     # FZF
     fzf = {
       enable = true;
-      enableZshIntegration = false; ## OMZ
+      enableZshIntegration = false; # # OMZ
       defaultCommand = "fd --type file --follow --hidden --exclude .git";
       historyWidgetOptions = [ "--sort" "--exact" ];
     };

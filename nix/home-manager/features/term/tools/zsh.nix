@@ -270,7 +270,7 @@ in
 
         # NixOS experimental support
         NIX_CONFIG =
-          "extra-experimental-features = nix-command flakes repl-flake";
+          "extra-experimental-features = nix-command flakes";
 
         PATH = lib.concatStringsSep ":" [
           "${config.home.homeDirectory}/.deno/bin"
