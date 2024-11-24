@@ -308,6 +308,11 @@ in
         PRJ_DEVTOOLS_DEFAULT_ROLE = "admin";
         AWS_CONFIG_FILE = "${prj_devtools}/aws/aws_profiles.conf";
 
+        # GPG keys
+        # https://github.com/badele/dotfiles/blob/main/.local/bin/gpg-backup-keys
+        GPG_BACKUP_DIR = "/run/media/badele/usb-black-disk/freefilesync/famille/bruno/home/security/gpg/";
+        GPG_USERID = "0x6B95E13DE469CC5D";
+
         # TODO
         # GNUPGHOME="${config.xdg.configHome}/gnupg";
 

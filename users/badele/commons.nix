@@ -47,6 +47,8 @@
     # Tool
     ##################################"
 
+    dconf # Dconf editor
+
     atop # Top alternative
     bat # cat alternative
     curl # HTTP client
