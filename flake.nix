@@ -139,6 +139,7 @@
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 verbose = true;
+                extraSpecialArgs = { inputs = self.inputs; };
                 users = {
                   root = import ./users/root/b4d14.nix;
                   badele = {
@@ -166,6 +167,7 @@
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 verbose = true;
+                extraSpecialArgs = { inputs = self.inputs; };
                 users = {
                   root = import ./users/root/badxps.nix;
                   badele = {
