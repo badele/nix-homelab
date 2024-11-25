@@ -96,8 +96,6 @@ in
             echo "$RESULT ms"
         }
 
-        test -e "$PRJ_DEVTOOLS/alias.sh" && source "$PRJ_DEVTOOLS/alias.sh"
-
         # function assume_role() {
         #   ~/ghq/github.com/cynapps/poc-devtools/aws-assume-role.sh $@
         #   source /tmp/.sso_exported
@@ -127,6 +125,9 @@ in
         bindkey "^F"     fzf-cd-widget # [CTRL-F] Goto FZF selected folder
         bindkey "^J"    fzf-zoxide # [CTRL-J] zoxide autojump ZFS list
         bindkey "^G"    _navi_widget # [CTRL-G] Show local navi
+
+        test -e "~/.araiko.env" && source "~/.araiko.env"
+        test -e "${prj_devtools}/alias.sh" && source "${prj_devtools}/alias.sh"
       '';
 
       shellAliases = with pkgs; {
