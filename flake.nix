@@ -124,6 +124,7 @@
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 verbose = true;
+                extraSpecialArgs = { inputs = self.inputs; };
                 users = {
                   root = import ./users/root/demovm.nix;
                   demo = {
@@ -269,29 +270,29 @@
       # Available through 'home-manager --flake .#your-username@your-hostname'
       # or 'home-manager --flake .' for current user in current hostname
       homeConfigurations = {
-        ########################################################################
-        # b4d14
-        ########################################################################
-        "root@b4d14" = home-manager.lib.homeManagerConfiguration {
-          pkgs =
-            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = { inherit inputs outputs; };
-          modules = [
-            # > Our main home-manager configuration file <
-            ./users/root/b4d14.nix
-          ];
-        };
-
-        "badele@b4d14" = home-manager.lib.homeManagerConfiguration {
-          pkgs =
-            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = { inherit inputs outputs; };
-          modules = [
-            # > Our main home-manager configuration file <
-            nur.hmModules.nur
-            ./users/badele/b4d14.nix
-          ];
-        };
+        #   ########################################################################
+        #   # b4d14
+        #   ########################################################################
+        #   "root@b4d14" = home-manager.lib.homeManagerConfiguration {
+        #     pkgs =
+        #       nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+        #     extraSpecialArgs = { inherit inputs outputs; };
+        #     modules = [
+        #       # > Our main home-manager configuration file <
+        #       ./users/root/b4d14.nix
+        #     ];
+        #   };
+        #
+        #   "badele@b4d14" = home-manager.lib.homeManagerConfiguration {
+        #     pkgs =
+        #       nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+        #     extraSpecialArgs = { inherit inputs outputs; };
+        #     modules = [
+        #       # > Our main home-manager configuration file <
+        #       nur.hmModules.nur
+        #       ./users/badele/b4d14.nix
+        #     ];
+        #   };
 
         ########################################################################
         # sadhome
@@ -336,30 +337,6 @@
           modules = [
             # > Our main home-manager configuration file <
             ./users/badele/rpi40.nix
-          ];
-        };
-
-        ########################################################################
-        # srvhoma
-        ########################################################################
-        "root@srvhoma" = home-manager.lib.homeManagerConfiguration {
-          pkgs =
-            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = { inherit inputs outputs; };
-          modules = [
-            # > Our main home-manager configuration file <
-            ./users/root/srvhoma.nix
-          ];
-        };
-
-        "badele@srvhoma" = home-manager.lib.homeManagerConfiguration {
-          pkgs =
-            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = { inherit inputs outputs; };
-          modules = [
-            # > Our main home-manager configuration file <
-            nur.hmModules.nur
-            ./users/badele/srvhoma.nix
           ];
         };
 
