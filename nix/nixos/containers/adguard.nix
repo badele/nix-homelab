@@ -9,10 +9,13 @@ let
 
 in
 {
+
+  # networking.vswitches = { br-adm = { interfaces = { vb-adguard = { }; }; }; };
+
   containers.adguard = {
     autoStart = true;
     privateNetwork = true;
-    hostBridge = "br-adm";
+    # hostBridge = "br-adm";
     hostAddress = hostAddress;
     localAddress = "192.168.240.96";
 

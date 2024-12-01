@@ -87,150 +87,160 @@
   # Allow forward
   boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
 
-  # virtualisation.vswitch = {
-  #   enable = true;
-  #   # don't reset the Open vSwitch database on reboot
-  #   resetOnStart = false;
-  # };
-
-  networking = {
-    hostName = "hype16";
-
-    # Disable some features
-    wireless.enable = false;
-    enableIPv6 = false;
-    nat.enable = false;
-    useDHCP = false;
-
-    # See     ../../nix/nixos/features/commons/networking.nix
-
-    # Define VLANs
-    vlans = {
-      vlan-dmz = {
-        id = 32;
-        interface = "enp1s0"; # tagged
-      };
-      vlan-adm = {
-        id = 240;
-        interface = "enp1s0"; # tagged
-      };
-    };
-
-    # vswitches = {
-    #   br-lan = { interfaces = { enp1s0 = { }; }; };
-    #   br-adm = { interfaces = { vlan-adm = { vlan = 240; }; }; };
-    #   br-dmz = { interfaces = { vlan-dmz = { vlan = 32; }; }; };
-    # };
-
-    bridges = {
-      br-lan = { interfaces = [ "enp1s0" ]; };
-      br-adm = { interfaces = [ "vlan-adm" ]; };
-      br-dmz = { interfaces = [ "vlan-dmz" ]; };
-    };
-
-    # Create interfaces
-    interfaces = {
-      br-lan = {
-        ipv4 = {
-          addresses = [{
-            address = "192.168.254.16";
-            prefixLength = 24;
-          }];
-          routes = [{
-            address = "0.0.0.0";
-            prefixLength = 0;
-            via = "192.168.254.254";
-          }];
-
-        };
-      };
-
-      br-adm = {
-        ipv4 = {
-          addresses = [{
-            address = "192.168.240.16";
-            prefixLength = 24;
-          }];
-          routes = [{
-            address = "0.0.0.0";
-            prefixLength = 0;
-            via = "192.168.240.254";
-          }];
-        };
-      };
-
-      br-dmz = {
-        ipv4 = {
-          addresses = [{
-            address = "192.168.32.16";
-            prefixLength = 24;
-          }];
-          routes = [{
-            address = "0.0.0.0";
-            prefixLength = 0;
-            via = "192.168.32.254";
-          }];
-        };
-      };
-    };
-
-    # Define default gateway and nameservers
-    # defaultGateway = "192.168.254.254";
-    nameservers = [ "89.2.0.1" "89.2.0.2" ];
-
-    # Firewall
-    firewall = {
-      # Allow configure firewall with allowedTCPPorts & allowedUDPPorts values
-      enable = true;
-      # checkReversePath = "loose";
-      checkReversePath = false;
-
-      # Logs
-      logReversePathDrops = true;
-      logRefusedPackets = true;
-      logRefusedConnections = true;
-      logRefusedUnicastsOnly = true;
-    };
-
-    nftables = {
-      enable = true;
-      ruleset = ''
-        table inet filter {
-          chain input {
-            type filter hook input priority 0; policy drop;
-
-            ct state { established, related } accept comment "Allow established traffic"
-
-            iifname { "br-lan" } accept comment "Allow lan network to access the router"
-            #iifname { "br-adm" } accept comment "Allow adm network to access the router"
-            iifname "lo" accept comment "Accept everything from loopback interface"
-
-          }
-          chain forward {
-            type filter hook forward priority filter; policy drop;
-
-            ct state { established, related } accept comment "Allow established back to LANs"
-
-            # adguard
-            # 23:29:47.453176 enp1s0 P   IP 192.168.254.114.51756 > 192.168.240.96.3000: Flags [S], seq 3951890633, win 64240, options [mss 1460,sackOK,TS val 273335813 ecr 0,nop,wscale 7], length 0
-            # 23:29:47.453176 vlan-adm P   IP 192.168.254.114.51756 > 192.168.240.96.3000: Flags [S], seq 3951890633, win 64240, options [mss 1460,sackOK,TS val 273335813 ecr 0,nop,wscale 7], length 0
-            # 23:29:47.453198 vb-adguard Out IP 192.168.254.114.51756 > 192.168.240.96.3000: Flags [S], seq 3951890633, win 64240, options [mss 1460,sackOK,TS val 273335813 ecr 0,nop,wscale 7], length 0
-            # 23:29:47.453271 vb-adguard P   IP 192.168.240.96.3000 > 192.168.254.114.51756: Flags [S.], seq 2593899192, ack 3951890634, win 65160, options [mss 1460,sackOK,TS val 902428753 ecr 273335813,nop,wscale 7], length 0
-            # 23:29:47.453285 br-adm In  IP 192.168.240.96.3000 > 192.168.254.114.51756: Flags [S.], seq 2593899192, ack 3951890634, win 65160, options [mss 1460,sackOK,TS val 902428753 ecr 273335813,nop,wscale 7], length 0
-            # 23:29:47.453315 br-lan Out IP 192.168.240.96.3000 > 192.168.254.114.51756: Flags [S.], seq 2593899192, ack 3951890634, win 65160, options [mss 1460,sackOK,TS val 902428753 ecr 273335813,nop,wscale 7], length 0
-            # 23:29:47.453320 enp1s0 Out IP 192.168.240.96.3000 > 192.168.254.114.51756: Flags [S.], seq 2593899192, ack 3951890634, win 65160, options [mss 1460,sackOK,TS val 902428753 ecr 273335813,nop,wscale 7], length 0
-            iifname "br-adm" oifname "br-lan" ip saddr 192.168.240.96 tcp sport 3000 accept comment "Allow adguard"
-
-            #iifname  "br-lan" oifname "br-lan" accept comment "Allow trusted LAN to LAN"
-            #iifname  "br-lan" oifname "br-adm" accept comment "Allow trusted LAN to ADM"
-            #iifname  "br-lan" oifname "br-dmz" accept comment "Allow trusted LAN to DMZ"
-
-            log prefix "Blocked Forward: " flags all drop
-          }
-        }
-      '';
-    };
+  virtualisation.vswitch = {
+    enable = true;
+    # don't reset the Open vSwitch database on reboot
+    resetOnStart = false;
   };
+
+  networking =
+    let
+      netlan = "254";
+      netadm = "240";
+      netdmz = "32";
+    in
+    {
+      hostName = "hype16";
+
+      # Disable some features
+      wireless.enable = false;
+      enableIPv6 = false;
+      nat.enable = false;
+      useDHCP = false;
+
+      # See     ../../nix/nixos/features/commons/networking.nix
+
+      # Define VLANs
+      vlans = {
+        vlan-dmz = {
+          id = 32;
+          interface = "enp1s0"; # tagged
+        };
+        vlan-adm = {
+          id = 240;
+          interface = "enp1s0"; # tagged
+        };
+      };
+
+      vswitches = {
+        br-lan = { interfaces = { enp1s0 = { }; }; };
+        br-adm = {
+          interfaces = {
+            vlan-adm = { };
+            vb-adguard = { };
+          };
+        };
+        br-dmz = { interfaces = { vlan-dmz = { }; }; };
+      };
+
+      # bridges = {
+      #   br-lan = { interfaces = [ "enp1s0" ]; };
+      #   br-adm = { interfaces = [ "vlan-adm" ]; };
+      #   br-dmz = { interfaces = [ "vlan-dmz" ]; };
+      # };
+
+      # Create interfaces
+      interfaces = {
+        br-lan = {
+          ipv4 = {
+            addresses = [{
+              address = "192.168.${netlan}.16";
+              prefixLength = 24;
+            }];
+            routes = [{
+              address = "0.0.0.0";
+              prefixLength = 0;
+              via = "192.168.${netlan}.254";
+            }];
+
+          };
+        };
+
+        br-adm = {
+          ipv4 = {
+            addresses = [{
+              address = "192.168.${netadm}.16";
+              prefixLength = 24;
+            }];
+            routes = [{
+              address = "0.0.0.0";
+              prefixLength = 0;
+              via = "192.168.${netadm}.254";
+            }];
+          };
+        };
+
+        br-dmz = {
+          ipv4 = {
+            addresses = [{
+              address = "192.168.${netdmz}.16";
+              prefixLength = 24;
+            }];
+            routes = [{
+              address = "0.0.0.0";
+              prefixLength = 0;
+              via = "192.168.${netdmz}.254";
+            }];
+          };
+        };
+      };
+
+      # Define default gateway and nameservers
+      # defaultGateway = "192.168.254.254";
+      nameservers = [ "89.2.0.1" "89.2.0.2" ];
+
+      # Firewall
+      firewall = {
+        # Allow configure firewall with allowedTCPPorts & allowedUDPPorts values
+        enable = true;
+        checkReversePath = "loose";
+
+        # Logs
+        logReversePathDrops = true;
+        logRefusedPackets = true;
+        logRefusedConnections = true;
+        logRefusedUnicastsOnly = true;
+      };
+
+      nftables = {
+        enable = true;
+        ruleset = ''
+          table inet filter {
+            chain input {
+              type filter hook input priority 0; policy drop;
+
+              #ct state { established, related } accept comment "Allow established traffic"
+
+              iifname { "br-lan" } accept comment "Allow lan network to access the router"
+              #iifname { "br-adm" } accept comment "Allow adm network to access the router"
+              iifname "lo" accept comment "Accept everything from loopback interface"
+
+            }
+            chain forward {
+              type filter hook forward priority filter; policy drop;
+
+              ct state { established, related } accept comment "Allow established back to LANs"
+
+              # adguard
+              # 23:29:47.453176 enp1s0 P   IP 192.168.254.114.51756 > 192.168.240.96.3000: Flags [S], seq 3951890633, win 64240, options [mss 1460,sackOK,TS val 273335813 ecr 0,nop,wscale 7], length 0
+              # 23:29:47.453176 vlan-adm P   IP 192.168.254.114.51756 > 192.168.240.96.3000: Flags [S], seq 3951890633, win 64240, options [mss 1460,sackOK,TS val 273335813 ecr 0,nop,wscale 7], length 0
+              # 23:29:47.453198 vb-adguard Out IP 192.168.254.114.51756 > 192.168.240.96.3000: Flags [S], seq 3951890633, win 64240, options [mss 1460,sackOK,TS val 273335813 ecr 0,nop,wscale 7], length 0
+              # 23:29:47.453271 vb-adguard P   IP 192.168.240.96.3000 > 192.168.254.114.51756: Flags [S.], seq 2593899192, ack 3951890634, win 65160, options [mss 1460,sackOK,TS val 902428753 ecr 273335813,nop,wscale 7], length 0
+              # 23:29:47.453285 br-adm In  IP 192.168.240.96.3000 > 192.168.254.114.51756: Flags [S.], seq 2593899192, ack 3951890634, win 65160, options [mss 1460,sackOK,TS val 902428753 ecr 273335813,nop,wscale 7], length 0
+              # 23:29:47.453315 br-lan Out IP 192.168.240.96.3000 > 192.168.254.114.51756: Flags [S.], seq 2593899192, ack 3951890634, win 65160, options [mss 1460,sackOK,TS val 902428753 ecr 273335813,nop,wscale 7], length 0
+              # 23:29:47.453320 enp1s0 Out IP 192.168.240.96.3000 > 192.168.254.114.51756: Flags [S.], seq 2593899192, ack 3951890634, win 65160, options [mss 1460,sackOK,TS val 902428753 ecr 273335813,nop,wscale 7], length 0
+              iifname "br-adm" oifname "br-lan" ip saddr 192.168.${netadm}.96 tcp sport 3000 accept comment "Allow adguard"
+
+              #iifname  "br-lan" oifname "br-lan" accept comment "Allow trusted LAN to LAN"
+              #iifname  "br-lan" oifname "br-adm" accept comment "Allow trusted LAN to ADM"
+              #iifname  "br-lan" oifname "br-dmz" accept comment "Allow trusted LAN to DMZ"
+
+              log prefix "Blocked Forward: " flags all drop
+            }
+          }
+        '';
+      };
+    };
 
   # systemd.network = let
   #   netlan = "254";
