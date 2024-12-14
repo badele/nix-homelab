@@ -1,77 +1,121 @@
-{ lib, config, ... }:
+{ lib, config, lan_address, adm_address, dmz_address, ... }:
 let domain = config.homelab.domain;
 in {
-  networking.nftables.enable = true;
-  networking.firewall = {
-    interfaces = {
-      br-adm = {
-        allowedTCPPorts = [ 8080 ];
-        allowedUDPPorts = [ ];
-      };
-      br-dmz = {
-        allowedTCPPorts = [ 80 443 ];
-        allowedUDPPorts = [ ];
-      };
-    };
 
-    # Forward
-    # filterForward = true;
-    # extraForwardRules = "iifname brdmz oifname brdmz accept";
-    # extraForwardRules = "accept";
-    # extraInputRules = "iifname brdmz accept";
-    # extraInputRules = "accept";
-    # "iifname brdmz ip saddr 192.168.254.0/24 ip daddr 192.168.253.0/24 accept";
-  };
+  # systemd.tmpfiles.rules = [ "d /var/log/traefik 0750 traefik traefik -" ];
 
-  # services.resolved.enable = true;
-
-  # Enable Traefik
   services.traefik = {
     enable = true;
 
     staticConfigOptions = {
       api.dashboard = true;
-      api.insecure = true;
+      api.insecure = false;
 
-      # Enable logs
-      # log.filePath = "/var/log/traefik/traefik.log";
-      # accessLog.filePath = "/var/log/traefik/accessLog.log";
+      log = {
+        level = "INFO";
+        filePath = "/var/lib/traefik/traefik.log";
+      };
 
-      # Enable Docker provider
-      # providers.docker = {
-      #   endpoint = "unix:///run/docker.sock";
-      #   watch = true;
-      #   exposedByDefault = false;
-      # };
+      accessLog = { filePath = "/var/lib/traefik/access.log"; };
 
       # Configure entrypoints, i.e the ports
       entryPoints = {
-        websecure.address = ":443";
-        web = {
-          address = ":80";
+        # LAN
+        lansecure.address = "${lan_address}:443";
+        lan = {
+          address = "${lan_address}:80";
           http.redirections.entryPoint = {
-            to = "websecure";
+            to = "lansecure";
             scheme = "https";
           };
         };
+
+        # ADM
+        admsecure.address = "${adm_address}:443";
+        adm = {
+          address = "${adm_address}:80";
+          http.redirections.entryPoint = {
+            to = "admsecure";
+            scheme = "https";
+          };
+        };
+
+        # DMZ
+        dmzsecure.address = "${dmz_address}:443";
+        dmz.address = "${dmz_address}:80";
       };
 
       # Configure certification
-      certificatesResolvers.acme-challenge.acme = {
+      certificatesResolvers.letsencrypt.acme = {
         email = "brunoadele@gmail.com";
         storage = "/var/lib/traefik/acme.json";
-        httpChallenge.entryPoint = "web";
+        httpChallenge.entryPoint = "dmz";
       };
     };
 
     # Dashboard
-    dynamicConfigOptions.http.routers.dashboard = {
-      rule = lib.mkDefault "Host(`traefik.${domain}`)";
-      service = "api@internal";
-      entryPoints = [ "websecure" ];
-      tls = lib.mkDefault false;
-      # Add certification
-      # tls.certResolver = "acme-challenge";
+    dynamicConfigOptions.http = {
+      routers = {
+        #######################################################################
+        # DMZ
+        #######################################################################
+        dmz-acme = {
+          rule = "PathPrefix(`/.well-known/acme-challenge`)";
+          service = "acme-http@internal";
+          entryPoints = "dmz";
+        };
+
+        dmz-deny = {
+          rule = "Host(`*`)";
+          service = "deny-service";
+        };
+
+        #######################################################################
+        # ADM
+        #######################################################################
+        dashboard = {
+          rule = lib.mkDefault "Host(`traefik.${domain}`)";
+          service = "api@internal";
+          entryPoints = [ "admsecure" ];
+          tls.certresolver = "letsencrypt";
+
+        };
+        homepages = {
+          rule = lib.mkDefault "Host(`home.${domain}`)";
+          service = "homepage";
+          entryPoints = [ "admsecure" ];
+          tls.certresolver = "letsencrypt";
+        };
+        adguard = {
+          rule = lib.mkDefault "Host(`adguard.${domain}`)";
+          service = "adguard";
+          entryPoints = [ "admsecure" ];
+          tls.certresolver = "letsencrypt";
+        };
+      };
+
+      services = {
+        #######################################################################
+        # DMZ
+        #######################################################################
+        deny-service = {
+          loadBalancer = { servers = [{ url = "http://127.0.0.1:65535"; }]; };
+        };
+
+        #######################################################################
+        # ADM
+        #######################################################################
+        adguard = {
+          loadBalancer = {
+            servers = [{ url = "http://192.168.241.1:3000"; }];
+          };
+        };
+        homepage = {
+          loadBalancer = {
+            servers = [{ url = "http://192.168.241.2:8082"; }];
+          };
+        };
+      };
     };
   };
 }

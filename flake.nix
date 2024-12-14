@@ -39,7 +39,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Color scheme
     stylix.url = "github:danth/stylix";
 
     crowdsec = {
