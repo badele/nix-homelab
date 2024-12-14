@@ -18,7 +18,7 @@ in
     ../../nix/modules/home-manager/userconf.nix
 
     # Common tools and packages for all badele user hosts
-    ./commons.nix
+    ../badele/commons.nix
 
     # Editor
     # INFO: I use my independant neovim configuration => https://github.com/badele/vides

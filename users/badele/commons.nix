@@ -2,6 +2,17 @@
   ##############################################################################
   # Common user conf
   ##############################################################################
+
+  imports = [
+    # Apps
+    ../../nix/home-manager/apps/tools.nix
+    ../../nix/home-manager/apps/development/commons.nix
+    ../../nix/home-manager/apps/development/internet.nix
+    ../../nix/home-manager/apps/development/nix.nix
+    ../../nix/home-manager/apps/system/performance.nix
+    ../../nix/home-manager/apps/system/file.nix
+  ];
+
   home = {
     username = lib.mkDefault "badele";
     homeDirectory = lib.mkDefault "/home/${config.home.username}";
@@ -43,51 +54,6 @@
   # User packages
   ##############################################################################
   home.packages = with pkgs; [
-    ##################################"
-    # Tool
-    ##################################"
-
-    atop # Top alternative
-    bat # cat alternative
-    curl # HTTP client
-    du-dust # du rust version
-    duf # df go version
-    eva # Calculator
-    eza # ls alternative
-    fd # find alternative
-    httpie # curl alternative
-    jq # JSON pretty printer and manipulator
-    pastel # Colors generator
-    ripgrep # Better grep
-    tmux # Terminal multiplexer
-    unzip # Unzip files
-    up # UI interactively pipe
-    wget # HTTP client
-
-    # Floating apps (used in i3)
-    bashmount # Terminal mount helper
-    bluetuith # Bluetooth manager
-    btop # Top alternative
-    procs # Top alternative
-
-    ##################################"
-    # Development
-    ##################################"
-
-    # Makefile like
-    just # justfile (Makefile like)
-
-    # Git
-    meld # Visual diff and merge tool
-    lazygit # git terminal UI
-
-    # Nix
-    haskellPackages.nix-derivation # Analyse derivation with pretty-derivation < packagename.drv
-    nix-prefetch-github # Compute SHA256 github repository
-    nixpkgs-fmt # Nix formatter
-    nix-diff # Check derivation differences
-    nvd # Show diff nix packages
-
     ##################################"
     # Container / Virtualization
     ##################################"

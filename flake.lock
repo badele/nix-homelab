@@ -261,6 +261,26 @@
         "type": "github"
       }
     },
+    "nixunits": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1734191902,
+        "narHash": "sha256-eVPDf1vcCor/21qOuJQkKuzZWK5+sZTaf+lW90uMuEI=",
+        "ref": "refs/heads/main",
+        "rev": "7600a67b82d13d013bc67a3a66b4a65effdb7fb1",
+        "revCount": 13,
+        "type": "git",
+        "url": "https://git.aevoo.com/aevoo/os/nixunits.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.aevoo.com/aevoo/os/nixunits.git"
+      }
+    },
     "nur": {
       "locked": {
         "lastModified": 1732445289,
@@ -283,6 +303,7 @@
         "home-manager": "home-manager",
         "impermanence": "impermanence",
         "nixpkgs": "nixpkgs",
+        "nixunits": "nixunits",
         "nur": "nur",
         "sops-nix": "sops-nix",
         "stylix": "stylix"

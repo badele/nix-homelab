@@ -18,13 +18,16 @@ in
     ../../nix/modules/home-manager/userconf.nix
 
     # Common tools and packages for all badele user hosts
-    ./commons.nix
+    ../badele/commons.nix
 
     # Editor
     # INFO: I use my independant neovim configuration => https://github.com/badele/vides
     # ../../nix/home-manager/features/term/editor/lazyvim.nix
 
     # Apps
+    ../../nix/home-manager/apps/bluetooth.nix
+    ../../nix/home-manager/apps/cad.nix
+    ../../nix/home-manager/apps/graphics.nix
     ../../nix/home-manager/apps/networking.nix
 
     # Term
@@ -59,11 +62,6 @@ in
   # Packages
   ###############################################################################
   home.packages = with pkgs; [
-    # DAO/CAO
-    openscad
-    librecad
-    solvespace
-
     # MQTT
     mosquitto
     mqttui
@@ -78,27 +76,6 @@ in
 
     # Go
     # go
-
-    ##################################"
-    # Cloud & co
-    ##################################"
-    awscli2 # AWS CLI
-    kubectl # Kubernetes CLI
-    kubectx # Kubernetes CLI
-    k9s # Kubernetes CLI
-    kubernetes-helm # Helm
-    argocd # ArgoCD CLI
-
-    # Network
-    ipcalc # IP subnetcalculator
-    trippy # mtr traceroute alternative
-
-    # Graphics
-    geeqie
-    gifsicle
-    gimp
-    imagemagick
-    inkscape
 
     # Office
     discord

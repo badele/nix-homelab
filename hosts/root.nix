@@ -1,17 +1,8 @@
-##########################################################
+# #########################################################
 # NIXOS
 ##########################################################
-{ pkgs
-, config
-, lib
-, ...
-}:
-{
-  sops.secrets = {
-    "system/user/root-hash" = {
-      neededForUsers = true;
-    };
-  };
+{ pkgs, config, lib, ... }: {
+  sops.secrets = { "system/user/root-hash" = { neededForUsers = true; }; };
 
   users.users = {
     # Root
