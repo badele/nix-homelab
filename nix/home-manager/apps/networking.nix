@@ -1,6 +1,11 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
+    # Tools
+    ipcalc # IP subnetcalculator
+
     # Networking
+    # [conflit] pietrasanta-traceroute # Traceroute utility
+    # [conflit] tshark # Network protocol analyzer
     conntrack-tools # Connection tracking userspace tools
     iperf # Tool to measure IP bandwidth using UDP or TCP
     iputils # arping, clockdif, ping, tracepath
@@ -8,10 +13,9 @@
     netcat-gnu # Utility which reads and writes data across network
     nmap # Network exploration tool and security scanner
     omping # multicast ping
-    # pietrasanta-traceroute # Traceroute utility
     tcpdump # Network packet analyzer
     termshark # Terminal UI for tshark
-    # tshark # Network protocol analyzer
+    trippy # mtr traceroute alternative
     wireshark # Network protocol analyzer
 
     # Proxy

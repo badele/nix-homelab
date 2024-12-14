@@ -41,6 +41,16 @@
 
     # Color scheme
     stylix.url = "github:danth/stylix";
+
+    crowdsec = {
+      url = "git+https://codeberg.org/kampka/nix-flake-crowdsec.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nixunits = {
+      url = "git+https://git.aevoo.com/aevoo/os/nixunits.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -201,9 +211,57 @@
           modules = [ inputs.sops-nix.nixosModules.sops ./hosts/rpi40 ];
         };
 
-        srvhoma = nixpkgs.lib.nixosSystem {
+        hype16 = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
-          modules = [ inputs.sops-nix.nixosModules.sops ./hosts/srvhoma ];
+          modules = [
+            inputs.sops-nix.nixosModules.sops
+            inputs.crowdsec.nixosModules.crowdsec
+            inputs.crowdsec.nixosModules.crowdsec-firewall-bouncer
+            inputs.nixunits.nixosModules.default
+            ./hosts/hype16
+
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                verbose = true;
+                extraSpecialArgs = { inputs = self.inputs; };
+                users = {
+                  root = import ./users/root/hype16.nix;
+                  badele = {
+                    imports = [
+                      nur.nixosModules.nur
+                      stylix.homeManagerModules.stylix
+                      ./users/badele/hype16.nix
+                    ];
+                  };
+                };
+              };
+            }
+          ];
+        };
+
+        #######################################################################
+        # Hypervised applications
+        #######################################################################
+
+        gw-dmz = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            "${nixpkgs}/nixos/modules/virtualisation/lxc-container.nix"
+            inputs.sops-nix.nixosModules.sops
+            ./hosts/hypervised/gw-dmz
+          ];
+        };
+
+        trilium = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            "${nixpkgs}/nixos/modules/virtualisation/lxc-container.nix"
+            inputs.sops-nix.nixosModules.sops
+            ./hosts/hypervised/trilium
+          ];
         };
       };
 

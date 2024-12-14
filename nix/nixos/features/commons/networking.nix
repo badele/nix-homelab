@@ -1,24 +1,18 @@
 { lib, config, ... }:
 let
   domain = config.homelab.domain;
-  aliasIps = lib.flatten
-    (
+  aliasIps = lib.flatten (
 
-      lib.mapAttrsToList
-        (
-          name: host:
-            let
-              alias = lib.optionals (host.dnsalias != null) host.dnsalias;
-            in
-            map
-              (entry: {
-                name = entry;
-                ip = host.ipv4;
-              })
-              alias
-        )
-        config.homelab.hosts
-    );
+    lib.mapAttrsToList
+      (name: host:
+        let alias = lib.optionals (host.dnsalias != null) host.dnsalias;
+        in map
+          (entry: {
+            name = entry;
+            ip = host.ipv4;
+          })
+          alias)
+      config.homelab.hosts);
 in
 {
   networking = {
@@ -31,17 +25,17 @@ in
     extraHosts = ''
       127.0.0.1 cert.adele.im
 
+      # ADM
+      192.168.240.16 traefik.adele.im home.adele.im adguard.adele.im
+
       # Hosts
-      ${lib.concatStringsSep "\n"
-          (lib.mapAttrsToList
-            (hostname: hostinfo:
-              ''${hostinfo.ipv4} ${hostname}.${domain} ${hostname}'')
-            config.homelab.hosts)}
+      ${lib.concatStringsSep "\n" (lib.mapAttrsToList (hostname: hostinfo:
+        "${hostinfo.ipv4} ${hostname}.${domain} ${hostname}")
+        config.homelab.hosts)}
 
       # Alias
-      ${lib.concatMapStringsSep "\n" (host:
-          "${host.ip} ${host.name}.${domain} ${host.name}" )
-        aliasIps}
+      ${lib.concatMapStringsSep "\n"
+      (host: "${host.ip} ${host.name}.${domain} ${host.name}") aliasIps}
     '';
 
     # For ZFS

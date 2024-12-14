@@ -2,57 +2,57 @@
 # You can enter it through 'nix develop' or (legacy) 'nix-shell'
 
 { pkgs ? (import ./nixpkgs.nix) { }, system }:
-let
-  uefi_file = "${pkgs.OVMF.fd}/FV/OVMF.fd";
-in
-{
+let uefi_file = "${pkgs.OVMF.fd}/FV/OVMF.fd";
+in {
   default = pkgs.mkShell {
     # Enable experimental features without having to specify the argument
     NIX_CONFIG = "experimental-features = nix-command flakes";
-    nativeBuildInputs = with pkgs; [
+    nativeBuildInputs = with pkgs;
+      [
 
-      # Required by nix-homelab project
-      borgbackup
-      deno
-      git
-      home-manager
-      just
-      nix
-      plantuml
-      pre-commit
+        # Required by nix-homelab project
+        borgbackup
+        deno
+        git
+        home-manager
+        just
+        nix
+        plantuml
+        pre-commit
 
-      # Testing nix-homelab
-      qemu
-      qemu_kvm
-      OVMF
+        # Testing nix-homelab
+        qemu
+        qemu_kvm
+        OVMF
 
-      # Nix unentended installation
-      nixos-anywhere
+        # Nix unentended installation
+        nixos-anywhere
 
-      # Credentials
-      age
-      gnupg
-      pass
-      pwgen
-      sops
-      ssh-to-age
+        # Credentials
+        age
+        gnupg
+        pass
+        pwgen
+        sops
+        ssh-to-age
 
-      # Required by invoke
-      wireguard-tools
-      openssl_3_0.bin
+        # Required by invoke
+        wireguard-tools
+        openssl_3_0.bin
 
-      # diagrams
-      graphviz
+        # diagrams
+        graphviz
+        d2
 
-      # Wireguard
-      wireguard-tools
-      openssl_3_0.bin
+        # Wireguard
+        wireguard-tools
+        openssl_3_0.bin
 
-      # Wireguard
-      openssl_3_0.bin
-      wireguard-tools
+        # Wireguard
+        openssl_3_0.bin
+        wireguard-tools
 
-    ] ++ lib.optional (stdenv.isLinux) mkpasswd;
+      ] ++ lib.optional (stdenv.isLinux) mkpasswd;
 
     shellHook = ''
       export UEFI_FILE=${uefi_file};

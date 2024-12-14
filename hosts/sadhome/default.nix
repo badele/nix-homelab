@@ -1,13 +1,7 @@
-##########################################################
+# #########################################################
 # NIXOS (hosts)
 ##########################################################
-{ inputs
-, config
-, pkgs
-, lib
-, ...
-}:
-{
+{ inputs, config, pkgs, lib, ... }: {
   imports = [
     ./hardware-configuration.nix
     ../../nix/modules/nixos/host.nix
@@ -38,7 +32,7 @@
       "mem_sleep_default=deep"
       "nouveau.blacklist=0"
       "acpi_osi=!"
-      "acpi_osi=\"Windows 2015\""
+      ''acpi_osi="Windows 2015"''
       "acpi_backlight=vendor"
     ];
 
@@ -59,7 +53,15 @@
     };
 
     initrd = {
-      availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" "sr_mod" "rtsx_pci_sdmmc" ];
+      availableKernelModules = [
+        "xhci_pci"
+        "ahci"
+        "nvme"
+        "usb_storage"
+        "sd_mod"
+        "sr_mod"
+        "rtsx_pci_sdmmc"
+      ];
       kernelModules = [ ];
     };
   };
@@ -87,7 +89,8 @@
   # Pulseaudio
   hardware.pulseaudio = {
     enable = true;
-    support32Bit = true; ## If compatibility with 32-bit applications is desired
+    support32Bit =
+      true; # # If compatibility with 32-bit applications is desired
     #extraConfig = "load-module module-combine-sink";
   };
 
@@ -98,9 +101,7 @@
   # Programs
   ####################################
   powerManagement.powertop.enable = true;
-  programs = {
-    dconf.enable = true;
-  };
+  programs = { dconf.enable = true; };
 
   nixpkgs.hostPlatform.system = "x86_64-linux";
   system.stateVersion = "22.11";

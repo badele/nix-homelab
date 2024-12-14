@@ -9,7 +9,6 @@
   virtualisation.docker = {
     enable = true;
     enableOnBoot = true;
-    storageDriver = "zfs";
 
     rootless = {
       enable = false;

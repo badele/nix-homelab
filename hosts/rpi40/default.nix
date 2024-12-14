@@ -1,12 +1,11 @@
-{ lib
-, ...
-}: {
+{ lib, ... }: {
   imports = [
     ./hardware-configuration.nix
 
     # Users
     ../root.nix
     ../badele.nix
+
     # Commons
     ../../nix/nixos/features/commons
     ../../nix/nixos/features/homelab
