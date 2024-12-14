@@ -39,8 +39,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Color scheme
     stylix.url = "github:danth/stylix";
+
+    crowdsec = {
+      url = "git+https://codeberg.org/kampka/nix-flake-crowdsec.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -203,6 +207,8 @@
           specialArgs = { inherit inputs outputs; };
           modules = [
             inputs.sops-nix.nixosModules.sops
+            inputs.crowdsec.nixosModules.crowdsec
+            inputs.crowdsec.nixosModules.crowdsec-firewall-bouncer
             ./hosts/hype16
 
             home-manager.nixosModules.home-manager

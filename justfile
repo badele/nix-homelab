@@ -171,12 +171,12 @@ demo-nixos-install hostname targetip port="22":
     nixos-anywhere --env-password --extra-files /tmp/nix-homelab -p {{port}} --flake .#{{hostname}} root@{{targetip}}
 
 # Update NixOS on local host
-@nixos-update hostname="" options="":
-    just nixos-command switch {{ hostname }} {{ options }}
+@nixos-update options="":
+    just nixos-command switch "" {{ options }}
 
-# Deploy NixOS on remote host
-@nixos-remote-deploy hostname targetip:
-    just nixos-command switch {{ hostname }} "--target-host root@{ targetip }}"
+# Install on remote host
+@nixos-remote-update hostname targetip options="":
+    just nixos-command switch {{hostname}} "--target-host root@{{ targetip }}" {{ options }}
 
 [private]
 home-command action:

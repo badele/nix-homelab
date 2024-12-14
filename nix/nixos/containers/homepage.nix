@@ -3,45 +3,21 @@
 # - firewall rule hosts/hype16/default.nix
 { lib, config, pkgs, ... }:
 let
-
-  webport = "3000";
   hostAddress =
     (builtins.elemAt config.networking.interfaces."vlan-adm".ipv4.addresses
       0).address;
   defaultGateway = config.networking.defaultGateway;
-
-  # Function
-  # Get Hosts IP
-  hostsIps = lib.mapAttrsToList
-    (name: host: {
-      domain = name;
-      answer = host.ipv4;
-    })
-    config.homelab.hosts;
-
-  # Function
-  # Get Alias IP
-  aliasIps = lib.flatten (lib.mapAttrsToList
-    (name: host:
-      let alias = lib.optionals (host.dnsalias != null) host.dnsalias;
-      in map
-        (entry: {
-          domain = entry;
-          answer = host.ipv4;
-        })
-        alias)
-    config.homelab.hosts);
 in
 {
 
-  # networking.vswitches = { br-adm = { interfaces = { vb-adguard = { }; }; }; };
+  # networking.vswitches = { br-adm = { interfaces = { vb-homepage = { }; }; }; };
 
-  containers.adguard = {
+  containers.homepage = {
 
     autoStart = true;
     privateNetwork = true;
     hostAddress = hostAddress;
-    localAddress = "192.168.241.1";
+    localAddress = "192.168.241.2";
 
     extraFlags = [
       "--drop-capability=CAP_AUDIT_WRITE"
@@ -96,22 +72,71 @@ in
         ];
       };
 
-      services.resolved.enable = false;
-      services.adguardhome = {
+      services.homepage-dashboard = {
         enable = true;
-        mutableSettings = false;
-        settings = {
-          http.address = "0.0.0.0:${webport}";
-          schema_version = 29;
-          dns = {
-            ratelimit = 0;
-            bind_hosts = [ "0.0.0.0" ];
-            bootstrap_dns = [ "9.9.9.10" "149.112.112.10" ];
-            upstream_dns = [ "1.1.1.1" "1.0.0.1" "8.8.8.8" "8.8.4.4" ];
-            rewrites = hostsIps ++ aliasIps;
-          };
-        };
+
+        widgets = [
+          {
+            resources = {
+              cpu = true;
+              disk = "/";
+              memory = true;
+            };
+          }
+          {
+            search = {
+              provider = "duckduckgo";
+              target = "_blank";
+            };
+          }
+          {
+            traefik = {
+              type = "traefik";
+              url = "http://192.168.240.16:8080";
+            };
+          }
+        ];
+
+        services = [
+          {
+            "My First Group" = [{
+              "My First Service" = {
+                description = "Homepage is awesome";
+                href = "http://localhost/";
+              };
+            }];
+          }
+          {
+            "My Second Group" = [{
+              "My Second Service" = {
+                description = "Homepage is the best";
+                href = "http://localhost/";
+              };
+            }];
+          }
+        ];
+
+        bookmarks = [
+          {
+            Developer = [{
+              Github = [{
+                abbr = "GH";
+                href = "https://github.com/";
+              }];
+            }];
+          }
+          {
+            Entertainment = [{
+              YouTube = [{
+                abbr = "YT";
+                href = "https://youtube.com/";
+              }];
+            }];
+          }
+        ];
+
       };
+
     };
   };
 }
