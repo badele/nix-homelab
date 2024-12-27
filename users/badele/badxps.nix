@@ -27,6 +27,7 @@ in
     # Apps
     ../../nix/home-manager/apps/bluetooth.nix
     ../../nix/home-manager/apps/cad.nix
+    ../../nix/home-manager/apps/chess.nix
     ../../nix/home-manager/apps/graphics.nix
     ../../nix/home-manager/apps/networking.nix
 
