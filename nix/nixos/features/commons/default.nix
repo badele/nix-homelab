@@ -1,6 +1,4 @@
-{ ...
-}:
-{
+{ ... }: {
   imports = [
     ./disk.nix
     ./locale.nix
@@ -13,7 +11,5 @@
     ./zfs.nix
   ];
 
-  programs = {
-    zsh.enable = true;
-  };
+  programs = { zsh.enable = true; };
 }

@@ -174,8 +174,6 @@
         "hass"
       ],
       "roles": [
-        "adguard",
-        "dashy",
         "grafana",
         "loki",
         "nfs",
@@ -285,33 +283,39 @@
       "zone": "office",
       "parent": "router-homeoffice",
       "dnsalias": [],
-      "description": "Incus hypervisor A",
+      "description": "Hypervisor/container on LAN network",
       "os": "NixOS",
       "roles": [
         "ntp"
       ]
     },
-    "trilium": {
+    "hype16-adm": {
       "icon": "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png",
-      "ipv4": "192.168.254.115",
+      "ipv4": "192.168.240.16",
       "zone": "office",
-      "parent": "hype16",
-      "dnsalias": [],
-      "description": "Trilium application",
-      "os": "NixOS",
-      "roles": []
-    },
-    "gw-dmz": {
-      "icon": "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png",
-      "ipv4": "192.168.253.1",
-      "zone": "office",
-      "parent": "hype16",
+      "parent": "router-homeoffice",
       "dnsalias": [
-        "note"
+        "adguard",
+        "home",
+        "traefik"
       ],
-      "description": "Traefik proxy",
+      "description": "Hypervisor/container on ADM network",
       "os": "NixOS",
-      "roles": []
+      "roles": [
+        "ntp"
+      ]
+    },
+    "hype16-dmz": {
+      "icon": "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png",
+      "ipv4": "192.168.32.16",
+      "zone": "office",
+      "parent": "router-homeoffice",
+      "dnsalias": [],
+      "description": "Hypervisor/container on DMZ network",
+      "os": "NixOS",
+      "roles": [
+        "ntp"
+      ]
     },
     "demovm": {
       "icon": "https://cdn.icon-icons.com/icons2/2699/PNG/512/qemu_logo_icon_169821.png",

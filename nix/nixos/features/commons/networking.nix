@@ -21,22 +21,23 @@ in
     domain = config.homelab.domain;
     enableIPv6 = false;
 
+    # TODO: remove this
     # add an entry to /etc/hosts for each host
-    extraHosts = ''
-      127.0.0.1 cert.adele.im
-
-      # ADM
-      192.168.240.16 traefik.adele.im home.adele.im adguard.adele.im
-
-      # Hosts
-      ${lib.concatStringsSep "\n" (lib.mapAttrsToList (hostname: hostinfo:
-        "${hostinfo.ipv4} ${hostname}.${domain} ${hostname}")
-        config.homelab.hosts)}
-
-      # Alias
-      ${lib.concatMapStringsSep "\n"
-      (host: "${host.ip} ${host.name}.${domain} ${host.name}") aliasIps}
-    '';
+    # extraHosts = ''
+    #   127.0.0.1 cert.adele.im
+    #
+    #   # ADM
+    #   192.168.240.16 traefik.adele.im home.adele.im adguard.adele.im
+    #
+    #   # Hosts
+    #   ${lib.concatStringsSep "\n" (lib.mapAttrsToList (hostname: hostinfo:
+    #     "${hostinfo.ipv4} ${hostname}.${domain} ${hostname}")
+    #     config.homelab.hosts)}
+    #
+    #   # Alias
+    #   ${lib.concatMapStringsSep "\n"
+    #   (host: "${host.ip} ${host.name}.${domain} ${host.name}") aliasIps}
+    # '';
 
     # For ZFS
     hostId = "9cd5e8c7";

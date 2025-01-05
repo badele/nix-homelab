@@ -1,15 +1,22 @@
 # #########################################################
 # NIXOS (hosts)
 ##########################################################
-{ lib, config, ... }:
+{ lib, config, pkgs, ... }:
 let
   netlan = "254";
   netadm = "240";
   netdmz = "32";
 
-  lan_address = "192.168.${netlan}.16";
-  adm_address = "192.168.${netadm}.16";
-  dmz_address = "192.168.${netdmz}.16";
+  ctradm = "241";
+
+  # Host
+  traefikHost = "16";
+  adguardHost = "97";
+  homepageHost = "98";
+
+  hype16_lan = "192.168.${netlan}.${traefikHost}";
+  hype16_adm = "192.168.${netadm}.${traefikHost}";
+  hype16_dmz = "192.168.${netdmz}.${traefikHost}";
 
 in
 {
@@ -36,12 +43,21 @@ in
     # ../../nix/nixos/services/crowdsec.nix
     ../../nix/nixos/services/fail2ban.nix
     (import ../../nix/nixos/services/traefik.nix {
-      inherit lib config lan_address adm_address dmz_address;
+      inherit lib config;
+      lan_address = hype16_lan;
+      adm_address = hype16_adm;
+      dmz_address = hype16_dmz;
     })
 
     # Containers
-    ../../nix/nixos/containers/adguard.nix
-    ../../nix/nixos/containers/homepage.nix
+    (import ../../nix/nixos/containers/adguard.nix {
+      inherit lib config pkgs;
+      containerHost = adguardHost;
+    })
+    (import ../../nix/nixos/containers/homepage.nix {
+      inherit pkgs;
+      containerHost = homepageHost;
+    })
 
     # Roles
     ../../nix/nixos/roles # Automatically load service from <host.roles> sectionn from `homelab.json` file
@@ -209,9 +225,9 @@ in
 
       # extraInputRules = ''
       #   # LAN to traefik (on hypervisor)
-      #   iifname enp1s0 ip saddr 192.168.254.0/24 ip daddr ${lan_address}/24 tcp dport {80, 443} accept comment "lan to traefik"
-      #   iifname vlan-adm ip saddr 192.168.254.0/24 ip daddr ${adm_address}/24 tcp dport {80, 443} accept comment "adm to traefik"
-      #   iifname vlan-dmz ip saddr 192.168.254.0/24 ip daddr ${dmz_address}/24 tcp dport {80, 443} accept comment "dmz to traefik"
+      #   iifname enp1s0 ip saddr 192.168.254.0/24 ip daddr ${hype16_lan}/24 tcp dport {80, 443} accept comment "lan to traefik"
+      #   iifname vlan-adm ip saddr 192.168.254.0/24 ip daddr ${hype16_adm}/24 tcp dport {80, 443} accept comment "adm to traefik"
+      #   iifname vlan-dmz ip saddr 192.168.254.0/24 ip daddr ${hype16_dmz}/24 tcp dport {80, 443} accept comment "dmz to traefik"
       # '';
     };
 
@@ -254,16 +270,17 @@ in
 
                         icmp type echo-request accept comment "allow ping"
 
-                        # Mikrotik Neighbors discovery
-                        udp dport 5678 accept comment "Mikrotik Neighbors discovery"
-
                         # Internet to DMZ
                         iifname vlan-dmz ip daddr 192.168.32.16 tcp dport {80, 443} accept comment "internet to DMZ traefik"
 
                         # LAN To traefik service
-                        iifname enp1s0   ip saddr 192.168.${netlan}.0/24 ip daddr ${lan_address}/24 tcp dport {80, 443} accept comment "lan to traefik"
-                        iifname vlan-adm ip saddr 192.168.${netlan}.0/24 ip daddr ${adm_address}/24 tcp dport {80, 443} accept comment "adm to traefik"
-                        iifname vlan-dmz ip saddr 192.168.${netlan}.0/24 ip daddr ${dmz_address}/24 tcp dport {80, 443} accept comment "dmz to traefik"
+                        iifname enp1s0   ip saddr 192.168.${netlan}.0/24 ip daddr ${hype16_lan} tcp dport {80, 443} accept comment "lan to traefik"
+                        iifname vlan-adm ip saddr 192.168.${netlan}.0/24 ip daddr ${hype16_adm} tcp dport {80, 443} accept comment "adm to traefik"
+                        iifname vlan-dmz ip saddr 192.168.${netlan}.0/24 ip daddr ${hype16_dmz} tcp dport {80, 443} accept comment "dmz to traefik"
+
+                        # LAN to adguard DNS
+                        ip saddr 192.168.${netlan}.0/24 ip daddr 192.168.${netadm}.${adguardHost} udp dport {53} accept comment "adm to adguard DNS"
+                        ip saddr 192.168.${netlan}.0/24 ip daddr 192.168.${netadm}.${adguardHost} tcp dport {53} accept comment "adm to adguard DNS"
 
                         log prefix "Blocked INPUT: " flags all drop
         	}
@@ -280,12 +297,15 @@ in
                         icmp type echo-request accept comment "allow ping"
 
                         # crowdsec
-                        oifname lo ip daddr 127.0.0.1 tcp dport 8080 accept comment "crowdsec API"
-                        oifname lo ip daddr 127.0.0.1 tcp dport 6060 accept comment "crowdsec API"
+                        # oifname lo ip daddr 127.0.0.1 tcp dport 8080 accept comment "crowdsec API"
+                        # oifname lo ip daddr 127.0.0.1 tcp dport 6060 accept comment "crowdsec API"
 
-                        oifname vlan-dmz tcp dport {80, 443} accept comment "hype16 to HTTP/HTTPS"
-                        oifname ve-adguard ip saddr 192.168.240.16 ip daddr 192.168.241.1 tcp dport 3000 accept comment "traefik to adguard"
-                        oifname ve-homepage ip saddr 192.168.240.16 ip daddr 192.168.241.2 tcp dport 8082 accept comment "traefik to homepage"
+                        # oifname vlan-dmz tcp dport {80, 443} accept comment "hype16 to HTTP/HTTPS traefik listener"
+
+                        oifname vlan-dmz ip saddr ${hype16_dmz} ip daddr 192.168.${ctradm}.${adguardHost} tcp dport {3000} accept comment "hype16 to adguard"
+
+                        oifname ve-adguard ip saddr 192.168.${netadm}.${adguardHost} ip daddr 192.168.${ctradm}.${adguardHost} tcp dport {3000} accept comment "hype16 to adguard"
+                        oifname ve-homepage ip saddr 192.168.${netadm}.${homepageHost} ip daddr 192.168.${ctradm}.${homepageHost} tcp dport 8082 accept comment "traefik to homepage"
 
                         log prefix "Blocked OUTPUT: " flags all drop
                 }
@@ -299,6 +319,20 @@ in
 
         	chain forward-allow {
         		ct status dnat accept comment "allow port forward"
+
+                        # ICMP
+                        iifname vlan-dmz oifname ve-adguard icmp type echo-request accept comment "ping request vlan-dmz => ve-adguard"
+                        iifname ve-adguard oifname vlan-dmz icmp type echo-request accept comment "ping request ve-adguard => vlan-dmz"
+
+                        #######################################################
+                        # Adguard
+                        #######################################################
+                        # NOTE: vlan-dmz is default route (out)
+                        # in
+                        iifname vlan-dmz oifname ve-adguard ip saddr 192.168.${netlan}.0/24 ip daddr 192.168.${ctradm}.${adguardHost} udp dport 53 accept comment "dmz to adguard DNS"
+                        # out
+                        iifname ve-adguard oifname vlan-dmz ip saddr 192.168.${ctradm}.${adguardHost} udp dport 53 accept comment "adguard out UDP DNS"
+                        iifname ve-adguard oifname vlan-dmz ip saddr 192.168.${ctradm}.${adguardHost} tcp dport {443,853} accept comment "adguard out DNSEC/TLS"
 
                         iifname ve-homepage oifname enp1s0 udp dport 53
         	}

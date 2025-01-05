@@ -306,17 +306,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1734191902,
-        "narHash": "sha256-eVPDf1vcCor/21qOuJQkKuzZWK5+sZTaf+lW90uMuEI=",
-        "ref": "refs/heads/main",
-        "rev": "7600a67b82d13d013bc67a3a66b4a65effdb7fb1",
-        "revCount": 13,
-        "type": "git",
-        "url": "https://git.aevoo.com/aevoo/os/nixunits.git"
+        "lastModified": 1735492397,
+        "narHash": "sha256-UYsx18CKcYPUXFXGVHsSQSidV0Vk9eDaWudjgcEFIbE=",
+        "owner": "dcasier",
+        "repo": "nixunits",
+        "rev": "12d6f88d53a89504f7195fd893c2b4d4c779051e",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "https://git.aevoo.com/aevoo/os/nixunits.git"
+        "owner": "dcasier",
+        "repo": "nixunits",
+        "type": "github"
       }
     },
     "nur": {
