@@ -44,7 +44,6 @@ in
 
         environment.systemPackages = with pkgs; [ tcpdump dig ];
 
-        services.resolved.enable = false;
         services.adguardhome = {
           enable = true;
           mutableSettings = false;

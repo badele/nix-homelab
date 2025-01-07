@@ -207,8 +207,7 @@ in
 
     # Define default gateway and nameservers
     defaultGateway = "192.168.32.254";
-    # nameservers = [ "89.2.0.1" "89.2.0.2" ];
-    nameservers = [ "192.168.${netlan}.254" ];
+    nameservers = [ "192.168.241.97" "9.9.9.11" ];
 
     # Firewall
     firewall = {
@@ -282,6 +281,11 @@ in
                         ip saddr 192.168.${netlan}.0/24 ip daddr 192.168.${netadm}.${adguardHost} udp dport {53} accept comment "adm to adguard DNS"
                         ip saddr 192.168.${netlan}.0/24 ip daddr 192.168.${netadm}.${adguardHost} tcp dport {53} accept comment "adm to adguard DNS"
 
+                        #######################################################
+                        # Homepage
+                        #######################################################
+                        iifname ve-homepage ip daddr ${hype16_adm} tcp dport {443} accept comment "homepage to traefik"
+
                         log prefix "Blocked INPUT: " flags all drop
         	}
 
@@ -305,8 +309,13 @@ in
                         oifname vlan-dmz ip saddr ${hype16_dmz} ip daddr 192.168.${ctradm}.${adguardHost} tcp dport {3000} accept comment "hype16 to adguard"
 
                         oifname ve-adguard ip saddr 192.168.${netadm}.${adguardHost} ip daddr 192.168.${ctradm}.${adguardHost} tcp dport {3000} accept comment "hype16 to adguard"
-                        oifname ve-homepage ip saddr 192.168.${netadm}.${homepageHost} ip daddr 192.168.${ctradm}.${homepageHost} tcp dport 8082 accept comment "traefik to homepage"
 
+                        #######################################################
+                        # Homepage
+                        #######################################################
+                        # oifname ve-homepage ip saddr 192.168.${netadm}.${homepageHost} ip daddr 192.168.${ctradm}.${homepageHost} tcp dport 8082 accept comment "traefik to homepage"
+                        oifname ve-homepage ip saddr ${hype16_dmz} ip daddr 192.168.${ctradm}.${homepageHost} tcp dport 8082 accept comment "traefik to homepage"
+                        oifname ve-homepage ip saddr 192.168.${netadm}.98 ip daddr 192.168.${ctradm}.98 tcp dport 8082 accept comment "traefik to homepage"
                         log prefix "Blocked OUTPUT: " flags all drop
                 }
 
@@ -334,7 +343,11 @@ in
                         iifname ve-adguard oifname vlan-dmz ip saddr 192.168.${ctradm}.${adguardHost} udp dport 53 accept comment "adguard out UDP DNS"
                         iifname ve-adguard oifname vlan-dmz ip saddr 192.168.${ctradm}.${adguardHost} tcp dport {443,853} accept comment "adguard out DNSEC/TLS"
 
-                        iifname ve-homepage oifname enp1s0 udp dport 53
+                        #######################################################
+                        # Homepage
+                        #######################################################
+                        iifname ve-homepage oifname vlan-dmz tcp dport {443} accept comment "homepage to external https"
+                        iifname ve-homepage oifname ve-adguard udp dport {53} accept comment "homepage to adguard DNS"
         	}
         }
       '';

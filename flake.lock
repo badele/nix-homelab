@@ -306,11 +306,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1735492397,
-        "narHash": "sha256-UYsx18CKcYPUXFXGVHsSQSidV0Vk9eDaWudjgcEFIbE=",
+        "lastModified": 1736169043,
+        "narHash": "sha256-kuqbaF1VUdcVc5ac2xuwD+ycE1myKAfqG1RecPESWTI=",
         "owner": "dcasier",
         "repo": "nixunits",
-        "rev": "12d6f88d53a89504f7195fd893c2b4d4c779051e",
+        "rev": "39abe7bd0ede250318b5c1ba0441c9ed86ccb0b4",
         "type": "github"
       },
       "original": {

@@ -19,11 +19,17 @@
         services.homepage-dashboard = {
           enable = true;
 
+          settings = {
+            background = "https://w.wallhaven.cc/full/0w/wallhaven-0w3pdr.jpg";
+            backgroundOpacity = "0.2";
+            cardBlur = "sm";
+          };
+
           widgets = [
             {
               openmeteo = {
                 label = "Montpellier";
-                lattitude = 43.625;
+                latitude = 43.625;
                 longitude = 3.862038;
                 units = "metric";
                 cache = 5;
@@ -36,31 +42,39 @@
                 memory = true;
               };
             }
+
             {
               search = {
-                provider = "duckduckgo";
-                target = "_blank";
-              };
-            }
-            {
-              traefik = {
-                type = "traefik";
-                icon = "traefik.svg";
-                href = "https://traefik.adele.im/dashboard";
-                url = "https://traefik.adele.im/api/overview";
+                provider = "google";
+                focus = true;
+                showSearchSuggestions = true;
+                target = "_self";
               };
             }
           ];
 
           services = [
             {
-              "My First Group" = [
+              "Services" = [
+
+                {
+                  traefik = {
+                    icon = "traefik";
+                    href = "https://traefik.adele.im";
+                    siteMonitor = "https://traefik.adele.im";
+                    widget = {
+                      type = "traefik";
+                      fields = [ "routers" "services" "middleware" ];
+                      url = "https://traefik.adele.im";
+                    };
+                  };
+                }
 
                 {
                   adguard = {
-                    icon = "adguard.svg";
+                    icon = "adguard-home";
                     href = "https://adguard.adele.im";
-                    ping = "https://adguard.adele.im";
+                    siteMonitor = "https://adguard.adele.im";
                     widget = {
                       type = "adguard";
                       fields = [ "queries" "blocked" "filtered" "latency" ];
