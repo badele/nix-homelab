@@ -48,7 +48,9 @@
     };
 
     nixunits = {
-      url = "git+https://git.aevoo.com/aevoo/os/nixunits.git";
+      url = "github:dcasier/nixunits";
+      # url = "github:badele/fork-nixunits/fix-systemd";
+      # url = "path:/home/badele/ghq/github.com/badele/fork-nixunits";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -62,6 +64,7 @@
       # , nix-pre-commit
     , stylix
     , nur
+    , nixunits
     , ...
     }@inputs:
     let
@@ -171,6 +174,8 @@
           specialArgs = { inherit inputs outputs; };
           modules = [
             inputs.sops-nix.nixosModules.sops
+            inputs.nixunits.nixosModules.default
+
             ./hosts/badxps
 
             home-manager.nixosModules.home-manager

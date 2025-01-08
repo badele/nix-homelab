@@ -66,6 +66,27 @@
         "type": "github"
       }
     },
+    "crowdsec": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1735050278,
+        "narHash": "sha256-vOVVbmuS83mjd5aWfU4uLdbig/r/OBA4v/NyQW8RD7w=",
+        "ref": "refs/heads/main",
+        "rev": "c6aa259c883e3810167b754fed72fc06119734a0",
+        "revCount": 35,
+        "type": "git",
+        "url": "https://codeberg.org/kampka/nix-flake-crowdsec.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://codeberg.org/kampka/nix-flake-crowdsec.git"
+      }
+    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -103,6 +124,23 @@
       }
     },
     "flake-utils": {
+      "inputs": {
+        "systems": "systems"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "id": "flake-utils",
+        "type": "indirect"
+      }
+    },
+    "flake-utils_2": {
       "inputs": {
         "systems": [
           "stylix",
@@ -268,17 +306,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1734191902,
-        "narHash": "sha256-eVPDf1vcCor/21qOuJQkKuzZWK5+sZTaf+lW90uMuEI=",
-        "ref": "refs/heads/main",
-        "rev": "7600a67b82d13d013bc67a3a66b4a65effdb7fb1",
-        "revCount": 13,
-        "type": "git",
-        "url": "https://git.aevoo.com/aevoo/os/nixunits.git"
+        "lastModified": 1736353807,
+        "narHash": "sha256-aPLRP5SLL2guDA/+KyQv6zX1FnLPqWg7oSCBackTE9I=",
+        "owner": "dcasier",
+        "repo": "nixunits",
+        "rev": "f5c9f17dbf5f78e5c3d6b352260b6554b38b8727",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "https://git.aevoo.com/aevoo/os/nixunits.git"
+        "owner": "dcasier",
+        "repo": "nixunits",
+        "type": "github"
       }
     },
     "nur": {
@@ -298,6 +336,7 @@
     },
     "root": {
       "inputs": {
+        "crowdsec": "crowdsec",
         "disko": "disko",
         "hardware": "hardware",
         "home-manager": "home-manager",
@@ -336,11 +375,11 @@
         "base16-helix": "base16-helix",
         "base16-vim": "base16-vim",
         "flake-compat": "flake-compat",
-        "flake-utils": "flake-utils",
+        "flake-utils": "flake-utils_2",
         "gnome-shell": "gnome-shell",
         "home-manager": "home-manager_2",
         "nixpkgs": "nixpkgs_2",
-        "systems": "systems",
+        "systems": "systems_2",
         "tinted-foot": "tinted-foot",
         "tinted-kitty": "tinted-kitty",
         "tinted-tmux": "tinted-tmux"
@@ -360,6 +399,21 @@
       }
     },
     "systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "systems_2": {
       "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
