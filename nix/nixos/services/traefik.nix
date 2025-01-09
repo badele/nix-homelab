@@ -2,8 +2,6 @@
 let domain = config.homelab.domain;
 in {
 
-  # systemd.tmpfiles.rules = [ "d /var/log/traefik 0750 traefik traefik -" ];
-
   services.traefik = {
     enable = true;
 
@@ -92,6 +90,12 @@ in {
           entryPoints = [ "admsecure" ];
           tls.certresolver = "letsencrypt";
         };
+        note = {
+          rule = lib.mkDefault "Host(`note.${domain}`)";
+          service = "trilium";
+          entryPoints = [ "admsecure" ];
+          tls.certresolver = "letsencrypt";
+        };
       };
 
       services = {
@@ -113,6 +117,11 @@ in {
         homepage = {
           loadBalancer = {
             servers = [{ url = "http://192.168.241.98:8082"; }];
+          };
+        };
+        trilium = {
+          loadBalancer = {
+            servers = [{ url = "http://192.168.241.99:8080"; }];
           };
         };
       };

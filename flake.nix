@@ -47,9 +47,9 @@
     };
 
     nixunits = {
-      url = "github:dcasier/nixunits";
+      # url = "github:dcasier/nixunits";
       # url = "github:badele/fork-nixunits/fix-systemd";
-      # url = "path:/home/badele/ghq/github.com/badele/fork-nixunits";
+      url = "path:/home/badele/ghq/github.com/badele/fork-nixunits";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

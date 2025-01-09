@@ -297,7 +297,8 @@
       "dnsalias": [
         "adguard",
         "home",
-        "traefik"
+        "traefik",
+        "note"
       ],
       "description": "Hypervisor/container on ADM network",
       "os": "NixOS",

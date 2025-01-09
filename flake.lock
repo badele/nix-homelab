@@ -306,17 +306,14 @@
         ]
       },
       "locked": {
-        "lastModified": 1736169043,
-        "narHash": "sha256-kuqbaF1VUdcVc5ac2xuwD+ycE1myKAfqG1RecPESWTI=",
-        "owner": "dcasier",
-        "repo": "nixunits",
-        "rev": "39abe7bd0ede250318b5c1ba0441c9ed86ccb0b4",
-        "type": "github"
+        "lastModified": 1736451857,
+        "narHash": "sha256-izUM9xC95Fh0q6S/DCHOQ7jX6AKn8Zsev1w88mvL4rI=",
+        "path": "/home/badele/ghq/github.com/badele/fork-nixunits",
+        "type": "path"
       },
       "original": {
-        "owner": "dcasier",
-        "repo": "nixunits",
-        "type": "github"
+        "path": "/home/badele/ghq/github.com/badele/fork-nixunits",
+        "type": "path"
       }
     },
     "nur": {

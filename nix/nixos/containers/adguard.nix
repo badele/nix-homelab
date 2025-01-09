@@ -1,7 +1,7 @@
 # Don't forget to add :
 # - hostname entry on nix/nixos/features/commons/networking.nix
 # - firewall rule hosts/hype16/default.nix
-{ lib, config, pkgs, containerHost, ... }:
+{ lib, config, pkgs, containerIpSuffix, ... }:
 let
 
   webport = "3000";
@@ -35,14 +35,14 @@ in
       autoStart = true;
 
       network = {
-        hostIp4 = "192.168.240.${containerHost}";
-        ip4 = "192.168.241.${containerHost}";
-        ip4route = "192.168.240.${containerHost}";
+        hostIp4 = "192.168.240.${containerIpSuffix}";
+        ip4 = "192.168.241.${containerIpSuffix}";
+        ip4route = "192.168.240.${containerIpSuffix}";
       };
 
       config = {
 
-        environment.systemPackages = with pkgs; [ tcpdump dig ];
+        # environment.systemPackages = with pkgs; [ ];
 
         services.adguardhome = {
           enable = true;

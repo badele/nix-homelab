@@ -10,13 +10,14 @@ let
   ctradm = "241";
 
   # Host
-  traefikHost = "16";
-  adguardHost = "97";
-  homepageHost = "98";
+  traefikIpSuffix = "16";
+  adguardIpSuffix = "97";
+  homepageIpSuffix = "98";
+  triliumIpSuffix = "99";
 
-  hype16_lan = "192.168.${netlan}.${traefikHost}";
-  hype16_adm = "192.168.${netadm}.${traefikHost}";
-  hype16_dmz = "192.168.${netdmz}.${traefikHost}";
+  hype16_lan = "192.168.${netlan}.${traefikIpSuffix}";
+  hype16_adm = "192.168.${netadm}.${traefikIpSuffix}";
+  hype16_dmz = "192.168.${netdmz}.${traefikIpSuffix}";
 
 in
 {
@@ -52,11 +53,15 @@ in
     # Containers
     (import ../../nix/nixos/containers/adguard.nix {
       inherit lib config pkgs;
-      containerHost = adguardHost;
+      containerIpSuffix = adguardIpSuffix;
     })
     (import ../../nix/nixos/containers/homepage.nix {
       inherit pkgs;
-      containerHost = homepageHost;
+      containerIpSuffix = homepageIpSuffix;
+    })
+    (import ../../nix/nixos/containers/trilium.nix {
+      inherit pkgs;
+      containerIpSuffix = triliumIpSuffix;
     })
 
     # Roles
@@ -278,8 +283,8 @@ in
                         iifname vlan-dmz ip saddr 192.168.${netlan}.0/24 ip daddr ${hype16_dmz} tcp dport {80, 443} accept comment "dmz to traefik"
 
                         # LAN to adguard DNS
-                        ip saddr 192.168.${netlan}.0/24 ip daddr 192.168.${netadm}.${adguardHost} udp dport {53} accept comment "adm to adguard DNS"
-                        ip saddr 192.168.${netlan}.0/24 ip daddr 192.168.${netadm}.${adguardHost} tcp dport {53} accept comment "adm to adguard DNS"
+                        ip saddr 192.168.${netlan}.0/24 ip daddr 192.168.${netadm}.${adguardIpSuffix} udp dport {53} accept comment "adm to adguard DNS"
+                        ip saddr 192.168.${netlan}.0/24 ip daddr 192.168.${netadm}.${adguardIpSuffix} tcp dport {53} accept comment "adm to adguard DNS"
 
                         #######################################################
                         # Homepage
@@ -300,22 +305,27 @@ in
                         udp dport 123 accept comment "NTP request"
                         icmp type echo-request accept comment "allow ping"
 
-                        # crowdsec
-                        # oifname lo ip daddr 127.0.0.1 tcp dport 8080 accept comment "crowdsec API"
-                        # oifname lo ip daddr 127.0.0.1 tcp dport 6060 accept comment "crowdsec API"
+                        #######################################################
+                        # Hype16
+                        #######################################################
+                        oifname vlan-dmz ip saddr ${hype16_dmz} tcp dport {80, 443} accept comment "hype16 to HTTP/HTTPS"
 
-                        # oifname vlan-dmz tcp dport {80, 443} accept comment "hype16 to HTTP/HTTPS traefik listener"
+                        # oifname vlan-dmz ip saddr ${hype16_dmz} ip daddr 192.168.${ctradm}.${adguardIpSuffix} tcp dport {3000} accept comment "hype16 to adguard"
 
-                        oifname vlan-dmz ip saddr ${hype16_dmz} ip daddr 192.168.${ctradm}.${adguardHost} tcp dport {3000} accept comment "hype16 to adguard"
-
-                        oifname ve-adguard ip saddr 192.168.${netadm}.${adguardHost} ip daddr 192.168.${ctradm}.${adguardHost} tcp dport {3000} accept comment "hype16 to adguard"
+                        oifname ve-adguard ip saddr 192.168.${netadm}.${adguardIpSuffix} ip daddr 192.168.${ctradm}.${adguardIpSuffix} tcp dport {3000} accept comment "hype16 to adguard"
 
                         #######################################################
                         # Homepage
                         #######################################################
-                        # oifname ve-homepage ip saddr 192.168.${netadm}.${homepageHost} ip daddr 192.168.${ctradm}.${homepageHost} tcp dport 8082 accept comment "traefik to homepage"
-                        oifname ve-homepage ip saddr ${hype16_dmz} ip daddr 192.168.${ctradm}.${homepageHost} tcp dport 8082 accept comment "traefik to homepage"
-                        oifname ve-homepage ip saddr 192.168.${netadm}.98 ip daddr 192.168.${ctradm}.98 tcp dport 8082 accept comment "traefik to homepage"
+                        oifname ve-homepage ip saddr ${hype16_dmz} ip daddr 192.168.${ctradm}.${homepageIpSuffix} tcp dport 8082 accept comment "traefik to homepage"
+                        oifname ve-homepage ip saddr 192.168.${netadm}.${homepageIpSuffix} ip daddr 192.168.${ctradm}.${homepageIpSuffix} tcp dport 8082 accept comment "traefik to homepage"
+
+                        #######################################################
+                        # Trilium
+                        #######################################################
+                        oifname ve-trilium ip saddr ${hype16_dmz} ip daddr 192.168.${ctradm}.${triliumIpSuffix} tcp dport 8080 accept comment "traefik to trilium"
+                        oifname ve-trilium ip saddr 192.168.${netadm}.${triliumIpSuffix} ip daddr 192.168.${ctradm}.${triliumIpSuffix} tcp dport 8080 accept comment "traefik to trilium"
+
                         log prefix "Blocked OUTPUT: " flags all drop
                 }
 
@@ -338,10 +348,10 @@ in
                         #######################################################
                         # NOTE: vlan-dmz is default route (out)
                         # in
-                        iifname vlan-dmz oifname ve-adguard ip saddr 192.168.${netlan}.0/24 ip daddr 192.168.${ctradm}.${adguardHost} udp dport 53 accept comment "dmz to adguard DNS"
+                        iifname vlan-dmz oifname ve-adguard ip saddr 192.168.${netlan}.0/24 ip daddr 192.168.${ctradm}.${adguardIpSuffix} udp dport 53 accept comment "dmz to adguard DNS"
                         # out
-                        iifname ve-adguard oifname vlan-dmz ip saddr 192.168.${ctradm}.${adguardHost} udp dport 53 accept comment "adguard out UDP DNS"
-                        iifname ve-adguard oifname vlan-dmz ip saddr 192.168.${ctradm}.${adguardHost} tcp dport {443,853} accept comment "adguard out DNSEC/TLS"
+                        iifname ve-adguard oifname vlan-dmz ip saddr 192.168.${ctradm}.${adguardIpSuffix} udp dport 53 accept comment "adguard out UDP DNS"
+                        iifname ve-adguard oifname vlan-dmz ip saddr 192.168.${ctradm}.${adguardIpSuffix} tcp dport {443,853} accept comment "adguard out DNSEC/TLS"
 
                         #######################################################
                         # Homepage
