@@ -120,7 +120,7 @@ nixos-init-root-pass host:
     fi
 
 # Init nixos host if not exists
-nixos-init-host host: (nixos-init-ssh-host host) (nixos-init-root-pass host)
+nixos-init-host host: (nixos-init-root-pass host) (nixos-init-ssh-host host)
 
 # Install new <hostname> to <target>:<port> system wide
 nixos-install hostname targetip port="22":
@@ -174,7 +174,7 @@ demo-nixos-install hostname targetip port="22":
 @nixos-update options="":
     just nixos-command switch "" {{ options }}
 
-# Install on remote host
+# Update on remote host
 @nixos-remote-update hostname targetip options="":
     just nixos-command switch {{hostname}} "--target-host root@{{ targetip }}" {{ options }}
 

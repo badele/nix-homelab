@@ -1,7 +1,14 @@
 # #########################################################
 # NIXOS (hosts)
 ##########################################################
-{ inputs, config, pkgs, lib, ... }: {
+{ inputs, config, pkgs, lib, ... }:
+let
+  wireguard_endpoint = "84.234.31.97:54321";
+  wireguard_private_ips = [ "10.123.0.2/24" ];
+  wireguard_public_key = "LQX7VSva7CZJmjmbGrFmG+37bS0PtTgy9Q6/15lIh08=";
+
+in
+{
   imports = [
     inputs.hardware.nixosModules.dell-xps-15-9570-intel
     ./hardware-configuration.nix
@@ -26,7 +33,7 @@
     ../../nix/nixos/features/desktop/wm/xorg/lightdm.nix
 
     # # Roles
-    ../../nix/nixos/roles # Automatically load service from <host.modules> sectionn from `homelab.json` file
+    # ../../nix/nixos/roles # Automatically load service from <host.modules> sectionn from `homelab.json` file
   ];
 
   ####################################
@@ -149,8 +156,36 @@
     #extraConfig = "load-module module-combine-sink";
   };
 
+  ####################################
+  # Network
+  ####################################
+
   networking.hostName = "badxps";
   networking.useDHCP = lib.mkDefault true;
+
+  networking.wireguard = {
+    enable = true;
+    interfaces = {
+      wg-cab1e = {
+        ips = wireguard_private_ips;
+        privateKeyFile = config.sops.secrets."wireguard/private_peer".path;
+
+        postSetup = ''
+          # ${pkgs.iproute2}/bin/ip route add 84.234.31.97 via 192.168.254.254 dev wlp59s0
+          ${pkgs.iproute2}/bin/ip route add default via 10.123.0.2
+        '';
+
+        peers = [{
+          publicKey = wireguard_public_key;
+          allowedIPs = [ "0.0.0.0/0" ]; # Tout le trafic passe par le VPN
+          endpoint = wireguard_endpoint;
+          persistentKeepalive = 25; # Permet de maintenir la connexion active
+        }];
+      };
+    };
+  };
+
+  # networking.nameservers = [ "1.1.1.1" ];
 
   ####################################
   # Programs
@@ -173,6 +208,8 @@
       mode = "0400";
       owner = config.users.users.badele.name;
     };
+
+    "wireguard/private_peer" = { sopsFile = ../../hosts/badxps/secrets.yml; };
   };
 
   nixpkgs.hostPlatform.system = "x86_64-linux";

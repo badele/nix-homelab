@@ -268,6 +268,40 @@
             ./hosts/hypervised/trilium
           ];
         };
+
+        ########################################################################
+        # cab1e (Wireguard VPN server)
+        ########################################################################
+        cab1e = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs outputs; };
+          modules = [
+            inputs.sops-nix.nixosModules.sops
+            inputs.nixunits.nixosModules.default
+
+            ./hosts/cab1e
+
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                backupFileExtension = "hm-backup";
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                verbose = true;
+                extraSpecialArgs = { inputs = self.inputs; };
+                users = {
+                  root = import ./users/root/cab1e.nix;
+                  badele = {
+                    imports = [
+                      nur.nixosModules.nur
+                      stylix.homeManagerModules.stylix
+                      ./users/badele/cab1e.nix
+                    ];
+                  };
+                };
+              };
+            }
+          ];
+        };
       };
 
       # Standalone home-manager configuration entrypoint
@@ -392,5 +426,6 @@
           ];
         };
       };
+
     };
 }

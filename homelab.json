@@ -9,6 +9,10 @@
       "net": "192.168.254.0",
       "mask": 24
     },
+    "vpn-cab1e": {
+      "net": "10.123.0.0",
+      "mask": 24
+    },
     "vpn-server": {
       "net": "10.123.45.0",
       "mask": 24
@@ -264,8 +268,7 @@
         "virtualization"
       ],
       "description": "Dell XPS 9570 Latop",
-      "os": "NixOS",
-      "roles": []
+      "os": "NixOS"
     },
     "badxps-eth": {
       "icon": "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png",
@@ -301,6 +304,14 @@
       "zone": "unknown",
       "parent": "none",
       "description": "qemu VM (SSH on port 2222)",
+      "os": "NixOS"
+    },
+    "cab1e": {
+      "icon": "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png",
+      "ipv4": "84.234.31.97",
+      "zone": "unknown",
+      "parent": "none",
+      "description": "Wireguard VPN anonymizer server",
       "os": "NixOS"
     }
   }
