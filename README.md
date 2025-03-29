@@ -59,7 +59,7 @@ This list generated with `just doc-update` command
     </tr><tr>
             <td><a href="./docs/wireguard.md"><img width="32" src="https://cdn.icon-icons.com/icons2/2699/PNG/512/wireguard_logo_icon_168760.png"></a></td>
             <td><a href="./docs/wireguard.md">wireguard</a></td>
-            <td>router-living, badphone</td>
+            <td>router-living, badphone, cab1e</td>
         <td>An VPN client/server alternative to IPSec and OpenVPN</td>
         <tr>
             <td><a href="./docs/acme.md"><img width="32" src="https://www.kevinsubileau.fr/wp-content/uploads/2016/03/letsencrypt-logo-pad.png"></a></td>
@@ -284,6 +284,11 @@ This list generated with `just doc-update` command
             <td><a href="./docs/hosts/vm-test.md">vm-test</a>&nbsp;(127.0.0.1)</td>
             <td>NixOS</td>
             <td>qemu VM (SSH on port 2222)</td>
+        </tr><tr>
+            <td><a href="./docs/hosts/cab1e.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
+            <td><a href="./docs/hosts/cab1e.md">cab1e</a>&nbsp;(84.234.31.97)</td>
+            <td>NixOS</td>
+            <td>Wireguard VPN anonymizer server</td>
         </tr></table>
 
 [comment]: (<<HOSTS)
@@ -393,35 +398,36 @@ This list generated with `just doc-update` command
 
 ```text
 Available recipes:
-    help                                              Help it showed if just is called without arguments
-    precommit-install                                 Setup pre-commit
-    precommit-update                                  Update pre-commit
-    precommit-check                                   precommit check
-    doc-update FAKEFILENAME                           Update documentation
-    lint                                              Lint the project
-    debug-repl                                        Repl the project
-    flake-metadata                                    Show flake metadata
-    flake-update                                      Update the flake
-    flake-check                                       Check the nix homelab configuration
-    passwd-generate                                   Generate random password
-    secret-update FILE                                Update secrets SOPS
-    nixos-init-host host                              Init nixos host if not exists
-    nixos-install hostname targetip port="22"         Install new <hostname> to <target>:<port> system wide
-    nixos-garbage                                     Nixos clean build cache and garbage unused derivations
-    nixos-build hostname="" options=""                Nixos build local host
-    demo-nixos-install hostname targetip port="22"    Install new <hostname> to <target>:<port> system wide
-    nixos-update hostname="" options=""               Update NixOS on local host
-    nixos-remote-deploy hostname targetip             Deploy NixOS on remote host
-    home-build                                        Home build for local user
-    home-deploy                                       Home deploy local user
-    iso-build                                         Build NixOS ISO image
-    demo-init-credentials passwd="demopass"           Init demo credentials
-    demo-start                                        Start NixOS demo from ISO image
-    demo-qemu-nixos-install                           Test NixOS installation deployment on qemu virutal machine
-    demo-qemu-nixos-update                            Test NixOS update deployment on qemu virutal machine
-    demo-stop                                         Stop demo vm test
-    demo-clean                                        Clean demo vm test
-    packages                                          Show installed packages
+    help                                                Help it showed if just is called without arguments
+    precommit-install                                   Setup pre-commit
+    precommit-update                                    Update pre-commit
+    precommit-check                                     precommit check
+    doc-update FAKEFILENAME                             Update documentation
+    lint                                                Lint the project
+    debug-repl                                          Repl the project
+    flake-metadata                                      Show flake metadata
+    flake-update                                        Update the flake
+    flake-sync-registry                                 Sync the nix registry with the current running nix version
+    flake-check                                         Check the nix homelab configuration
+    passwd-generate                                     Generate random password
+    secret-update FILE                                  Update secrets SOPS
+    nixos-init-host host                                Init nixos host if not exists
+    nixos-install hostname targetip port="22"           Install new <hostname> to <target>:<port> system wide
+    nixos-garbage                                       Nixos clean build cache and garbage unused derivations
+    nixos-build hostname="" options=""                  Nixos build local host
+    demo-nixos-install hostname targetip port="22"      Install new <hostname> to <target>:<port> system wide
+    nixos-update options=""                             Update NixOS on local host
+    nixos-remote-update hostname targetip options=""    Update on remote host
+    home-build                                          Home build for local user
+    home-deploy                                         Home deploy local user
+    iso-build                                           Build NixOS ISO image
+    demo-init-credentials passwd="demopass"             Init demo credentials
+    demo-start                                          Start NixOS demo from ISO image
+    demo-qemu-nixos-install                             Test NixOS installation deployment on qemu virutal machine
+    demo-qemu-nixos-update                              Test NixOS update deployment on qemu virutal machine
+    demo-stop                                           Stop demo vm test
+    demo-clean                                          Clean demo vm test
+    packages                                            Show installed packages
 ```
 
 <!-- /COMMANDS -->

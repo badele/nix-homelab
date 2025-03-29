@@ -48,9 +48,8 @@ in {
         wireguard-tools
         openssl_3_0.bin
 
-        # Wireguard
-        openssl_3_0.bin
-        wireguard-tools
+        # Openstack
+        openstackclient
 
       ] ++ lib.optional (stdenv.isLinux) mkpasswd;
 
