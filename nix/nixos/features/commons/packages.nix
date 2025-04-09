@@ -1,6 +1,5 @@
 { lib, pkgs, inputs, outputs, ... }: {
-  imports = [
-  ];
+  imports = [ ];
 
   services.udisks2.enable = true;
 
@@ -9,6 +8,7 @@
   #   enable = true;
   #   libraries = with pkgs; [ zlib ];
   # };
+  programs.nix-ld.enable = true;
 
   environment.systemPackages = with pkgs; [
 

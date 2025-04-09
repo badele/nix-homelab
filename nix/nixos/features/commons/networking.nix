@@ -10,6 +10,13 @@ let
 
 in
 {
+  networking.firewall.enable = true;
+  networking.firewall.logRefusedPackets = true;
+  networking.firewall.logReversePathDrops = true;
+  networking.firewall.logRefusedConnections = true;
+
+  networking.nftables.enable = true;
+
   networking = {
     networkmanager.enable = true;
 

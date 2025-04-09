@@ -1,5 +1,5 @@
-{ config, ... }:
-{
+{ pkgs, ... }: {
+
   programs.firefox = {
     enable = true;
     profiles.badele = {
@@ -103,7 +103,7 @@
 
       # Search firefox extension
       #https://nur.nix-community.org/repos/rycee/
-      extensions = with config.nur.repos.rycee.firefox-addons; [
+      extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
         behind-the-overlay-revival # Block overlay mask
         browserpass # GPG passwordstore
         darkreader # Dark mode
@@ -123,7 +123,8 @@
           pname = "fireshot";
           version = "8.3.0";
           addonId = "languagetool-webextension@languagetool.org";
-          url = "https://addons.mozilla.org/firefox/downloads/file/4199245/languagetool-${version}.xpi";
+          url =
+            "https://addons.mozilla.org/firefox/downloads/file/4199245/languagetool-${version}.xpi";
           sha256 = "sha256-41dCTj353eS6EOufjzcZrEgwaBVwVX9NUdsVpGLNdmc=";
           meta = { };
         })
@@ -133,7 +134,8 @@
           pname = "fireshot";
           version = "8.3.0";
           addonId = "languagetool-webextension@languagetool.org";
-          url = "https://addons.mozilla.org/firefox/downloads/file/4199245/languagetool-${version}.xpi";
+          url =
+            "https://addons.mozilla.org/firefox/downloads/file/4199245/languagetool-${version}.xpi";
           sha256 = "sha256-41dCTj353eS6EOufjzcZrEgwaBVwVX9NUdsVpGLNdmc=";
           meta = { };
         })
@@ -143,7 +145,8 @@
           pname = "fireshot";
           version = "1.12.18";
           addonId = "{0b457cAA-602d-484a-8fe7-c1d894a011ba}";
-          url = "https://addons.mozilla.org/firefox/downloads/file/4120150/fireshot-${version}.xpi";
+          url =
+            "https://addons.mozilla.org/firefox/downloads/file/4120150/fireshot-${version}.xpi";
           sha256 = "sha256-YAhLt3FW019rASp0wleegXdNXfoCHyzXd6JcrBjafyM=";
           meta = { };
         })
@@ -153,7 +156,8 @@
           pname = "imtranslator";
           version = "16.30";
           addonId = "{9AA46F4F-4DC7-4c06-97AF-5035170634FE}";
-          url = "https://addons.mozilla.org/firefox/downloads/file/4028792/imtranslator-${version}.xpi";
+          url =
+            "https://addons.mozilla.org/firefox/downloads/file/4028792/imtranslator-${version}.xpi";
           sha256 = "sha256-9ZC3FmYXUWgZ+4VADX66cApOyJKmkgHWAi0zzovcn8U=";
           meta = { };
         })
@@ -163,7 +167,8 @@
           pname = "clean-up";
           version = "0.1.0";
           addonId = "{a1087d5d-d793-445a-b988-088b1d86f2a6}";
-          url = "https://addons.mozilla.org/firefox/downloads/file/3610512/bookmarks_clean_up-${version}.xpi";
+          url =
+            "https://addons.mozilla.org/firefox/downloads/file/3610512/bookmarks_clean_up-${version}.xpi";
           sha256 = "sha256-4FNojXUkm+8lFEBbQOfpdlZgt/SfB8AAGCOiGyWnsuo=";
           meta = { };
         })

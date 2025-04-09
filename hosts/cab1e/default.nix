@@ -3,23 +3,51 @@
 ##########################################################
 { config, lib, pkgs, ... }:
 let
-  external_interface = "enp3s0";
 
-  wireguard_network = "10.123.0.0/24";
-  wireguard_private_ips = [ "10.123.0.1/32" ];
-  wireguard_port = 54321;
-  port_forwarding = 50000;
-  peers = [{
-    # badxps
-    publicKey = "77u+Uy2Gt0j/Fu0GOw01Ex7B13c7HEfdYoANYP5rqEU=";
-    allowedIPs = [ "10.123.0.2/32" ];
-  }];
+  cfg = config.homelab.hosts.badxps;
+  hostconfiguration = {
+    description = "Infomaniak cab1e instance";
+    dnsalias = null;
+    icon =
+      "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png";
+    ipv4 = "10.123.0.2";
+    os = "NixOS";
+    parent = "internet";
+    roles = [ ];
+    wg = null;
+    zone = "infomaniak";
+
+    params = {
+      nat.public.interface = "enp3s0";
+
+      wireguard = {
+        interface = "wg-cab1e";
+        serverIPs = [ "10.123.0.1/32" ];
+        listenPort = 54321;
+        peers = [{
+          # badxps
+          publicKey = "77u+Uy2Gt0j/Fu0GOw01Ex7B13c7HEfdYoANYP5rqEU=";
+          allowedIPs = [ "${cfg.params.torrent.clientIP}/32" ];
+        }];
+      };
+
+      torrent = {
+        clientIP = "10.123.0.2";
+
+        interface = "wg-cab1e";
+        clientWebPort = 8080;
+        clientPort = 53545;
+      };
+    };
+  };
 
 in
 {
   imports = [
     ./hardware-configuration.nix
     ./disks.nix
+
+    # homelab modules
     ../../nix/modules/nixos/host.nix
 
     # Users
@@ -27,86 +55,81 @@ in
     ../badele.nix
 
     # Commons
+    ../../nix/modules/nixos/homelab
     ../../nix/nixos/features/commons
-    ../../nix/nixos/features/homelab
   ];
 
-  # Public peer server key
-  # LQX7VSva7CZJmjmbGrFmG+37bS0PtTgy9Q6/15lIh08=
-  sops.secrets = {
-    "wireguard/private_peer" = { sopsFile = ../../hosts/cab1e/secrets.yml; };
-  };
-
   ####################################
-  # Boot
+  # Host Configuration
   ####################################
-  boot = {
-    kernelParams = [ "mem_sleep_default=deep" ];
-    blacklistedKernelModules = [ ];
-    kernelModules = [ "kvm-intel" ];
-    supportedFilesystems = [ "btrfs" ];
 
-    # Grub EFI boot loader
-    loader = {
-      grub = {
-        enable = true;
-        devices = [ "nodev" ];
-        efiInstallAsRemovable = true;
-        efiSupport = true;
-        useOSProber = true;
-      };
-    };
-
-    kernel.sysctl = {
-      "net.ipv4.conf.all.forwarding" = true;
-      "net.ipv4.conf.default.forwarding" = true;
-    };
-  };
-
-  ####################################
-  # host profile
-  ####################################
+  homelab.hosts.badxps = hostconfiguration;
   hostprofile = { nproc = 2; };
 
   ####################################
   # Network
   ####################################
 
-  # Host
   networking.hostName = "cab1e";
   networking.useDHCP = lib.mkDefault true;
 
-  # Natting
-  networking.nat = {
-    enable = true;
-    externalInterface = "enp3s0";
-    internalInterfaces = [ "wg-cab1e" ];
-    forwardPorts = [{
-      sourcePort = port_forwarding;
-      proto = "tcp";
-      destination = "10.123.0.2:50000";
-    }];
+  networking = {
+    # Wireguard
+    wireguard = {
+      enable = true;
+      interfaces."${cfg.params.wireguard.interface}" = {
+        privateKeyFile = config.sops.secrets."wireguard/private_peer".path;
+        ips = cfg.params.wireguard.serverIPs;
+        listenPort = cfg.params.wireguard.listenPort;
 
-  };
-  networking.firewall.allowedUDPPorts = [ wireguard_port port_forwarding ];
+        peers = cfg.params.wireguard.peers;
+      };
+    };
 
-  # Wireguard
-  networking.wireguard.enable = true;
-  networking.wireguard.interfaces."wg-cab1e" = {
-    privateKeyFile = config.sops.secrets."wireguard/private_peer".path;
-    ips = wireguard_private_ips;
-    listenPort = wireguard_port;
+    # Firewall
+    nftables.enable = true;
+    firewall = {
+      enable = true;
+      logRefusedPackets = true;
+      logReversePathDrops = true;
+      logRefusedConnections = true;
 
-    postSetup = ''
-      ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s ${wireguard_network} -o ${external_interface} -j MASQUERADE
-    '';
+      interfaces = {
+        "${cfg.params.nat.public.interface}" = {
+          allowedTCPPorts = [ ];
+          allowedUDPPorts = [ cfg.params.wireguard.listenPort ];
+        };
+        "${cfg.params.wireguard.interface}" = {
+          allowedTCPPorts = [ ];
+          allowedUDPPorts = [ ];
+        };
+      };
+    };
 
-    # This undoes the above command
-    postShutdown = ''
-      ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s ${wireguard_network} -o ${external_interface} -j MASQUERADE
-    '';
+    # Nat
+    nat = {
+      enable = true;
+      internalIPs = [ "${cfg.params.torrent.clientIP}/32" ];
+      internalInterfaces = [ cfg.params.torrent.interface ];
+      externalInterface = cfg.params.nat.public.interface;
 
-    peers = peers;
+      forwardPorts = [
+        {
+          sourcePort = cfg.params.torrent.clientPort;
+          destination = "${cfg.params.torrent.clientIP}:${
+              toString cfg.params.torrent.clientPort
+            }";
+          proto = "tcp";
+        }
+        {
+          sourcePort = cfg.params.torrent.clientPort;
+          destination = "${cfg.params.torrent.clientIP}:${
+              toString cfg.params.torrent.clientPort
+            }";
+          proto = "udp";
+        }
+      ];
+    };
   };
 
   ####################################
@@ -114,7 +137,19 @@ in
   ####################################
   powerManagement.powertop.enable = true;
   programs = { };
+  environment.systemPackages = with pkgs; [ ];
+
+  ####################################
+  # Secrets
+  ####################################
+
+  # Public peer server key
+  # LQX7VSva7CZJmjmbGrFmG+37bS0PtTgy9Q6/15lIh08=
+  sops.secrets = {
+    "wireguard/private_peer" = { sopsFile = ../../hosts/cab1e/secrets.yml; };
+  };
 
   nixpkgs.hostPlatform.system = "x86_64-linux";
   system.stateVersion = "24.05";
+
 }

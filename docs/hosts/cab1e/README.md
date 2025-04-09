@@ -68,6 +68,12 @@ openstack security group rule create --ingress \
 openstack security group rule create --ingress \
   --protocol udp --dst-port 54321 \
   --ethertype IPv4 cab1e
+openstack security group rule create --ingress \
+  --protocol tcp --dst-port 53545 \
+  --ethertype IPv4 cab1e
+openstack security group rule create --ingress \
+  --protocol udp --dst-port 53545 \
+  --ethertype IPv4 cab1e
 
 openstack server add security group cab1e cab1e
 ```
