@@ -20,7 +20,6 @@ let
 
     parent = "router-ladbedroom";
     roles = [ "virtualization" "coredns" ];
-    wg = null;
     zone = "homeoffice";
 
     params = {

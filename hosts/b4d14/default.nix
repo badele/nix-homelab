@@ -1,20 +1,55 @@
 # #########################################################
 # NIXOS (hosts)
 ##########################################################
-{ inputs, config, pkgs, lib, ... }: {
-  imports = [
-    ./hardware-configuration.nix
+{ inputs, config, pkgs, lib, ... }:
+let
+  cfg = config.homelab.hosts.b4d14;
+  hostconfiguration = {
+    description = "Dell XPS 9560 Latop";
+    icon =
+      "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png";
+    ipv4 = "192.168.254.124";
+    os = "NixOS";
+    nproc = 20;
 
+    autologin = {
+      user = "badele";
+      session = "none+i3";
+    };
+
+    parent = "router-ladbedroom";
+    roles = [ "virtualization" "coredns" ];
+    zone = "homeoffice";
+
+    params = {
+      wireguard = {
+        endpoint = "84.234.31.97:54321";
+        privateIPs = [ "10.123.0.2/24" ];
+        publicKey = "LQX7VSva7CZJmjmbGrFmG+37bS0PtTgy9Q6/15lIh08=";
+      };
+
+      torrent = {
+        interface = "wg-cab1e";
+        clientWebPort = 8080;
+        clientPort = 53545;
+      };
+    };
+  };
+in
+{
+  imports = [
     # https://github.com/NixOS/nixos-hardware/tree/master/dell/xps/15-9520
     inputs.hardware.nixosModules.dell-xps-15-9520
-    ../../nix/modules/nixos/host.nix
+    ./hardware-configuration.nix
 
-    # Users
+    # Modules
+    ../../nix/modules/nixos/homelab
+
+    # Users account
     ../root.nix
     ../badele.nix
 
     # Commons
-    ../../nix/modules/nixos/homelab
     ../../nix/nixos/features/commons
     ../../nix/nixos/features/system/containers.nix
 
@@ -24,21 +59,16 @@
   ];
 
   ####################################
+  # Host Configuration
+  ####################################
+
+  homelab.hosts.b4d14 = hostconfiguration;
+
+  ####################################
   # Boot
   ####################################
 
   boot = {
-    # kernelParams = [ # See dell-xps-15-9530
-    #   "mem_sleep_default=deep"
-    #   "nouveau.blacklist=0"
-    #   "acpi_osi=!"
-    #   "acpi_osi=\"Windows 2015\""
-    #   "acpi_backlight=vendor"
-    # ];
-
-    # blacklistedKernelModules = See dell-xps-15-9530
-    # extraModulePackages = See dell-xps-15-9530
-
     kernelModules = [ "kvm-intel" ];
     supportedFilesystems = [ "zfs" ];
     zfs = {
@@ -67,15 +97,11 @@
   };
 
   ####################################
-  # host profile
+  # Network
   ####################################
-  hostprofile = {
-    nproc = 20;
-    autologin = {
-      user = "badele";
-      session = "none+i3";
-    };
-  };
+
+  networking.hostName = "b4d14";
+  networking.useDHCP = lib.mkDefault true;
 
   ####################################
   # Hardware
@@ -98,14 +124,12 @@
     #extraConfig = "load-module module-combine-sink";
   };
 
-  networking.hostName = "b4d14";
-  networking.useDHCP = lib.mkDefault true;
-
   ####################################
   # Programs
   ####################################
   powerManagement.powertop.enable = true;
   programs = { dconf.enable = true; };
+  environment.systemPackages = [ ];
 
   ####################################
   # Secrets

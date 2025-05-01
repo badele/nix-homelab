@@ -148,6 +148,8 @@
           specialArgs = { inherit inputs outputs; };
           modules = [
             inputs.sops-nix.nixosModules.sops
+
+            ./nix/modules/nixos/default.nix
             ./hosts/b4d14
 
             home-manager.nixosModules.home-manager
@@ -162,13 +164,15 @@
                   root = import ./users/root/b4d14.nix;
                   badele = {
                     imports = [
-                      nur.modules.homeManager
                       stylix.homeManagerModules.stylix
                       ./users/badele/b4d14.nix
                     ];
                   };
                 };
               };
+
+              nixpkgs.overlays = [ nur.overlay ];
+              _module.args.nur = { inherit nur; };
             }
           ];
         };
