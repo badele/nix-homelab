@@ -1,5 +1,4 @@
-{ pkgs, config, lib, inputs, ... }:
-{
+{ pkgs, config, lib, inputs, ... }: {
   programs.chromium = {
     enable = true;
     extensions = [

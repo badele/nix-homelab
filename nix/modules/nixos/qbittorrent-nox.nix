@@ -7,6 +7,14 @@ in {
 
     package = lib.mkPackageOption pkgs "qbittorrent-nox" { };
 
+    group = mkOption {
+      type = types.str;
+      default = "media";
+      description = ''
+        Group under which qbittorrent-nox runs.
+      '';
+    };
+
     ui.enableFirewall = lib.mkOption {
       description = "Add the web UI port to firewall";
       type = lib.types.bool;
@@ -28,22 +36,31 @@ in {
       type = with lib.types; nullOr port;
       default = null;
     };
+    torrent.watcherFile = lib.mkOption {
+      description = "JSON watch files";
+      type = lib.types.path;
+      default = "";
+    };
   };
 
   config = mkIf cfg.enable {
 
     users.users.qbittorrent-nox = {
       isSystemUser = true;
-      group = "qbittorrent-nox";
+      group = cfg.group;
       home = "/var/lib/qbittorrent-nox";
     };
-    users.groups.qbittorrent-nox = { };
 
     systemd.tmpfiles.rules = [
-      "d '/var/lib/qbittorrent-nox/qBittorrent/downloads/completed' 0755 qbittorrent-nox qbittorrent-nox - -"
-      "d '/var/lib/qbittorrent-nox/qBittorrent/downloads/incomplete' 0755 qbittorrent-nox qbittorrent-nox - -"
-      "d '/var/lib/qbittorrent-nox/qBittorrent/watch' 0755 qbittorrent-nox qbittorrent-nox - -"
-      "d '/var/lib/qbittorrent-nox/qBittorrent/data/logs' 0755 qbittorrent-nox qbittorrent-nox - -"
+      "d '/var/lib/qbittorrent-nox/qBittorrent/downloads/incomplete/ebooks' 0775 qbittorrent-nox ${cfg.group} - -"
+      "d '/var/lib/qbittorrent-nox/qBittorrent/downloads/incomplete/films' 0775 qbittorrent-nox ${cfg.group} - -"
+      "d '/var/lib/qbittorrent-nox/qBittorrent/downloads/incomplete/series' 0775 qbittorrent-nox ${cfg.group} - -"
+      "d '/var/lib/qbittorrent-nox/qBittorrent/downloads/complete' 0775 qbittorrent-nox ${cfg.group} - -"
+      "d '/var/lib/qbittorrent-nox/qBittorrent/watch/ebooks' 0775 qbittorrent-nox ${cfg.group} - -"
+      "d '/var/lib/qbittorrent-nox/qBittorrent/watch/films' 0775 qbittorrent-nox ${cfg.group} - -"
+      "d '/var/lib/qbittorrent-nox/qBittorrent/watch/series' 0775 qbittorrent-nox ${cfg.group} - -"
+      "d '/var/lib/qbittorrent-nox/qBittorrent/data/logs' 0775 qbittorrent-nox ${cfg.group} - -"
+      "L+ /var/lib/qbittorrent-nox/qBittorrent/config/watched_folders.json - - - - ${cfg.torrent.watcherFile}"
     ];
 
     networking.firewall.allowedTCPPorts =
@@ -62,7 +79,7 @@ in {
       serviceConfig = {
         Type = "simple";
         User = "qbittorrent-nox";
-        Group = "qbittorrent-nox";
+        Group = cfg.group;
         WorkingDirectory = "/var/lib/qbittorrent-nox";
 
         ExecStart = ''

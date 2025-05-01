@@ -1,18 +1,11 @@
-##########################################################
+# #########################################################
 # NIXOS
 ##########################################################
-{ pkgs
-, config
-, lib
-, ...
-}:
+{ pkgs, config, lib, ... }:
 let
-  ifTheyExist = groups: builtins.filter (group: builtins.hasAttr group config.users.groups) groups;
-  extraGroups = [
-    "audio"
-    "video"
-    "wheel"
-  ] ++ ifTheyExist [
+  ifTheyExist = groups:
+    builtins.filter (group: builtins.hasAttr group config.users.groups) groups;
+  extraGroups = [ "audio" "video" "wheel" ] ++ ifTheyExist [
     "docker"
     "git"
     "incus-admin"
@@ -20,6 +13,8 @@ let
     "network"
     "networkmanager"
     "plugdev"
+    "qbittorrent-nox"
+    "media"
   ];
 
 in

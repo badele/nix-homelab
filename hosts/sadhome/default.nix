@@ -12,8 +12,8 @@
     ../sadele.nix
 
     # Commons
+    ../../nix/modules/nixos/homelab
     ../../nix/nixos/features/commons
-    ../../nix/nixos/features/homelab
     ../../nix/nixos/features/system/containers.nix
 
     # Desktop

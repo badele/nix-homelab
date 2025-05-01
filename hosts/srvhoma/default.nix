@@ -1,13 +1,7 @@
-##########################################################
+# #########################################################
 # NIXOS (hosts)
 ##########################################################
-{ inputs
-, config
-, pkgs
-, lib
-, ...
-}:
-{
+{ inputs, config, pkgs, lib, ... }: {
   imports = [
     ./hardware-configuration.nix
     ./disks.nix
@@ -18,8 +12,8 @@
     ../badele.nix
 
     # Commons
+    ../../nix/modules/nixos/homelab
     ../../nix/nixos/features/commons
-    ../../nix/nixos/features/homelab
 
     # Roles
     ../../nix/nixos/roles # Automatically load service from <host.modules> sectionn from `homelab.json` file
@@ -33,9 +27,7 @@
   ####################################
 
   boot = {
-    kernelParams = [
-      "mem_sleep_default=deep"
-    ];
+    kernelParams = [ "mem_sleep_default=deep" ];
     blacklistedKernelModules = [ ];
     kernelModules = [ "kvm-intel" ];
     supportedFilesystems = [ "btrfs" ];
@@ -58,9 +50,7 @@
   ####################################
   # host profile
   ####################################
-  hostprofile = {
-    nproc = 8;
-  };
+  hostprofile = { nproc = 8; };
 
   ####################################
   # Hardware
@@ -69,7 +59,8 @@
   # Pulseaudio
   hardware.pulseaudio = {
     enable = true;
-    support32Bit = true; ## If compatibility with 32-bit applications is desired
+    support32Bit =
+      true; # # If compatibility with 32-bit applications is desired
     #extraConfig = "load-module module-combine-sink";
   };
 

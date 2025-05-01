@@ -6,7 +6,7 @@ let
   cfg = config.homelab.hosts.badxps;
   hostconfiguration = {
     description = "Dell XPS 9570 Latop";
-    dnsalias = null;
+    dnsalias = [ "flood" "jellyfin" "prowlarr" "readarr" "sonarr" ];
     icon =
       "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png";
     ipv4 = "192.168.254.114";
@@ -19,7 +19,7 @@ let
     };
 
     parent = "router-ladbedroom";
-    roles = [ "virtualization" ];
+    roles = [ "virtualization" "coredns" ];
     wg = null;
     zone = "homeoffice";
 
@@ -64,9 +64,10 @@ in
 
     # Services
     ./services/torrent.nix
+    ./services/traefik.nix
 
     # # Roles
-    # ../../nix/nixos/roles # Automatically load service from <host.modules> sectionn from `homelab.json` file
+    ../../nix/nixos/roles # Automatically load service from <host.modules> sectionn from `homelab.json` file
   ];
 
   ####################################
@@ -74,6 +75,8 @@ in
   ####################################
 
   homelab.hosts.badxps = hostconfiguration;
+
+  users.groups.media = { };
 
   ####################################
   # Boot
@@ -126,8 +129,8 @@ in
     };
 
     # Firewall
-    nftables.enable = true;
     firewall = {
+      package = pkgs.iptables-nftables-compat;
       enable = true;
       logRefusedPackets = true;
       logReversePathDrops = true;
