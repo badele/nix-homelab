@@ -1,11 +1,9 @@
-{ config, lib, pkgs, ... }:
-{
+{ config, lib, pkgs, ... }: {
 
-  imports = [
-    ../../../../../modules/nixos/host.nix
-  ];
+  imports = [ ../../../../../modules/nixos/homelab ];
 
-  environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw
+  environment.pathsToLink =
+    [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw
   services = {
     xserver = {
       enable = true;
@@ -23,8 +21,8 @@
     };
 
     displayManager = {
-      autoLogin.user = config.hostprofile.autologin.user;
-      defaultSession = config.hostprofile.autologin.session;
+      autoLogin.user = config.homelab.currentHost.autologin.user;
+      defaultSession = config.homelab.currentHost.autologin.session;
     };
 
     # Touchpad

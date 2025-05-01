@@ -1,0 +1,68 @@
+{
+    "/var/lib/qbittorrent-nox/qBittorrent/watch/ebooks": {
+        "add_torrent_params": {
+            "category": "",
+            "download_limit": -1,
+            "download_path": "/var/lib/qbittorrent-nox/qBittorrent/downloads/incomplete/ebooks",
+            "inactive_seeding_time_limit": -2,
+            "operating_mode": "AutoManaged",
+            "ratio_limit": -2,
+            "save_path": "",
+            "seeding_time_limit": -2,
+            "share_limit_action": "Default",
+            "skip_checking": false,
+            "ssl_certificate": "",
+            "ssl_dh_params": "",
+            "ssl_private_key": "",
+            "tags": [
+                "ebooks"
+            ],
+            "upload_limit": -1
+        },
+        "recursive": false
+    },
+    "/var/lib/qbittorrent-nox/qBittorrent/watch/films": {
+        "add_torrent_params": {
+            "category": "",
+            "download_limit": -1,
+            "download_path": "/var/lib/qbittorrent-nox/qBittorrent/downloads/incomplete/films",
+            "inactive_seeding_time_limit": -2,
+            "operating_mode": "AutoManaged",
+            "ratio_limit": -2,
+            "save_path": "",
+            "seeding_time_limit": -2,
+            "share_limit_action": "Default",
+            "skip_checking": false,
+            "ssl_certificate": "",
+            "ssl_dh_params": "",
+            "ssl_private_key": "",
+            "tags": [
+                "films"
+            ],
+            "upload_limit": -1
+        },
+        "recursive": false
+    },
+    "/var/lib/qbittorrent-nox/qBittorrent/watch/series": {
+        "add_torrent_params": {
+            "category": "",
+            "download_limit": -1,
+            "download_path": "/var/lib/qbittorrent-nox/qBittorrent/downloads/incomplete/series",
+            "inactive_seeding_time_limit": -2,
+            "operating_mode": "AutoManaged",
+            "ratio_limit": -2,
+            "save_path": "",
+            "seeding_time_limit": -2,
+            "share_limit_action": "Default",
+            "skip_checking": false,
+            "ssl_certificate": "",
+            "ssl_dh_params": "",
+            "ssl_private_key": "",
+            "tags": [
+                "series"
+            ],
+            "upload_limit": -1
+        },
+        "recursive": false
+    }
+}

@@ -1,15 +1,10 @@
-{ pkgs
-, lib
-, config
-, ...
-}:
-{
+{ pkgs, lib, config, ... }: {
   imports = [
     #    ./loki/promtail.nix
     ./acme.nix
     ./adguard.nix
     ./coredns.nix
-    ./dashy.nix
+    # ./dashy.nix
     ./grafana
     ./home-assistant
     ./loki/loki.nix

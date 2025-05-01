@@ -16,8 +16,8 @@
     ../demo.nix
 
     # Commons
+    ../../nix/modules/nixos/homelab
     ../../nix/nixos/features/commons
-    ../../nix/nixos/features/homelab
 
     # i3
     ../../nix/nixos/features/desktop/wm/xorg/lightdm.nix

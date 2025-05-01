@@ -35,6 +35,7 @@ in {
         pwgen
         sops
         ssh-to-age
+        git-crypt
 
         # Required by invoke
         wireguard-tools

@@ -7,6 +7,7 @@
   inputs = {
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixpkgs.url = "github:nixos/nixpkgs/23.05";
     # nixpkgs.url = "path:/home/badele/ghq/github.com/badele/fork-nixpkgs";
     # nixpkgs.url = "github:badele/fork-nixpkgs/unstable-fix-smokeping-symbolic-links";
     # You can access packages and modules from different nixpkgs revs
@@ -76,6 +77,8 @@
         # "aarch64-darwin"
         # "x86_64-darwin"
       ];
+
+      pkgs = import nixpkgs { overlays = [ nur.overlay ]; };
     in
     rec {
       # Your custom packages
@@ -159,7 +162,7 @@
                   root = import ./users/root/b4d14.nix;
                   badele = {
                     imports = [
-                      nur.nixosModules.nur
+                      nur.modules.homeManager
                       stylix.homeManagerModules.stylix
                       ./users/badele/b4d14.nix
                     ];
@@ -172,10 +175,12 @@
 
         badxps = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
+
           modules = [
             inputs.sops-nix.nixosModules.sops
             inputs.nixunits.nixosModules.default
 
+            ./nix/modules/nixos/default.nix
             ./hosts/badxps
 
             home-manager.nixosModules.home-manager
@@ -190,13 +195,15 @@
                   root = import ./users/root/badxps.nix;
                   badele = {
                     imports = [
-                      nur.nixosModules.nur
                       stylix.homeManagerModules.stylix
                       ./users/badele/badxps.nix
                     ];
                   };
                 };
               };
+
+              nixpkgs.overlays = [ nur.overlay ];
+              _module.args.nur = { inherit nur; };
             }
           ];
         };
@@ -236,7 +243,7 @@
                   root = import ./users/root/hype16.nix;
                   badele = {
                     imports = [
-                      nur.nixosModules.nur
+                      nur.modules.homeManager
                       stylix.homeManagerModules.stylix
                       ./users/badele/hype16.nix
                     ];
@@ -292,7 +299,6 @@
                   root = import ./users/root/cab1e.nix;
                   badele = {
                     imports = [
-                      nur.nixosModules.nur
                       stylix.homeManagerModules.stylix
                       ./users/badele/cab1e.nix
                     ];
@@ -327,7 +333,7 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
-            nur.hmModules.nur
+            nur.modules.homeManager
             ./users/badele/b4d14.nix
           ];
         };
@@ -397,7 +403,7 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
-            nur.hmModules.nur
+            nur.modules.homeManager
             ./users/badele/srvhoma.nix
           ];
         };
@@ -421,7 +427,7 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
-            nur.hmModules.nur
+            nur.modules.homeManager
             ./users/badele/demo.nix
           ];
         };
