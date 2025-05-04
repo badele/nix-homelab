@@ -76,6 +76,13 @@ in
   # Indexers
   services.prowlarr = { enable = true; };
 
+  # Movies
+  services.radarr = {
+    enable = true;
+    user = "qbittorrent-nox";
+    group = "media";
+  };
+
   # Ebooks
   services.readarr = {
     enable = true;

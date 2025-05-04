@@ -4,6 +4,7 @@ let
   localIp = config.homelab.currentHost.ipv4;
 in
 {
+  networking.firewall.allowedTCPPorts = [ 80 ];
 
   services.traefik = {
     enable = true;
@@ -36,14 +37,19 @@ in
           service = "jellyfin";
           entryPoints = [ "local" ];
         };
-        sonarr = {
-          rule = lib.mkDefault "Host(`sonarr.${domain}`)";
-          service = "sonarr";
-          entryPoints = [ "local" ];
-        };
         prowlarr = {
           rule = lib.mkDefault "Host(`prowlarr.${domain}`)";
           service = "prowlarr";
+          entryPoints = [ "local" ];
+        };
+        radarr = {
+          rule = lib.mkDefault "Host(`radarr.${domain}`)";
+          service = "radarr";
+          entryPoints = [ "local" ];
+        };
+        sonarr = {
+          rule = lib.mkDefault "Host(`sonarr.${domain}`)";
+          service = "sonarr";
           entryPoints = [ "local" ];
         };
       };
@@ -52,11 +58,14 @@ in
         jellyfin = {
           loadBalancer = { servers = [{ url = "http://localhost:8096"; }]; };
         };
-        sonarr = {
-          loadBalancer = { servers = [{ url = "http://localhost:8989"; }]; };
-        };
         prowlarr = {
           loadBalancer = { servers = [{ url = "http://localhost:9696"; }]; };
+        };
+        radarr = {
+          loadBalancer = { servers = [{ url = "http://localhost:7878"; }]; };
+        };
+        sonarr = {
+          loadBalancer = { servers = [{ url = "http://localhost:8989"; }]; };
         };
       };
     };
