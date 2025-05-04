@@ -6,7 +6,7 @@ let
   cfg = config.homelab.hosts.badxps;
   hostconfiguration = {
     description = "Dell XPS 9570 Latop";
-    dnsalias = [ "flood" "jellyfin" "prowlarr" "readarr" "sonarr" ];
+    dnsalias = [ "flood" "jellyfin" "prowlarr" "radarr" "readarr" "sonarr" ];
     icon =
       "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png";
     ipv4 = "192.168.254.114";
