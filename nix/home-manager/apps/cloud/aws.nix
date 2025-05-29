@@ -7,6 +7,7 @@
     kubectl # Kubernetes CLI
     kubectx # Kubernetes CLI
     k9s # Kubernetes CLI
+    kdash # k9s alternative (Read only)
     kubernetes-helm # Helm
     argocd # ArgoCD CLI
   ];
