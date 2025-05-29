@@ -1,3 +1,18 @@
-{ pkgs, ... }:
-let pythonEnv = pkgs.python313.withPackages (p: with p; [ pip requests ]);
-in { home.packages = [ pythonEnv ]; }
+{ pkgs, ... }: {
+  home.packages = with pkgs; [
+    ruff
+    (python313.withPackages (ps:
+      with ps; [
+        pip
+        requests
+
+        # Used by VIDE project (https://github.com/badele/vide)
+        pycodestyle
+        pydocstyle
+        pylint
+        mypy
+        vulture
+        mdformat
+      ]))
+  ];
+}
