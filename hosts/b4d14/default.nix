@@ -35,7 +35,8 @@ let
       };
     };
   };
-in {
+in
+{
   imports = [
     # https://github.com/NixOS/nixos-hardware/tree/master/dell/xps/15-9520
     inputs.hardware.nixosModules.dell-xps-15-9520

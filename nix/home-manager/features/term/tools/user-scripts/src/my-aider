@@ -2,6 +2,10 @@
 
 set -euo pipefail
 
+##############################################################################
+# Github Copilot API Key
+##############################################################################
+
 # copilot file configuration (created by copilot neovim pluging)
 CONFIG_COPILOT_FILE="${HOME}/.config/github-copilot/apps.json"
 
@@ -32,5 +36,10 @@ export OPENAI_API_KEY="$COPILOT_TOKEN"
 
 # Launch aider with the environment variable set
 echo "Starting aider..."
+
+##############################################################################
+# Google Gemini API Key
+##############################################################################
+export GEMINI_API_KEY=$(pass show home/bruno/gemini/aider/API-KEY | head -n1)
 
 exec aider "$@"

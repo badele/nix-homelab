@@ -6,12 +6,12 @@
     deno
     nodePackages.eslint
     nodePackages.prettier
-    
+
     # JSON
     vscode-langservers-extracted
     nodePackages.fixjson
     nodePackages.jsonlint
-    
+
     # Dockerfile
     nodePackages.dockerfile-language-server-nodejs
   ];

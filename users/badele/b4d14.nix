@@ -10,7 +10,8 @@ let
     COLOR="#"$COLOR
     ${pkgs.imagemagick}/bin/magick convert -size 1920x1080 xc:$COLOR $out
   '';
-in {
+in
+{
   imports = [
     # homelab Modules
     ../../nix/modules/home-manager/font.nix

@@ -4,7 +4,7 @@
     nodePackages.bash-language-server
     shellcheck
     shfmt
-    
+
     # Makefile
     checkmake
   ];
