@@ -21,3 +21,6 @@ result
 # Some secrets
 *.openstackrc
 *.priv
+
+# AI pair programming
+.aider*
