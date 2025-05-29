@@ -29,9 +29,7 @@ in {
 
     # Language
     ../../nix/home-manager/apps/cloud/aws.nix
-    ../../nix/home-manager/features/language/c.nix
-    ../../nix/home-manager/features/language/go.nix
-    ../../nix/home-manager/features/language/python.nix
+    ../../nix/home-manager/features/language/all.nix
 
     # Desktop
     ../../nix/home-manager/features/desktop/apps/base.nix
