@@ -18,22 +18,16 @@ const doc = await Deno.readTextFile("README.md");
 // Execute commands
 ///////////////////////////////////////////////////////////////////////////////
 
-// List commands
-const cmdcommands = new Deno.Command("just", {});
-let { stdout } = await cmdcommands.output();
-const outputcommands = new TextDecoder().decode(stdout);
-
 // List packages
 const cmdpackages = new Deno.Command("just", { args: ["packages"] });
-({ stdout } = await cmdpackages.output());
+const { stdout } = await cmdpackages.output();
 const outputpackages = new TextDecoder().decode(stdout);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Replace tags
 ///////////////////////////////////////////////////////////////////////////////
 
-let result = replaceCode("COMMANDS", doc, outputcommands);
-result = replaceCode("PACKAGES", result, outputpackages);
+const result = replaceCode("PACKAGES", doc, outputpackages);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Update READLE.md

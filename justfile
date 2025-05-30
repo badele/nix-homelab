@@ -5,36 +5,32 @@ set export
 SSHPASS := "nixosusb"
 
 # This help
-# Help it showed if just is called without arguments
+[group('general')]
 @help:
-    just -l -u | column -s '#' -t | sed 's/[ \t]*$//'
+    just -l -u
 
 ###############################################################################
 # Pre-commit
 ###############################################################################
 
 # Setup pre-commit
+[group('precommit')]
 precommit-install:
     #!/usr/bin/env bash
     test ! -f .git/hooks/pre-commit && pre-commit install || true
 
 # Update pre-commit
+[group('precommit')]
 @precommit-update:
     pre-commit autoupdate
 
 # precommit check
+[group('precommit')]
 @precommit-check:
     pre-commit run --all-files
 
-###############################################################################
-# Documentation
-###############################################################################
-
-# Update documentation
-@doc-update FAKEFILENAME:
-    ./.pre-commit-scripts/updatedoc.ts
-
 # Lint the project
+[group('precommit')]
 @lint:
     pre-commit run --all-files
 
@@ -42,7 +38,19 @@ precommit-install:
 # Documentation
 ###############################################################################
 
+# Update documentation
+[group('documentation')]
+@doc-update FILENAME="FAKEFILENAME":
+    termshot -f docs/commands.png -- just
+    ./.pre-commit-scripts/updatedoc.ts
+
+
+###############################################################################
+# Debug
+###############################################################################
+
 # Repl the project
+[group('debug')]
 @debug-repl:
     nix repl --extra-experimental-features repl-flake .#
 
@@ -51,20 +59,24 @@ precommit-install:
 ###############################################################################
 
 # Show flake metadata
+[group('flake')]
 @flake-metadata:
     nix flake metadata
 
 # Update the flake
+[group('flake')]
 @flake-update:
     nix flake update
 
 # Sync the nix registry with the current running nix version
+[group('flake')]
 @flake-sync-registry:
     nix registry pin nixpkgs github:NixOS/nixpkgs/$(nix flake metadata --json | jq -r '.locks.nodes."nixpkgs".locked.rev')
     # nix flake metadata --json | jq -r '.locks.nodes."nixpkgs".locked.rev'
     # nix flake metadata --json | jq -r '.locks.nodes."home-manager".locked.rev'
 
 # Check the nix homelab configuration
+[group('flake')]
 @flake-check:
     nix flake check
 
@@ -72,15 +84,8 @@ precommit-install:
 # NIXOS installer
 ###############################################################################
 
-# Generate random password
-@passwd-generate:
-    pwgen -s 12 1
-
-# Update secrets SOPS
-@secret-update FILE:
-    sops updatekeys {{ FILE }}
-
 [private]
+[group('installer')]
 nixos-init-ssh-host host save="true":
     #!/usr/bin/env bash
     mkdir -p ./hosts/{{host}} /tmp/nix-homelab
@@ -120,9 +125,11 @@ nixos-init-root-pass host:
     fi
 
 # Init nixos host if not exists
+[group('installer')]
 nixos-init-host host: (nixos-init-root-pass host) (nixos-init-ssh-host host)
 
 # Install new <hostname> to <target>:<port> system wide
+[group('installer')]
 nixos-install hostname targetip port="22":
     #!/usr/bin/env bash
     mkdir -p /tmp/nix-homelab
@@ -142,39 +149,22 @@ nixos-command action hostname="" options="":
     sudo nixos-rebuild {{ action }} {{ options }} --fast --option accept-flake-config true --flake .#{{ hostname }}
 
 # Nixos clean build cache and garbage unused derivations
+[group('nixos')]
 @nixos-garbage:
     sudo nix-collect-garbage -d
 
 # Nixos build local host
+[group('nixos')]
 @nixos-build hostname="" options="":
     just nixos-command build {{ hostname }} {{ options }}
 
-# Install new <hostname> to <target>:<port> system wide
-demo-nixos-install hostname targetip port="22":
-    #!/usr/bin/env bash
-    mkdir -p /tmp/nix-homelab
-    cleanup() {
-    rm -rf "/tmp/nix-homelab"
-    }
-    trap cleanup EXIT
-
-    # Copy host ssh keys
-    install -d -m755 "/tmp/nix-homelab/etc/ssh"
-    cp ./hosts/demovm/ssh_host_ed25519_key /tmp/nix-homelab/etc/ssh/ssh_host_ed25519_key
-    chmod 600 /tmp/nix-homelab/etc/ssh/ssh_host_ed25519_key
-
-    # copy demo age key
-    install -d -m755 "/tmp/nix-homelab/root/.config/sops/age"
-    PRIVATEKEY=$(tail -1 ./users/demo/age-key.txt)
-    echo "$PRIVATEKEY" > /tmp/nix-homelab/root/.config/sops/age/keys.txt
-    chmod 600 "/tmp/nix-homelab/etc/ssh/ssh_host_ed25519_key" "/tmp/nix-homelab/root/.config/sops/age/keys.txt"
-    nixos-anywhere --env-password --extra-files /tmp/nix-homelab -p {{port}} --flake .#{{hostname}} root@{{targetip}}
-
 # Update NixOS on local host
+[group('nixos')]
 @nixos-update options="":
     just nixos-command switch "" {{ options }}
 
 # Update on remote host
+[group('nixos')]
 @nixos-remote-update hostname targetip options="":
     just nixos-command switch {{hostname}} "--target-host root@{{ targetip }}" {{ options }}
 
@@ -183,10 +173,12 @@ home-command action:
     home-manager {{action}} --option accept-flake-config true --flake .
 
 # Home build for local user
+[group('home-manager')]
 @home-build:
     just home-command build
 
 # Home deploy local user
+[group('home-manager')]
 @home-deploy:
     just home-command switch
 
@@ -195,10 +187,12 @@ home-command action:
 ###############################################################################
 
 # Build NixOS ISO image
+[group('demo')]
 @iso-build:
     nix build '.#nixosConfigurations.iso.config.system.build.isoImage'
 
 # Init demo credentials
+[group('demo')]
 demo-init-credentials passwd="demopass": (nixos-init-ssh-host "demovm" "false")
     #!/usr/bin/env bash
 
@@ -229,22 +223,48 @@ demo-init-credentials passwd="demopass": (nixos-init-ssh-host "demovm" "false")
     sops --input-type yaml --output-type yaml -e ./hosts/demovm/secrets.tmp > ./hosts/demovm/secrets.yml
     rm -f ./hosts/demovm/secrets.tmp
 
+# Install new <hostname> to <target>:<port> system wide
+[group('demo')]
+demo-nixos-install hostname targetip port="22":
+    #!/usr/bin/env bash
+    mkdir -p /tmp/nix-homelab
+    cleanup() {
+    rm -rf "/tmp/nix-homelab"
+    }
+    trap cleanup EXIT
+
+    # Copy host ssh keys
+    install -d -m755 "/tmp/nix-homelab/etc/ssh"
+    cp ./hosts/demovm/ssh_host_ed25519_key /tmp/nix-homelab/etc/ssh/ssh_host_ed25519_key
+    chmod 600 /tmp/nix-homelab/etc/ssh/ssh_host_ed25519_key
+
+    # copy demo age key
+    install -d -m755 "/tmp/nix-homelab/root/.config/sops/age"
+    PRIVATEKEY=$(tail -1 ./users/demo/age-key.txt)
+    echo "$PRIVATEKEY" > /tmp/nix-homelab/root/.config/sops/age/keys.txt
+    chmod 600 "/tmp/nix-homelab/etc/ssh/ssh_host_ed25519_key" "/tmp/nix-homelab/root/.config/sops/age/keys.txt"
+    nixos-anywhere --env-password --extra-files /tmp/nix-homelab -p {{port}} --flake .#{{hostname}} root@{{targetip}}
+
+
 [private]
 @demo-create-disk:
     [ -e disk-demo.raw ] || qemu-img create disk-demo.raw 20G
 
 # Start NixOS demo from ISO image
+[group('demo')]
 @demo-start: demo-create-disk
     qemu-system-x86_64 -enable-kvm -smp 2 -m 4096 --bios $UEFI_FILE -device virtio-vga -net nic,model=virtio-net-pci -net user,hostfwd=tcp::2222-:22 -drive file=disk-demo.raw,format=raw -cdrom result/iso/nixos-*.iso &
 
 # (type ESC for select boot device)
 # Test NixOS installation deployment on qemu virutal machine
+[group('demo')]
 @demo-qemu-nixos-install: demo-init-credentials demo-start
     ssh-keygen -R "[127.0.0.1]:2222"
     just demo-nixos-install demovm 127.0.0.1 2222
 
 # (type ESC for select boot device)
 # Test NixOS update deployment on qemu virutal machine
+[group('demo')]
 @demo-qemu-nixos-update: demo-start
     ssh-keygen -R "[127.0.0.1]:2222"
     # Disable --fast (if you have error: cached failure of attribute)
@@ -252,13 +272,34 @@ demo-init-credentials passwd="demopass": (nixos-init-ssh-host "demovm" "false")
     NIX_SSHOPTS="-l root -p 2222 -o StrictHostKeychecking=no" nixos-rebuild switch --fallback --show-trace --option accept-flake-config true --target-host 127.0.0.1 --flake .#demovm
 
 # Stop demo vm test
+[group('demo')]
 @demo-stop:
     pkill qemu
 
 # Clean demo vm test
+[group('demo')]
 @demo-clean:
     rm -f disk-demo.raw
 
+###############################################################################
+# Secrets
+###############################################################################
+# Generate random password
+[group('secrets')]
+@passwd-generate:
+    pwgen -s 12 1
+
+# Update secrets SOPS
+[group('secrets')]
+@secret-update FILE:
+    sops updatekeys {{ FILE }}
+
+# List encrypted file with git-crypt
+[group('secrets')]
+@file-encryption-list:
+    git-crypt status | grep -v "not encrypted"
+
 # Show installed packages
+[group('flake')]
 @packages:
     echo $PATH | tr ":" "\n" | grep -E "/nix/store" | sed -e "s/\/nix\/store\/[a-z0-9]\+\-//g" | sed -e "s/\/.*//g"

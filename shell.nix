@@ -19,6 +19,7 @@ in {
         nix
         plantuml
         pre-commit
+        termshot
 
         # Testing nix-homelab
         qemu

@@ -395,43 +395,7 @@ Home lab commands list
 
 This list generated with `just doc-update` command
 
-<!-- COMMANDS -->
-
-```text
-Available recipes:
-    help                                                Help it showed if just is called without arguments
-    precommit-install                                   Setup pre-commit
-    precommit-update                                    Update pre-commit
-    precommit-check                                     precommit check
-    doc-update FAKEFILENAME                             Update documentation
-    lint                                                Lint the project
-    debug-repl                                          Repl the project
-    flake-metadata                                      Show flake metadata
-    flake-update                                        Update the flake
-    flake-sync-registry                                 Sync the nix registry with the current running nix version
-    flake-check                                         Check the nix homelab configuration
-    passwd-generate                                     Generate random password
-    secret-update FILE                                  Update secrets SOPS
-    nixos-init-host host                                Init nixos host if not exists
-    nixos-install hostname targetip port="22"           Install new <hostname> to <target>:<port> system wide
-    nixos-garbage                                       Nixos clean build cache and garbage unused derivations
-    nixos-build hostname="" options=""                  Nixos build local host
-    demo-nixos-install hostname targetip port="22"      Install new <hostname> to <target>:<port> system wide
-    nixos-update options=""                             Update NixOS on local host
-    nixos-remote-update hostname targetip options=""    Update on remote host
-    home-build                                          Home build for local user
-    home-deploy                                         Home deploy local user
-    iso-build                                           Build NixOS ISO image
-    demo-init-credentials passwd="demopass"             Init demo credentials
-    demo-start                                          Start NixOS demo from ISO image
-    demo-qemu-nixos-install                             Test NixOS installation deployment on qemu virutal machine
-    demo-qemu-nixos-update                              Test NixOS update deployment on qemu virutal machine
-    demo-stop                                           Stop demo vm test
-    demo-clean                                          Clean demo vm test
-    packages                                            Show installed packages
-```
-
-<!-- /COMMANDS -->
+![commands list](docs/commands.png)
 
 # A big thanks ❤️
 
