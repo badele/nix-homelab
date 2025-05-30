@@ -48,4 +48,4 @@ To list the available models from the Copilot API, use:
 my-aider-models
 ```
 
-![aider](docs/aider/aider.png)
+![aider](/docs/aider/aider.png)
