@@ -110,8 +110,7 @@ let
         '';
       };
     };
-in
-{
+in {
   options = with lib; {
     homelab.hosts = mkOption {
       type = with types; attrsOf (submodule [{ options = hostOptions; }]);
@@ -127,7 +126,7 @@ in
   config = {
     warnings =
       lib.optional (!(config.homelab.hosts ? ${config.networking.hostName}))
-        "no network configuration for ${config.networking.hostName} found in ${
+      "no network configuration for ${config.networking.hostName} found in ${
         ./hosts.nix
       }";
 
