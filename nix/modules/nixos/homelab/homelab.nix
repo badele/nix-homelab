@@ -22,7 +22,8 @@ let
     };
 
   };
-in {
+in
+{
   options = with lib; {
     homelab.domain = mkOption {
       type = types.str;

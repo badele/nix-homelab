@@ -20,8 +20,9 @@ wg genkey | tee ./hosts/cab1e/wireguard.priv | wg pubkey > ./hosts/cab1e/wiregua
 Then, store the WireGuard private key in the SOPS secrets file:
 
 ```yaml
-wireguard:
-  private_peer: <./hosts/cab1e/wireguard.priv> content
+services:
+  wireguard:
+    private_peer: <./hosts/cab1e/wireguard.priv> content
 ```
 
 #### Creating Client Keys
@@ -35,8 +36,9 @@ wg genkey | tee ./hosts/<HOSTNAME>/wireguard.priv | wg pubkey > ./hosts/<HOSTNAM
 Then, store the WireGuard private key in the corresponding SOPS secrets file:
 
 ```yaml
-wireguard:
-  private_peer: <./hosts/<HOSTNAME>/wireguard.priv> content
+services:
+  wireguard:
+    private_peer: <./hosts/<HOSTNAME>/wireguard.priv> content
 ```
 
 ### Host Configuration
