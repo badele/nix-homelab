@@ -1,4 +1,15 @@
 {
+  "borgBackup": {
+    "remote": {
+      "address": "u444061.your-storagebox.de",
+      "port": 23
+    },
+    "users": [
+      {
+        "netbox": "u444061-sub1"
+      }
+    ]
+  },
   "domain": "adele.im",
   "networks": {
     "box": {

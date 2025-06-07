@@ -28,7 +28,7 @@ let
     };
 
     parent = "router-ladbedroom";
-    roles = [ "virtualization" "coredns" ];
+    roles = [ "coredns" "netbox" "virtualization" ];
     zone = "homeoffice";
 
     params = {
@@ -71,8 +71,8 @@ in
     ../../nix/nixos/features/desktop/wm/xorg/lightdm.nix
 
     # Services
-    ./services/homepage.nix
-    ./services/netbox.nix
+    # ./services/homepage.nix
+    # ./services/netbox.nix
     ./services/torrent.nix
     ./services/traefik.nix
 

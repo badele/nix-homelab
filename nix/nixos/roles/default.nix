@@ -9,6 +9,7 @@
     ./home-assistant
     ./loki/loki.nix
     ./mosquitto.nix
+    ./netbox.nix
     ./nfs.nix
     ./nix-serve.nix
     ./ntp.nix
