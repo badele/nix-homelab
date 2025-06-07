@@ -113,7 +113,7 @@
             "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
             "${nixpkgs}/nixos/modules/installer/cd-dvd/channel.nix"
             inputs.sops-nix.nixosModules.sops
-            ./hosts/iso
+            ./configuration/hosts/iso
           ];
         };
 
@@ -121,7 +121,7 @@
           specialArgs = { inherit inputs outputs; };
           modules = [
             inputs.sops-nix.nixosModules.sops
-            ./hosts/demovm
+            ./configuration/hosts/demovm
 
             home-manager.nixosModules.home-manager
             {
@@ -150,7 +150,7 @@
             inputs.sops-nix.nixosModules.sops
 
             ./nix/modules/nixos/default.nix
-            ./hosts/b4d14
+            ./configuration/hosts/b4d14
 
             home-manager.nixosModules.home-manager
             {
@@ -185,7 +185,7 @@
             inputs.nixunits.nixosModules.default
 
             ./nix/modules/nixos/default.nix
-            ./hosts/badxps
+            ./configuration/hosts/badxps
 
             home-manager.nixosModules.home-manager
             {
@@ -214,17 +214,22 @@
 
         sadhome = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
-          modules = [ inputs.sops-nix.nixosModules.sops ./hosts/sadhome ];
+          modules =
+            [ inputs.sops-nix.nixosModules.sops ./configuration/hosts/sadhome ];
         };
 
         bootstore = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
-          modules = [ inputs.sops-nix.nixosModules.sops ./hosts/bootstore ];
+          modules = [
+            inputs.sops-nix.nixosModules.sops
+            ./configuration/hosts/bootstore
+          ];
         };
 
         rpi40 = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
-          modules = [ inputs.sops-nix.nixosModules.sops ./hosts/rpi40 ];
+          modules =
+            [ inputs.sops-nix.nixosModules.sops ./configuration/hosts/rpi40 ];
         };
 
         hype16 = nixpkgs.lib.nixosSystem {
@@ -234,7 +239,7 @@
             inputs.crowdsec.nixosModules.crowdsec
             inputs.crowdsec.nixosModules.crowdsec-firewall-bouncer
             inputs.nixunits.nixosModules.default
-            ./hosts/hype16
+            ./configuration/hosts/hype16
 
             home-manager.nixosModules.home-manager
             {
@@ -267,7 +272,7 @@
           modules = [
             "${nixpkgs}/nixos/modules/virtualisation/lxc-container.nix"
             inputs.sops-nix.nixosModules.sops
-            ./hosts/hypervised/gw-dmz
+            ./configuration/hosts/hypervised/gw-dmz
           ];
         };
 
@@ -276,7 +281,7 @@
           modules = [
             "${nixpkgs}/nixos/modules/virtualisation/lxc-container.nix"
             inputs.sops-nix.nixosModules.sops
-            ./hosts/hypervised/trilium
+            ./configuration/hosts/hypervised/trilium
           ];
         };
 
@@ -289,7 +294,7 @@
             inputs.sops-nix.nixosModules.sops
             inputs.nixunits.nixosModules.default
 
-            ./hosts/cab1e
+            ./configuration/hosts/cab1e
 
             home-manager.nixosModules.home-manager
             {

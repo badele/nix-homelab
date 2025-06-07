@@ -1,3 +1,11 @@
+## Documentation
+
+### Emoji
+
+- Secret => 🔐
+- Account/User => 👤
+- When adding note/suggestion, add quote > 💡
+
 ## Nix
 
 ### Content format creation
