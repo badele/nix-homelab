@@ -113,7 +113,7 @@
             "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
             "${nixpkgs}/nixos/modules/installer/cd-dvd/channel.nix"
             inputs.sops-nix.nixosModules.sops
-            ./hosts/iso
+            ./configuration/hosts/iso
           ];
         };
 
@@ -121,7 +121,7 @@
           specialArgs = { inherit inputs outputs; };
           modules = [
             inputs.sops-nix.nixosModules.sops
-            ./hosts/demovm
+            ./configuration/hosts/demovm
 
             home-manager.nixosModules.home-manager
             {
@@ -131,11 +131,11 @@
                 useUserPackages = true;
                 verbose = true;
                 users = {
-                  root = import ./users/root/demovm.nix;
+                  root = import ./configuration/users/root/demovm.nix;
                   demo = {
                     imports = [
                       stylix.homeManagerModules.stylix
-                      ./users/demo/demovm.nix
+                      ./configuration/users/demo/demovm.nix
                     ];
                   };
                 };
@@ -150,7 +150,7 @@
             inputs.sops-nix.nixosModules.sops
 
             ./nix/modules/nixos/default.nix
-            ./hosts/b4d14
+            ./configuration/hosts/b4d14
 
             home-manager.nixosModules.home-manager
             {
@@ -161,11 +161,11 @@
                 verbose = true;
                 extraSpecialArgs = { inputs = self.inputs; };
                 users = {
-                  root = import ./users/root/b4d14.nix;
+                  root = import ./configuration/users/root/b4d14.nix;
                   badele = {
                     imports = [
                       stylix.homeManagerModules.stylix
-                      ./users/badele/b4d14.nix
+                      ./configuration/users/badele/b4d14.nix
                     ];
                   };
                 };
@@ -185,7 +185,7 @@
             inputs.nixunits.nixosModules.default
 
             ./nix/modules/nixos/default.nix
-            ./hosts/badxps
+            ./configuration/hosts/badxps
 
             home-manager.nixosModules.home-manager
             {
@@ -196,11 +196,11 @@
                 verbose = true;
                 extraSpecialArgs = { inputs = self.inputs; };
                 users = {
-                  root = import ./users/root/badxps.nix;
+                  root = import ./configuration/users/root/badxps.nix;
                   badele = {
                     imports = [
                       stylix.homeManagerModules.stylix
-                      ./users/badele/badxps.nix
+                      ./configuration/users/badele/badxps.nix
                     ];
                   };
                 };
@@ -214,17 +214,22 @@
 
         sadhome = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
-          modules = [ inputs.sops-nix.nixosModules.sops ./hosts/sadhome ];
+          modules =
+            [ inputs.sops-nix.nixosModules.sops ./configuration/hosts/sadhome ];
         };
 
         bootstore = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
-          modules = [ inputs.sops-nix.nixosModules.sops ./hosts/bootstore ];
+          modules = [
+            inputs.sops-nix.nixosModules.sops
+            ./configuration/hosts/bootstore
+          ];
         };
 
         rpi40 = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
-          modules = [ inputs.sops-nix.nixosModules.sops ./hosts/rpi40 ];
+          modules =
+            [ inputs.sops-nix.nixosModules.sops ./configuration/hosts/rpi40 ];
         };
 
         hype16 = nixpkgs.lib.nixosSystem {
@@ -234,7 +239,7 @@
             inputs.crowdsec.nixosModules.crowdsec
             inputs.crowdsec.nixosModules.crowdsec-firewall-bouncer
             inputs.nixunits.nixosModules.default
-            ./hosts/hype16
+            ./configuration/hosts/hype16
 
             home-manager.nixosModules.home-manager
             {
@@ -244,12 +249,12 @@
                 verbose = true;
                 extraSpecialArgs = { inputs = self.inputs; };
                 users = {
-                  root = import ./users/root/hype16.nix;
+                  root = import ./configuration/users/root/hype16.nix;
                   badele = {
                     imports = [
                       nur.modules.homeManager
                       stylix.homeManagerModules.stylix
-                      ./users/badele/hype16.nix
+                      ./configuration/users/badele/hype16.nix
                     ];
                   };
                 };
@@ -267,7 +272,7 @@
           modules = [
             "${nixpkgs}/nixos/modules/virtualisation/lxc-container.nix"
             inputs.sops-nix.nixosModules.sops
-            ./hosts/hypervised/gw-dmz
+            ./configuration/hosts/hypervised/gw-dmz
           ];
         };
 
@@ -276,7 +281,7 @@
           modules = [
             "${nixpkgs}/nixos/modules/virtualisation/lxc-container.nix"
             inputs.sops-nix.nixosModules.sops
-            ./hosts/hypervised/trilium
+            ./configuration/hosts/hypervised/trilium
           ];
         };
 
@@ -289,7 +294,7 @@
             inputs.sops-nix.nixosModules.sops
             inputs.nixunits.nixosModules.default
 
-            ./hosts/cab1e
+            ./configuration/hosts/cab1e
 
             home-manager.nixosModules.home-manager
             {
@@ -300,11 +305,11 @@
                 verbose = true;
                 extraSpecialArgs = { inputs = self.inputs; };
                 users = {
-                  root = import ./users/root/cab1e.nix;
+                  root = import ./configuration/users/root/cab1e.nix;
                   badele = {
                     imports = [
                       stylix.homeManagerModules.stylix
-                      ./users/badele/cab1e.nix
+                      ./configuration/users/badele/cab1e.nix
                     ];
                   };
                 };
@@ -327,7 +332,7 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
-            ./users/root/b4d14.nix
+            ./configuration/users/root/b4d14.nix
           ];
         };
 
@@ -338,7 +343,7 @@
           modules = [
             # > Our main home-manager configuration file <
             nur.modules.homeManager
-            ./users/badele/b4d14.nix
+            ./configuration/users/badele/b4d14.nix
           ];
         };
 
@@ -361,7 +366,7 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
-            ./users/badele/sadhome.nix
+            ./configuration/users/badele/sadhome.nix
           ];
         };
 
@@ -371,7 +376,7 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
-            ./users/sadele/sadhome.nix
+            ./configuration/users/sadele/sadhome.nix
           ];
         };
 
@@ -384,7 +389,7 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
-            ./users/badele/rpi40.nix
+            ./configuration/users/badele/rpi40.nix
           ];
         };
 
@@ -397,7 +402,7 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
-            ./users/root/srvhoma.nix
+            ./configuration/users/root/srvhoma.nix
           ];
         };
 
@@ -408,7 +413,7 @@
           modules = [
             # > Our main home-manager configuration file <
             nur.modules.homeManager
-            ./users/badele/srvhoma.nix
+            ./configuration/users/badele/srvhoma.nix
           ];
         };
 
@@ -421,7 +426,7 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
-            ./users/root/demo.nix
+            ./configuration/users/root/demo.nix
           ];
         };
 
@@ -432,7 +437,7 @@
           modules = [
             # > Our main home-manager configuration file <
             nur.modules.homeManager
-            ./users/badele/demo.nix
+            ./configuration/users/badele/demo.nix
           ];
         };
       };

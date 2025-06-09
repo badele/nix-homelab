@@ -12,7 +12,6 @@
     mtr # Network diagnostics tool
     netcat-gnu # Utility which reads and writes data across network
     nmap # Network exploration tool and security scanner
-    omping # multicast ping
     tcpdump # Network packet analyzer
     termshark # Terminal UI for tshark
     trippy # mtr traceroute alternative

@@ -7,14 +7,14 @@ docs/nvim/tags
 .direnv
 
 # Private keys
-hosts/*/ssh_host_rsa_key
-hosts/*/ssh_host_ed25519_key
+configuration/hosts/*/ssh_host_rsa_key
+configuration/hosts/*/ssh_host_ed25519_key
 
 # demo user
-users/demo/age-key.txt
-hosts/demovm/secrets.tmp
-hosts/demovm/ssh_host_rsa_key.pub
-hosts/demovm/ssh_host_ed25519_key.pub
+configuration/users/demo/age-key.txt
+configuration/hosts/demovm/secrets.tmp
+configuration/hosts/demovm/ssh_host_rsa_key.pub
+configuration/hosts/demovm/ssh_host_ed25519_key.pub
 disk-demo.raw
 result
 

@@ -12,15 +12,15 @@
     ../sadele.nix
 
     # Commons
-    ../../nix/modules/nixos/homelab
-    ../../nix/nixos/features/commons
-    ../../nix/nixos/features/system/containers.nix
+    ../../../nix/modules/nixos/homelab
+    ../../../nix/nixos/features/commons
+    ../../../nix/nixos/features/system/containers.nix
 
     # Desktop
-    ../../nix/nixos/features/desktop/wm/xorg/gdm.nix
+    ../../../nix/nixos/features/desktop/wm/xorg/gdm.nix
 
     # Printer
-    ../../nix/nixos/features/system/printer.nix
+    ../../../nix/nixos/features/system/printer.nix
   ];
 
   ####################################

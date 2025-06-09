@@ -5,14 +5,14 @@
 
   imports = [
     # Apps
-    ../../nix/home-manager/apps/tools.nix
-    ../../nix/home-manager/apps/editor/neovim.nix
-    ../../nix/home-manager/apps/development/packages.nix
-    ../../nix/home-manager/apps/development/aider.nix
-    ../../nix/home-manager/apps/development/internet.nix
-    ../../nix/home-manager/apps/development/nix.nix
-    ../../nix/home-manager/apps/system/performance.nix
-    ../../nix/home-manager/apps/system/file.nix
+    ../../../nix/home-manager/apps/tools.nix
+    ../../../nix/home-manager/apps/editor/neovim.nix
+    ../../../nix/home-manager/apps/development/packages.nix
+    ../../../nix/home-manager/apps/development/aider.nix
+    ../../../nix/home-manager/apps/development/internet.nix
+    ../../../nix/home-manager/apps/development/nix.nix
+    ../../../nix/home-manager/apps/system/performance.nix
+    ../../../nix/home-manager/apps/system/file.nix
   ];
 
   home = {
