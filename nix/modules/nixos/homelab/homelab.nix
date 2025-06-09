@@ -2,6 +2,7 @@
 let
   homelabJson = builtins.fromJSON (builtins.readFile ../../../../homelab.json);
 
+  # Network options
   netOptions = with lib; {
     vlanId = mkOption {
       type = types.int;
@@ -20,7 +21,6 @@ let
       default = null;
       description = "mask";
     };
-
   };
 in
 {
@@ -34,10 +34,17 @@ in
       type = with types; attrsOf (submodule [{ options = netOptions; }]);
       description = "Networks";
     };
+
+    homelab.borgBackup.remote = mkOption {
+      type = types.str;
+      default = null;
+      description = "Borg backup remote server address (ssh://address:port)";
+    };
   };
 
   config = {
     homelab.domain = homelabJson.domain;
     homelab.networks = homelabJson.networks;
+    homelab.borgBackup.remote = homelabJson.borgBackup.remote;
   };
 }

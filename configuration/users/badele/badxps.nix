@@ -14,8 +14,8 @@ in
 {
   imports = [
     # homelab Modules
-    ../../nix/modules/home-manager/font.nix
-    ../../nix/modules/home-manager/userconf.nix
+    ../../../nix/modules/home-manager/font.nix
+    ../../../nix/modules/home-manager/userconf.nix
 
     # Common tools and packages for all badele user hosts
     ../badele/commons.nix
@@ -25,36 +25,36 @@ in
     # ../../nix/home-manager/features/term/editor/lazyvim.nix
 
     # Apps
-    ../../nix/home-manager/apps/bluetooth.nix
-    ../../nix/home-manager/apps/cad.nix
-    ../../nix/home-manager/apps/chess.nix
-    ../../nix/home-manager/apps/graphics.nix
-    ../../nix/home-manager/apps/networking.nix
+    ../../../nix/home-manager/apps/bluetooth.nix
+    ../../../nix/home-manager/apps/cad.nix
+    ../../../nix/home-manager/apps/chess.nix
+    ../../../nix/home-manager/apps/graphics.nix
+    ../../../nix/home-manager/apps/networking.nix
 
     # Term
-    ../../nix/home-manager/features/term/base.nix
-    ../../nix/home-manager/features/term/security
+    ../../../nix/home-manager/features/term/base.nix
+    ../../../nix/home-manager/features/term/security
 
     # Language
-    ../../nix/home-manager/features/language/all.nix
+    ../../../nix/home-manager/features/language/all.nix
 
     # Desktop
-    ../../nix/home-manager/features/desktop/apps/base.nix
-    ../../nix/home-manager/features/desktop/xorg/base.nix
-    ../../nix/home-manager/features/desktop/xorg/wm/i3.nix
+    ../../../nix/home-manager/features/desktop/apps/base.nix
+    ../../../nix/home-manager/features/desktop/xorg/base.nix
+    ../../../nix/home-manager/features/desktop/xorg/wm/i3.nix
 
     # Web browser
-    ../../nix/home-manager/features/desktop/apps/google-chrome.nix
+    ../../../nix/home-manager/features/desktop/apps/google-chrome.nix
     ../../users/badele/firefox.nix
 
     # Multimedia
-    ../../nix/home-manager/features/desktop/apps/spotify.nix
+    ../../../nix/home-manager/features/desktop/apps/spotify.nix
 
     # Development desktop
-    ../../nix/home-manager/features/desktop/apps/development/vscode.nix
+    ../../../nix/home-manager/features/desktop/apps/development/vscode.nix
 
     # Virtualisation
-    ../../nix/home-manager/features/desktop/xorg/virtualisation.nix
+    ../../../nix/home-manager/features/desktop/xorg/virtualisation.nix
   ];
 
   ###############################################################################

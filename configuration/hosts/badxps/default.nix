@@ -28,7 +28,7 @@ let
     };
 
     parent = "router-ladbedroom";
-    roles = [ "virtualization" "coredns" ];
+    roles = [ "coredns" "netbox" "virtualization" ];
     zone = "homeoffice";
 
     params = {
@@ -52,32 +52,32 @@ in
     ./hardware-configuration.nix
 
     # Modules
-    ../../nix/modules/nixos/homelab
-    ../../nix/modules/nixos/qbittorrent-nox.nix
+    ../../../nix/modules/nixos/homelab
+    ../../../nix/modules/nixos/qbittorrent-nox.nix
 
     # Users account
     ../root.nix
     ../badele.nix
 
     # Commons
-    ../../nix/nixos/features/commons
-    ../../nix/nixos/features/system/containers.nix
+    ../../../nix/nixos/features/commons
+    ../../../nix/nixos/features/system/containers.nix
 
     # ../../nix/nixos/features/virtualisation/incus.nix
     # ../../nix/nixos/features/virtualisation/libvirt.nix
 
     # Desktop
-    ../../nix/nixos/features/system/bluetooth.nix
-    ../../nix/nixos/features/desktop/wm/xorg/lightdm.nix
+    ../../../nix/nixos/features/system/bluetooth.nix
+    ../../../nix/nixos/features/desktop/wm/xorg/lightdm.nix
 
     # Services
-    ./services/homepage.nix
-    ./services/netbox.nix
+    # ./services/homepage.nix
+    # ./services/netbox.nix
     ./services/torrent.nix
     ./services/traefik.nix
 
     # # Roles
-    ../../nix/nixos/roles # Automatically load service from <host.modules> sectionn from `homelab.json` file
+    ../../../nix/nixos/roles # Automatically load service from <host.modules> sectionn from `homelab.json` file
   ];
 
   ####################################
