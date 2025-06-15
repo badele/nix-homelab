@@ -1,5 +1,7 @@
 # NetBox
 
+![Interface NetBox](netbox.png)
+
 ## 🔐 Secret
 
 NetBox requires a secret key to securely hash passwords and HTTP cookies.
