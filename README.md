@@ -108,7 +108,7 @@ This list generated with `just doc-update` command
         <td>Scalable log aggregation system [service port 8084,9095]</td>
         </tr><tr>
             <td><img width="32" src="https://netboxlabs.com/images/favicons/favicon.svg"></td>
-            <td>netbox</td>
+            <td><a href="./docs/netbox/README.md">netbox</a></td>
             <td>badxps</td>
         <td>The Premier Network Source of Truth</td>
         </tr><tr>

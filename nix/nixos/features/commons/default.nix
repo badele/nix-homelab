@@ -1,7 +1,6 @@
-{ ...
-}:
-{
+{ ... }: {
   imports = [
+    ./borgbackup.nix
     ./disk.nix
     ./locale.nix
     ./networking.nix
@@ -13,7 +12,5 @@
     ./zfs.nix
   ];
 
-  programs = {
-    zsh.enable = true;
-  };
+  programs = { zsh.enable = true; };
 }

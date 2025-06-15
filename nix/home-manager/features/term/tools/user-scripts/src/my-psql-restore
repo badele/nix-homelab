@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+usage() {
+    echo "Usage: $(basename "$0") <repository_name> <database_name>"
+    echo "Restaure une base de données PostgreSQL à partir d'un répertoire de sauvegarde."
+    echo "Le répertoire de sauvegarde est attendu sous /data/borgbackup/postgresql/<repository_name>."
+    exit 1
+}
+
+if [ "$(id -u)" -ne 0 ]; then
+    echo "Vous devez être root pour exécuter ce script."
+    exit 1
+fi
+
+if [ -z "$1" ] || [ -z "$2" ]; then
+    usage
+fi
+
+REPO_NAME="$1"
+DB_NAME="$2"
+BACKUP_DIR="/data/borgbackup/postgresql/$REPO_NAME"
+
+if [ ! -d "$BACKUP_DIR" ]; then
+    echo "Erreur: Le répertoire de sauvegarde '$BACKUP_DIR' n'existe pas."
+    exit 1
+fi
+
+echo "Restauration de la base de données '$DB_NAME' à partir de '$BACKUP_DIR'..."
+pg_restore -F d -d "$DB_NAME" "$BACKUP_DIR"
+
+echo "Restauration terminée pour la base de données '$DB_NAME'."

@@ -72,7 +72,8 @@ lib.mkIf (roleEnabled) {
   ############################################################################
   services.borgbackup.jobs.netbox = {
     paths = [ "/data/borgbackup/postgresql/netbox" ];
-    repo = borgbackup.remote;
+    repo = "${borgbackup.remote}/./netbox";
+    doInit = true;
 
     encryption = {
       mode = "repokey-blake2";
@@ -84,18 +85,16 @@ lib.mkIf (roleEnabled) {
       # BORG_RELOCATED_REPO_ACCESS_IS_OK = "yes";
     };
     preHook = ''
+      rm -rf /data/borgbackup/postgresql/netbox
       ${
         lib.getExe pkgs.sudo
       } -u postgres ${pkgs.postgresql}/bin/pg_dump -F directory -f /data/borgbackup/postgresql/netbox netbox
     '';
     postCreate = ''
-      rm -r /var/backup/postgresql/netbox
+      rm -rf /data/borgbackup/postgresql/netbox
     '';
-    readWritePaths = [ "/var/backup/postgresql" ];
+    readWritePaths = [ "/data/borgbackup/postgresql" ];
     compression = "auto,zlib";
     startAt = "daily";
   };
-
-  systemd.tmpfiles.rules =
-    [ "d /data/borgbackup/postgresql 0750 postgresql postgresql -" ];
 }
