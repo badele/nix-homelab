@@ -61,87 +61,93 @@ This list generated with `just doc-update` command
             <td><a href="./docs/wireguard.md">wireguard</a></td>
             <td>router-living, badphone, cab1e</td>
         <td>An VPN client/server alternative to IPSec and OpenVPN</td>
-        <tr>
+        </tr><tr>
             <td><a href="./docs/acme.md"><img width="32" src="https://www.kevinsubileau.fr/wp-content/uploads/2016/03/letsencrypt-logo-pad.png"></a></td>
             <td><a href="./docs/acme.md">acme</a></td>
             <td>rpi40, bootstore</td>
         <td>Let's Encrypt Automatic Certificate Management Environment</td>
-        <tr>
+        </tr><tr>
             <td><img width="32" src="https://raw.githubusercontent.com/coredns/logo/master/Icon/CoreDNS_Colour_Icon.png"></td>
             <td>coredns</td>
             <td>rpi40</td>
         <td>A Go DNS server, it used for serving local hosts and alias</td>
-        <tr>
+        </tr><tr>
             <td><img width="32" src="https://freesvg.org/img/ftntp-client.png"></td>
             <td>ntp</td>
             <td>rpi40, bootstore, srvhoma</td>
         <td>Network Time Protocol</td>
-        <tr>
+        </tr><tr>
             <td><img width="32" src="https://developer.community.boschrexroth.com/t5/image/serverpage/image-id/13467i19FDFA6E5DC7C260?v=v2"></td>
             <td>mosquitto</td>
             <td>rpi40</td>
         <td>A mqtt broker [service port 1883]</td>
-        <tr>
+        </tr><tr>
             <td><a href="./docs/zigbee2mqtt.md"><img width="32" src="https://www.zigbee2mqtt.io/logo.png"></a></td>
             <td><a href="./docs/zigbee2mqtt.md">zigbee2mqtt</a></td>
             <td>rpi40</td>
         <td>A zigbee2mqtt [service port 8080]</td>
-        <tr>
+        </tr><tr>
             <td><img width="32" src="https://play-lh.googleusercontent.com/pCqOLS2w-QaTI63tjFLvncHnbXc4100EQI3FAD0RZEFWjGMa_54M4x2HD7j48qMSv3kk"></td>
             <td>adguard</td>
             <td>bootstore</td>
         <td>DNS ad blocker [service port 3002]</td>
-        <tr>
+        </tr><tr>
             <td><img width="32" src="https://dashy.to/img/dashy.png"></td>
             <td>dashy</td>
             <td>bootstore</td>
         <td>The Ultimate Homepage for your Homelab [service port 8081]</td>
-        <tr>
+        </tr><tr>
             <td><img width="32" src="https://patch.pulseway.com/Images/features/patch/3pp-logos/Grafana.png"></td>
             <td>grafana</td>
             <td>bootstore</td>
         <td>The open and composable observability and data visualization platform [service port 3000]</td>
-        <tr>
+        </tr><tr>
             <td><img width="32" src="https://grafana.com/static/img/logos/logo-loki.svg"></td>
             <td>loki</td>
             <td>bootstore</td>
         <td>Scalable log aggregation system [service port 8084,9095]</td>
-        <tr>
+        </tr><tr>
+            <td><img width="32" src="https://netboxlabs.com/images/favicons/favicon.svg"></td>
+            <td><a href="./docs/netbox/README.md">netbox</a></td>
+            <td>badxps</td>
+        <td>The Premier Network Source of Truth</td>
+        </tr><tr>
             <td><img width="32" src="https://logo-marque.com/wp-content/uploads/2021/09/Need-For-Speed-Logo-2019-2020.jpg"></td>
             <td>nfs</td>
             <td>bootstore</td>
         <td>A Linux NFS server, it used for backuping a servers and Latops</td>
-        <tr>
+        </tr><tr>
             <td><a href="./docs/nix-serve.md"><img width="32" src="https://camo.githubusercontent.com/33a99d1ffcc8b23014fd5f6dd6bfad0f8923d44d61bdd2aad05f010ed8d14cb4/68747470733a2f2f6e69786f732e6f72672f6c6f676f2f6e69786f732d6c6f676f2d6f6e6c792d68697265732e706e67"></a></td>
             <td><a href="./docs/nix-serve.md">nix-serve</a></td>
             <td>bootstore</td>
         <td>For caching the nix build results</td>
-        <tr>
+        </tr><tr>
             <td><a href="./docs/prometheus.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Prometheus_software_logo.svg/2066px-Prometheus_software_logo.svg.png"></a></td>
             <td><a href="./docs/prometheus.md">prometheus</a></td>
             <td>bootstore</td>
         <td>Monitoring system and time series database [service port 9090]</td>
-        <tr>
+        </tr><tr>
             <td><img width="32" src="https://img.freepik.com/vecteurs-premium/cardiogramme-cardiaque-isole-blanc_97886-1185.jpg?w=2000"></td>
             <td>smokeping</td>
             <td>bootstore</td>
         <td>Latency measurement tool</td>
-        <tr>
+        </tr><tr>
             <td><img width="32" src="https://avatars.githubusercontent.com/u/61949049?s=32&v=4"></td>
             <td>statping</td>
             <td>bootstore</td>
         <td>A Status Page for monitoring your websites and applications with beautiful graphs [service port 8082]</td>
-        <tr>
+        </tr><tr>
             <td><img width="32" src="https://cf.appdrag.com/dashboard-openvm-clo-b2d42c/uploads/Uptime-kuma-7fPG.png"></td>
             <td>uptime</td>
             <td>bootstore</td>
         <td>A Status Page [service port 3001/8083]</td>
-        <tr>
+        </tr><tr>
             <td><a href="./docs/home-assistant.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/32px-Home_Assistant_Logo.svg.png"></a></td>
             <td><a href="./docs/home-assistant.md">home-assistant</a></td>
             <td>bootstore</td>
         <td>Open source home automation [service port 8123]</td>
-        </table>
+        </tr>
+</table>
 
 [comment]: (<<ROLES)
 
@@ -150,6 +156,7 @@ This list generated with `just doc-update` command
 | Logo                                                                                                                                                                                      | Name        | Description                                                                 |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------- |
 | [<img width="32" src="https://aider.chat/assets/icons/favicon-32x32.png">](./docs/aider/README.md)                                                                                        | Aider       | [AI Pair programming](./docs/aider/README.md)                               |
+| [<img width="32" src="https://www.borgbackup.org/favicon.ico">](./docs/borgbackup/README.md)                                                                                              | borgbackup  | [Deduplication backup tool](./docs/borgbackup/README.md)                    |
 | [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Firefox_logo%2C_2019.svg/32px-Firefox_logo%2C_2019.svg.png">](./users/badele/firefox.nix)                 | Firefox     | [Browser](./users/badele/firefox.nix)                                       |
 | [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/The_GIMP_icon_-_gnome.svg/32px-The_GIMP_icon_-_gnome.svg.png">](./users/badele/commons.nix)               | Gimp        | [Raster graphics editor](./users/badele/commons.nix)                        |
 | [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/I3_window_manager_logo.svg/32px-I3_window_manager_logo.svg.png">](./users/badele/commons.nix)             | i3          | [Tiling window manager](./nix/home-manager/features/desktop/xorg/wm/i3.nix) |

@@ -78,7 +78,8 @@ in
     wireguard = {
       enable = true;
       interfaces."${cfg.params.wireguard.interface}" = {
-        privateKeyFile = config.sops.secrets."wireguard/private_peer".path;
+        privateKeyFile =
+          config.sops.secrets."services/wireguard/private_peer".path;
         ips = cfg.params.wireguard.serverIPs;
         listenPort = cfg.params.wireguard.listenPort;
 
@@ -146,7 +147,9 @@ in
   # Public peer server key
   # LQX7VSva7CZJmjmbGrFmG+37bS0PtTgy9Q6/15lIh08=
   sops.secrets = {
-    "wireguard/private_peer" = { sopsFile = ../../hosts/cab1e/secrets.yml; };
+    "services/wireguard/private_peer" = {
+      sopsFile = ../../hosts/cab1e/secrets.yml;
+    };
   };
 
   nixpkgs.hostPlatform.system = "x86_64-linux";

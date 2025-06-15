@@ -37,11 +37,14 @@ precommit-install:
 ###############################################################################
 # Documentation
 ###############################################################################
+# Update documentation
+[group('documentation')]
+@doc-update-command:
+    termshot -f docs/commands.png -- just
 
 # Update documentation
 [group('documentation')]
 @doc-update FILENAME="FAKEFILENAME":
-    termshot -f docs/commands.png -- just
     ./.pre-commit-scripts/updatedoc.ts
 
 
@@ -83,6 +86,36 @@ precommit-install:
 ###############################################################################
 # NIXOS installer
 ###############################################################################
+
+# Create SSH key and store on passwordstore
+[group('installer')]
+create-ssh-key folder account save="true":
+    #!/usr/bin/env bash
+    mkdir -p ./configuration/{{folder}}/ssh /tmp/nix-homelab
+    cleanup() {
+    rm -rf "/tmp/nix-homelab"
+    }
+    trap cleanup EXIT
+
+    PREFIXKEY="ssh_account_{{account}}"
+    if [ ! -f ./configuration/{{folder}}/ssh/${PREFIXKEY}_ed25519.pub ]; then
+        # Generate ssh keys
+        ssh-keygen -q -N "" -t rsa -b 4096 -f /tmp/nix-homelab/${PREFIXKEY}_rsa_key
+        ssh-keygen -q -N "" -t ed25519 -f /tmp/nix-homelab/${PREFIXKEY}_ed25519_key
+
+        # Insert ssh keys to pass
+        if [ "{{save}}" == "true" ]; then
+            pass insert -m nix-homelab/{{folder}}/ssh/${PREFIXKEY}_rsa_key < /tmp/nix-homelab/${PREFIXKEY}_rsa_key
+            pass insert -m nix-homelab/{{folder}}/ssh/${PREFIXKEY}_ed25519_key < /tmp/nix-homelab/${PREFIXKEY}_ed25519_key
+        else
+            cp /tmp/nix-homelab/${PREFIXKEY}_rsa_key ./configuration/{{folder}}/ssh
+            cp /tmp/nix-homelab/${PREFIXKEY}_ed25519_key ./configuration/{{folder}}/ssh
+        fi
+
+        # Copy ssh pub keys to host configuration
+        cp /tmp/nix-homelab/${PREFIXKEY}_rsa_key.pub ./configuration/{{folder}}/ssh
+        cp /tmp/nix-homelab/${PREFIXKEY}_ed25519_key.pub ./configuration/{{folder}}/ssh
+    fi
 
 [private]
 [group('installer')]

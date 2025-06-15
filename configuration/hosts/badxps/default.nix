@@ -6,7 +6,16 @@ let
   cfg = config.homelab.hosts.badxps;
   hostconfiguration = {
     description = "Dell XPS 9570 Latop";
-    dnsalias = [ "flood" "jellyfin" "prowlarr" "radarr" "readarr" "sonarr" ];
+    dnsalias = [
+      "flood"
+      "home"
+      "jellyfin"
+      "netbox"
+      "prowlarr"
+      "radarr"
+      "readarr"
+      "sonarr"
+    ];
     icon =
       "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png";
     ipv4 = "192.168.254.114";
@@ -19,7 +28,7 @@ let
     };
 
     parent = "router-ladbedroom";
-    roles = [ "virtualization" "coredns" ];
+    roles = [ "coredns" "netbox" "virtualization" ];
     zone = "homeoffice";
 
     params = {
@@ -43,30 +52,32 @@ in
     ./hardware-configuration.nix
 
     # Modules
-    ../../nix/modules/nixos/homelab
-    ../../nix/modules/nixos/qbittorrent-nox.nix
+    ../../../nix/modules/nixos/homelab
+    ../../../nix/modules/nixos/qbittorrent-nox.nix
 
     # Users account
     ../root.nix
     ../badele.nix
 
     # Commons
-    ../../nix/nixos/features/commons
-    ../../nix/nixos/features/system/containers.nix
+    ../../../nix/nixos/features/commons
+    ../../../nix/nixos/features/system/containers.nix
 
     # ../../nix/nixos/features/virtualisation/incus.nix
     # ../../nix/nixos/features/virtualisation/libvirt.nix
 
     # Desktop
-    ../../nix/nixos/features/system/bluetooth.nix
-    ../../nix/nixos/features/desktop/wm/xorg/lightdm.nix
+    ../../../nix/nixos/features/system/bluetooth.nix
+    ../../../nix/nixos/features/desktop/wm/xorg/lightdm.nix
 
     # Services
+    # ./services/homepage.nix
+    # ./services/netbox.nix
     ./services/torrent.nix
     ./services/traefik.nix
 
     # # Roles
-    ../../nix/nixos/roles # Automatically load service from <host.modules> sectionn from `homelab.json` file
+    ../../../nix/nixos/roles # Automatically load service from <host.modules> sectionn from `homelab.json` file
   ];
 
   ####################################
@@ -111,7 +122,8 @@ in
         wg-cab1e = {
           mtu = 1384; # Permet de réduire la taille des paquets
           ips = cfg.params.wireguard.privateIPs;
-          privateKeyFile = config.sops.secrets."wireguard/private_peer".path;
+          privateKeyFile =
+            config.sops.secrets."services/wireguard/private_peer".path;
 
           postSetup = ''
             ${pkgs.iproute2}/bin/ip route add default via 10.123.0.2
@@ -166,9 +178,11 @@ in
       owner = config.users.users.badele.name;
     };
 
-    "wireguard/private_peer" = { sopsFile = ../../hosts/badxps/secrets.yml; };
+    "services/wireguard/private_peer" = {
+      sopsFile = ../../hosts/badxps/secrets.yml;
+    };
   };
 
   nixpkgs.hostPlatform.system = "x86_64-linux";
-  system.stateVersion = "24.05";
+  system.stateVersion = "25.05";
 }

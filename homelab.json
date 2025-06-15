@@ -1,4 +1,7 @@
 {
+  "borgBackup": {
+    "remote": "ssh://u444061@u444061.your-storagebox.de:23"
+  },
   "domain": "adele.im",
   "networks": {
     "box": {
