@@ -16,11 +16,9 @@
       - [Installation](#installation)
       - [Update](#update)
       - [Re-use the demo](#re-use-the-demo)
-    - [Secrets initialisation (AGE & SOPS)](#secrets-initialisation-age-sops)
-    - [Homelab initialisation](#homelab-initialisation)
-    - [NixOS installation & update](#nixos-installation-update)
+    - [Secrets initialisation (AGE \& SOPS)](#secrets-initialisation-age--sops)
+    - [NixOS installation \& update](#nixos-installation--update)
       - [Update from you local computer/laptop](#update-from-you-local-computerlaptop)
-    - [Update roles or multiple hosts](#update-roles-or-multiple-hosts)
   - [Commands](#commands)
 - [A big thanks ❤️](#a-big-thanks-️)
 
@@ -28,9 +26,9 @@
 
 ## Features
 
-This homelab entirelly managed by [NixOS](https://nixos.org/)
+This homelab is entirely managed by [NixOS](https://nixos.org/)
 
-All the configuration is stored on `homelab.json` file, you can do:
+All the configuration is stored in the `homelab.json` file. You can:
 
 - Define network CIDR
 - Define hosts
@@ -60,7 +58,7 @@ This list generated with `just doc-update` command
             <td><a href="./docs/wireguard.md"><img width="32" src="https://cdn.icon-icons.com/icons2/2699/PNG/512/wireguard_logo_icon_168760.png"></a></td>
             <td><a href="./docs/wireguard.md">wireguard</a></td>
             <td>router-living, badphone, cab1e</td>
-        <td>An VPN client/server alternative to IPSec and OpenVPN</td>
+        <td>A VPN client/server alternative to IPSec and OpenVPN</td>
         </tr><tr>
             <td><a href="./docs/acme.md"><img width="32" src="https://www.kevinsubileau.fr/wp-content/uploads/2016/03/letsencrypt-logo-pad.png"></a></td>
             <td><a href="./docs/acme.md">acme</a></td>
@@ -115,7 +113,7 @@ This list generated with `just doc-update` command
             <td><img width="32" src="https://logo-marque.com/wp-content/uploads/2021/09/Need-For-Speed-Logo-2019-2020.jpg"></td>
             <td>nfs</td>
             <td>bootstore</td>
-        <td>A Linux NFS server, it used for backuping a servers and Latops</td>
+        <td>A Linux NFS server used for backing up servers and laptops</td>
         </tr><tr>
             <td><a href="./docs/nix-serve.md"><img width="32" src="https://camo.githubusercontent.com/33a99d1ffcc8b23014fd5f6dd6bfad0f8923d44d61bdd2aad05f010ed8d14cb4/68747470733a2f2f6e69786f732e6f72672f6c6f676f2f6e69786f732d6c6f676f2d6f6e6c792d68697265732e706e67"></a></td>
             <td><a href="./docs/nix-serve.md">nix-serve</a></td>
@@ -153,18 +151,19 @@ This list generated with `just doc-update` command
 
 ### User programs
 
-| Logo                                                                                                                                                                                      | Name        | Description                                                                 |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------- |
-| [<img width="32" src="https://aider.chat/assets/icons/favicon-32x32.png">](./docs/aider/README.md)                                                                                        | Aider       | [AI Pair programming](./docs/aider/README.md)                               |
-| [<img width="32" src="https://www.borgbackup.org/favicon.ico">](./docs/borgbackup/README.md)                                                                                              | borgbackup  | [Deduplication backup tool](./docs/borgbackup/README.md)                    |
-| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Firefox_logo%2C_2019.svg/32px-Firefox_logo%2C_2019.svg.png">](./users/badele/firefox.nix)                 | Firefox     | [Browser](./users/badele/firefox.nix)                                       |
-| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/The_GIMP_icon_-_gnome.svg/32px-The_GIMP_icon_-_gnome.svg.png">](./users/badele/commons.nix)               | Gimp        | [Raster graphics editor](./users/badele/commons.nix)                        |
-| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/I3_window_manager_logo.svg/32px-I3_window_manager_logo.svg.png">](./users/badele/commons.nix)             | i3          | [Tiling window manager](./nix/home-manager/features/desktop/xorg/wm/i3.nix) |
-| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Inkscape_Logo.svg/32px-Inkscape_Logo.svg.png">](./users/badele/commons.nix)                               | Inkscape    | [Vectorial graphics editor](./users/badele/commons.nix)                     |
-| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/LibreOffice_icon_3.3.1_48_px.svg/32px-LibreOffice_icon_3.3.1_48_px.svg.png">](./users/badele/commons.nix) | Libreoffice | [Office editor](./users/badele/commons.nix)                                 |
-| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Meld_Logo.svg/128px-Meld_Logo.svg.png">](./users/badele/commons.nix)                                      | Meld        | [Awesome diff tool](./users/badele/commons.nix)                             |
-| [<img width="32" src="https://raw.githubusercontent.com/denisidoro/navi/master/assets/icon.png">](./nix/home-manager/features/term/base.nix)                                              | Navi        | [interactive cheatsheet tool](https://github.com/badele/vide)               |
-| [<img width="32" src="https://user-images.githubusercontent.com/28633984/66519056-2e840c80-eaef-11e9-8670-c767213c26ba.png">](https://github.com/badele/vide)                             | Neovim      | [**VIDE** (badele's customized nix neovim)](/docs/nvim/README.md)           |
+| Logo                                                                                                                                                                                      | Name               | Description                                                                 |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | --------------------------------------------------------------------------- |
+| [<img width="32" src="https://aider.chat/assets/icons/favicon-32x32.png">](./docs/aider/README.md)                                                                                        | Aider              | [AI Pair programming](./docs/aider/README.md)                               |
+| [<img width="32" src="https://www.borgbackup.org/favicon.ico">](./docs/borgbackup/README.md)                                                                                              | borgbackup         | [Deduplication backup tool](./docs/borgbackup/README.md)                    |
+| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Firefox_logo%2C_2019.svg/32px-Firefox_logo%2C_2019.svg.png">](./users/badele/firefox.nix)                 | Firefox            | [Browser](./users/badele/firefox.nix)                                       |
+| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/The_GIMP_icon_-_gnome.svg/32px-The_GIMP_icon_-_gnome.svg.png">](./users/badele/commons.nix)               | Gimp               | [Raster graphics editor](./users/badele/commons.nix)                        |
+| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/I3_window_manager_logo.svg/32px-I3_window_manager_logo.svg.png">](./users/badele/commons.nix)             | i3                 | [Tiling window manager](./nix/home-manager/features/desktop/xorg/wm/i3.nix) |
+| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Inkscape_Logo.svg/32px-Inkscape_Logo.svg.png">](./users/badele/commons.nix)                               | Inkscape           | [Vectorial graphics editor](./users/badele/commons.nix)                     |
+| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/LibreOffice_icon_3.3.1_48_px.svg/32px-LibreOffice_icon_3.3.1_48_px.svg.png">](./users/badele/commons.nix) | Libreoffice        | [Office editor](./users/badele/commons.nix)                                 |
+| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Meld_Logo.svg/128px-Meld_Logo.svg.png">](./users/badele/commons.nix)                                      | Meld               | [Awesome diff tool](./users/badele/commons.nix)                             |
+| [<img width="32" src="https://raw.githubusercontent.com/denisidoro/navi/master/assets/icon.png">](./nix/home-manager/features/term/base.nix)                                              | Navi               | [interactive cheatsheet tool](https://github.com/badele/vide)               |
+| [<img width="32" src="https://user-images.githubusercontent.com/28633984/66519056-2e840c80-eaef-11e9-8670-c767213c26ba.png">](https://github.com/badele/vide)                             | Neovim             | [**VIDE** (badele's customized nix neovim)](/docs/nvim/README.md)           |
+| [<img width="32" src="https://code.visualstudio.com/assets/favicon.ico">](/docs/vscode/README.md)                                                                                         | Visual Studio Code | [Visual Studio Code](/docs/vscode/README.md)                                |
 
 ### TUI floating panel configuration
 
@@ -375,9 +374,8 @@ just demo-start
 
 Your `pass` (passwordstore) configuration must be correctly configured.
 
-In order to be able to encrypt your credentials, you first need initialize an
-`age` key. It is this key that will subsequently have to be added in the
-`.sops.yaml` file
+In order to encrypt your credentials, you first need to initialize an `age` key.
+This key will subsequently have to be added to the `.sops.yaml` file.
 
 - `age-keygen | pass insert -m nix-homelab/users/your_username`
 - `pass show nix-homelab/users/your_username | grep AGE-SECRET-KEY >> ~/.config/sops/age/keys.txt`
