@@ -1,9 +1,6 @@
-{ ... }:
-{
+{ ... }: {
   # Create /data/docker folder
-  systemd.tmpfiles.rules = [
-    "d /data/docker 0750 root root -"
-  ];
+  systemd.tmpfiles.rules = [ "d /data/docker 0755 root root -" ];
 
   virtualisation.oci-containers.backend = "docker";
   virtualisation.docker = {
@@ -15,8 +12,6 @@
       # setSocketVariable = true;
     };
 
-    daemon.settings = {
-      experimental = true;
-    };
+    daemon.settings = { experimental = true; };
   };
 }

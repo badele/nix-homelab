@@ -75,7 +75,7 @@ This list generated with `just doc-update` command
             <td>rpi40, bootstore, srvhoma</td>
         <td>Network Time Protocol</td>
         </tr><tr>
-            <td><img width="32" src="https://developer.community.boschrexroth.com/t5/image/serverpage/image-id/13467i19FDFA6E5DC7C260?v=v2"></td>
+            <td><img width="32" src="https://mosquitto.org/favicon-32x32.png"></td>
             <td>mosquitto</td>
             <td>rpi40</td>
         <td>A mqtt broker [service port 1883]</td>
@@ -95,15 +95,20 @@ This list generated with `just doc-update` command
             <td>bootstore</td>
         <td>The Ultimate Homepage for your Homelab [service port 8081]</td>
         </tr><tr>
-            <td><img width="32" src="https://patch.pulseway.com/Images/features/patch/3pp-logos/Grafana.png"></td>
+            <td><img width="32" src="https://grafana.com/static/assets/img/fav32.png"></td>
             <td>grafana</td>
             <td>bootstore</td>
         <td>The open and composable observability and data visualization platform [service port 3000]</td>
-        </tr><tr>
+            </tr><tr>
             <td><img width="32" src="https://grafana.com/static/img/logos/logo-loki.svg"></td>
             <td>loki</td>
             <td>bootstore</td>
         <td>Scalable log aggregation system [service port 8084,9095]</td>
+        </tr><tr>
+            <td><img width="32" src="https://linkding.link/favicon.svg"></td>
+            <td><a href="./docs/linkding/README.md">linkding</a></td>
+            <td>badxps</td>
+        <td>Bookmark manager</td>
         </tr><tr>
             <td><img width="32" src="https://netboxlabs.com/images/favicons/favicon.svg"></td>
             <td><a href="./docs/netbox/README.md">netbox</a></td>
@@ -115,7 +120,7 @@ This list generated with `just doc-update` command
             <td>bootstore</td>
         <td>A Linux NFS server used for backing up servers and laptops</td>
         </tr><tr>
-            <td><a href="./docs/nix-serve.md"><img width="32" src="https://camo.githubusercontent.com/33a99d1ffcc8b23014fd5f6dd6bfad0f8923d44d61bdd2aad05f010ed8d14cb4/68747470733a2f2f6e69786f732e6f72672f6c6f676f2f6e69786f732d6c6f676f2d6f6e6c792d68697265732e706e67"></a></td>
+            <td><a href="./docs/nix-serve.md"><img width="32" src="https://github.githubassets.com/favicons/favicon.svg"></a></td>
             <td><a href="./docs/nix-serve.md">nix-serve</a></td>
             <td>bootstore</td>
         <td>For caching the nix build results</td>
@@ -145,6 +150,7 @@ This list generated with `just doc-update` command
             <td>bootstore</td>
         <td>Open source home automation [service port 8123]</td>
         </tr>
+
 </table>
 
 [comment]: (<<ROLES)

@@ -7,6 +7,7 @@
     # ./dashy.nix
     ./grafana
     ./home-assistant
+    ./linkding.nix
     ./loki/loki.nix
     ./mosquitto.nix
     ./netbox.nix

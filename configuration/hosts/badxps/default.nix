@@ -10,6 +10,7 @@ let
       "flood"
       "home"
       "jellyfin"
+      "links"
       "netbox"
       "prowlarr"
       "radarr"
@@ -28,7 +29,7 @@ let
     };
 
     parent = "router-ladbedroom";
-    roles = [ "coredns" "netbox" "virtualization" ];
+    roles = [ "coredns" "linkding" "netbox" "virtualization" ];
     zone = "homeoffice";
 
     params = {
@@ -45,8 +46,7 @@ let
       };
     };
   };
-in
-{
+in {
   imports = [
     inputs.hardware.nixosModules.dell-xps-15-9570-intel
     ./hardware-configuration.nix
