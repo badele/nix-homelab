@@ -77,24 +77,13 @@ pass nix-homelab/hosts/badxps/ssh_host_ed25519_key > /tmp/ssh && chmod 600 /tmp/
 Generate the borgbackup passphrase with
 
 ```bash
-pwgen -s 32 1
+nix shell nixpkgs#pwgen --command pwgen -s 32 1
 ```
 
 and store to `configuration/hosts/secrets.yml` in `borgbackup/passphrase`
 section
 
-## Restoration
+## Backup and restoration
 
-### Backup
-
-```bash
-sudo my-borg ${SERVICENAME} list ${BORG_REPO_BASE}/./netbox
-( cd / && sudo my-borg ${SERVICENAME} extract ${BORG_REPO_BASE}/./netbox::badxps-netbox-2025-06-11T00:00:04)
-```
-
-### Netbox
-
-```bash
-sudo -u postgres dropdb netbox sudo -u postgres createdb netbox
-nix shell nixpkgs#postgresql --command sudo -u postgres pg_restore -Fd -d netbox /data/borgbackup/postgresql/netbox
-```
+- [netbox](/docs/netbox/)
+- [linkding](/docs/linkding/)

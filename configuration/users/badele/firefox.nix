@@ -35,6 +35,7 @@
                 "urlbar-container",
                 "simple-tab-groups_drive4ik-browser-action",
                 "browserpass_maximbaz_com-browser-action",
+                "_61a05c39-ad45-4086-946f-32adb0a40a9d_-browser-action",
                 "_d634138d-c276-4fc8-924b-40a0ea21d284_-browser-action",
                 "_c0e1baea-b4cb-4b62-97f0-278392ff8c37_-browser-action",
                 "addon_darkreader_org-browser-action",
@@ -115,8 +116,8 @@
         ublock-origin # addblocker
 
         # Install manually addons
-        # Search AddonId with about:support
-        # Fireshot
+        # On addon website, get download link of the addon (install/uninstall button)
+        # Fromt firefox (about:support) copy the addonId
 
         # LanguageTool, grammar and spell checker
         (buildFirefoxXpiAddon rec {
@@ -170,6 +171,17 @@
           url =
             "https://addons.mozilla.org/firefox/downloads/file/3610512/bookmarks_clean_up-${version}.xpi";
           sha256 = "sha256-4FNojXUkm+8lFEBbQOfpdlZgt/SfB8AAGCOiGyWnsuo=";
+          meta = { };
+        })
+
+        # Clean bookmark (duplicate links & unavailable links )
+        (buildFirefoxXpiAddon rec {
+          pname = "linkding-extension";
+          version = "1.14.0";
+          addonId = "{61a05c39-ad45-4086-946f-32adb0a40a9d}";
+          url =
+            "https://addons.mozilla.org/firefox/downloads/file/4449452/linkding_extension-${version}.xpi";
+          sha256 = "sha256-uORUU9Nmplslvk9Q59szaS9xk1SSV2hfT8K86zenB5w=";
           meta = { };
         })
       ];
