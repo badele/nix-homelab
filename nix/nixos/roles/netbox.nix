@@ -5,8 +5,7 @@ let
   roleEnabled = lib.elem roleName config.homelab.currentHost.roles;
 
   borgbackup = config.homelab.borgBackup;
-in
-lib.mkIf (roleEnabled) {
+in lib.mkIf (roleEnabled) {
   sops.secrets = {
     "services/netbox/secret" = {
       mode = "0400";
@@ -26,6 +25,12 @@ lib.mkIf (roleEnabled) {
     listenAddress = "127.0.0.1";
     port = 8001;
     secretKeyFile = config.sops.secrets."services/netbox/secret".path;
+
+    plugins = python313Packages:
+      with python313Packages;
+      [ netbox-topology-views ];
+    settings = { PLUGINS = [ "netbox_topology_views" ]; };
+
   };
 
   services.nginx = {

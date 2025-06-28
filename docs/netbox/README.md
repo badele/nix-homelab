@@ -1,4 +1,15 @@
-# NetBox
+<!--toc:start-->
+
+- [🔐 Secret](#🔐-secret)
+- [👤 Superuser account](#👤-superuser-account)
+- [Plugins](#plugins)
+  - [Update](#update)
+    - [netbox-topology-views](#netbox-topology-views)
+- [Borg backup restoration](#borg-backup-restoration)
+  - [The archive](#the-archive)
+  - [Netbox database](#netbox-database)
+
+<!--toc:end-->
 
 ![NetBox interface](netbox.png)
 
@@ -42,6 +53,26 @@ Username (leave blank to use 'netbox'): admin
 Email address: netbox@local.local
 Password:
 Password (again):
+```
+
+## Plugins
+
+### Update
+
+#### netbox-topology-views
+
+```bash
+sudo -u netbox bash
+NETBOX=$(systemctl show netbox | grep -oE -- '--pythonpath .*/opt/netbox/netbox' | head -n1 | awk '{ print $2 }')
+PYTHON=$(head -n1 $NETBOX/manage.py | grep -oE '/.*')
+
+systemctl show netbox | grep -E '^Environment='
+
+# Before launching python3 command, manual copy all environment variable
+# ex: LOCALE_ARCHIVE=/nix/store/xxx-glibc-locales-2.40-66/lib/locale/locale-archive PATH=/nix/store/xxx-coreutils-9.7/bin $PYTHON xxx
+cd $NETBOX
+ALLVARS=see_previous_line $PYTHON manage.py migrate netbox_topology_views
+ALLVARS=see_previous_line $PYTHON manage.py collectstatic --no-input
 ```
 
 ## Borg backup restoration
