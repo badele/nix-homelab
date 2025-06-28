@@ -24,20 +24,20 @@ in lib.mkIf (roleEnabled) {
   ############################################################################
   # linkding service
   ############################################################################
-  systemd.tmpfiles.rules = [ "d /data/docker/${roleName} 0750 1000 100 -" ];
+  systemd.tmpfiles.rules = [ "d /data/docker/${roleName} 0750 33 33 -" ];
 
   virtualisation.oci-containers.containers = {
     linkding = {
       image = "ghcr.io/sissbruecker/linkding:${version}";
       autoStart = true;
-      user = "1000:100";
+      # user = "1000:100";
       ports = [ "9090:9090" ];
 
       volumes = [ "/data/docker/${roleName}:/etc/linkding/data" ];
       environmentFiles = [ config.sops.templates."linkding-env".path ];
       environment = {
         LD_SUPERUSER_NAME = "badele";
-        LD_CSRF_TRUSTED_ORIGINS = "https://${roleName}.${domain}";
+        LD_CSRF_TRUSTED_ORIGINS = "http://${host}.${domain}";
       };
     };
   };

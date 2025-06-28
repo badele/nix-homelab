@@ -3,7 +3,7 @@
 # mkdir -p $DIR_NIXSERVE && cd $DIR_NIXSERVE
 # nix-store --generate-binary-cache-key $(hostname).$(hostname -d) cache-priv-key.pem cache-pub-key.pem
 #
-# curl https://nixcache.adele.im:5000/nix-cache-info
+# curl https://nixcache.adele.lan:5000/nix-cache-info
 { outputs, lib, config, ... }:
 let
   roleName = "nix-serve";

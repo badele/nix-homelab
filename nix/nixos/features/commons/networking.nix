@@ -29,10 +29,10 @@ in
 
     # add an entry to /etc/hosts for each host
     extraHosts = ''
-      127.0.0.1 cert.adele.im
+      127.0.0.1 cert.adele.lan
 
       # ADM
-      192.168.240.16 traefik.adele.im home.adele.im adguard.adele.im
+      192.168.240.16 traefik.adele.lan home.adele.lan adguard.adele.lan
 
       # Hosts
       ${lib.concatStringsSep "\n" (lib.mapAttrsToList (hostname: hostinfo:

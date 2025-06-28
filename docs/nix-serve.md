@@ -16,8 +16,8 @@ inv nix.deploy --hostnames <hostname>
 ## Testing the nix cache server
 
 ```
-curl -sLv https://nixcache.adele.im/nix-cache-info
-nix verify --store https://nixcache.adele.im:5000 --trusted-public-keys 'nixcache.adele.im:+2EnxpRxBCNd5V/2PNoobcq7fW+oXpZ0IhRwL+X2WHI=' /nix/store
+curl -sLv https://nixcache.adele.lan/nix-cache-info
+nix verify --store https://nixcache.adele.lan:5000 --trusted-public-keys 'nixcache.adele.lan:+2EnxpRxBCNd5V/2PNoobcq7fW+oXpZ0IhRwL+X2WHI=' /nix/store
 ```
 
 ## Utilization
@@ -27,12 +27,12 @@ Edit `flake.nix` file
 ```
   nixConfig = {
     extra-substituers = [
-      "http://nixcache.adele.im:5000"
+      "http://nixcache.adele.lan:5000"
       "https://nix-community.cachix.org"
     ];
     extra-trusted-public-keys =
       [
-        "nixcache.adele.im:+2EnxpRxBCNd5V/2PNoobcq7fW+oXpZ0IhRwL+X2WHI="
+        "nixcache.adele.lan:+2EnxpRxBCNd5V/2PNoobcq7fW+oXpZ0IhRwL+X2WHI="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
   };
