@@ -2,9 +2,7 @@
 
 This page generated with `inv docs.all-pages`
 
-
 [comment]: (>>HOSTINFOS)
-
 
 ### Role
 
@@ -43,15 +41,13 @@ This page generated with `inv docs.all-pages`
 
 ### Scan
 
-| Port | Proto | Service | Product | Extra info |
-| ------ | ------ | ------ |------ |------ |
-|22|tcp|ssh|OpenSSH|protocol 2.0|
-|53|tcp|domain|Unbound||
-|80|tcp|http|nginx||
-|443|tcp|http|nginx||
-|9100|tcp|jetdirect|||
-
-
+| Port | Proto | Service   | Product | Extra info   |
+| ---- | ----- | --------- | ------- | ------------ |
+| 22   | tcp   | ssh       | OpenSSH | protocol 2.0 |
+| 53   | tcp   | domain    | Unbound |              |
+| 80   | tcp   | http      | nginx   |              |
+| 443  | tcp   | http      | nginx   |              |
+| 9100 | tcp   | jetdirect |         |              |
 
 ### Config
 
@@ -66,9 +62,7 @@ KERNEL   : 5.15.74
 
 ### Topologie
 
-
 ![hardware topology](https://raw.githubusercontent.com/badele/nix-homelab/master/docs/hosts/rpi40/topologie.svg)
-
 
 ### Hardwares
 
@@ -147,10 +141,7 @@ Info:      Processes: 181
            inxi: 3.3.04
 ```
 
-
-
 [comment]: (<<HOSTINFOS)
-
 
 ## Install from scratch
 
@@ -161,6 +152,7 @@ Start [Commons installation](../installation.md)
 On specific **host section**
 
 # configure nix-server, <One time> add host and public key to features/system/nix.nix
+
 inv init-nix-serve --hosts ${TARGETIP} --hostnames ${TARGETNAME}
 
 ```
@@ -168,7 +160,7 @@ inv init-nix-serve --hosts ${TARGETIP} --hostnames ${TARGETNAME}
 inv init-nix-server --hosts <nixos-livecd-ip>
 export DIR_NIXSERVE=/persist/host/data/nix-serve
 mkdir -p $DIR_NIXSERVE && cd $DIR_NIXSERVE
-nix-store --generate-binary-cache-key rpi40.adele.local cache-priv-key.pem cache-pub-key.pem
+nix-store --generate-binary-cache-key rpi40.adele.lan cache-priv-key.pem cache-pub-key.pem
 
 # Update RPI and configure USB boot
 inv firmware-rpi-update --hosts <nixos-livecd-ip>
@@ -176,4 +168,5 @@ inv firmware-rpi-update --hosts <nixos-livecd-ip>
 
 End [Commons installation](../installation.md) with **custom task**
 
-TODO: update rpi40, bootstore nix-server documentation and remove persistent store
+TODO: update rpi40, bootstore nix-server documentation and remove persistent
+store

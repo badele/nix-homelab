@@ -46,7 +46,7 @@ lib.mkIf (roleEnabled)
       };
 
       mqtt = {
-        server = "mqtt://mqtt.adele.im/${toString mqtt_port}";
+        server = "mqtt://mqtt.adele.lan/${toString mqtt_port}";
         user = "zigbee2mqtt";
         password = "!secret password";
       };
