@@ -56,18 +56,9 @@
     };
   };
 
-  outputs =
-    { self
-    , nixpkgs
-    , home-manager
-    , sops-nix
-    , hardware
-      # , nix-pre-commit
-    , stylix
-    , nur
-    , nixunits
-    , ...
-    }@inputs:
+  outputs = { self, nixpkgs, home-manager, sops-nix, hardware
+    # , nix-pre-commit
+    , stylix, nur, nixunits, ... }@inputs:
     let
       inherit (self) outputs;
       forAllSystems = nixpkgs.lib.genAttrs [
@@ -79,8 +70,7 @@
       ];
 
       pkgs = import nixpkgs { overlays = [ nur.overlay ]; };
-    in
-    rec {
+    in rec {
       # Your custom packages
       # Acessible through 'nix build', 'nix shell', etc
       packages = forAllSystems (system:
@@ -232,14 +222,12 @@
             [ inputs.sops-nix.nixosModules.sops ./configuration/hosts/rpi40 ];
         };
 
-        hype16 = nixpkgs.lib.nixosSystem {
+        hype10 = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
           modules = [
             inputs.sops-nix.nixosModules.sops
-            inputs.crowdsec.nixosModules.crowdsec
-            inputs.crowdsec.nixosModules.crowdsec-firewall-bouncer
             inputs.nixunits.nixosModules.default
-            ./configuration/hosts/hype16
+            ./configuration/hosts/hype10
 
             home-manager.nixosModules.home-manager
             {
@@ -249,12 +237,11 @@
                 verbose = true;
                 extraSpecialArgs = { inputs = self.inputs; };
                 users = {
-                  root = import ./configuration/users/root/hype16.nix;
+                  root = import ./configuration/users/root/hype10.nix;
                   badele = {
                     imports = [
-                      nur.modules.homeManager
                       stylix.homeManagerModules.stylix
-                      ./configuration/users/badele/hype16.nix
+                      ./configuration/users/badele/hype10.nix
                     ];
                   };
                 };
