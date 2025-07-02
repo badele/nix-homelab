@@ -10,23 +10,22 @@ let
     COLOR="#"$COLOR
     ${pkgs.imagemagick}/bin/magick convert -size 1920x1080 xc:$COLOR $out
   '';
-in
-{
+in {
   imports = [
     # homelab Modules
-    ../../nix/modules/home-manager/font.nix
-    ../../nix/modules/home-manager/userconf.nix
+    ../../../nix/modules/home-manager/font.nix
+    ../../../nix/modules/home-manager/userconf.nix
 
     # Common tools and packages for all badele user hosts
-    ./badele-commons.nix
+    ../badele/commons.nix
 
     # Editor
     # INFO: I use my independant neovim configuration => https://github.com/badele/vides
     # ../../nix/home-manager/features/term/editor/lazyvim.nix
 
     # Term
-    ../../nix/home-manager/features/term/base.nix
-    ../../nix/home-manager/features/term/security
+    ../../../nix/home-manager/features/term/base.nix
+    ../../../nix/home-manager/features/term/security
   ];
 
   ###############################################################################
