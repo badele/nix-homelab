@@ -1,0 +1,3 @@
+{
+  networking.fqdn = "jesuislibre.org";
+}

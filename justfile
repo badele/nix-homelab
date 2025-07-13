@@ -5,9 +5,52 @@ set export
 SSHPASS := "nixosusb"
 
 # This help
-[group('general')]
 @help:
     just -l -u
+
+###############################################################################
+# Installer
+###############################################################################
+# Create an 
+[group('clan')]
+@create-bootable-usb-installer USBDISK KEYMAP="us" LANGUAGE="en_US.UTF8": 
+    ssh-add -L > /tmp/clan-yubikey.pub
+    clan flash write --flake git+https://git.clan.lol/clan/clan-core \
+    --ssh-pubkey /tmp/clan-yubikey.pub \
+    --keymap fr \
+    --language fr_FR.UTF-8 \
+    --disk main ${USBDISK} \
+    flash-installer
+
+# Add new machine
+[group('clan')]
+@machine-add MACHINE:
+    clan machines create {{MACHINE}} 
+
+# Get disk ID
+[group('clan')]
+@machine-get-disk-id HOST PORT="22":
+    ssh root@{{HOST}} -p {{PORT}} -o StrictHostKeychecking=no lsblk --output NAME,ID-LINK,FSTYPE,SIZE,MOUNTPOINT
+
+# log in to kanidm
+[group('admin')]
+@kanidm-login:
+    echo "Password copied to clipboard, you can paste later"
+    clan vars get houston kanidm/idm-admin-password | xclip -selection clipboard 
+    (sleep 5 && echo -n | xclip -selection clipboard) &
+    kanidm login --name idm_admin
+
+# add user to kanidm
+[group('admin')]
+@kanidm-user-add USER DISPLAYNAME EMAIL="":
+    kanidm person create {{USER}} "{{DISPLAYNAME}}"
+    [ ! -z "{{EMAIL}}" ] && kanidm person update {{USER}} --mail {{EMAIL}}
+
+# Reset user password
+[group('admin')]
+@kanidm-reset-user-password USER:
+    # Reset user password
+    kanidm person credential create-reset-token {{USER}}
 
 ###############################################################################
 # Pre-commit
@@ -327,10 +370,29 @@ demo-nixos-install hostname targetip port="22":
 @secret-update FILE:
     sops updatekeys {{ FILE }}
 
+[group('secrets')]
+@init-git-crypt-secrefiles HOST:
+    mkdir -p configuration/hosts/{{HOST}}/secretfiles/
+    echo "* filter=git-crypt diff=git-crypt" > configuration/hosts/{{HOST}}/secretfiles/.gitattributes
+    echo ".gitattributes !filter !diff" >> configuration/hosts/{{HOST}}/secretfiles/.gitattributes
+
 # List encrypted file with git-crypt
 [group('secrets')]
 @file-encryption-list:
     git-crypt status | grep -v "not encrypted"
+
+[group('certificate')]
+@init-ca DOMAIN HOST:
+    #!/usr/bin/env bash
+    just init-git-crypt-secrefiles {{HOST}}
+    export STEPPATH="configuration/hosts/{{HOST}}/secretfiles"
+
+    step ca init \
+    --name "Homelab CA" \
+    --dns "localhost" \
+    --address ":443" \
+    --provisioner "admin@{{DOMAIN}}" \
+    --deployment-type standalone
 
 # Show installed packages
 [group('flake')]

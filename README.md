@@ -409,6 +409,8 @@ This list generated with `just doc-update` command
 
 A big thank to the contributors of OpenSource projects in particular :
 
+- [clan project](https://clan.lol/) Simplest way to re-enter independent
+  computing with our framework
 - [doctor-cluster-config](https://github.com/TUM-DSE/doctor-cluster-config) from
   German TUM School of Computation
 - [Mic92](https://github.com/Mic92/dotfiles) and for his some nix contributions
