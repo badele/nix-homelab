@@ -34,6 +34,14 @@ let
         '';
       };
 
+      hostIpId = mkOption {
+        type = nullOr int;
+        default = null;
+        description = ''
+          host IP id (for computing the host IP address in VLAN network)
+        '';
+      };
+
       ipv4 = mkOption {
         type = str;
         description = ''
@@ -110,24 +118,30 @@ let
         '';
       };
     };
-in
-{
-  options = with lib; {
-    homelab.hosts = mkOption {
-      type = with types; attrsOf (submodule [{ options = hostOptions; }]);
-      description = "A host in my homelab";
+in {
+  options = with lib;
+    with types; {
+      homelab.networkId = mkOption {
+        type = int;
+        description = "Network ID";
+      };
+
+      homelab.hosts = mkOption {
+        type = attrsOf (submodule [{ options = hostOptions; }]);
+        description = "A host in my homelab";
+      };
+
+      homelab.currentHost = mkOption {
+        type = submodule [{ options = hostOptions; }];
+        default = config.homelab.hosts.${config.networking.hostName};
+        description = "The host that is described by this configuration";
+      };
     };
-    homelab.currentHost = mkOption {
-      type = with types; submodule [{ options = hostOptions; }];
-      default = config.homelab.hosts.${config.networking.hostName};
-      description = "The host that is described by this configuration";
-    };
-  };
 
   config = {
     warnings =
       lib.optional (!(config.homelab.hosts ? ${config.networking.hostName}))
-        "no network configuration for ${config.networking.hostName} found in ${
+      "no network configuration for ${config.networking.hostName} found in ${
         ./hosts.nix
       }";
 

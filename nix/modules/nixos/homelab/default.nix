@@ -1,1 +1,1 @@
-{ ... }: { imports = [ ./homelab.nix ./hosts.nix ]; }
+{ ... }: { imports = [ ./homelab.nix ./lib.nix ./networks.nix ./hosts.nix ]; }
