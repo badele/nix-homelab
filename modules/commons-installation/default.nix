@@ -23,6 +23,6 @@
   nix = {
     gc.automatic = true;
     gc.dates = "daily";
-    gc.options = "--delete-older-than 60d";
+    gc.options = "--delete-older-than 30d";
   };
 }

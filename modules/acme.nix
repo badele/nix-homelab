@@ -1,4 +1,4 @@
 {
   security.acme.acceptTerms = true;
-  security.acme.defaults.email = "admin@jesuislibre.org";
+  security.acme.defaults.email = "admin@ma-cabane.eu";
 }

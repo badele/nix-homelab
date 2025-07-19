@@ -32,25 +32,55 @@ SSHPASS := "nixosusb"
 @machine-get-disk-id HOST PORT="22":
     ssh root@{{HOST}} -p {{PORT}} -o StrictHostKeychecking=no lsblk --output NAME,ID-LINK,FSTYPE,SIZE,MOUNTPOINT
 
+# Get clan vars
+[group('admin')]
+@clan-vars-get HOST VARNAME:
+    clan vars get {{HOST}} {{VARNAME}}
+
+##############################################################################
+# kandim
+##############################################################################
+
 # log in to kanidm
 [group('admin')]
 @kanidm-login:
-    echo "Password copied to clipboard, you can paste later"
+    echo "Password will be copied to clipboard, you can paste later"
     clan vars get houston kanidm/idm-admin-password | xclip -selection clipboard 
-    (sleep 5 && echo -n | xclip -selection clipboard) &
+    # (sleep 5 && echo -n | xclip -selection clipboard) &
     kanidm login --name idm_admin
-
-# add user to kanidm
-[group('admin')]
-@kanidm-user-add USER DISPLAYNAME EMAIL="":
-    kanidm person create {{USER}} "{{DISPLAYNAME}}"
-    [ ! -z "{{EMAIL}}" ] && kanidm person update {{USER}} --mail {{EMAIL}}
 
 # Reset user password
 [group('admin')]
 @kanidm-reset-user-password USER:
     # Reset user password
     kanidm person credential create-reset-token {{USER}}
+
+# add user to kanidm
+[group('admin')]
+@kanidm-user-add USER DISPLAYNAME EMAIL="":
+    kanidm person create {{USER}} "{{DISPLAYNAME}}"
+    [ ! -z "{{EMAIL}}" ] && kanidm person update {{USER}} --mail {{EMAIL}}
+    just kanidm-reset-user-password {{USER}}
+
+
+# Create group
+[group('admin')]
+@kanidm-group-create GROUP:
+    kanidm group create {{GROUP}}
+
+# add user to group
+[group('admin')]
+@kanidm-group-add-member GROUP USER:
+    kanidm group add-members {{GROUP}} {{USER}}
+
+
+# add user to group
+[group('admin')]
+@kanidm-oauth2-compare-secret HOST APPNAME VARNAME:
+    echo "= kanidm secret"
+    kanidm system oauth2 show-basic-secret {{APPNAME}}
+    echo "= {{HOST}}/{{APPNAME}}/{{VARNAME}}"
+    just clan-vars-get {{HOST}} {{APPNAME}}/{{VARNAME}}
 
 ###############################################################################
 # Pre-commit

@@ -1,3 +1,3 @@
 {
-  networking.fqdn = "jesuislibre.org";
+  networking.fqdn = "ma-cabane.eu";
 }

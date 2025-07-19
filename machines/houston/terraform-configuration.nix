@@ -3,6 +3,9 @@
   lib,
   ...
 }:
+let
+  tf_houston = config.resource.hcloud_server.houston;
+in
 {
   terraform.required_providers.local.source = "hashicorp/local";
   terraform.required_providers.hetznerdns.source = "timohirt/hetznerdns";
@@ -44,17 +47,54 @@
   #############################################################################
   # hetzner DNS records
   #############################################################################
-  resource.hetznerdns_record.adele_im_root_a = {
-    zone_id = lib.tf.ref "module.dns.adele_im_zone_id";
+
+  resource.hetznerdns_record.ma-cabane-eu_root_a = {
+    zone_id = lib.tf.ref "module.dns.ma-cabane-eu_zone_id";
     name = "@";
     type = "A";
-    value = config.resource.hcloud_server.houston "ipv4_address";
+    value = tf_houston "ipv4_address";
   };
 
-  # resource.hetznerdns_record.adele_im_outline_a = {
-  #   zone_id = lib.tf.ref "module.dns.adele_im_zone_id";
-  #   name = "outline";
-  #   type = "A";
-  #   value = config.resource.hcloud_server.houston "ipv4_address";
-  # };
+  resource.hetznerdns_record.ma-cabane-eu_houston_a = {
+    zone_id = lib.tf.ref "module.dns.ma-cabane-eu_zone_id";
+    name = "houston";
+    type = "A";
+    value = tf_houston "ipv4_address";
+  };
+
+  resource.hetznerdns_record.ma-cabane-eu_home_a = {
+    zone_id = lib.tf.ref "module.dns.ma-cabane-eu_zone_id";
+    name = "home";
+    type = "A";
+    value = tf_houston "ipv4_address";
+  };
+
+  resource.hetznerdns_record.ma-cabane-eu_auth_a = {
+    zone_id = lib.tf.ref "module.dns.ma-cabane-eu_zone_id";
+    name = "auth";
+    type = "A";
+    value = tf_houston "ipv4_address";
+  };
+
+  resource.hetznerdns_record.ma-cabane-eu_rss_a = {
+    zone_id = lib.tf.ref "module.dns.ma-cabane-eu_zone_id";
+    name = "rss";
+    type = "A";
+    value = tf_houston "ipv4_address";
+  };
+
+  resource.hetznerdns_record.ma-cabane-eu_links_a = {
+    zone_id = lib.tf.ref "module.dns.ma-cabane-eu_zone_id";
+    name = "links";
+    type = "A";
+    value = tf_houston "ipv4_address";
+  };
+
+  resource.hetznerdns_record.ma-cabane-eu_stats_a = {
+    zone_id = lib.tf.ref "module.dns.ma-cabane-eu_zone_id";
+    name = "stats";
+    type = "A";
+    value = tf_houston "ipv4_address";
+  };
+
 }

@@ -83,7 +83,6 @@
           pkgs.kanidm
 
         ];
-        env.KANIDM_URL = "https://auth.jesuislibre.org";
         env.UEFI_FILE = uefi_file;
       };
     };

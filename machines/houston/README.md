@@ -13,9 +13,10 @@ Houston is the center of public control. It provides the authentication service
 
 ### Services
 
-- authentification (kanidm)
+- authentification (authelia)
 - Web server (nginx)
   - miniflux (Minimalist and Opinionated Feed Reader)
+  - linkding (self-hosted bookmark manager designed to be minimal and fast)
 - Zerotier controller
 
 ## Initial deployment
