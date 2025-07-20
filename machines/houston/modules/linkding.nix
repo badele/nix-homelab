@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }:
@@ -9,12 +10,24 @@ let
   appDomain = "links.${domain}";
   appPath = "/data/podman/linkding";
   listenPort = 10004;
+  borgBackup = config.homelab.borgBackup;
 
   version = "1.41.0-plus";
 in
 {
-  imports = [ ../../../modules/acme.nix ];
+  imports = [
+    ../../../modules/acme.nix
+    ../../../nix/modules/nixos/homelab
 
+  ];
+
+  networking.firewall.allowedTCPPorts = [
+    443
+  ];
+
+  ############################################################################
+  # Clan Credentials
+  ############################################################################
   clan.core.vars.generators.linkding = {
     files.oauth2-client-secret = {
       owner = "linkding";
@@ -50,15 +63,23 @@ in
     '';
   };
 
+  ############################################################################
+  # Service configuration
+  ############################################################################
   users.users.linkding = {
     isSystemUser = true;
     group = "linkding";
     createHome = true;
-    home = "/data/podman/linkding";
+    home = appPath;
     homeMode = "0774";
   };
 
   users.groups.linkding = { };
+
+  systemd.tmpfiles.rules = [
+    "d ${appPath} 0750 linkding linkding -"
+    "d /var/backup/linkding 0750 linkding linkding -"
+  ];
 
   services.authelia.instances.main.settings.identity_providers.oidc.clients = [
     {
@@ -80,8 +101,6 @@ in
       ];
     }
   ];
-
-  systemd.tmpfiles.rules = [ "d ${appPath} 0750 linkding linkding -" ];
 
   virtualisation.oci-containers = {
     containers = {
@@ -120,17 +139,6 @@ in
           OIDC_OP_USER_ENDPOINT = "https://${authdomain}/api/oidc/userinfo";
           OIDC_OP_JWKS_ENDPOINT = "https://${authdomain}/jwks.json";
           OIDC_RP_CLIENT_ID = "linkding";
-
-          # LD_ENABLE_OIDC = "True";
-          # OIDC_RP_CLIENT_ID = "linkding";
-          # OIDC_OP_AUTHORIZATION_ENDPOINT = "https://auth.ma-cabane.eu/ui/oauth2";
-          # OIDC_OP_TOKEN_ENDPOINT = "https://auth.ma-cabane.eu/oauth2/token";
-          # OIDC_OP_USER_ENDPOINT = "https://auth.ma-cabane.eu/oauth2/openid/linkding/userinfo";
-          # OIDC_OP_JWKS_ENDPOINT = "https://auth.ma-cabane.eu/oauth2/openid/linkding/public_key.jwk";
-          #
-          # OIDC_RP_SCOPES = "openid email profile";
-          # OIDC_RP_SIGN_ALGO = "RS256";
-          # OIDC_USERNAME_CLAIM = "preferred_username";
         };
       };
     };
@@ -147,7 +155,35 @@ in
     extraConfig = ''access_log /var/log/nginx/public.log vcombined;'';
   };
 
-  networking.firewall.allowedTCPPorts = [
-    443
-  ];
+  #############################################################################
+  # Backup
+  #############################################################################
+  services.borgbackup.jobs.linkding = {
+    startAt = "*-*-* 03:10:00";
+
+    paths = [ "/data/podman/linkding" ];
+    repo = "${borgBackup.remote}/./linkding";
+    doInit = true;
+
+    encryption = {
+      mode = "repokey-blake2";
+      passCommand = "cat ${
+        config.clan.core.vars.generators."borgbackup".files."borgbackup-passphrase".path
+      }";
+    };
+    environment = {
+      BORG_RSH = "ssh -i ${
+        config.clan.core.vars.generators."borgbackup".files."borgbackup-ssh-account".path
+      }";
+      # BORG_RELOCATED_REPO_ACCESS_IS_OK = "yes";
+    };
+    preHook = ''
+      systemctl stop podman-linkding
+      ${lib.getExe pkgs.rsync} -avr --delete /data/podman/linkding/ /var/backup/linkding/
+      systemctl start podman-linkding
+    '';
+    readWritePaths = [ "/var/backup/linkding" ];
+    compression = "auto,zlib";
+  };
+
 }

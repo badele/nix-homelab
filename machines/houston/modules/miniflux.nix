@@ -8,10 +8,21 @@ let
   authDomain = "auth.${domain}";
   appDomain = "rss.${domain}";
   listenPort = 10002;
+  borgBackup = config.homelab.borgBackup;
 in
 {
-  imports = [ ../../../modules/acme.nix ];
+  imports = [
+    ../../../modules/acme.nix
+    ../../../nix/modules/nixos/homelab
+  ];
 
+  networking.firewall.allowedTCPPorts = [
+    443
+  ];
+
+  ############################################################################
+  # Clan Credentials
+  ############################################################################
   clan.core.vars.generators.miniflux = {
     files.oauth2-client-secret = {
       owner = "miniflux";
@@ -47,6 +58,9 @@ in
     '';
   };
 
+  ############################################################################
+  # Service configuration
+  ############################################################################
   users.users.miniflux = {
     isSystemUser = true;
     group = "miniflux";
@@ -73,23 +87,8 @@ in
         "email"
         "profile"
       ];
-      # userinfo_signed_response_alg = "none";
     }
   ];
-
-  # services.kanidm.provision.systems.oauth2.miniflux = {
-  #   displayName = "Miniflux";
-  #   originUrl = "https://${appDomain}/oauth2/oidc/callback";
-  #   originLanding = "https://${appDomain}";
-  #   allowInsecureClientDisablePkce = true;
-  #
-  #   basicSecretFile = config.clan.core.vars.generators."miniflux".files."oauth2-client-secret".path;
-  #   scopeMaps."idm_all_persons" = [
-  #     "openid"
-  #     "profile"
-  #     "email"
-  #   ];
-  # };
 
   services.miniflux = {
     enable = true;
@@ -124,7 +123,34 @@ in
     extraConfig = ''access_log /var/log/nginx/public.log vcombined;'';
   };
 
-  networking.firewall.allowedTCPPorts = [
-    443
-  ];
+  #############################################################################
+  # Backup
+  #############################################################################
+
+  # backup to '/var/backup/postgresql'
+  # backuped at 02:10 UTC
+  services.postgresqlBackup.databases = [ "miniflux" ];
+
+  services.borgbackup.jobs.miniflux = {
+    startAt = "*-*-* 02:20:00";
+
+    paths = [ "/var/backup/postgresql/miniflux.sql.gz" ];
+    repo = "${borgBackup.remote}/./miniflux";
+    doInit = true;
+
+    encryption = {
+      mode = "repokey-blake2";
+      passCommand = "cat ${
+        config.clan.core.vars.generators."borgbackup".files."borgbackup-passphrase".path
+      }";
+    };
+    environment = {
+      BORG_RSH = "ssh -i ${
+        config.clan.core.vars.generators."borgbackup".files."borgbackup-ssh-account".path
+      }";
+      # BORG_RELOCATED_REPO_ACCESS_IS_OK = "yes";
+    };
+    readWritePaths = [ ];
+    compression = "auto,zlib";
+  };
 }

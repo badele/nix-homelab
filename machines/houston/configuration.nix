@@ -11,9 +11,10 @@
     ../../modules/disko.nix
     ../../modules/commons-installation
     ../../modules/server.nix
+    ../../modules/postgresql.nix
+    ../../modules/borgbackup.nix
 
     # houston infra
-    # ./modules/kanidm.nix
     ./modules/authelia.nix
 
     # houston apps

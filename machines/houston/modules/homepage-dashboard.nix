@@ -70,11 +70,22 @@ in
               }
             ];
           }
+
+          {
+            goaccess = [
+              {
+                icon = "sh-goaccess";
+                href = "https://stats.ma-cabane.eu";
+                description = "Website log stats";
+              }
+            ];
+          }
+
         ];
       }
 
       {
-        "Public apps(auth)" = [
+        "Apps with authentification" = [
 
           {
             miniflux = [
@@ -89,6 +100,7 @@ in
           {
             linkding = [
               {
+                abbr = "bm";
                 icon = "sh-linkding";
                 href = "https://links.ma-cabane.eu";
                 description = "Bookmark manager";
@@ -99,23 +111,102 @@ in
       }
 
       {
-        "Infrastructure" = [
-          {
-            goaccess = [
-              {
-                icon = "sh-goaccess";
-                href = "https://stats.ma-cabane.eu";
-                description = "Website log stats";
-              }
-            ];
-          }
+        "Homelab use" = [
 
           {
             authelia = [
               {
                 icon = "sh-authelia";
-                href = "https://auth.ma-cabane.eu/";
-                description = "Identity manager";
+                href = "https://www.authelia.com/";
+                description = "Athentication and authorization server";
+              }
+            ];
+          }
+
+          {
+            borgbackup = [
+              {
+                icon = "sh-borg";
+                href = "https://www.borgbackup.org/";
+                description = "Deduplicating archiver(backup)";
+              }
+            ];
+          }
+
+          {
+            clan = [
+              {
+                icon = "sh-nixos";
+                href = "https://clan.lol/";
+                description = "Kill the cloud, build your own darknet ♥️";
+              }
+            ];
+          }
+
+          {
+            goaccess = [
+              {
+                icon = "sh-goaccess";
+                href = "https://goaccess.io/";
+                description = "Real-time web log analyzer";
+              }
+            ];
+          }
+          {
+            hetzner = [
+              {
+                icon = "sh-hetzner";
+                href = "https://www.hetzner.com/";
+                description = "German low-cost provider";
+              }
+            ];
+          }
+          {
+            linkding = [
+              {
+                icon = "sh-linkding";
+                href = "https://linkding.link/";
+                description = "Bookmark manager designed to be minimal, fast";
+              }
+            ];
+          }
+
+          {
+            miniflux = [
+              {
+                icon = "sh-miniflux";
+                href = "https://miniflux.app/";
+                description = "Minimalist and opinionated feed reader.";
+              }
+            ];
+          }
+
+          {
+            nixos = [
+              {
+                icon = "sh-nixos";
+                href = "https://nixos.org/";
+                description = "Declarative Linux distribution ♥️";
+              }
+            ];
+          }
+
+          {
+            opentofu = [
+              {
+                icon = "sh-opentofu";
+                href = "https://opentofu.org/";
+                description = "Infrastructure as Code";
+              }
+            ];
+          }
+
+          {
+            postgresql = [
+              {
+                icon = "sh-postgresql";
+                href = "https://www.postgresql.org/";
+                description = "The World's Most Advanced Relational Database";
               }
             ];
           }
@@ -125,7 +216,7 @@ in
               {
                 icon = "sh-zerotier";
                 href = "https://zerotier.com/";
-                description = "VPN Network";
+                description = "Global Networking Solution for IoT, SD-WAN, and VPN";
               }
             ];
           }
