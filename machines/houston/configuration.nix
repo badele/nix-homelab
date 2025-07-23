@@ -16,6 +16,7 @@
 
     # houston infra
     ./modules/authelia.nix
+    ./modules/borgbackup.nix
 
     # houston apps
     ./modules/goaccess.nix

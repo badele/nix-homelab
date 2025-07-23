@@ -158,32 +158,32 @@ in
   #############################################################################
   # Backup
   #############################################################################
-  services.borgbackup.jobs.linkding = {
-    startAt = "*-*-* 03:10:00";
-
-    paths = [ "/data/podman/linkding" ];
-    repo = "${borgBackup.remote}/./linkding";
-    doInit = true;
-
-    encryption = {
-      mode = "repokey-blake2";
-      passCommand = "cat ${
-        config.clan.core.vars.generators."borgbackup".files."borgbackup-passphrase".path
-      }";
-    };
-    environment = {
-      BORG_RSH = "ssh -i ${
-        config.clan.core.vars.generators."borgbackup".files."borgbackup-ssh-account".path
-      }";
-      # BORG_RELOCATED_REPO_ACCESS_IS_OK = "yes";
-    };
-    preHook = ''
-      systemctl stop podman-linkding
-      ${lib.getExe pkgs.rsync} -avr --delete /data/podman/linkding/ /var/backup/linkding/
-      systemctl start podman-linkding
-    '';
-    readWritePaths = [ "/var/backup/linkding" ];
-    compression = "auto,zlib";
-  };
+  # services.borgbackup.jobs.linkding = {
+  #   startAt = "*-*-* 03:10:00";
+  #
+  #   paths = [ "/data/podman/linkding" ];
+  #   repo = "${borgBackup.remote}/./linkding";
+  #   doInit = true;
+  #
+  #   encryption = {
+  #     mode = "repokey-blake2";
+  #     passCommand = "cat ${
+  #       config.clan.core.vars.generators."borgbackup".files."borgbackup-passphrase".path
+  #     }";
+  #   };
+  #   environment = {
+  #     BORG_RSH = "ssh -i ${
+  #       config.clan.core.vars.generators."borgbackup".files."borgbackup-ssh-account".path
+  #     }";
+  #     # BORG_RELOCATED_REPO_ACCESS_IS_OK = "yes";
+  #   };
+  #   preHook = ''
+  #     systemctl stop podman-linkding
+  #     ${lib.getExe pkgs.rsync} -avr --delete /data/podman/linkding/ /var/backup/linkding/
+  #     systemctl start podman-linkding
+  #   '';
+  #   readWritePaths = [ "/var/backup/linkding" ];
+  #   compression = "auto,zlib";
+  # };
 
 }

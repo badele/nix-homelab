@@ -1,7 +1,12 @@
-{ pkgs, ... }:
+{
+  config,
+  self,
+  pkgs,
+  ...
+}:
 let
-  username = "u444061";
-  host = "${username}.your-storagebox.de";
+  user = "u444061";
+  host = "${user}.your-storagebox.de";
   port = "23";
 
   # Run this from the hetzner network
@@ -12,30 +17,32 @@ let
   storagebox-rsa-knownHosts = "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EB5p/5Hp3hGW1oHok+PIOH9Pbn7cnUiGmUEBrCVjnAw+HrKyN8bYVV0dIGllswYXwkG/+bgiBlE6IVIBAq+JwVWu1Sss3KarHY3OvFJUXZoZyRRg/Gc/+LRCE7lyKpwWQ70dbelGRyyJFH36eNv6ySXoUYtGkwlU5IVaHPApOxe4LHPZa/qhSRbPo2hwoh0orCtgejRebNtW5nlx00DNFgsvn8Svz2cIYLxsPVzKgUxs8Zxsxgn+Q/UvR7uq4AbAhyBMLxv7DjJ1pc7PJocuTno2Rw9uMZi1gkjbnmiOh6TTXIEWbnroyIhwc8555uto9melEUmWNQ+C+PwAK+MPw==";
 in
 {
-  clan.core.vars.generators.borgbackup = {
-    files."borgbackup-ssh-account" = {
-      share = true;
-    };
+  imports = [ self.inputs.clan-core.clanModules.borgbackup ];
 
-    files."borgbackup-ssh-account.pub" = {
-      secret = false;
-      share = true;
-    };
-
-    files."borgbackup-passphrase" = {
-      share = true;
-    };
-
-    runtimeInputs = [
-      pkgs.pwgen
-      pkgs.openssh
-    ];
-
-    script = ''
-      pwgen -s 64 1 > "$out/borgbackup-passphrase"
-      ssh-keygen -q -N "" -t ed25519 -f "$out/borgbackup-ssh-account"
-    '';
-  };
+  # clan.core.vars.generators.borgbackup = {
+  #   files."borgbackup-ssh-account" = {
+  #     share = true;
+  #   };
+  #
+  #   files."borgbackup-ssh-account.pub" = {
+  #     secret = false;
+  #     share = true;
+  #   };
+  #
+  #   files."borgbackup-passphrase" = {
+  #     share = true;
+  #   };
+  #
+  #   runtimeInputs = [
+  #     pkgs.pwgen
+  #     pkgs.openssh
+  #   ];
+  #
+  #   script = ''
+  #     pwgen -s 64 1 > "$out/borgbackup-passphrase"
+  #     ssh-keygen -q -N "" -t ed25519 -f "$out/borgbackup-ssh-account"
+  #   '';
+  # };
 
   # ssh-keyscan -p 23 u444061.your-storagebox.de
   programs.ssh.knownHosts = {
