@@ -1,6 +1,15 @@
-{ self, inputs, ... }:
+{
+  self,
+  inputs,
+  ...
+}:
 let
   houston_ipv4 = "91.99.130.127";
+
+  borgUser = "u444061";
+  borgHost = "${borgUser}.your-storagebox.de";
+  borgPort = "23";
+
 in
 {
   imports = [
@@ -65,8 +74,19 @@ in
           roles.controller.machines."houston" = { };
           roles.moon.machines."houston".settings.stableEndpoints = [ houston_ipv4 ];
           roles.peer.tags."all" = { };
-
         };
+
+        borgbackup = {
+          roles.client.machines."houston".settings = {
+            destinations."storagebox" = {
+              repo = "${borgUser}@${borgHost}:/./borgbackup";
+              rsh = ''ssh -oPort=${borgPort} -i /run/secrets/vars/borgbackup/borgbackup.ssh'';
+            };
+          };
+
+          roles.server.machines = { };
+        };
+
       };
     };
   };

@@ -10,7 +10,6 @@ let
   appDomain = "links.${domain}";
   appPath = "/data/podman/linkding";
   listenPort = 10004;
-  borgBackup = config.homelab.borgBackup;
 
   version = "1.41.0-plus";
 in
@@ -158,32 +157,50 @@ in
   #############################################################################
   # Backup
   #############################################################################
-  # services.borgbackup.jobs.linkding = {
-  #   startAt = "*-*-* 03:10:00";
-  #
-  #   paths = [ "/data/podman/linkding" ];
-  #   repo = "${borgBackup.remote}/./linkding";
-  #   doInit = true;
-  #
-  #   encryption = {
-  #     mode = "repokey-blake2";
-  #     passCommand = "cat ${
-  #       config.clan.core.vars.generators."borgbackup".files."borgbackup-passphrase".path
-  #     }";
-  #   };
-  #   environment = {
-  #     BORG_RSH = "ssh -i ${
-  #       config.clan.core.vars.generators."borgbackup".files."borgbackup-ssh-account".path
-  #     }";
-  #     # BORG_RELOCATED_REPO_ACCESS_IS_OK = "yes";
-  #   };
-  #   preHook = ''
-  #     systemctl stop podman-linkding
-  #     ${lib.getExe pkgs.rsync} -avr --delete /data/podman/linkding/ /var/backup/linkding/
-  #     systemctl start podman-linkding
-  #   '';
-  #   readWritePaths = [ "/var/backup/linkding" ];
-  #   compression = "auto,zlib";
-  # };
+  clan.core.state.linkding = {
+    folders = [ appPath ];
 
+    preBackupScript = ''
+      export PATH=${
+        lib.makeBinPath [
+          config.systemd.package
+          pkgs.coreutils
+          pkgs.rsync
+        ]
+      }
+
+      service_status=$(systemctl is-active podman-linkding)
+
+      if [ "$service_status" = "active" ]; then
+        systemctl stop podman-linkding
+        rsync -avH --delete --numeric-ids "${appPath}/" /var/backup/linkding/
+        systemctl start podman-linkding
+      fi
+    '';
+
+    postRestoreScript = ''
+      export PATH=${
+        lib.makeBinPath [
+          config.systemd.package
+          pkgs.coreutils
+          pkgs.rsync
+        ]
+      }
+
+      service_status="$(systemctl is-active podman-linkding)"
+
+      if [ "$service_status" = "active" ]; then
+        systemctl stop podman-linkding
+
+        # Backup localy current linkding data
+        DATE=$(date +%Y%m%d-%H%M%S)
+        cp -rp "${appPath}" "${appPath}.$DATE.bak"
+
+        # Restore from borgbackup
+        rsync -avH --delete --numeric-ids /var/backup/linkding/ "${appPath}/"
+
+        systemctl start podman-linkding
+      fi
+    '';
+  };
 }

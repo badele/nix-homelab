@@ -8,10 +8,12 @@
     - [] configure postgresql backup
   - [] replace authy by Aegis Authenticator
     - [] sync to syncthing
+  - [] cstate
 
 - nebula
   - [] homepage dashboard (private)
   - [] syncthing
+  - [] migrate netbox from hype10/badxps ?
 
 - Install tools
   - [] fileflows

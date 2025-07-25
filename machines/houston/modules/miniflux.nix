@@ -1,5 +1,6 @@
 {
   config,
+  clan,
   pkgs,
   ...
 }:
@@ -8,7 +9,6 @@ let
   authDomain = "auth.${domain}";
   appDomain = "rss.${domain}";
   listenPort = 10002;
-  borgBackup = config.homelab.borgBackup;
 in
 {
   imports = [
@@ -126,31 +126,12 @@ in
   #############################################################################
   # Backup
   #############################################################################
-
-  # backup to '/var/backup/postgresql'
-  # backuped at 02:10 UTC
-  services.postgresqlBackup.databases = [ "miniflux" ];
-
-  # services.borgbackup.jobs.miniflux = {
-  #   startAt = "*-*-* 02:20:00";
-  #
-  #   paths = [ "/var/backup/postgresql/miniflux.sql.gz" ];
-  #   repo = "${borgBackup.remote}/./miniflux";
-  #   doInit = true;
-  #
-  #   encryption = {
-  #     mode = "repokey-blake2";
-  #     passCommand = "cat ${
-  #       config.clan.core.vars.generators."borgbackup".files."borgbackup-passphrase".path
-  #     }";
-  #   };
-  #   environment = {
-  #     BORG_RSH = "ssh -i ${
-  #       config.clan.core.vars.generators."borgbackup".files."borgbackup-ssh-account".path
-  #     }";
-  #     # BORG_RELOCATED_REPO_ACCESS_IS_OK = "yes";
-  #   };
-  #   readWritePaths = [ ];
-  #   compression = "auto,zlib";
-  # };
+  clan.postgresql.databases = {
+    miniflux = {
+      service = "miniflux";
+      restore = {
+        stopOnRestore = [ "miniflux" ];
+      };
+    };
+  };
 }

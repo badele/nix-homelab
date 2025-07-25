@@ -1,4 +1,7 @@
-{ self, clan, ... }:
+{
+  self,
+  ...
+}:
 {
   imports = [
     # Install server profile
@@ -11,12 +14,10 @@
     ../../modules/disko.nix
     ../../modules/commons-installation
     ../../modules/server.nix
-    ../../modules/postgresql.nix
     ../../modules/borgbackup.nix
 
     # houston infra
     ./modules/authelia.nix
-    ./modules/borgbackup.nix
 
     # houston apps
     ./modules/goaccess.nix
