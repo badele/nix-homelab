@@ -1,23 +1,18 @@
 { lib, config, ... }:
 let
   domain = config.homelab.domain;
-  aliasIps = lib.flatten (lib.mapAttrsToList
-    (name: host:
-      let alias = lib.optionals (host.dnsalias != null) host.dnsalias;
-      in map
-        (entry: {
-          name = entry;
-          ip = host.ipv4;
-        })
-        alias)
-    config.homelab.hosts);
+  aliasIps = lib.flatten (lib.mapAttrsToList (name: host:
+    let alias = lib.optionals (host.dnsalias != null) host.dnsalias;
+    in map (entry: {
+      name = entry;
+      ip = host.ipv4;
+    }) alias) config.homelab.hosts);
 
-in
-{
-  networking.firewall.enable = true;
-  networking.firewall.logRefusedPackets = true;
-  networking.firewall.logReversePathDrops = true;
-  networking.firewall.logRefusedConnections = true;
+in {
+  # networking.firewall.enable = true;
+  # networking.firewall.logRefusedPackets = true;
+  # networking.firewall.logReversePathDrops = true;
+  # networking.firewall.logRefusedConnections = true;
 
   networking.nftables.enable = true;
 

@@ -4,15 +4,12 @@
 
 - [Borgbackup](#borgbackup)
   - [Intro](#intro)
-    - [Lexique](#lexique)
   - [Main Storage Box Account Setup](#main-storage-box-account-setup)
     - [Order a Storage Box](#order-a-storage-box)
     - [Configure SSH Access for the Main Account](#configure-ssh-access-for-the-main-account)
     - [Test Main Account SSH Access](#test-main-account-ssh-access)
   - [Passphrase generation](#passphrase-generation)
-  - [Restoration](#restoration)
-    - [Backup](#backup)
-    - [Netbox](#netbox)
+  - [Backup and Restoration](#backup-and-restoration)
 
 <!--toc:end-->
 
@@ -22,45 +19,26 @@ Setup for using Borgbackup with Hetzner Storage Box. I use Hetzner's Storage Box
 solution (Robot) for my backups. [Borgbackup](https://www.borgbackup.org/) is a
 deduplicating backup program.
 
-### Lexique
-
-| Name          | Description                                                 |
-| ------------- | ----------------------------------------------------------- |
-| `ACCOUNTNAME` | a storage box account username name                         |
-| `HOSTNAME`    | the client host name                                        |
-| `PASSPHRASE`  | the borgbackup passphrase                                   |
-| `REPOSITORY`  | the root borgbackup repository (`ssh://user@host:port`)     |
-| `SERVICENAME` | the borgbackup path (can be an service or application name) |
-| `ARCHIVEID`   | the borgbackup archive id for `SERVICENAME`                 |
-
 ## Main Storage Box Account Setup
 
 ### Order a Storage Box
 
 Go to https://robot.hetzner.com/ and order a new storage box. An account ID and
-a URL will be created in the following format:
-`<ACCOUNTNAME>.your-storagebox.de`.
+a URL will be created in the following format: `<USERNAME>.your-storagebox.de`.
 
 ### Configure SSH Access for the Main Account
 
-To simplify backup management following service movements that can switch from
-one host to another, we will use the host's public key to connect without a
-password to the Borgbackup SSH repository.
+To simplify backup management, I use one account in the homelab infrastructure.
+This allows services to move from one host to another without changing the host
+private key.
 
-First, define your account name:
-
-```bash
-export ACCOUNTNAME="<YOUR_HETZNER_ACCOUNT_NAME>"
-export HOSTNAME="<HOSTNAMECLIENT>"
-```
-
-Add your public key to the `.ssh/authorized_keys` file on your Storage Box.
-You'll need your main account password for this step (retrieved via `pass` in
-this example):
+The public/private SSH key and the borg backup passphrase are created and shared
+across other hosts:
 
 ```bash
-pass show home/bruno/hetzner.com/storagebox/${ACCOUNTNAME}
-cat configuration/hosts/${HOSTNAME}/ssh_host_ed25519_key.pub | ssh -p23 ${ACCOUNTNAME}@${ACCOUNTNAME}.your-storagebox.de install-ssh-key
+clan machines update houston
+
+clan vars get houston borgbackup/borgbackup/borgbackup.ssh.pub | ssh -p23 u444061.your-storagebox.de install-ssh-key
 ```
 
 ### Test Main Account SSH Access
@@ -69,21 +47,33 @@ From the client host, test that the SSH connection is working correctly without
 a password:
 
 ```bash
-pass nix-homelab/hosts/badxps/ssh_host_ed25519_key > /tmp/ssh && chmod 600 /tmp/ssh && ssh -i /tmp/ssh -p23 ${ACCOUNTNAME}@${ACCOUNTNAME}.your-storagebox.de ls -alh && rm -f /tmp/ssh
+clan vars get houston borgbackup/borgbackup/borgbackup.ssh > /tmp/ssh && chmod 600 /tmp/ssh && ssh -i /tmp/ssh -p23 u444061@u444061.your-storagebox.de ls -alh && rm -f /tmp/ssh
 ```
 
-## Passphrase generation
+## Backup maintenance
 
-Generate the borgbackup passphrase with
+### List all scheduled backups
+
+On server host
 
 ```bash
-nix shell nixpkgs#pwgen --command pwgen -s 32 1
+systemctl list-timers | grep -E 'NEXT|borg'
 ```
 
-and store to `configuration/hosts/secrets.yml` in `borgbackup/passphrase`
-section
+### Manual backup
 
-## Backup and restoration
+```bash
+clan backups create houston
+```
 
-- [netbox](/docs/netbox/)
-- [linkding](/docs/linkding/)
+### List backup
+
+```bash
+borgbackup-list
+```
+
+```bash
+storagebox::u444061@u444061.your-storagebox.de:/./borgbackup::houston-storagebox-2025-07-24T01:00:00
+storagebox::u444061@u444061.your-storagebox.de:/./borgbackup::houston-storagebox-2025-07-24T06:02:35
+storagebox::u444061@u444061.your-storagebox.de:/./borgbackup::houston-storagebox-2025-07-25T01:00:02
+```
