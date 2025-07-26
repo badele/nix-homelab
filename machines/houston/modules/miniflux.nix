@@ -1,6 +1,6 @@
 {
   config,
-  clan,
+  clan-core,
   pkgs,
   ...
 }:
@@ -12,6 +12,8 @@ let
 in
 {
   imports = [
+    clan-core.clanModules.postgresql
+
     ../../../modules/acme.nix
     ../../../nix/modules/nixos/homelab
   ];

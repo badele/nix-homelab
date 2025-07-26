@@ -7,8 +7,7 @@
     # Install server profile
     # see ./modules/flake-module.nix
     self.nixosModules.server
-
-    self.nixosModules.houston
+    self.inputs.srvos.nixosModules.mixins-nginx
 
     # Default shared configuration for the clan machines.
     ../../modules/disko.nix

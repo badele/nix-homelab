@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+PATHLIST=$(grep ' -' ~/.config/navi/config.yaml | awk '{print $2}')
+
+for path in $PATHLIST; do
+  path=$(eval echo "$path")
+  if [ ! -d "$path" ]; then
+    repo=$(echo "$path" | sed -e 's/.*github.com\//git@github.com:/')
+    ghq get "${repo}.git"
+  fi
+done
+
+navi $*

@@ -15,6 +15,9 @@
   - [] syncthing
   - [] migrate netbox from hype10/badxps ?
 
+- gagarin
+  - [] replace aider by claude code
+
 - Install tools
   - [] fileflows
   - [] syncthing

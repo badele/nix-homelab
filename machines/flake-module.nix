@@ -34,6 +34,29 @@ in
       };
 
       instances = {
+        # home-manager
+        # https://docs.clan.lol/guides/getting-started/add-user/#using-home-manager
+        badele-user = {
+          module.name = "users";
+
+          roles.default.machines."gagarin" = { };
+
+          roles.default.settings = {
+            user = "badele";
+            groups = [
+              "audio"
+              "input"
+              "networkmanager"
+              "video"
+              "wheel"
+            ];
+          };
+
+          roles.default.extraModules = [
+            ./../modules/users/badele/gagarin.nix
+          ];
+        };
+
         # Docs: https://docs.clan.lol/reference/clanServices/admin/
         # Admin service for managing machines
         # This service adds a root password and SSH access.

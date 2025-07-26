@@ -36,10 +36,10 @@
       inputs.srvos.nixosModules.mixins-telegraf
     ];
 
-    houston.imports = [
-      self.nixosModules.server
-      inputs.srvos.nixosModules.mixins-nginx
+    desktop.imports = [
+      ./commons-installation/desktop/wm/xorg/lightdm.nix
     ];
+
   };
 
   #############################################################################
