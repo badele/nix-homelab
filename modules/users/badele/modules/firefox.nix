@@ -2,10 +2,15 @@
   pkgs,
   ...
 }:
+let
+  user = "badele";
+in
 {
+  # config.stylix.targets.firefox.profileNames = [ user ];
+
   programs.firefox = {
     enable = true;
-    profiles.badele = {
+    profiles."${user}" = {
       bookmarks = { };
       # Get by about:config and format with https://jsonformatter.org/
       # Use Dark theme

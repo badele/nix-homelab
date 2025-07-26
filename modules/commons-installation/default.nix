@@ -9,7 +9,6 @@
 {
   # Import clan-core modules
   imports = [
-    clan-core.clanModules.sshd # SSH daemon configuration
 
     ./yubikey.nix
   ];

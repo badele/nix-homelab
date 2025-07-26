@@ -52,7 +52,7 @@ in
 
     # home-manager imports
     imports = [
-      self.inputs.stylix.homeManagerModules.stylix
+      self.inputs.stylix.homeModules.stylix
 
       # Modules
       ../../home-manager/modules/userconf.nix
@@ -87,13 +87,16 @@ in
       ../../home-manager/term/neovim.nix
 
       # Apps
-      # ../../home-manager/desktop/cad.nix
-      # ../../home-manager/desktop/chess.nix
-      # ../../home-manager/desktop/graphics.nix
-      # ../../home-manager/desktop/vscode.nix
+      # ../../home-manager/desktop/apps/cad.nix
+      # ../../home-manager/desktop/apps/chess.nix
+      # ../../home-manager/desktop/apps/graphics.nix
+      # ../../home-manager/desktop/apps/vscode.nix
+
+      # Multimedia
+      ../../home-manager/desktop/apps/spotify.nix
 
       # Web browser
-      ../../home-manager/desktop/apps/google-chrome.nix
+      # ../../home-manager/desktop/apps/google-chrome.nix
       ../../users/badele/modules/firefox.nix
 
     ];

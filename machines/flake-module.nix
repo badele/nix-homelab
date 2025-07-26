@@ -85,12 +85,6 @@ in
           };
         };
 
-        # Docs: https://docs.clan.lol/reference/clanServices/sstate-version/
-        # Automatically generate the state version of the nixos installation.
-        state-version = {
-          roles.default.tags."all" = { };
-        };
-
         # https://docs.clan.lol/guides/mesh-vpn/
         # list zerotier network ID - zerotier-cli info
         zerotier = {
