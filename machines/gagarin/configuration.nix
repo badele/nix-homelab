@@ -12,7 +12,7 @@ in
 
     # Default configuration for the clan machines.
     ../../modules/disko-encryption-laptop.nix
-    ../../modules/commons-installation
+    ../../modules/shared.nix
   ];
 
   # This is your user login name.

@@ -1,5 +1,19 @@
-{ pkgs, ... }:
 {
+  pkgs,
+  ...
+}:
+{
+  imports = [
+    # Modules
+    ../home-manager/modules/userconf.nix
+
+    # Security (GPG, SSH)
+    ../home-manager/term/security/gpg.nix
+
+    # Homogen style (stylix)
+    ../home-manager/term/stylix.nix
+  ];
+
   programs.kitty.enable = true;
 
   home.packages = with pkgs; [
@@ -12,5 +26,4 @@
     up # UI interactively pipe
     wget # HTTP client
   ];
-
 }

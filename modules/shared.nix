@@ -7,10 +7,8 @@
   ...
 }:
 {
-  # Import clan-core modules
   imports = [
-
-    ./yubikey.nix
+    ../modules/term/yubikey.nix
   ];
 
   console.keyMap = "fr"; # French keyboard layout

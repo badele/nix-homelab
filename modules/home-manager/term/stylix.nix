@@ -1,4 +1,7 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  ...
+}:
 {
   # You can preview the palette at ~/.config/stylix/palette.html
   stylix.enable = true;

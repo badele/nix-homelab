@@ -37,7 +37,7 @@
     ];
 
     desktop.imports = [
-      ./commons-installation/desktop/wm/xorg/lightdm.nix
+      ./desktop/wm/xorg/lightdm.nix
     ];
 
   };

@@ -11,7 +11,8 @@
 
     # Default shared configuration for the clan machines.
     ../../modules/disko.nix
-    ../../modules/commons-installation
+    ../../modules/shared.nix
+
     ../../modules/server.nix
     ../../modules/borgbackup.nix
 

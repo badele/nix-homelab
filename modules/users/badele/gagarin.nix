@@ -55,16 +55,20 @@ in
       self.inputs.stylix.homeModules.stylix
 
       # Modules
-      ../../home-manager/modules/userconf.nix
+      # ../../home-manager/modules/userconf.nix
+
+      # Shared
+      ../../home-manager/shared.nix
 
       # Bluetooth
       ../../home-manager/term/bluetooth.nix
 
       # Security (GPG, SSH)
-      ../../home-manager/term/security
+      ../../home-manager/term/security/pass.nix
+      ../../home-manager/term/security/ssh.nix
 
       # Homogen style (stylix)
-      ../../home-manager/term/stylix.nix
+      # ../../home-manager/term/stylix.nix
 
       # Development
       ../../home-manager/term/development/aws.nix
@@ -76,17 +80,17 @@ in
       ../../home-manager/desktop/apps/base.nix
 
       # Packages
-      ./../../home-manager/term/packages/base.nix
       ./../../home-manager/term/packages/development.nix
       ./../../home-manager/term/packages/filesystem.nix
       ./../../home-manager/term/packages/networking.nix
       ./../../home-manager/term/packages/nix.nix
-      ./../../home-manager/term/packages/performance.nix
+      ./../../home-manager/term/apps/system.nix
 
-      # Editor
-      ../../home-manager/term/neovim.nix
+      # Term Apps
+      ../../home-manager/term/apps/neovim.nix
+      ../../home-manager/term/apps/system.nix
 
-      # Apps
+      # Desktop Apps
       # ../../home-manager/desktop/apps/cad.nix
       # ../../home-manager/desktop/apps/chess.nix
       # ../../home-manager/desktop/apps/graphics.nix
