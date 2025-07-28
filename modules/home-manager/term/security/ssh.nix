@@ -1,7 +1,5 @@
 { ... }:
 {
-  programs.ssh = {
-    enable = true;
-    includes = [ "/home/badele/.ssh/devpod" ];
-  };
+  programs.ssh.enable = true;
+  programs.ssh.includes = [ "/home/badele/.ssh/devpod" ];
 }

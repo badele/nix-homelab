@@ -14,20 +14,11 @@
     font-awesome
   ];
 
-  fontProfiles = {
-    enable = true;
-    fontawesome = {
-      family = "Font Awesome 6 Free Solid";
-      package = pkgs.font-awesome;
-    };
-    monospace = {
-      family = "FiraCode Nerd Font";
-      package = pkgs.nerd-fonts.fira-code;
-
-    };
-    regular = {
-      family = "Fira Sans";
-      package = pkgs.fira;
-    };
-  };
+  fontProfiles.enable = true;
+  fontProfiles.fontawesome.family = "Font Awesome 6 Free Solid";
+  fontProfiles.fontawesome.package = pkgs.font-awesome;
+  fontProfiles.monospace.family = "FiraCode Nerd Font";
+  fontProfiles.monospace.package = pkgs.nerd-fonts.fira-code;
+  fontProfiles.regular.family = "Fira Sans";
+  fontProfiles.regular.package = pkgs.fira;
 }

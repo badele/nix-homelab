@@ -1,6 +1,4 @@
 {
-  qt = {
-    enable = true;
-    # platformTheme.name = "gtk";
-  };
+  qt.enable = true;
+  # qt.platformTheme.name = "gtk";
 }
