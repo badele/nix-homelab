@@ -15,7 +15,7 @@ let
 in
 {
   imports = [
-    ../../../modules/acme.nix
+    ../../../modules/system/acme.nix
     ../../../nix/modules/nixos/homelab
 
   ];

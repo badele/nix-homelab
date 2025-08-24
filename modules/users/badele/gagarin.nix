@@ -9,23 +9,22 @@ let
   ifTheyExist = groups: builtins.filter (group: builtins.hasAttr group config.users.groups) groups;
 
   username = "badele";
-  extraGroups =
-    [
-      "audio"
-      "video"
-      "wheel"
-    ]
-    ++ ifTheyExist [
-      "docker"
-      "git"
-      "incus-admin"
-      "libvirtd"
-      "network"
-      "networkmanager"
-      "plugdev"
-      "qbittorrent-nox"
-      "media"
-    ];
+  extraGroups = [
+    "audio"
+    "video"
+    "wheel"
+  ]
+  ++ ifTheyExist [
+    "docker"
+    "git"
+    "incus-admin"
+    "libvirtd"
+    "network"
+    "networkmanager"
+    "plugdev"
+    "qbittorrent-nox"
+    "media"
+  ];
 in
 {
   ############################################################################
@@ -36,7 +35,9 @@ in
   ];
 
   users.users."${username}" = {
-    extraGroups = extraGroups;
+    uid = 1000;
+    inherit extraGroups;
+    shell = pkgs.zsh;
     openssh.authorizedKeys.keys = config.users.users.root.openssh.authorizedKeys.keys;
   };
 
@@ -45,10 +46,8 @@ in
   ############################################################################
   home-manager.users."${username}" = {
 
-    nixpkgs.config = {
-      allowUnfree = true;
-      allowUnfreePredicate = (_: true);
-    };
+    # Pass flake inputs to home-manager modules
+    _module.args.inputs = self.inputs;
 
     # home-manager imports
     imports = [
@@ -58,7 +57,7 @@ in
       # ../../home-manager/modules/userconf.nix
 
       # Shared
-      ../../home-manager/shared.nix
+      ../../home-manager/shared
 
       # Bluetooth
       ../../home-manager/term/bluetooth.nix
@@ -142,5 +141,11 @@ in
         };
       };
     };
+
+    home.packages = with pkgs; [
+      gimp
+      inkscape
+    ];
+
   };
 }

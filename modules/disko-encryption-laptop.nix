@@ -50,7 +50,7 @@ in
                 # Optionally: add keyFile or clevis if desired
                 content = {
                   type = "filesystem";
-                  format = "ext4"; # or btrfs/bcachefs
+                  format = "btrfs"; # or btrfs/bcachefs
                   mountpoint = "/";
                 };
               };

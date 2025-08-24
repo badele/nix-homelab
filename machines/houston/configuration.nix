@@ -14,7 +14,7 @@
     ../../modules/shared.nix
 
     ../../modules/server.nix
-    ../../modules/borgbackup.nix
+    ../../modules/system/borgbackup.nix
 
     # houston infra
     ./modules/authelia.nix
@@ -24,7 +24,7 @@
     ./modules/homepage-dashboard.nix
     ./modules/linkding.nix
     ./modules/miniflux.nix
-
+    ./modules/shaarli.nix
   ];
 
   # This is your user login name.

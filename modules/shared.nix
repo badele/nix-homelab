@@ -8,7 +8,7 @@
 }:
 {
   imports = [
-    ../modules/term/yubikey.nix
+    ../modules/system/yubikey.nix
   ];
 
   console.keyMap = "fr"; # French keyboard layout

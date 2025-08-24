@@ -14,7 +14,7 @@ in
   imports = [
     clan-core.clanModules.postgresql
 
-    ../../../modules/acme.nix
+    ../../../modules/system/acme.nix
     ../../../nix/modules/nixos/homelab
   ];
 

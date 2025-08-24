@@ -13,7 +13,7 @@ let
   };
 in
 {
-  imports = [ ../../../modules/acme.nix ];
+  imports = [ ../../../modules/system/acme.nix ];
 
   clan.core.vars.generators.gmail-application-password = {
     prompts."token" = {
