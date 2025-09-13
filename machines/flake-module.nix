@@ -90,7 +90,7 @@ in
         zerotier = {
           roles.controller.machines."houston" = { };
           roles.moon.machines."houston".settings.stableEndpoints = [ houston_ipv4 ];
-          roles.peer.tags."all" = { };
+          roles.peer.machines."gagarin" = { };
         };
 
         borgbackup = {

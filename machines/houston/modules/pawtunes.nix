@@ -6,11 +6,11 @@
 }:
 let
   domain = "${config.networking.fqdn}";
-  appDomain = "megaphone.${domain}";
-  appPath = "/data/docker/shaarli";
-  listenPort = 10005;
+  appDomain = "radio.${domain}";
+  appPath = "/data/docker/pawtunes";
+  listenPort = 10008;
 
-  version = "v0.12.2";
+  version = "1.0.6";
 in
 {
   imports = [
@@ -22,22 +22,31 @@ in
     443
   ];
 
+  ############################################################################
+  # Service configuration
+  ############################################################################
   systemd.tmpfiles.rules = [
-    "d ${appPath}/data 0750 100 101 -"
-    "d ${appPath}/cache 0750 100 101 -"
-    "d /var/backup/shaarli 0750 shaarli shaarli -"
+    "d ${appPath} 0750 root root -"
+    "d ${appPath}/data 0750 33 33 -"
+    "d ${appPath}/data/cache 0750 33 33 -"
+    "d ${appPath}/inc 0750 33 33 -"
+    "d ${appPath}/inc/config 0750 33 33 -"
+    "d ${appPath}/inc/locale 0750 33 33 -"
+    "d /var/backup/pawtunes 0750 root root -"
   ];
 
   virtualisation.oci-containers = {
     containers = {
-      shaarli = {
-        image = "shaarli/shaarli:${version}";
+      pawtunes = {
+        image = "jackyprahec/pawtunes:${version}";
         autoStart = true;
+
         ports = [ "127.0.0.1:${toString listenPort}:80" ];
 
         volumes = [
-          "${appPath}/data:/var/www/shaarli/data"
-          "${appPath}/cache:/var/www/shaarli/cache"
+          "${appPath}/inc/config:/var/www/html/inc/config"
+          "${appPath}/inc/locale:/var/www/html/inc/locale"
+          "${appPath}/data:/var/www/html/data"
         ];
 
         extraOptions = [
@@ -66,7 +75,7 @@ in
   #############################################################################
   # Backup
   #############################################################################
-  clan.core.state.shaarli = {
+  clan.core.state.pawtunes = {
     folders = [ appPath ];
 
     preBackupScript = ''
@@ -78,12 +87,12 @@ in
         ]
       }
 
-      service_status=$(systemctl is-active docker-shaarli)
+      service_status=$(systemctl is-active docker-pawtunes)
 
       if [ "$service_status" = "active" ]; then
-        systemctl stop docker-shaarli
-        rsync -avH --delete --numeric-ids "${appPath}/" /var/backup/shaarli/
-        systemctl start docker-shaarli
+        systemctl stop docker-pawtunes
+        rsync -avH --delete --numeric-ids "${appPath}/" /var/backup/pawtunes/
+        systemctl start docker-pawtunes
       fi
     '';
 
@@ -96,19 +105,19 @@ in
         ]
       }
 
-      service_status="$(systemctl is-active docker-shaarli)"
+      service_status="$(systemctl is-active docker-pawtunes)"
 
       if [ "$service_status" = "active" ]; then
-        systemctl stop docker-shaarli
+        systemctl stop docker-pawtunes
 
-        # Backup localy current shaarli data
+        # Backup localy current pawtunes data
         DATE=$(date +%Y%m%d-%H%M%S)
         cp -rp "${appPath}" "${appPath}.$DATE.bak"
 
         # Restore from borgbackup
-        rsync -avH --delete --numeric-ids /var/backup/shaarli/ "${appPath}/"
+        rsync -avH --delete --numeric-ids /var/backup/pawtunes/ "${appPath}/"
 
-        systemctl start docker-shaarli
+        systemctl start docker-pawtunes
       fi
     '';
   };

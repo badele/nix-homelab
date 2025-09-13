@@ -24,7 +24,10 @@
     ./modules/homepage-dashboard.nix
     ./modules/linkding.nix
     ./modules/miniflux.nix
+    ./modules/pawtunes.nix
     ./modules/shaarli.nix
+    ./modules/wastebin.nix
+    ./modules/wikijs.nix
   ];
 
   # This is your user login name.

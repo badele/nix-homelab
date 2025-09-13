@@ -20,12 +20,10 @@ in
     listenPort = listenPort;
     allowedHosts = "${appDomain}";
 
-    # HOMEPAGE_ALLOWED_HOSTS
-    # settings = {
-    #   background = "https://w.wallhaven.cc/full/0w/wallhaven-0w3pdr.jpg";
-    #   backgroundOpacity = "0.2";
-    #   cardBlur = "sm";
-    # };
+    settings = {
+      title = "Ma Cabane";
+      description = "Bienvenue dans ma cabane, trouvez l'ensemble de mes services web.";
+    };
 
     widgets = [
       {
@@ -60,23 +58,63 @@ in
 
     bookmarks = [
       {
-        "Public apps" = [
+        "Applications publiques" = [
           {
-            "shared bookmark" = [
+            "Radio" = [
               {
-                icon = "sh-linkding";
-                href = "https://links.ma-cabane.eu/bookmarks/shared";
-                description = "Shared bookmarks";
+                icon = "si-overcast";
+                href = "https://radio.ma-cabane.eu/";
+                description = "Flux radios";
               }
             ];
           }
 
           {
-            goaccess = [
+            "Notes" = [
+              {
+                icon = "sh-wiki-js";
+                href = "https://notes.ma-cabane.eu/";
+                description = "Partage de notes (wiki-js)";
+              }
+            ];
+          }
+
+          {
+            Megaphone = [
+              {
+                icon = "sh-shaarli";
+                href = "https://megaphone.ma-cabane.eu/";
+                description = "Partage de liens (Shaarli)";
+              }
+            ];
+          }
+
+          {
+            "Marque pages" = [
+              {
+                icon = "sh-linkding";
+                href = "https://links.ma-cabane.eu/bookmarks/shared";
+                description = "Mes liens (linkding)";
+              }
+            ];
+          }
+
+          {
+            "codes" = [
+              {
+                icon = "sh-wastebin";
+                href = "https://codes.ma-cabane.eu";
+                description = "Mes codes copié/collé";
+              }
+            ];
+          }
+
+          {
+            "Les visites" = [
               {
                 icon = "sh-goaccess";
                 href = "https://stats.ma-cabane.eu";
-                description = "Website log stats";
+                description = "Website log stats (goaccess)";
               }
             ];
           }
@@ -85,25 +123,54 @@ in
       }
 
       {
-        "Apps with authentification" = [
-
+        "Applications avec authentifications" = [
           {
-            miniflux = [
+            "Radio" = [
               {
-                icon = "sh-miniflux";
-                href = "https://rss.ma-cabane.eu";
-                description = "RSS Reader";
+                icon = "si-overcast";
+                href = "https://radio.ma-cabane.eu/panel";
+                description = "radios (admin)";
               }
             ];
           }
 
           {
-            linkding = [
+            Notes = [
+              {
+                icon = "sh-wiki-js";
+                href = "https://notes.ma-cabane.eu/login";
+                description = "wiki-js (sso)";
+              }
+            ];
+          }
+
+          {
+            "Megaphone" = [
+              {
+                icon = "sh-shaarli";
+                href = "https://megaphone.ma-cabane.eu/login";
+                description = "Shaarli (admin)";
+              }
+            ];
+          }
+
+          {
+            "Nouvelle" = [
+              {
+                icon = "sh-miniflux";
+                href = "https://rss.ma-cabane.eu";
+                description = "miniflux (sso)";
+              }
+            ];
+          }
+
+          {
+            "Marque pages" = [
               {
                 abbr = "bm";
                 icon = "sh-linkding";
                 href = "https://links.ma-cabane.eu";
-                description = "Bookmark manager";
+                description = "linkding (sso)";
               }
             ];
           }
@@ -192,6 +259,16 @@ in
           }
 
           {
+            shaarli = [
+              {
+                icon = "sh-shaarli";
+                href = "https://github.com/shaarli/Shaarli";
+                description = "minimalist, super-fast, bookmarking service";
+              }
+            ];
+          }
+
+          {
             opentofu = [
               {
                 icon = "sh-opentofu";
@@ -207,6 +284,36 @@ in
                 icon = "sh-postgresql";
                 href = "https://www.postgresql.org/";
                 description = "The World's Most Advanced Relational Database";
+              }
+            ];
+          }
+
+          {
+            pawtunes = [
+              {
+                icon = "mdi-paw";
+                href = "https://github.com/Jackysi/PawTunes";
+                description = "The Ultimate HTML5 Internet Radio Player";
+              }
+            ];
+          }
+
+          {
+            wastebin = [
+              {
+                icon = "sh-wastebin";
+                href = "https://github.com/matze/wastebin";
+                description = "wastebin is a pastebin";
+              }
+            ];
+          }
+
+          {
+            wiki-js = [
+              {
+                icon = "sh-wiki-js";
+                href = "https://js.wiki/";
+                description = "Most powerful and extensible open source Wiki";
               }
             ];
           }
@@ -231,16 +338,6 @@ in
                 icon = "sh-hugo";
                 href = "https://blog.jesuislibre.org";
                 description = "My blog";
-              }
-            ];
-          }
-
-          {
-            devops = [
-              {
-                icon = "sh-mkdocs";
-                href = "https://devops.jesuislibre.org/";
-                description = "My DevOps docs";
               }
             ];
           }

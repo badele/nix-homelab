@@ -13,7 +13,7 @@ Houston is the center of public control. It provides the authentication service
 
 ### Services
 
-- authentification (authelia)
+- authentification ([authelia](../../docs/authelia.md)
 - Web server (nginx)
   - miniflux (Minimalist and Opinionated Feed Reader)
   - linkding (self-hosted bookmark manager designed to be minimal and fast)
@@ -68,10 +68,6 @@ nix run .#terraform.terraform -- destroy -target "hcloud_server.houston"
 ```bash
 clan machines update houston
 ```
-
-## Administration
-
-- kanidm (users managment)
 
 ## Links
 

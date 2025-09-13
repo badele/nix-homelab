@@ -11,6 +11,10 @@ in
 
     # xorg
     mesa-demos # glxinfo, glxgears
+
+    # Filesystem
+    file
+
     # Performance
     atop # Top alternative
     btop # Top alternative
@@ -21,6 +25,5 @@ in
     lurk
     ltrace
     strace
-
   ];
 }

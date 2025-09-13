@@ -195,24 +195,34 @@ in
           {
             domain = "*.${config.networking.fqdn}";
             policy = "one_factor";
-            subject = "group:admins";
+            subject = "group:admin";
           }
 
-          ####################################################################
-          # Apps for public group user
-          ####################################################################
           {
             domain = "rss.${config.networking.fqdn}";
             policy = "one_factor";
             subject = [
-              "group:public.access"
+              "group:admin"
+              "group:family"
+              "group:friend"
             ];
           }
           {
             domain = "links.${config.networking.fqdn}";
             policy = "one_factor";
             subject = [
-              "group:public.access"
+              "group:admin"
+              "group:family"
+              "group:friend"
+            ];
+          }
+          {
+            domain = "notes.${config.networking.fqdn}";
+            policy = "one_factor";
+            subject = [
+              "group:admin"
+              "group:family"
+              "group:friend"
             ];
           }
 
@@ -291,7 +301,7 @@ in
           password: "$HASHED_PASSWORD"
           email: "$EMAIL"
           groups:
-            - public.access
+            - no_defined_group
       EOF
 
       echo "L'utilisateur devra utiliser la fonction 'Mot de passe oublié' pour le changer"

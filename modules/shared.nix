@@ -9,6 +9,7 @@
 {
   imports = [
     ../modules/system/yubikey.nix
+    ../modules/virtualisation/docker.nix
   ];
 
   console.keyMap = "fr"; # French keyboard layout

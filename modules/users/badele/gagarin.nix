@@ -145,6 +145,7 @@ in
     home.packages = with pkgs; [
       gimp
       inkscape
+      libreoffice
     ];
 
   };

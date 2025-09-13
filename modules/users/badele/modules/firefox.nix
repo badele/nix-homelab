@@ -116,7 +116,7 @@ in
         behind-the-overlay-revival # Block overlay mask
         browserpass # GPG passwordstore
         darkreader # Dark mode
-        floccus # Sync bookmark
+        # floccus # Sync bookmark
         onepassword-password-manager # Password manager
         simple-tab-groups # Tab group
         simple-translate # Translate
@@ -158,34 +158,34 @@ in
         })
 
         # imtranslatoe
-        (buildFirefoxXpiAddon rec {
-          pname = "imtranslator";
-          version = "16.30";
-          addonId = "{9AA46F4F-4DC7-4c06-97AF-5035170634FE}";
-          url = "https://addons.mozilla.org/firefox/downloads/file/4028792/imtranslator-${version}.xpi";
-          sha256 = "sha256-9ZC3FmYXUWgZ+4VADX66cApOyJKmkgHWAi0zzovcn8U=";
-          meta = { };
-        })
+        # (buildFirefoxXpiAddon rec {
+        #   pname = "imtranslator";
+        #   version = "16.30";
+        #   addonId = "{9AA46F4F-4DC7-4c06-97AF-5035170634FE}";
+        #   url = "https://addons.mozilla.org/firefox/downloads/file/4028792/imtranslator-${version}.xpi";
+        #   sha256 = "sha256-9ZC3FmYXUWgZ+4VADX66cApOyJKmkgHWAi0zzovcn8U=";
+        #   meta = { };
+        # })
 
         # Clean bookmark (duplicate links & unavailable links )
-        (buildFirefoxXpiAddon rec {
-          pname = "clean-up";
-          version = "0.1.0";
-          addonId = "{a1087d5d-d793-445a-b988-088b1d86f2a6}";
-          url = "https://addons.mozilla.org/firefox/downloads/file/3610512/bookmarks_clean_up-${version}.xpi";
-          sha256 = "sha256-4FNojXUkm+8lFEBbQOfpdlZgt/SfB8AAGCOiGyWnsuo=";
-          meta = { };
-        })
+        # (buildFirefoxXpiAddon rec {
+        #   pname = "clean-up";
+        #   version = "0.1.0";
+        #   addonId = "{a1087d5d-d793-445a-b988-088b1d86f2a6}";
+        #   url = "https://addons.mozilla.org/firefox/downloads/file/3610512/bookmarks_clean_up-${version}.xpi";
+        #   sha256 = "sha256-4FNojXUkm+8lFEBbQOfpdlZgt/SfB8AAGCOiGyWnsuo=";
+        #   meta = { };
+        # })
 
-        # Clean bookmark (duplicate links & unavailable links )
-        (buildFirefoxXpiAddon rec {
-          pname = "linkding-extension";
-          version = "1.14.0";
-          addonId = "{61a05c39-ad45-4086-946f-32adb0a40a9d}";
-          url = "https://addons.mozilla.org/firefox/downloads/file/4449452/linkding_extension-${version}.xpi";
-          sha256 = "sha256-uORUU9Nmplslvk9Q59szaS9xk1SSV2hfT8K86zenB5w=";
-          meta = { };
-        })
+        # trydactyl
+        # (buildFirefoxXpiAddon rec {
+        #   pname = "trydactyl";
+        #   version = "1.24.4";
+        #   addonId = "tridactyl.vim@cmcaine.co.uk";
+        #   url = "https://addons.mozilla.org/firefox/downloads/file/4549492/tridactyl_vim-${version}.xpi";
+        #   sha256 = "sha256-m6fWvDvlVWMcmBw6zdJcq2lCwfSm8MtRG76PqB153Z0=";
+        #   meta = { };
+        # })
       ];
     };
   };
