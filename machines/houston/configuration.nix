@@ -26,6 +26,7 @@
     ./modules/miniflux.nix
     ./modules/pawtunes.nix
     ./modules/shaarli.nix
+    ./modules/vector.nix
     ./modules/wastebin.nix
     ./modules/wikijs.nix
   ];

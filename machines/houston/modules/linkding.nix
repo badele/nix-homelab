@@ -46,7 +46,11 @@ in
       echo "$CLIENTSECRET" > "$out/oauth2-client-secret"
       echo "$DIGETSECRET" > "$out/digest-client-secret"
 
-      printf "OIDC_RP_CLIENT_SECRET=$CLIENTSECRET\nLD_SUPERUSER_NAME=bookadmin\nLD_SUPERUSER_PASSWORD=$BOOKADMIN"  > "$out/envfile"
+      cat > "$out/envfile" << EOF
+      OIDC_RP_CLIENT_SECRET=$CLIENTSECRET
+      LD_SUPERUSER_NAME=bookadmin
+      LD_SUPERUSER_PASSWORD=$ADMINPASSWORD
+      EOF
     '';
   };
 

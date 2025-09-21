@@ -55,8 +55,12 @@ in
 
       echo "$CLIENTSECRET" > "$out/oauth2-client-secret"
       echo "$DIGETSECRET" > "$out/digest-client-secret"
-      printf "OAUTH2_CLIENT_SECRET=$CLIENTSECRET\nADMIN_USERNAME=admin\nADMIN_PASSWORD=$ADMINPASSWORD"  > "$out/miniflux-env"
 
+      cat > "$out/miniflux-env" << EOF
+      OAUTH2_CLIENT_SECRET=$CLIENTSECRET
+      ADMIN_USERNAME=admin
+      ADMIN_PASSWORD=$ADMINPASSWORD
+      EOF
     '';
   };
 
@@ -99,6 +103,7 @@ in
     config = {
       LISTEN_ADDR = "127.0.0.1:${toString listenPort}";
       BASE_URL = "https://${appDomain}";
+      HTTP_CLIENT_MAX_BODY_SIZE = "33554432";
 
       # https://www.authelia.com/integration/openid-connect/miniflux/
       OAUTH2_OIDC_PROVIDER_NAME = "Authelia";

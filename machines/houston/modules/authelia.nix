@@ -202,27 +202,37 @@ in
             domain = "rss.${config.networking.fqdn}";
             policy = "one_factor";
             subject = [
-              "group:admin"
-              "group:family"
-              "group:friend"
+              "group:rss-admin"
+              "group:rss-read"
+              "group:rss-write"
             ];
           }
           {
             domain = "links.${config.networking.fqdn}";
             policy = "one_factor";
             subject = [
-              "group:admin"
-              "group:family"
-              "group:friend"
+              "group:links-admin"
+              "group:links-read"
+              "group:links-write"
             ];
           }
           {
             domain = "notes.${config.networking.fqdn}";
             policy = "one_factor";
             subject = [
-              "group:admin"
-              "group:family"
-              "group:friend"
+              "group:notes-admin"
+              "group:notes-read"
+              "group:notes-write"
+            ];
+          }
+
+          {
+            domain = "wiki.${config.networking.fqdn}";
+            policy = "one_factor";
+            subject = [
+              "group:wiki-admin"
+              "group:wiki-read"
+              "group:wiki-write"
             ];
           }
 

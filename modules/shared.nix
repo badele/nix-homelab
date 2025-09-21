@@ -17,6 +17,9 @@
   # Enable proprietary firmware
   hardware.enableRedistributableFirmware = true;
 
+  # for detecting port scan with vector & reaction
+  networking.firewall.logRefusedConnections = true;
+
   # Nixpkgs configuration
   nixpkgs.config = {
     allowUnfree = true; # Allow unfree packages system-wide
@@ -26,7 +29,7 @@
   nix = {
     # Garbage collection settings
     gc.automatic = true; # Enable automatic garbage collection
-    gc.dates = "daily"; # Run garbage collection daily
+    gc.dates = "weekly"; # Run garbage collection weekly
     gc.options = "--delete-older-than 30d"; # Delete generations older than 30 days
 
     # Flake registry configuration

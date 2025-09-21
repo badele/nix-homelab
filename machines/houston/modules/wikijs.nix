@@ -54,7 +54,11 @@ in
     #
     #   echo "$CLIENTSECRET" > "$out/oauth2-client-secret"
     #   echo "$DIGETSECRET" > "$out/digest-client-secret"
-    #   printf "OAUTH2_CLIENT_SECRET=$CLIENTSECRET\nADMIN_USERNAME=admin\nADMIN_PASSWORD=$ADMINPASSWORD"  > "$out/envfile"
+    #  cat > "$out/miniflux-env" << EOF
+    #  OAUTH2_CLIENT_SECRET=$CLIENTSECRET
+    #  ADMIN_USERNAME=admin
+    #  ADMIN_PASSWORD=$ADMINPASSWORD
+    #  EOF
     #
     # '';
   };

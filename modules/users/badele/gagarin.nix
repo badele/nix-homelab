@@ -146,6 +146,8 @@ in
       gimp
       inkscape
       libreoffice
+
+      hl-log-viewer # JSON and logfmt viewer
     ];
 
   };

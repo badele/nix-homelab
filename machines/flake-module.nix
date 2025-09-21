@@ -87,11 +87,11 @@ in
 
         # https://docs.clan.lol/guides/mesh-vpn/
         # list zerotier network ID - zerotier-cli info
-        zerotier = {
-          roles.controller.machines."houston" = { };
-          roles.moon.machines."houston".settings.stableEndpoints = [ houston_ipv4 ];
-          roles.peer.machines."gagarin" = { };
-        };
+        # zerotier = {
+        #   roles.controller.machines."houston" = { };
+        #   roles.moon.machines."houston".settings.stableEndpoints = [ houston_ipv4 ];
+        #   roles.peer.machines."gagarin" = { };
+        # };
 
         borgbackup = {
           roles.client.machines."houston".settings = {
