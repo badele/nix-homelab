@@ -60,7 +60,7 @@ in
       {
         "Applications publiques" = [
           {
-            "Radio" = [
+            Radio = [
               {
                 icon = "si-overcast";
                 href = "https://radio.ma-cabane.eu/";
@@ -70,7 +70,7 @@ in
           }
 
           {
-            "Notes" = [
+            Notes = [
               {
                 icon = "sh-wiki-js";
                 href = "https://notes.ma-cabane.eu/";
@@ -100,7 +100,7 @@ in
           }
 
           {
-            "codes" = [
+            Codes = [
               {
                 icon = "sh-wastebin";
                 href = "https://codes.ma-cabane.eu";
@@ -115,6 +115,16 @@ in
                 icon = "sh-goaccess";
                 href = "https://stats.ma-cabane.eu";
                 description = "Website log stats (goaccess)";
+              }
+            ];
+          }
+
+          {
+            lampiotes = [
+              {
+                icon = "sh-grafana";
+                href = "https://lampiotes.ma-cabane.eu";
+                description = "C'est vert ?";
               }
             ];
           }
@@ -219,6 +229,27 @@ in
               }
             ];
           }
+
+          {
+            grafana = [
+              {
+                icon = "sh-grafana";
+                href = "https://github.com/grafana/grafana";
+                description = "The open and composable observability";
+              }
+            ];
+          }
+
+          {
+            influxdb = [
+              {
+                icon = "sh-influxdb";
+                href = "https://github.com/influxdata/influxdb";
+                description = "Scalable datastore for metrics, events";
+              }
+            ];
+          }
+
           {
             hetzner = [
               {
@@ -259,16 +290,6 @@ in
           }
 
           {
-            shaarli = [
-              {
-                icon = "sh-shaarli";
-                href = "https://github.com/shaarli/Shaarli";
-                description = "minimalist, super-fast, bookmarking service";
-              }
-            ];
-          }
-
-          {
             opentofu = [
               {
                 icon = "sh-opentofu";
@@ -299,11 +320,50 @@ in
           }
 
           {
+            reaction = [
+              {
+                icon = "sh-github";
+                href = "https://reaction.ppom.me/";
+                description = "Scan logs and take action";
+              }
+            ];
+          }
+
+          {
+            shaarli = [
+              {
+                icon = "sh-shaarli";
+                href = "https://github.com/shaarli/Shaarli";
+                description = "minimalist, super-fast, bookmarking service";
+              }
+            ];
+          }
+          {
+            telegrag = [
+              {
+                icon = "sh-telegraf";
+                href = "https://github.com/influxdata/telegraf";
+                description = "Agent for collecting, processing, aggregating";
+              }
+            ];
+          }
+
+          {
+            vector = [
+              {
+                icon = "sh-vector";
+                href = "https://github.com/vectordotdev/vector";
+                description = "A high-performance observability data pipeline";
+              }
+            ];
+          }
+
+          {
             wastebin = [
               {
                 icon = "sh-wastebin";
                 href = "https://github.com/matze/wastebin";
-                description = "wastebin is a pastebin";
+                description = "Pastebin alternative";
               }
             ];
           }

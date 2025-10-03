@@ -1,5 +1,6 @@
 {
   self,
+  lib,
   ...
 }:
 {
@@ -15,18 +16,24 @@
 
     ../../modules/server.nix
     ../../modules/system/borgbackup.nix
+    ../../modules/system/reaction.nix
 
     # houston infra
     ./modules/authelia.nix
 
     # houston apps
     ./modules/goaccess.nix
+    ./modules/grafana.nix
     ./modules/homepage-dashboard.nix
+    ./modules/influxdb.nix
     ./modules/linkding.nix
     ./modules/miniflux.nix
     ./modules/pawtunes.nix
+    ./modules/reaction.nix
     ./modules/shaarli.nix
-    ./modules/vector.nix
+    ./modules/telegraf
+    ./modules/vector
+    ./modules/victoriametrics.nix
     ./modules/wastebin.nix
     ./modules/wikijs.nix
   ];

@@ -21,9 +21,13 @@
   networking.firewall.logRefusedConnections = true;
 
   # Nixpkgs configuration
-  nixpkgs.config = {
-    allowUnfree = true; # Allow unfree packages system-wide
-    allowUnfreePredicate = (_: true); # Allow all unfree packages
+  nixpkgs = {
+    config = {
+      allowUnfree = true; # Allow unfree packages system-wide
+      allowUnfreePredicate = (_: true); # Allow all unfree packages
+    };
+    # Apply custom overlays globally for all machines
+    overlays = import ../overlays/default.nix { inherit (self) inputs; };
   };
 
   nix = {
