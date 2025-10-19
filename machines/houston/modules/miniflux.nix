@@ -6,8 +6,8 @@
 }:
 let
   domain = "${config.networking.fqdn}";
-  authDomain = "auth.${domain}";
-  appDomain = "rss.${domain}";
+  authDomain = "douane.${domain}";
+  appDomain = "journaliste.${domain}";
   listenPort = 10002;
 in
 {
@@ -86,12 +86,14 @@ in
       public = false;
       authorization_policy = "two_factor";
       redirect_uris = [
-        "https://rss.${config.networking.fqdn}/oauth2/oidc/callback"
+        "https://journaliste.${config.networking.fqdn}/oauth2/oidc/callback"
       ];
+
       scopes = [
         "openid"
         "email"
         "profile"
+        "groups"
       ];
     }
   ];
@@ -122,11 +124,45 @@ in
   services.nginx.virtualHosts."${appDomain}" = {
     forceSSL = true;
     enableACME = true;
+
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString listenPort}";
       recommendedProxySettings = true;
       proxyWebsockets = true;
+
+      extraConfig = ''
+        # Forward auth to Authelia
+        auth_request /authelia;
+
+        # Transmit headers for authentification
+        auth_request_set $user $upstream_http_remote_user;
+        auth_request_set $groups $upstream_http_remote_groups;
+        auth_request_set $email $upstream_http_remote_email;
+
+        proxy_set_header Remote-User $user;
+        proxy_set_header Remote-Groups $groups;
+        proxy_set_header Remote-Email $email;
+
+        # Error redirection
+        error_page 401 =302 https://douane.${config.networking.fqdn}/?rd=$scheme://$http_host$request_uri;
+      '';
     };
+
+    locations."/authelia" = {
+      proxyPass = "http://127.0.0.1:9091/api/verify";
+      extraConfig = ''
+        internal;
+        proxy_set_header X-Original-URL $scheme://$http_host$request_uri;
+        proxy_set_header X-Forwarded-Method $request_method;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $http_host;
+        proxy_set_header X-Forwarded-Uri $request_uri;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header Content-Length "";
+        proxy_pass_request_body off;
+      '';
+    };
+
     extraConfig = ''access_log /var/log/nginx/public.log vcombined;'';
   };
 

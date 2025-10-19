@@ -1,8 +1,10 @@
+{ inputs, ... }:
 {
   perSystem =
     {
       inputs', # flake-parts provides this (perSystem)
       pkgs,
+      system,
       ...
     }:
     let
@@ -79,9 +81,9 @@
           # Certificate
           pkgs.step-cli
 
-          # kanidm
-          pkgs.kanidm
-
+          # markdown web server
+          inputs.godown.packages.${system}.godown
+          #
         ];
         env.UEFI_FILE = uefi_file;
       };

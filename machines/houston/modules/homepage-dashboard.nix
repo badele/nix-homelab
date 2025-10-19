@@ -4,7 +4,7 @@
 }:
 let
   domain = "${config.networking.fqdn}";
-  appDomain = "home.${domain}";
+  appDomain = "salon.${domain}";
   listenPort = 10001;
 in
 {
@@ -60,40 +60,10 @@ in
       {
         "Applications publiques" = [
           {
-            Radio = [
-              {
-                icon = "si-overcast";
-                href = "https://radio.ma-cabane.eu/";
-                description = "Flux radios";
-              }
-            ];
-          }
-
-          {
-            Notes = [
-              {
-                icon = "sh-wiki-js";
-                href = "https://notes.ma-cabane.eu/";
-                description = "Partage de notes (wiki-js)";
-              }
-            ];
-          }
-
-          {
-            Megaphone = [
-              {
-                icon = "sh-shaarli";
-                href = "https://megaphone.ma-cabane.eu/";
-                description = "Partage de liens (Shaarli)";
-              }
-            ];
-          }
-
-          {
-            "Marque pages" = [
+            "Bonnes adresses" = [
               {
                 icon = "sh-linkding";
-                href = "https://links.ma-cabane.eu/bookmarks/shared";
+                href = "https://bonnes-adresses.ma-cabane.eu/bookmarks/shared";
                 description = "Mes liens (linkding)";
               }
             ];
@@ -110,21 +80,51 @@ in
           }
 
           {
-            "Les visites" = [
+            Encyclopedie = [
               {
-                icon = "sh-goaccess";
-                href = "https://stats.ma-cabane.eu";
-                description = "Website log stats (goaccess)";
+                icon = "sh-dokuwiki";
+                href = "https://encyclopedie.ma-cabane.eu/";
+                description = "Partage de notes (dokuwiki)";
               }
             ];
           }
 
           {
-            lampiotes = [
+            Lampiotes = [
               {
                 icon = "sh-grafana";
                 href = "https://lampiotes.ma-cabane.eu";
                 description = "C'est vert ?";
+              }
+            ];
+          }
+
+          {
+            Megaphone = [
+              {
+                icon = "sh-shaarli";
+                href = "https://megaphone.ma-cabane.eu/";
+                description = "Partage de liens (Shaarli)";
+              }
+            ];
+          }
+
+          {
+            Radio = [
+              {
+                icon = "si-overcast";
+                href = "https://radio.ma-cabane.eu/";
+                description = "Flux radios";
+              }
+            ];
+          }
+
+          {
+            "Visiteurs" = [
+              {
+                icon = "sh-goaccess";
+                href = "https://stats.ma-cabane.eu";
+                description = "Website log stats (goaccess)";
               }
             ];
           }
@@ -135,27 +135,37 @@ in
       {
         "Applications avec authentifications" = [
           {
-            "Radio" = [
+            Douane = [
               {
-                icon = "si-overcast";
-                href = "https://radio.ma-cabane.eu/panel";
-                description = "radios (admin)";
+                icon = "sh-authelia";
+                href = "https://douane.ma-cabane.eu";
+                description = "Authelia authentification (sso)";
               }
             ];
           }
 
           {
-            Notes = [
+            Encyclopedie = [
               {
-                icon = "sh-wiki-js";
-                href = "https://notes.ma-cabane.eu/login";
-                description = "wiki-js (sso)";
+                icon = "sh-dokuwiki";
+                href = "https://encyclopedie.ma-cabane.eu/login";
+                description = "dokuwiki (sso)";
               }
             ];
           }
 
           {
-            "Megaphone" = [
+            Journaliste = [
+              {
+                icon = "sh-miniflux";
+                href = "https://journaliste.ma-cabane.eu";
+                description = "Veille flux RSS (sso)";
+              }
+            ];
+          }
+
+          {
+            Megaphone = [
               {
                 icon = "sh-shaarli";
                 href = "https://megaphone.ma-cabane.eu/login";
@@ -165,21 +175,21 @@ in
           }
 
           {
-            "Nouvelle" = [
+            Radio = [
               {
-                icon = "sh-miniflux";
-                href = "https://rss.ma-cabane.eu";
-                description = "miniflux (sso)";
+                icon = "si-overcast";
+                href = "https://radio.ma-cabane.eu/panel";
+                description = "radios (admin)";
               }
             ];
           }
 
           {
-            "Marque pages" = [
+            "Bonnes adresses" = [
               {
                 abbr = "bm";
                 icon = "sh-linkding";
-                href = "https://links.ma-cabane.eu";
+                href = "https://bonnes-adresses.ma-cabane.eu";
                 description = "linkding (sso)";
               }
             ];
@@ -216,6 +226,16 @@ in
                 icon = "sh-nixos";
                 href = "https://clan.lol/";
                 description = "Kill the cloud, build your own darknet ♥️";
+              }
+            ];
+          }
+
+          {
+            dokuwiki = [
+              {
+                icon = "sh-dokuwiki";
+                href = "https://www.dokuwiki.org/dokuwiki";
+                description = "The Open Source Wiki Engine ";
               }
             ];
           }
@@ -364,16 +384,6 @@ in
                 icon = "sh-wastebin";
                 href = "https://github.com/matze/wastebin";
                 description = "Pastebin alternative";
-              }
-            ];
-          }
-
-          {
-            wiki-js = [
-              {
-                icon = "sh-wiki-js";
-                href = "https://js.wiki/";
-                description = "Most powerful and extensible open source Wiki";
               }
             ];
           }

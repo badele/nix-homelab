@@ -50,6 +50,8 @@
     terranix.url = "github:terranix/terranix";
     terranix.inputs.flake-parts.follows = "flake-parts";
     terranix.inputs.nixpkgs.follows = "nixpkgs";
+
+    godown.url = "github:badele/godown";
   };
 
   outputs =

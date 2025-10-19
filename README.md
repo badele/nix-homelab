@@ -1,193 +1,248 @@
-# nix-homelab
+# 🏠 nix-homelab
 
-<!--toc:start-->
+<img width="100%" src="./docs/imgs/nixos.gif" />
 
-- [nix-homelab](#nix-homelab)
-  - [Features](#features)
-    - [Roles](#roles)
-    - [User programs](#user-programs)
-    - [TUI floating panel configuration](#tui-floating-panel-configuration)
-  - [Documentation](#documentation)
-    - [Hosts](#hosts)
-    - [Network](#network)
-    - [Structure](#structure)
-  - [Usage](#usage)
-    - [Demo](#demo)
-      - [Installation](#installation)
-      - [Update](#update)
-      - [Re-use the demo](#re-use-the-demo)
-    - [Secrets initialisation (AGE \& SOPS)](#secrets-initialisation-age--sops)
-    - [NixOS installation \& update](#nixos-installation--update)
-      - [Update from you local computer/laptop](#update-from-you-local-computerlaptop)
-  - [Commands](#commands)
-- [A big thanks ❤️](#a-big-thanks-️)
+My personal homelab infrastructure, fully managed with
+[NixOS](https://nixos.org/) and [Clan](./docs/clan.md). This repository contains
+all configurations for my servers, desktops, and network devices.
 
-<!--toc:end-->
+## What is this?
 
-## Features
+This is a complete NixOS homelab setup that manages:
 
-This homelab is entirely managed by [NixOS](https://nixos.org/)
+- **Servers**: Public VPS (Hetzner, Infomaniak), physical servers, Raspberry Pi
+- **Desktops**: Personal laptops and workstations
+- **Network**: Routers, IoT devices, and monitoring
 
-All the configuration is stored in the `homelab.json` file. You can:
+Everything is declarative, reproducible, and version-controlled whenever
+possible.
 
-- Define network CIDR
-- Define hosts
-- Define the roles installed for selected hosts
-- Define services descriptions
-- etc ...
+## Why Clan?
 
-This documentation is generated from `homelab.json` file content
+I'm using [Clan](./docs/clan.md) to simplify infrastructure management:
 
-<img width="100%" src="./docs/nixos.gif" />
+> Backbone of independent infrastructure
 
-### Roles
+Or as I like to say:
 
-The main roles used in this home lab
+> Kill the cloud, build your darkcloud ☁️
 
-This list generated with `just doc-update` command
+**[→ Learn more about Clan and why I use it](./docs/clan.md)**
+
+### Key benefits
+
+- **Simple host management**: Easy inventory system
+- **Automatic secrets**: Built-in secret generation and management
+- **Backup made easy**: Integrated backup solution
+- **Declarative**: Everything in code, no manual steps
+
+## 🛠️ Deployment Strategy
+
+I follow a hybrid approach:
+
+- **NixOS services first**: Most applications run as native NixOS services
+- **Podman when needed**: Some apps use containers to:
+  - Avoid service interruptions during system updates
+  - Use plugins or features not well-supported in NixOS (e.g., DokuWiki)
+  - Maintain stability during version upgrades
+
+This gives me the best of both worlds: NixOS reproducibility with container
+flexibility.
+
+## Project Structure
+
+> [!NOTE] 🚧 Work in Progress - The project is being migrated to Clan
+> architecture. During this transition, you'll find both old and new directory
+> structures coexisting.
+
+The homelab uses a modular flake-parts architecture with Clan: **Key
+directories:**
+
+#### 🚧 New structure (managed with clan command)
+
+- `machines/`: Per-host configurations `clan machines update "machine-name"`
+- `modules/`: Shared modules and legacy configurations
+- `vars/`: Secrets `clan vars list "machine-name"` and on nix expression
+  `clan.core.vars.generators."secret-bucket-name"`
+
+#### 💥 Legacy structure
+
+- `nix/nixos/roles/`: Service roles
+- `nix/home-manager/`: User environment configs
+- `sops/`: SOPS secrets
+
+## 📦 Services & Applications
+
+Here are the main services running in my homelab:
 
 [comment]: (>>ROLES)
 
 <table>
     <tr>
         <th>Logo</th>
-        <th>Module</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Links</th>
         <th>Hosts</th>
         <th>Description</th>
-    </tr><tr>
-            <td><a href="./docs/wireguard.md"><img width="32" src="https://cdn.icon-icons.com/icons2/2699/PNG/512/wireguard_logo_icon_168760.png"></a></td>
-            <td><a href="./docs/wireguard.md">wireguard</a></td>
-            <td>router-living, badphone, cab1e</td>
-        <td>A VPN client/server alternative to IPSec and OpenVPN</td>
-        </tr><tr>
-            <td><a href="./docs/acme.md"><img width="32" src="https://www.kevinsubileau.fr/wp-content/uploads/2016/03/letsencrypt-logo-pad.png"></a></td>
-            <td><a href="./docs/acme.md">acme</a></td>
-            <td>rpi40, bootstore</td>
+    </tr>
+    <tr>
+        <td><img width="32" src="https://www.kevinsubileau.fr/wp-content/uploads/2016/03/letsencrypt-logo-pad.png"></td>
+        <td><a href="https://letsencrypt.org/fr/docs/client-options/">ACME</a></td>
+        <td>NixOS</td>
+        <td><a href="./docs/acme.md">doc</a></td>
+        <td>rpi40, bootstore, houston</td>
         <td>Let's Encrypt Automatic Certificate Management Environment</td>
-        </tr><tr>
-            <td><img width="32" src="https://raw.githubusercontent.com/coredns/logo/master/Icon/CoreDNS_Colour_Icon.png"></td>
-            <td>coredns</td>
-            <td>rpi40</td>
-        <td>A Go DNS server, it used for serving local hosts and alias</td>
-        </tr><tr>
-            <td><img width="32" src="https://freesvg.org/img/ftntp-client.png"></td>
-            <td>ntp</td>
-            <td>rpi40, bootstore, srvhoma</td>
-        <td>Network Time Protocol</td>
-        </tr><tr>
-            <td><img width="32" src="https://mosquitto.org/favicon-32x32.png"></td>
-            <td>mosquitto</td>
-            <td>rpi40</td>
-        <td>A mqtt broker [service port 1883]</td>
-        </tr><tr>
-            <td><a href="./docs/zigbee2mqtt.md"><img width="32" src="https://www.zigbee2mqtt.io/logo.png"></a></td>
-            <td><a href="./docs/zigbee2mqtt.md">zigbee2mqtt</a></td>
-            <td>rpi40</td>
-        <td>A zigbee2mqtt [service port 8080]</td>
-        </tr><tr>
-            <td><img width="32" src="https://play-lh.googleusercontent.com/pCqOLS2w-QaTI63tjFLvncHnbXc4100EQI3FAD0RZEFWjGMa_54M4x2HD7j48qMSv3kk"></td>
-            <td>adguard</td>
-            <td>bootstore</td>
-        <td>DNS ad blocker [service port 3002]</td>
-        </tr><tr>
-            <td><img width="32" src="https://dashy.to/img/dashy.png"></td>
-            <td>dashy</td>
-            <td>bootstore</td>
-        <td>The Ultimate Homepage for your Homelab [service port 8081]</td>
-        </tr><tr>
-            <td><img width="32" src="https://grafana.com/static/assets/img/fav32.png"></td>
-            <td>grafana</td>
-            <td>bootstore</td>
+    </tr>
+    <tr>
+        <td><a href="./docs/authelia.md"><img width="32" src="https://www.authelia.com/favicon.svg"></a></td>
+        <td><a href="https://www.authelia.com/">Authelia</a></td>
+        <td>NixOS</td>
+        <td><a href="./machines/houston/modules/authelia.nix">module</a>, <a href="./docs/authelia.md">doc</a></td>
+        <td>houston</td>
+        <td>An open-source authentication and single sign-on (SSO)</td>
+    </tr>
+    <tr>
+        <td><a href="./docs/dokuwiki.md"><img width="32" src="https://www.dokuwiki.org/lib/tpl/dokuwiki/images/favicon.ico"></a></td>
+        <td><a href="https://www.dokuwiki.org/">Dokuwiki</a></td>
+        <td>Podman</td>
+        <td><a href="./machines/houston/modules/dokuwiki.nix">module</a>, <a href="./docs/dokuwiki.md">doc</a></td>
+        <td>houston</td>
+        <td>Simple to use and highly versatile Open Source wiki software</td>
+    </tr>
+    <tr>
+        <td><a href="https://goaccess.io/"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"></a></td>
+        <td><a href="https://goaccess.io/">GoAccess</a></td>
+        <td>NixOS</td>
+        <td><a href="./machines/houston/modules/goaccess.nix">module</a></td>
+        <td>houston</td>
+        <td>Real-time web log analyzer</td>
+    </tr>
+    <tr>
+        <td><a href="./docs/grafana.md"><img width="32" src="https://grafana.com/static/assets/img/fav32.png"></a></td>
+        <td><a href="https://grafana.com/">Grafana</a></td>
+        <td>NixOS</td>
+        <td><a href="./machines/houston/modules/grafana.nix">module</a>, <a href="./docs/grafana.md">doc</a></td>
+        <td>houston</td>
         <td>The open and composable observability and data visualization platform [service port 3000]</td>
-            </tr><tr>
-            <td><img width="32" src="https://grafana.com/static/img/logos/logo-loki.svg"></td>
-            <td>loki</td>
-            <td>bootstore</td>
-        <td>Scalable log aggregation system [service port 8084,9095]</td>
-        </tr><tr>
-            <td><img width="32" src="https://linkding.link/favicon.svg"></td>
-            <td><a href="./docs/linkding/README.md">linkding</a></td>
-            <td>badxps</td>
+    </tr>
+    <tr>
+        <td><a href="./docs/linkding/README.md"><img width="32" src="https://linkding.link/favicon.svg"></a></td>
+        <td><a href="https://linkding.link/">linkding</a></td>
+        <td>Podman</td>
+        <td><a href="./machines/houston/modules/linkding.nix">module</a></td>
+        <td>houston</td>
         <td>Bookmark manager</td>
-        </tr><tr>
-            <td><img width="32" src="https://netboxlabs.com/images/favicons/favicon.svg"></td>
-            <td><a href="./docs/netbox/README.md">netbox</a></td>
-            <td>badxps</td>
-        <td>The Premier Network Source of Truth</td>
-        </tr><tr>
-            <td><img width="32" src="https://logo-marque.com/wp-content/uploads/2021/09/Need-For-Speed-Logo-2019-2020.jpg"></td>
-            <td>nfs</td>
-            <td>bootstore</td>
-        <td>A Linux NFS server used for backing up servers and laptops</td>
-        </tr><tr>
-            <td><a href="./docs/nix-serve.md"><img width="32" src="https://github.githubassets.com/favicons/favicon.svg"></a></td>
-            <td><a href="./docs/nix-serve.md">nix-serve</a></td>
-            <td>bootstore</td>
-        <td>For caching the nix build results</td>
-        </tr><tr>
-            <td><a href="./docs/prometheus.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Prometheus_software_logo.svg/2066px-Prometheus_software_logo.svg.png"></a></td>
-            <td><a href="./docs/prometheus.md">prometheus</a></td>
-            <td>bootstore</td>
-        <td>Monitoring system and time series database [service port 9090]</td>
-        </tr><tr>
-            <td><img width="32" src="https://img.freepik.com/vecteurs-premium/cardiogramme-cardiaque-isole-blanc_97886-1185.jpg?w=2000"></td>
-            <td>smokeping</td>
-            <td>bootstore</td>
-        <td>Latency measurement tool</td>
-        </tr><tr>
-            <td><img width="32" src="https://avatars.githubusercontent.com/u/61949049?s=32&v=4"></td>
-            <td>statping</td>
-            <td>bootstore</td>
-        <td>A Status Page for monitoring your websites and applications with beautiful graphs [service port 8082]</td>
-        </tr><tr>
-            <td><img width="32" src="https://cf.appdrag.com/dashboard-openvm-clo-b2d42c/uploads/Uptime-kuma-7fPG.png"></td>
-            <td>uptime</td>
-            <td>bootstore</td>
-        <td>A Status Page [service port 3001/8083]</td>
-        </tr><tr>
-            <td><a href="./docs/home-assistant.md"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/32px-Home_Assistant_Logo.svg.png"></a></td>
-            <td><a href="./docs/home-assistant.md">home-assistant</a></td>
-            <td>bootstore</td>
-        <td>Open source home automation [service port 8123]</td>
-        </tr>
-
+    </tr>
+    <tr>
+        <td><a href="https://goaccess.io/"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"></a></td>
+        <td><a href="https://github.com/lldap/lldap">LLDAP</a></td>
+        <td>Podman</td>
+        <td><a href="./machines/houston/modules/lldap.nix">module</a>, <a href="./docs/lldap.md">doc</a></td>
+        <td>houston</td>
+        <td>Lightweight LDAP directory service for authentication</td>
+    </tr>
+    <tr>
+        <td><img width="32" src="https://reaction.ppom.me/favicon.svg"></td>
+        <td><a href="https://reaction.ppom.me/">Reaction</a></td>
+        <td>NixOS</td>
+        <td><a href="./machines/houston/modules/reaction.nix">module</a>, <a href="./docs/reaction.md">doc</a></td>
+        <td>houston</td>
+        <td>Block some network attacks</td>
+    </tr>
+    <tr>
+        <td><img width="32" src="https://vector.dev/favicon.ico"></td>
+        <td><a href="https://vector.dev/">Vector</a></td>
+        <td>NixOS</td>
+        <td><a href="./machines/houston/modules/vector/default.nix">module</a>, <a href="./docs/reaction.md">doc</a></td>
+        <td>houston</td>
+        <td>High-performance observability data pipeline</td>
+    </tr>
+    <tr>
+        <td><a href="./docs/victoriametrics.md"><img width="32" src="https://victoriametrics.com/icons/favicon.ico"></a></td>
+        <td><a href="https://victoriametrics.com/">VictoriaMetrics</a></td>
+        <td>NixOS</td>
+        <td><a href="./machines/houston/modules/victoriametrics.nix">module</a>, <a href="./docs/victoriametrics.md">doc</a></td>
+        <td>houston</td>
+        <td>Fast and scalable time series database</td>
+    </tr>
+    <tr>
+        <td><img width="32" src="https://bin.bloerg.net/favicon.ico"></td>
+        <td><a href="https://github.com/matze/wastebin">Wastebin</a></td>
+        <td>NixOS</td>
+        <td><a href="./machines/houston/modules/wastebin.nix">module</a></td>
+        <td>houston</td>
+        <td>Minimalist pastebin</td>
+    </tr>
 </table>
 
 [comment]: (<<ROLES)
 
-### User programs
+## 💻 Desktop Environment
 
-| Logo                                                                                                                                                                                      | Name               | Description                                                                 |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | --------------------------------------------------------------------------- |
-| [<img width="32" src="https://aider.chat/assets/icons/favicon-32x32.png">](./docs/aider/README.md)                                                                                        | Aider              | [AI Pair programming](./docs/aider/README.md)                               |
-| [<img width="32" src="https://www.borgbackup.org/favicon.ico">](./docs/borgbackup/README.md)                                                                                              | borgbackup         | [Deduplication backup tool](./docs/borgbackup/README.md)                    |
-| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Firefox_logo%2C_2019.svg/32px-Firefox_logo%2C_2019.svg.png">](./users/badele/firefox.nix)                 | Firefox            | [Browser](./users/badele/firefox.nix)                                       |
-| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/The_GIMP_icon_-_gnome.svg/32px-The_GIMP_icon_-_gnome.svg.png">](./users/badele/commons.nix)               | Gimp               | [Raster graphics editor](./users/badele/commons.nix)                        |
-| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/I3_window_manager_logo.svg/32px-I3_window_manager_logo.svg.png">](./users/badele/commons.nix)             | i3                 | [Tiling window manager](./nix/home-manager/features/desktop/xorg/wm/i3.nix) |
-| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Inkscape_Logo.svg/32px-Inkscape_Logo.svg.png">](./users/badele/commons.nix)                               | Inkscape           | [Vectorial graphics editor](./users/badele/commons.nix)                     |
-| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/LibreOffice_icon_3.3.1_48_px.svg/32px-LibreOffice_icon_3.3.1_48_px.svg.png">](./users/badele/commons.nix) | Libreoffice        | [Office editor](./users/badele/commons.nix)                                 |
-| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Meld_Logo.svg/128px-Meld_Logo.svg.png">](./users/badele/commons.nix)                                      | Meld               | [Awesome diff tool](./users/badele/commons.nix)                             |
-| [<img width="32" src="https://raw.githubusercontent.com/denisidoro/navi/master/assets/icon.png">](./nix/home-manager/features/term/base.nix)                                              | Navi               | [interactive cheatsheet tool](https://github.com/badele/vide)               |
-| [<img width="32" src="https://user-images.githubusercontent.com/28633984/66519056-2e840c80-eaef-11e9-8670-c767213c26ba.png">](https://github.com/badele/vide)                             | Neovim             | [**VIDE** (badele's customized nix neovim)](/docs/nvim/README.md)           |
-| [<img width="32" src="https://code.visualstudio.com/assets/favicon.ico">](/docs/vscode/README.md)                                                                                         | Visual Studio Code | [Visual Studio Code](/docs/vscode/README.md)                                |
+My workstations run a customized NixOS setup with i3 window manager and various
+productivity tools.
 
-### TUI floating panel configuration
+### Desktop Applications
 
-| [<img width="320" src="./docs/floating_bluetooth.png">](./docs/floating_bluetooth.png) | [<img width="320" src="./docs/floating_disk.png">](./docs/floating_disk.png)       |
-| -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| [Bluetooth](./docs/floating_bluetooth.gif) (`bluetuith`)                               | [Disk](./docs/floating_disk.gif) (`bashmount`)                                     |
-| [<img width="320" src="./docs/floating_mixer.png">](./docs/floating_mixer.png)         | [<img width="320" src="./docs/floating_network.png">](./docs/floating_network.png) |
-| [Mixer](./docs/floating_mixer.gif) (`pulsemixer`)                                      | [Network](./docs/floating_network.gif) (`nmtui`)                                   |
-| [<img width="320" src="./docs/floating_process.png">](./docs/floating_process.png)     |                                                                                    |
-| [Process](./docs/floating_process.gif) (`pulsemixer`)                                  |                                                                                    |
+| Logo                                                                                                                                                                                      | Application | Description                                                                 |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------- |
+| [<img width="32" src="https://www.borgbackup.org/favicon.ico">](./docs/borgbackup/README.md)                                                                                              | borgbackup  | [Deduplication backup tool](./docs/borgbackup/README.md)                    |
+| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Firefox_logo%2C_2019.svg/32px-Firefox_logo%2C_2019.svg.png">](./users/badele/firefox.nix)                 | Firefox     | [Web browser](./users/badele/firefox.nix)                                   |
+| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/The_GIMP_icon_-_gnome.svg/32px-The_GIMP_icon_-_gnome.svg.png">](./users/badele/commons.nix)               | Gimp        | [Raster graphics editor](./users/badele/commons.nix)                        |
+| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/I3_window_manager_logo.svg/32px-I3_window_manager_logo.svg.png">](./users/badele/commons.nix)             | i3          | [Tiling window manager](./nix/home-manager/features/desktop/xorg/wm/i3.nix) |
+| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Inkscape_Logo.svg/32px-Inkscape_Logo.svg.png">](./users/badele/commons.nix)                               | Inkscape    | [Vector graphics editor](./users/badele/commons.nix)                        |
+| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/LibreOffice_icon_3.3.1_48_px.svg/32px-LibreOffice_icon_3.3.1_48_px.svg.png">](./users/badele/commons.nix) | LibreOffice | [Office suite](./users/badele/commons.nix)                                  |
+| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Meld_Logo.svg/128px-Meld_Logo.svg.png">](./users/badele/commons.nix)                                      | Meld        | [Visual diff tool](./users/badele/commons.nix)                              |
+| [<img width="32" src="https://raw.githubusercontent.com/denisidoro/navi/master/assets/icon.png">](./nix/home-manager/features/term/base.nix)                                              | Navi        | [Interactive cheatsheet tool](https://github.com/badele/vide)               |
+| [<img width="32" src="https://user-images.githubusercontent.com/28633984/66519056-2e840c80-eaef-11e9-8670-c767213c26ba.png">](https://github.com/badele/vide)                             | Neovim      | [**VIDE** - My customized Neovim config](/docs/nvim/README.md)              |
 
-## Documentation
+### Floating TUI Panels
 
-### Hosts
+Quick access to system controls via i3 floating terminals:
 
-List of hosts composing the home lab
+| Bluetooth Manager                                                                      | Disk Manager                                                                 |
+| -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [<img width="320" src="./docs/floating_bluetooth.png">](./docs/floating_bluetooth.gif) | [<img width="320" src="./docs/floating_disk.png">](./docs/floating_disk.gif) |
+| `bluetuith`                                                                            | `bashmount`                                                                  |
 
-This list generated with `just doc-update` command
+| Audio Mixer                                                                    | Network Manager                                                                    |
+| ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| [<img width="320" src="./docs/floating_mixer.png">](./docs/floating_mixer.gif) | [<img width="320" src="./docs/floating_network.png">](./docs/floating_network.gif) |
+| `pulsemixer`                                                                   | `nmtui`                                                                            |
+
+## 🌐 Infrastructure
+
+### 🚀 [Houston Server](./machines/houston/README.md)
+
+My main public VPS running on [Hetzner Cloud](https://www.hetzner.com/cloud/)
+(CX32: 4 vCPU, 8GB RAM, 80GB SSD).
+
+**What it does:**
+
+- **🔐 Authentication Hub**: Authelia + LLDAP for SSO across all services
+- **📊 Full Observability Stack**: Grafana, VictoriaMetrics, InfluxDB, Telegraf,
+  Vector
+- **📱 Self-Hosted Apps**: DokuWiki, Linkding, Miniflux, Shaarli, and more
+
+**[→ See complete service list and details](./machines/houston/README.md)**
+
+### 💻 [Gagarin Workstation](./machines/gagarin/README.md)
+
+My main desktop workstation for daily development and productivity.
+
+**Setup:**
+
+- **🪟 i3 Tiling WM**: Efficient workspace management with custom keybindings
+- **🛠️ Full Dev Environment**: VIDE (Neovim), VS Code, Git, Docker, and more
+- **🎨 Creative Tools**: GIMP, Inkscape, LibreOffice
+- **⚙️ System Management**: TUI panels for quick access to system controls
+
+**[→ See complete configuration and tools](./machines/gagarin/README.md)**
+
+### All Hosts
+
+Complete list of hosts in the homelab (auto-generated with `just doc-update`):
 
 [comment]: (>>HOSTS)
 
@@ -302,110 +357,32 @@ This list generated with `just doc-update` command
             <td><a href="./docs/hosts/cab1e.md">cab1e</a>&nbsp;(84.234.31.97)</td>
             <td>NixOS</td>
             <td>Wireguard VPN anonymizer server</td>
-        </tr></table>
+        </tr>
+        <tr>
+            <td><a href="./machines/houston/README.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
+            <td><a href="./machines/houston/README.md">houston</a>&nbsp;(91.99.130.127)</td>
+            <td>NixOS</td>
+            <td>Main public server</td>
+        </tr>
+        <tr>
+            <td><a href="./machines/gagarin//README.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
+            <td><a href="./machines/gagarin/README.md">gagarin</a>&nbsp;(192.168.254.147)</td>
+            <td>NixOS</td>
+            <td>My main desktop workstation</td>
+        </tr>
+</table>
 
 [comment]: (<<HOSTS)
 
-### Network
+### Network Topology
 
-|                                                          |
-| :------------------------------------------------------: |
-|  generated by `diagrams ./docs/network_architecture.py`  |
-| ![Network architecture](./docs/network_architecture.png) |
-|       generated by `plantuml ./docs/network.puml`        |
-|          ![Network diagram](./docs/network.png)          |
+![Network diagram](./docs/network.png)
 
-### Structure
+### Common Commands
 
-- **Configuration**
-  - `homelab.json`: main homelab file configuration (roles servers, network,
-    etc)
-  - `hosts`: hosts configuration (system, hardware, host secrets)
-    - `*.nix`: user accounts
-  - `users`: users configuration (on user environment, user secrets)
-- **System**
-  - `nix`: all ***.nix** files
-    - `home-manager`: All users ***.nix** files (installed on user environment)
-    - `modules`: all nix modules
-      - `home-manager`: user modules
-      - `nixos`: nixos modules (installed on system wide)
-        - `host.nix`: host options (custom options for host)
-    - `nixos`: all ***.nix** files installed on system wide
-    - `overlays`: overlays **nix derivations**
-    - `pkgs`: custom nix packages
+![Available commands](docs/commands.png)
 
-## Usage
-
-### Demo
-
-To test `nix-homelab` as well as the configuration of a workstation,
-`nix-homelab` offers a demo that runs on a virtual machine based on QEMU.
-
-![usb-installer](./docs/usb-installer.png)
-
-#### Installation
-
-- From your desktop
-  - `nix develop`
-  - `just iso-build`
-  - `just demo-qemu-nixos-install` (`demopass` password) Go for a walk or have a
-    coffee
-  - when the installation is completed, reboot the virtual machine (you can
-    write `reboot` on the terminal) and select
-    `Firmware Setup => Boot Manager => UEFI QEMU HardDisk`
-
-![reboot](docs/reboot.png)
-
-#### Update
-
-You can update from your remote desktop or directly from your recent installed
-desktop
-
-- From remote
-  - `just demo-qemu-nixos-update`
-
-- From your fresh installation
-  - `ssh root@localhost -p 2222` (`demopass` password)
-  - `ghq clone https://github.com/badele/nix-homelab.git`
-  - `cd ghq/github.com/badele/nix-homelab`
-  - `just nixos-update`
-
-#### Re-use the demo
-
-```bash
-just demo-start
-```
-
-### Secrets initialisation (AGE & SOPS)
-
-Your `pass` (passwordstore) configuration must be correctly configured.
-
-In order to encrypt your credentials, you first need to initialize an `age` key.
-This key will subsequently have to be added to the `.sops.yaml` file.
-
-- `age-keygen | pass insert -m nix-homelab/users/your_username`
-- `pass show nix-homelab/users/your_username | grep AGE-SECRET-KEY >> ~/.config/sops/age/keys.txt`
-
-### NixOS installation & update
-
-See [Commons installation](docs/installation.md)
-
-#### Update from you local computer/laptop
-
-- From your fresh installation
-  - `ghq clone https://github.com/badele/nix-homelab.git`
-  - `cd ghq/github.com/badele/nix-homelab`
-  - `just nixos-update`
-
-## Commands
-
-Home lab commands list
-
-This list generated with `just doc-update` command
-
-![commands list](docs/commands.png)
-
-# A big thanks ❤️
+## ❤️ Thanks
 
 A big thank to the contributors of OpenSource projects in particular :
 
@@ -419,3 +396,6 @@ A big thank to the contributors of OpenSource projects in particular :
 - [longerHV](https://github.com/LongerHV/nixos-configuration) nix configuration
   file
 - [wikipedia](https://www.wikipedia.org) for logos inventories
+
+```
+```

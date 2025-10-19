@@ -22,11 +22,13 @@
     ./modules/authelia.nix
 
     # houston apps
+    ./modules/dokuwiki.nix
     ./modules/goaccess.nix
     ./modules/grafana.nix
     ./modules/homepage-dashboard.nix
     ./modules/influxdb.nix
     ./modules/linkding.nix
+    ./modules/lldap.nix
     ./modules/miniflux.nix
     ./modules/pawtunes.nix
     ./modules/reaction.nix
@@ -35,7 +37,6 @@
     ./modules/vector
     ./modules/victoriametrics.nix
     ./modules/wastebin.nix
-    ./modules/wikijs.nix
   ];
 
   # This is your user login name.

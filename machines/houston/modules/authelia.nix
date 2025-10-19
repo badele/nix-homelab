@@ -4,8 +4,10 @@
   ...
 }:
 let
-  appDomain = "auth.${config.networking.fqdn}";
+  cfg = config.services.authelia.instances.main;
+  appDomain = "douane.${config.networking.fqdn}";
   certs = config.security.acme.certs."${appDomain}";
+  base_dn = "dc=homelab,dc=lan";
 
   secrets_permission = {
     owner = config.services.authelia.instances.main.user;
@@ -40,6 +42,7 @@ in
     files.jwks-private-key = secrets_permission;
     files.jwks-certificate = secrets_permission;
     files.hmac-secret = secrets_permission;
+    files.lldap-password = secrets_permission;
 
     dependencies = [
       "gmail-application-password"
@@ -54,8 +57,10 @@ in
       pwgen -s 64 1 > "$out"/jwt-secret
       pwgen -s 64 1 > "$out"/session-secret
       pwgen -s 64 1 > "$out"/hmac-secret
+      pwgen -s 64 1 > "$out"/lldap-password
+
       authelia crypto certificate rsa generate \
-        --common-name "auth.${config.networking.fqdn}" \
+        --common-name "douane.${config.networking.fqdn}" \
         --bits 2048 \
         --file.private-key jwks-private-key \
         --file.certificate jwks-certificate \
@@ -80,6 +85,7 @@ in
       sessionSecretFile = config.clan.core.vars.generators.authelia.files.session-secret.path;
       storageEncryptionKeyFile =
         config.clan.core.vars.generators.authelia.files.storage-encryption-key.path;
+
       oidcIssuerPrivateKeyFile = config.clan.core.vars.generators.authelia.files.jwks-private-key.path;
       oidcHmacSecretFile = config.clan.core.vars.generators.authelia.files.hmac-secret.path;
     };
@@ -87,6 +93,8 @@ in
     environmentVariables = {
       AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE =
         config.clan.core.vars.generators.authelia.files.gmail-application-password.path;
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE =
+        config.clan.core.vars.generators.authelia.files.lldap-password.path;
       # AUTHELIA_JWT_SECRET_FILE = config.clan.core.vars.generators.authelia.files.jwt-secret.path;
       # AUTHELIA_IDENTITY_PROVIDERS_OIDC_HMAC_SECRET_FILE =
       #   config.clan.core.vars.generators.authelia.files.hmac-secret.path;
@@ -125,20 +133,29 @@ in
 
       authentication_backend = {
         refresh_interval = "1m";
-        file = {
-          path = "/var/lib/authelia-main/users_database.yml";
-          password = {
-            algorithm = "argon2";
-            argon2 = {
-              variant = "argon2id";
-              iterations = 3;
-              memory = 65536;
-              parallelism = 4;
-              key_length = 32;
-              salt_length = 16;
-            };
-          };
+        ldap = {
+          implementation = "custom";
+          address = "ldap://127.0.0.1:3890";
+          base_dn = base_dn;
+          users_filter = "(&(|({username_attribute}={input})({mail_attribute}={input}))(objectClass=person))";
+          groups_filter = "(uniqueMember={dn})";
+
+          user = "uid=authelia,ou=people,${base_dn}";
         };
+        # file = {
+        #   path = "/var/lib/authelia-main/users_database.yml";
+        #   password = {
+        #     algorithm = "argon2";
+        #     argon2 = {
+        #       variant = "argon2id";
+        #       iterations = 3;
+        #       memory = 65536;
+        #       parallelism = 4;
+        #       key_length = 32;
+        #       salt_length = 16;
+        #     };
+        #   };
+        # };
       };
 
       session = {
@@ -187,35 +204,41 @@ in
         default_policy = "deny";
         rules = [
           {
-            domain = "auth.${config.networking.fqdn}";
+            domain = "douane.${config.networking.fqdn}";
             policy = "bypass";
           }
 
           # Allow all domain for admins
+          # {
+          #   domain = "*.${config.networking.fqdn}";
+          #   policy = "one_factor";
+          #   subject = "group:admin";
+          # }
+
           {
-            domain = "*.${config.networking.fqdn}";
+            domain = "journaliste.${config.networking.fqdn}";
             policy = "one_factor";
-            subject = "group:admin";
+            subject = [
+              "group:sso-miniflux"
+            ];
           }
 
           {
-            domain = "rss.${config.networking.fqdn}";
+            domain = "bonnes-adresses.${config.networking.fqdn}";
             policy = "one_factor";
             subject = [
-              "group:rss-admin"
-              "group:rss-read"
-              "group:rss-write"
+              "group:sso-linkding"
             ];
           }
+
           {
-            domain = "links.${config.networking.fqdn}";
+            domain = "encyclopedie.${config.networking.fqdn}";
             policy = "one_factor";
             subject = [
-              "group:links-admin"
-              "group:links-read"
-              "group:links-write"
+              "group:sso-dokuwiki"
             ];
           }
+
           {
             domain = "notes.${config.networking.fqdn}";
             policy = "one_factor";
@@ -280,43 +303,43 @@ in
     443
   ];
 
-  environment.systemPackages = [
-    (pkgs.writeShellScriptBin "authelia-create-user" ''
-      #!/bin/bash
-      set -euo pipefail
-
-      if [ $# -ne 3 ]; then
-          echo "Usage: $0 <username> <email> <displayname>"
-          exit 1
-      fi
-
-      USERNAME=$1
-      EMAIL=$2
-      DISPLAYNAME=$3
-
-      # Hash password with argon2 algorithm
-      AUTHELIA=${pkgs.authelia}/bin/authelia
-      HASHED_PASSWORD=$($AUTHELIA crypto hash generate argon2 --random | grep Digest | awk '{ print $2 }')
-
-      USERFILE="/var/lib/authelia-main/users_database.yml"
-      if grep -Pzo "users:\n  authelia:" $USERFILE > /dev/null; then
-          cp $USERFILE $USERFILE.deleted
-          echo "users:" > $USERFILE
-      fi
-
-      # Add user
-      cat >> $USERFILE << EOF
-        $USERNAME:
-          displayname: "$DISPLAYNAME"
-          password: "$HASHED_PASSWORD"
-          email: "$EMAIL"
-          groups:
-            - no_defined_group
-      EOF
-
-      echo "L'utilisateur devra utiliser la fonction 'Mot de passe oublié' pour le changer"
-
-      # sudo systemctl restart authelia-main
-    '')
-  ];
+  # environment.systemPackages = [
+  #   (pkgs.writeShellScriptBin "authelia-create-user" ''
+  #     #!/bin/bash
+  #     set -euo pipefail
+  #
+  #     if [ $# -ne 3 ]; then
+  #         echo "Usage: $0 <username> <email> <displayname>"
+  #         exit 1
+  #     fi
+  #
+  #     USERNAME=$1
+  #     EMAIL=$2
+  #     DISPLAYNAME=$3
+  #
+  #     # Hash password with argon2 algorithm
+  #     AUTHELIA=${pkgs.authelia}/bin/authelia
+  #     HASHED_PASSWORD=$($AUTHELIA crypto hash generate argon2 --random | grep Digest | awk '{ print $2 }')
+  #
+  #     USERFILE="/var/lib/authelia-main/users_database.yml"
+  #     if grep -Pzo "users:\n  authelia:" $USERFILE > /dev/null; then
+  #         cp $USERFILE $USERFILE.deleted
+  #         echo "users:" > $USERFILE
+  #     fi
+  #
+  #     # Add user
+  #     cat >> $USERFILE << EOF
+  #       $USERNAME:
+  #         displayname: "$DISPLAYNAME"
+  #         password: "$HASHED_PASSWORD"
+  #         email: "$EMAIL"
+  #         groups:
+  #           - no_defined_group
+  #     EOF
+  #
+  #     echo "L'utilisateur devra utiliser la fonction 'Mot de passe oublié' pour le changer"
+  #
+  #     # sudo systemctl restart authelia-main
+  #   '')
+  # ];
 }
