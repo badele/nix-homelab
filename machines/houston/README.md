@@ -30,23 +30,23 @@ Houston provides three main categories of services:
 ### Monitoring & Observability
 
 - 📑 **[Grafana](../../docs/grafana.md)**: Visualization and analytics platform
-- 📑 **[VictoriaMetrics](../../docs/victoriametrics.md)**: Time series database
   for metrics
+- 📑 **[Reaction](../../docs/reaction.md)**: Alert reaction system
 - ⚙️ **[Telegraf](./modules/telegraf)**: Metrics collection agent
-- ⚙️ **[Vector](./modules/vector/default.nix)**: Observability data pipeline
-- ⚙️ **[Reaction](./modules/reaction.nix)**: Alert reaction system
+- 📑 **[Vector](../../docs/vector.md)**: Observability data pipeline
+- 📑 **[VictoriaMetrics](../../docs/victoriametrics.md)**: Time series database
 
 ### Applications
 
 - 📑 **[DokuWiki](../../docs/dokuwiki.md)**: Wiki software for documentation
-- 📑 **[Linkding](../../docs/linkding.md)**: Bookmark manager
-- ⚙️ **[Miniflux](./modules/miniflux.nix)**: Minimalist RSS feed reader
-- ⚙️ **[Shaarli](./modules/shaarli.nix)**: Personal link sharing platform
 - ⚙️ **[GoAccess](./modules/goaccess.nix)**: Real-time web log analyzer
 - ⚙️ **[Homepage Dashboard](./modules/homepage-dashboard.nix)**: Application
+- 📑 **[Linkding](../../docs/linkding.md)**: Bookmark manager
+- ⚙️ **[Miniflux](./modules/miniflux.nix)**: Minimalist RSS feed reader
+- ⚙️ **[Pawtunes](./modules/pawtunes.nix)**: Music streaming service
+- ⚙️ **[Shaarli](./modules/shaarli.nix)**: Personal link sharing platform
   dashboard
 - ⚙️ **[Wastebin](./modules/wastebin.nix)**: Minimalist pastebin
-- ⚙️ **[Pawtunes](./modules/pawtunes.nix)**: Music streaming service
 
 ## Service Details
 

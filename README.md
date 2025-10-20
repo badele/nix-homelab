@@ -51,9 +51,10 @@ flexibility.
 
 ## Project Structure
 
-> [!NOTE] 🚧 Work in Progress - The project is being migrated to Clan
-> architecture. During this transition, you'll find both old and new directory
-> structures coexisting.
+> [!NOTE]
+> 🚧 Work in Progress - The project is being migrated to Clan architecture.
+> During this transition, you'll find both old and new directory structures
+> coexisting.
 
 The homelab uses a modular flake-parts architecture with Clan: **Key
 directories:**
@@ -288,41 +289,6 @@ Complete list of hosts in the homelab (auto-generated with `just doc-update`):
             <td>NixOS</td>
             <td>HP Microserver N40L server</td>
         </tr><tr>
-            <td><a href="./docs/hosts/badphone.md"><img width="32" src="https://cdn-icons-png.flaticon.com/512/38/38002.png"></a></td>
-            <td><a href="./docs/hosts/badphone.md">badphone</a>&nbsp;(192.168.254.194)</td>
-            <td>Android</td>
-            <td>Bruno's phone</td>
-        </tr><tr>
-            <td><a href="./docs/hosts/ladphone.md"><img width="32" src="https://cdn-icons-png.flaticon.com/512/38/38002.png"></a></td>
-            <td><a href="./docs/hosts/ladphone.md">ladphone</a>&nbsp;(192.168.254.184)</td>
-            <td>Android</td>
-            <td>Lucas's phone</td>
-        </tr><tr>
-            <td><a href="./docs/hosts/sadphone.md"><img width="32" src="https://cdn-icons-png.flaticon.com/512/38/38002.png"></a></td>
-            <td><a href="./docs/hosts/sadphone.md">sadphone</a>&nbsp;(192.168.254.188)</td>
-            <td>Android</td>
-            <td>Steph's phone</td>
-        </tr><tr>
-            <td><a href="./docs/hosts/loadphone.md"><img width="32" src="https://img.freepik.com/icones-gratuites/pomme_318-162866.jpg"></a></td>
-            <td><a href="./docs/hosts/loadphone.md">loadphone</a>&nbsp;(192.168.254.199)</td>
-            <td>Iphone</td>
-            <td>Lou's phone</td>
-        </tr><tr>
-            <td><a href="./docs/hosts/tv-chromecast.md"><img width="32" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrW-wZZhmKpadJqRe73njFwEDLzh-jIn1XaSbCVhgMmoN46pgj6M4Fq1tWyr5w_z_HcP4&usqp=CAU"></a></td>
-            <td><a href="./docs/hosts/tv-chromecast.md">tv-chromecast</a>&nbsp;(192.168.254.105)</td>
-            <td>Chromecast</td>
-            <td>TV Chromecast</td>
-        </tr><tr>
-            <td><a href="./docs/hosts/bedroom-googlemini-A.md"><img width="32" src="https://c.clc2l.com/t/g/o/google-home-wxDa7w.png"></a></td>
-            <td><a href="./docs/hosts/bedroom-googlemini-A.md">bedroom-googlemini-A</a>&nbsp;(192.168.254.197)</td>
-            <td>GoogleMini</td>
-            <td>Google Mini room A</td>
-        </tr><tr>
-            <td><a href="./docs/hosts/bedroom-googlemini-C.md"><img width="32" src="https://c.clc2l.com/t/g/o/google-home-wxDa7w.png"></a></td>
-            <td><a href="./docs/hosts/bedroom-googlemini-C.md">bedroom-googlemini-C</a>&nbsp;(192.168.254.196)</td>
-            <td>GoogleMini</td>
-            <td>Google Mini room C</td>
-        </tr><tr>
             <td><a href="./docs/hosts/b4d14.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
             <td><a href="./docs/hosts/b4d14.md">b4d14</a>&nbsp;(192.168.254.124)</td>
             <td>NixOS</td>
@@ -332,21 +298,6 @@ Complete list of hosts in the homelab (auto-generated with `just doc-update`):
             <td><a href="./docs/hosts/badxps.md">badxps</a>&nbsp;(192.168.254.114)</td>
             <td>NixOS</td>
             <td>Dell XPS 9570 Latop</td>
-        </tr><tr>
-            <td><a href="./docs/hosts/badxps-eth.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
-            <td><a href="./docs/hosts/badxps-eth.md">badxps-eth</a>&nbsp;(192.168.254.179)</td>
-            <td>NixOS</td>
-            <td>Dell XPS 9570 Latop</td>
-        </tr><tr>
-            <td><a href="./docs/hosts/bridge-hue.md"><img width="32" src="https://www.daskeyboard.com/images/applets/philips-hue/icon.png"></a></td>
-            <td><a href="./docs/hosts/bridge-hue.md">bridge-hue</a>&nbsp;(192.168.254.191)</td>
-            <td>Bridge</td>
-            <td>Philips Hue bridge</td>
-        </tr><tr>
-            <td><a href="./docs/hosts/srvhoma.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
-            <td><a href="./docs/hosts/srvhoma.md">srvhoma</a>&nbsp;(192.168.254.116)</td>
-            <td>NixOS</td>
-            <td>First NUC homelab server</td>
         </tr><tr>
             <td><a href="./docs/hosts/vm-test.md"><img width="32" src="https://cdn.icon-icons.com/icons2/2699/PNG/512/qemu_logo_icon_169821.png"></a></td>
             <td><a href="./docs/hosts/vm-test.md">vm-test</a>&nbsp;(127.0.0.1)</td>

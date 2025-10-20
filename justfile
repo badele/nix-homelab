@@ -85,6 +85,11 @@ precommit-install:
 @debug-repl:
     nix repl --extra-experimental-features repl-flake .#
 
+# Repl the project
+[group('debug')]
+@serve-markdown:
+   godown 
+
 ###############################################################################
 # Flake
 ###############################################################################
