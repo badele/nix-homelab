@@ -5,9 +5,37 @@ set export
 SSHPASS := "nixosusb"
 
 # This help
-[group('general')]
 @help:
     just -l -u
+
+###############################################################################
+# Installer
+###############################################################################
+# Create an 
+[group('clan')]
+@create-bootable-usb-installer USBDISK KEYMAP="us" LANGUAGE="en_US.UTF8": 
+    ssh-add -L > /tmp/clan-yubikey.pub
+    clan flash write --flake git+https://git.clan.lol/clan/clan-core \
+    --ssh-pubkey /tmp/clan-yubikey.pub \
+    --keymap fr \
+    --language fr_FR.UTF-8 \
+    --disk main ${USBDISK} \
+    flash-installer
+
+# Add new machine
+[group('clan')]
+@machine-add MACHINE:
+    clan machines create {{MACHINE}} 
+
+# Get disk ID
+[group('clan')]
+@machine-get-disk-id HOST PORT="22":
+    ssh root@{{HOST}} -p {{PORT}} -o StrictHostKeychecking=no lsblk --output NAME,ID-LINK,FSTYPE,SIZE,MOUNTPOINT
+
+# Get clan vars
+[group('admin')]
+@clan-vars-get HOST VARNAME:
+    clan vars get {{HOST}} {{VARNAME}}
 
 ###############################################################################
 # Pre-commit
@@ -56,6 +84,11 @@ precommit-install:
 [group('debug')]
 @debug-repl:
     nix repl --extra-experimental-features repl-flake .#
+
+# Repl the project
+[group('debug')]
+@serve-markdown:
+   godown 
 
 ###############################################################################
 # Flake
@@ -327,12 +360,37 @@ demo-nixos-install hostname targetip port="22":
 @secret-update FILE:
     sops updatekeys {{ FILE }}
 
+[group('secrets')]
+@init-git-crypt-secrefiles HOST:
+    mkdir -p configuration/hosts/{{HOST}}/secretfiles/
+    echo "* filter=git-crypt diff=git-crypt" > configuration/hosts/{{HOST}}/secretfiles/.gitattributes
+    echo ".gitattributes !filter !diff" >> configuration/hosts/{{HOST}}/secretfiles/.gitattributes
+
 # List encrypted file with git-crypt
 [group('secrets')]
 @file-encryption-list:
     git-crypt status | grep -v "not encrypted"
 
+[group('certificate')]
+@init-ca DOMAIN HOST:
+    #!/usr/bin/env bash
+    just init-git-crypt-secrefiles {{HOST}}
+    export STEPPATH="configuration/hosts/{{HOST}}/secretfiles"
+
+    step ca init \
+    --name "Homelab CA" \
+    --dns "localhost" \
+    --address ":443" \
+    --provisioner "admin@{{DOMAIN}}" \
+    --deployment-type standalone
+
 # Show installed packages
 [group('flake')]
 @packages:
     echo $PATH | tr ":" "\n" | grep -E "/nix/store" | sed -e "s/\/nix\/store\/[a-z0-9]\+\-//g" | sed -e "s/\/.*//g"
+
+# Show installed packages
+[group('misc')]
+@generate_nixos_gif:
+    cd docs/imgs && magick -delay 300 -loop 0  neofetch_top.png grafana_attacks_dashboard.png homeassistant.png nixos.gif
+

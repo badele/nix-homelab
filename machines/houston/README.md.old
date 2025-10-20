@@ -1,0 +1,44 @@
+# houston
+
+### Instance type
+
+- Provider: On premise
+- Instance type:
+  [NiPoGi E3B](https://www.minimachines.net/actu/nipogi-e3b-un-minipc-ryzen-5-7430u-16-512-go-a-299e-133317)
+- CPU: 6 cores (12 threads)
+- RAM: 16 GB
+- Storage: 512 GB SSD
+
+### Services
+
+- kandim (identity management platform)
+
+## Initial deployment
+
+Add new machine
+
+```bash
+just machine-add houston
+```
+
+Get Device ID and edit `machines/houston/configuration.nix` and change host IP and
+installation disk destination `disko.devices.disk.main.device` (ex:
+`/dev/disk/by-id/xxx` or `/dev/sda`)
+
+```bash
+just machine-get-disk-id 192.168.254.137
+```
+
+Boot on the clan USB key
+
+```bash
+clan machines install houston --target-host 192.168.254.137 --update-hardware-config nixos-facter
+```
+
+## Update deployment
+
+Update host installation
+
+```bash
+clan machines update houston
+```

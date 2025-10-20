@@ -13,434 +13,79 @@
     # You can access packages and modules from different nixpkgs revs
     # at the same time. Here's an working example:
 
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    flake-parts.url = "github:hercules-ci/flake-parts";
+
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
 
     # Home manager
-    home-manager = {
-      url = "github:nix-community/home-manager/master";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    home-manager.url = "github:nix-community/home-manager/master";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    hardware.url = "github:NixOS/nixos-hardware/master";
     # hardware.url = "git+file:///home/badele/ghq/github.com/badele/fork-nixos-hardware";
     # hardware.url = "github:badele/fork-nixos-hardware/xps-15-9530";
-    hardware.url = "github:NixOS/nixos-hardware/master";
 
-    impermanence = { url = "github:nix-community/impermanence"; };
+    impermanence.url = "github:nix-community/impermanence";
 
-    nur = {
-      url = "github:nix-community/NUR";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nur.url = "github:nix-community/NUR";
+    nur.inputs.nixpkgs.follows = "nixpkgs";
 
-    sops-nix = {
-      url = "github:mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    sops-nix.url = "github:mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Color scheme
     stylix.url = "github:danth/stylix";
 
-    crowdsec = {
-      url = "git+https://codeberg.org/kampka/nix-flake-crowdsec.git";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nixunits.url = "github:dcasier/nixunits";
+    nixunits.inputs.nixpkgs.follows = "nixpkgs";
+    # url = "github:badele/fork-nixunits/fix-systemd";
+    # url = "path:/home/badele/ghq/github.com/badele/fork-nixunits";
 
-    nixunits = {
-      url = "github:dcasier/nixunits";
-      # url = "github:badele/fork-nixunits/fix-systemd";
-      # url = "path:/home/badele/ghq/github.com/badele/fork-nixunits";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    clan-core.url = "https://git.clan.lol/clan/clan-core/archive/main.zip";
+    clan-core.inputs.nixpkgs.follows = "nixpkgs";
+
+    srvos.url = "github:nix-community/srvos";
+    srvos.inputs.nixpkgs.follows = "nixpkgs";
+
+    terranix.url = "github:terranix/terranix";
+    terranix.inputs.flake-parts.follows = "flake-parts";
+    terranix.inputs.nixpkgs.follows = "nixpkgs";
+
+    godown.url = "github:badele/godown";
   };
 
   outputs =
-    { self
-    , nixpkgs
-    , home-manager
-    , sops-nix
-    , hardware
-      # , nix-pre-commit
-    , stylix
-    , nur
-    , nixunits
-    , ...
-    }@inputs:
-    let
-      inherit (self) outputs;
-      forAllSystems = nixpkgs.lib.genAttrs [
+    inputs@{ self, flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [
         "aarch64-linux"
-        # "i686-linux"
         "x86_64-linux"
-        # "aarch64-darwin"
-        # "x86_64-darwin"
       ];
 
-      pkgs = import nixpkgs { overlays = [ nur.overlay ]; };
-    in
-    rec {
-      # Your custom packages
-      # Acessible through 'nix build', 'nix shell', etc
-      packages = forAllSystems (system:
-        let pkgs = import nixpkgs { inherit system; };
-        in import ./nix/pkgs { inherit pkgs; });
-      # Devshell for bootstrapping
-      # Acessible through 'nix develop' or 'nix-shell' (legacy)
-      devShells = forAllSystems (system:
-        let pkgs = nixpkgs.legacyPackages.${system};
-        in import ./shell.nix { inherit pkgs system; });
+      # # Hacky way to detect we're in a REPL
+      # debug = builtins ? currentSystem;
 
-      # Your custom packages and modifications, exported as overlays
-      overlays = import ./nix/overlays { inherit inputs; };
-      # Reusable nixos modules you might want to export
-      # These are usually stuff you would upstream into nixpkgs
-      nixosModules = import ./nix/modules/nixos;
-      # Reusable home-manager modules you might want to export
-      # These are usually stuff you would upstream into home-manager
-      # homeManagerModules = import ./nix/modules/home-manager;
+      imports = [
+        inputs.clan-core.flakeModules.default
 
-      # NixOS configuration entrypoint
-      # Available through 'nixos-rebuild --flake .#your-hostname'
-      # or 'nixos-rebuild --flake .' for current hostname
-      nixosConfigurations = {
-        # Build a iso image (NixOS installer)
-        iso = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs outputs; };
-          modules = [
-            # "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-gnome.nix"
-            "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
-            "${nixpkgs}/nixos/modules/installer/cd-dvd/channel.nix"
-            inputs.sops-nix.nixosModules.sops
-            ./configuration/hosts/iso
-          ];
-        };
+        ./shells/flake-module.nix
+        ./machines/flake-module.nix
+        ./modules/flake-module.nix
+        ./packages/flake-module.nix
 
-        demovm = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs outputs; };
-          modules = [
-            inputs.sops-nix.nixosModules.sops
-            ./configuration/hosts/demovm
+        ./flake-parts/nixos-configurations.nix
+        ./flake-parts/home-configurations.nix
+      ];
 
-            home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                backupFileExtension = "hm-backup";
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                verbose = true;
-                users = {
-                  root = import ./configuration/users/root/demovm.nix;
-                  demo = {
-                    imports = [
-                      stylix.homeManagerModules.stylix
-                      ./configuration/users/demo/demovm.nix
-                    ];
-                  };
-                };
-              };
-            }
-          ];
-        };
-
-        b4d14 = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs outputs; };
-          modules = [
-            inputs.sops-nix.nixosModules.sops
-
-            ./nix/modules/nixos/default.nix
-            ./configuration/hosts/b4d14
-
-            home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                backupFileExtension = "hm-backup";
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                verbose = true;
-                extraSpecialArgs = { inputs = self.inputs; };
-                users = {
-                  root = import ./configuration/users/root/b4d14.nix;
-                  badele = {
-                    imports = [
-                      stylix.homeManagerModules.stylix
-                      ./configuration/users/badele/b4d14.nix
-                    ];
-                  };
-                };
-              };
-
-              nixpkgs.overlays = [ nur.overlay ];
-              _module.args.nur = { inherit nur; };
-            }
-          ];
-        };
-
-        badxps = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs outputs; };
-
-          modules = [
-            inputs.sops-nix.nixosModules.sops
-            inputs.nixunits.nixosModules.default
-
-            ./nix/modules/nixos/default.nix
-            ./configuration/hosts/badxps
-
-            home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                backupFileExtension = "hm-backup";
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                verbose = true;
-                extraSpecialArgs = { inputs = self.inputs; };
-                users = {
-                  root = import ./configuration/users/root/badxps.nix;
-                  badele = {
-                    imports = [
-                      stylix.homeManagerModules.stylix
-                      ./configuration/users/badele/badxps.nix
-                    ];
-                  };
-                };
-              };
-
-              nixpkgs.overlays = [ nur.overlay ];
-              _module.args.nur = { inherit nur; };
-            }
-          ];
-        };
-
-        sadhome = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs outputs; };
-          modules =
-            [ inputs.sops-nix.nixosModules.sops ./configuration/hosts/sadhome ];
-        };
-
-        bootstore = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs outputs; };
-          modules = [
-            inputs.sops-nix.nixosModules.sops
-            ./configuration/hosts/bootstore
-          ];
-        };
-
-        rpi40 = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs outputs; };
-          modules =
-            [ inputs.sops-nix.nixosModules.sops ./configuration/hosts/rpi40 ];
-        };
-
-        hype16 = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs outputs; };
-          modules = [
-            inputs.sops-nix.nixosModules.sops
-            inputs.crowdsec.nixosModules.crowdsec
-            inputs.crowdsec.nixosModules.crowdsec-firewall-bouncer
-            inputs.nixunits.nixosModules.default
-            ./configuration/hosts/hype16
-
-            home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                verbose = true;
-                extraSpecialArgs = { inputs = self.inputs; };
-                users = {
-                  root = import ./configuration/users/root/hype16.nix;
-                  badele = {
-                    imports = [
-                      nur.modules.homeManager
-                      stylix.homeManagerModules.stylix
-                      ./configuration/users/badele/hype16.nix
-                    ];
-                  };
-                };
-              };
-            }
-          ];
-        };
-
-        #######################################################################
-        # Hypervised applications
-        #######################################################################
-
-        gw-dmz = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
-            "${nixpkgs}/nixos/modules/virtualisation/lxc-container.nix"
-            inputs.sops-nix.nixosModules.sops
-            ./configuration/hosts/hypervised/gw-dmz
-          ];
-        };
-
-        trilium = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
-            "${nixpkgs}/nixos/modules/virtualisation/lxc-container.nix"
-            inputs.sops-nix.nixosModules.sops
-            ./configuration/hosts/hypervised/trilium
-          ];
-        };
-
-        ########################################################################
-        # cab1e (Wireguard VPN server)
-        ########################################################################
-        cab1e = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs outputs; };
-          modules = [
-            inputs.sops-nix.nixosModules.sops
-            inputs.nixunits.nixosModules.default
-
-            ./configuration/hosts/cab1e
-
-            home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                backupFileExtension = "hm-backup";
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                verbose = true;
-                extraSpecialArgs = { inputs = self.inputs; };
-                users = {
-                  root = import ./configuration/users/root/cab1e.nix;
-                  badele = {
-                    imports = [
-                      stylix.homeManagerModules.stylix
-                      ./configuration/users/badele/cab1e.nix
-                    ];
-                  };
-                };
-              };
-            }
-          ];
-        };
+      flake = {
+        # Your custom packages and modifications, exported as overlays
+        overlays = import ./nix/overlays { inherit inputs; };
+        # Reusable nixos modules you might want to export
+        # These are usually stuff you would upstream into nixpkgs
+        nixosModules = import ./nix/modules/nixos;
+        # Reusable home-manager modules you might want to export
+        # These are usually stuff you would upstream into home-manager
+        # homeManagerModules = import ./nix/modules/home-manager;
       };
-
-      # Standalone home-manager configuration entrypoint
-      # Available through 'home-manager --flake .#your-username@your-hostname'
-      # or 'home-manager --flake .' for current user in current hostname
-      homeConfigurations = {
-        ########################################################################
-        # b4d14
-        ########################################################################
-        "root@b4d14" = home-manager.lib.homeManagerConfiguration {
-          pkgs =
-            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = { inherit inputs outputs; };
-          modules = [
-            # > Our main home-manager configuration file <
-            ./configuration/users/root/b4d14.nix
-          ];
-        };
-
-        "badele@b4d14" = home-manager.lib.homeManagerConfiguration {
-          pkgs =
-            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = { inherit inputs outputs; };
-          modules = [
-            # > Our main home-manager configuration file <
-            nur.modules.homeManager
-            ./configuration/users/badele/b4d14.nix
-          ];
-        };
-
-        ########################################################################
-        # sadhome
-        ########################################################################
-        "root@sadhome" = home-manager.lib.homeManagerConfiguration {
-          pkgs =
-            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = { inherit inputs outputs; };
-          modules = [
-            # > Our main home-manager configuration file <
-            ./nix/home-manager/users/root/sadhome.nix
-          ];
-        };
-
-        "badele@sadhome" = home-manager.lib.homeManagerConfiguration {
-          pkgs =
-            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = { inherit inputs outputs; };
-          modules = [
-            # > Our main home-manager configuration file <
-            ./configuration/users/badele/sadhome.nix
-          ];
-        };
-
-        "sadele@sadhome" = home-manager.lib.homeManagerConfiguration {
-          pkgs =
-            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = { inherit inputs outputs; };
-          modules = [
-            # > Our main home-manager configuration file <
-            ./configuration/users/sadele/sadhome.nix
-          ];
-        };
-
-        ########################################################################
-        # rpi40
-        ########################################################################
-        "badele@rpi40" = home-manager.lib.homeManagerConfiguration {
-          pkgs =
-            nixpkgs.legacyPackages.aarch64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = { inherit inputs outputs; };
-          modules = [
-            # > Our main home-manager configuration file <
-            ./configuration/users/badele/rpi40.nix
-          ];
-        };
-
-        ########################################################################
-        # srvhoma
-        ########################################################################
-        "root@srvhoma" = home-manager.lib.homeManagerConfiguration {
-          pkgs =
-            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = { inherit inputs outputs; };
-          modules = [
-            # > Our main home-manager configuration file <
-            ./configuration/users/root/srvhoma.nix
-          ];
-        };
-
-        "badele@srvhoma" = home-manager.lib.homeManagerConfiguration {
-          pkgs =
-            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = { inherit inputs outputs; };
-          modules = [
-            # > Our main home-manager configuration file <
-            nur.modules.homeManager
-            ./configuration/users/badele/srvhoma.nix
-          ];
-        };
-
-        ########################################################################
-        # demo
-        ########################################################################
-        "root@demovm" = home-manager.lib.homeManagerConfiguration {
-          pkgs =
-            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = { inherit inputs outputs; };
-          modules = [
-            # > Our main home-manager configuration file <
-            ./configuration/users/root/demo.nix
-          ];
-        };
-
-        "badele@demovm" = home-manager.lib.homeManagerConfiguration {
-          pkgs =
-            nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = { inherit inputs outputs; };
-          modules = [
-            # > Our main home-manager configuration file <
-            nur.modules.homeManager
-            ./configuration/users/badele/demo.nix
-          ];
-        };
-      };
-
     };
 }

@@ -4,6 +4,16 @@
   },
   "domain": "adele.lan",
   "networks": {
+    "dmz": {
+      "vlanId": 32,
+      "net": "192.168.32.0",
+      "mask": 24
+    },
+    "lan": {
+      "vlanId": 254,
+      "net": "192.168.254.0",
+      "mask": 24
+    },
     "box": {
       "net": "192.168.0.0",
       "mask": 24
