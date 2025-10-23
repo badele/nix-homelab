@@ -4,7 +4,9 @@
 > `just` supports autocompletion, you can use `TAB` for listing just `kanidm`
 > commands
 
-## Creating a new user
+## User
+
+### Creating a new user
 
 1. Enter the `nix-homelab` project environment
 
@@ -28,8 +30,22 @@ just kanidm-login
    ```
    ```
 
-## Reset user password
+### Reset user password
 
 ```bash
 just kanidm-reset-user-password "<USERNAME>"
+```
+
+## OAuth2
+
+### List OAuth2
+
+```bash
+just kanidm-login
+```
+
+### Show basic secret
+
+```bash
+kanidm system oauth2 show-basic-secret "<OAUTHNAME>"
 ```

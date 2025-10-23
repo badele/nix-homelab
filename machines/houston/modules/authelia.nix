@@ -240,6 +240,17 @@ in
           }
 
           {
+            domain = "lampiotes.${config.networking.fqdn}";
+            policy = "one_factor";
+            subject = [
+              "group:grafana-superadmins"
+              "group:grafana-admins"
+              "group:grafana-editors"
+              "group:grafana-viewers"
+            ];
+          }
+
+          {
             domain = "notes.${config.networking.fqdn}";
             policy = "one_factor";
             subject = [
