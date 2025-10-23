@@ -26,6 +26,11 @@ just debug-repl
 :p NixosConfigurations.xxx.xxx
 ```
 
+Vous pouvez égallement évaluer avec la commande suivante
+
+```bash
+nix eval .#nixosConfigurations.xxx.xxx
+
 ## Content and file managment
 
 ### Convert nix attribute to file

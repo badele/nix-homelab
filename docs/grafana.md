@@ -158,7 +158,8 @@ If you need to reset the admin password manually:
 ```bash
 # On houston server
 runuser grafana -s /run/current-system/sw/bin/bash
-grafana cli -homepath /var/lib/grafana --config=/nix/store/x5hyfmwda1sssl4s6g9xc2z0wp0zzj1r-config.ini admin reset-admin-password "<NEW_PASSWORD>"
+GRAFANACONFIG=$(cat $(systemctl cat grafana | grep ExecStart= | cut -d"=" -f2) | grep -o -E "\-config /nix/.*.ini" | cut -d" " -f2)
+ grafana cli -homepath /var/lib/grafana --config=$GRAFANACONFIG admin reset-admin-password "<NEW_PASSWORD>"
 ```
 
 Or regenerate credentials using Clan:

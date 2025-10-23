@@ -20,6 +20,8 @@ central hub for authentication, monitoring, and various web applications.
 
 Houston provides three main categories of services:
 
+[view the services provided by Houston](https://salon.ma-cabane.eu/)
+
 ### Authentication Infrastructure
 
 - 📑 **[Authelia](../../docs/authelia.md)**: Single Sign-On (SSO) authentication
