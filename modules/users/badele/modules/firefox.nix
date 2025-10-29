@@ -27,18 +27,21 @@ in
         "browser.shell.defaultBrowserCheckCount" = 1;
         "browser.disableResetPrompt" = true;
         "browser.uiCustomization.state" = ''
-          {
+                    {
             "placements": {
               "widget-overflow-fixed-list": [],
               "unified-extensions-area": [
                 "_testpilot-containers-browser-action",
                 "tranquility_ushnisha_com-browser-action",
-                "craig_wandrer_earth-browser-action"
+                "craig_wandrer_earth-browser-action",
+                "display-anchors_robwu_nl-browser-action",
+                "wappalyzer_crunchlabz_com-browser-action"
               ],
               "nav-bar": [
                 "back-button",
                 "forward-button",
                 "stop-reload-button",
+                "vertical-spacer",
                 "home-button",
                 "urlbar-container",
                 "simple-tab-groups_drive4ik-browser-action",
@@ -46,6 +49,7 @@ in
                 "_61a05c39-ad45-4086-946f-32adb0a40a9d_-browser-action",
                 "_d634138d-c276-4fc8-924b-40a0ea21d284_-browser-action",
                 "_c0e1baea-b4cb-4b62-97f0-278392ff8c37_-browser-action",
+                "_ublacklist-browser-action",
                 "addon_darkreader_org-browser-action",
                 "languagetool-webextension_languagetool_org-browser-action",
                 "_0b457caa-602d-484a-8fe7-c1d894a011ba_-browser-action",
@@ -70,6 +74,7 @@ in
                 "new-tab-button",
                 "alltabs-button"
               ],
+              "vertical-tabs": [],
               "PersonalToolbar": [
                 "import-button",
                 "personal-bookmarks"
@@ -94,7 +99,11 @@ in
               "addon_darkreader_org-browser-action",
               "languagetool-webextension_languagetool_org-browser-action",
               "craig_wandrer_earth-browser-action",
-              "_d634138d-c276-4fc8-924b-40a0ea21d284_-browser-action"
+              "_d634138d-c276-4fc8-924b-40a0ea21d284_-browser-action",
+              "display-anchors_robwu_nl-browser-action",
+              "wappalyzer_crunchlabz_com-browser-action",
+              "screenshot-button",
+              "_ublacklist-browser-action"
             ],
             "dirtyAreaCache": [
               "nav-bar",
@@ -102,10 +111,11 @@ in
               "toolbar-menubar",
               "TabsToolbar",
               "widget-overflow-fixed-list",
-              "unified-extensions-area"
+              "unified-extensions-area",
+              "vertical-tabs"
             ],
-            "currentVersion": 20,
-            "newElementCount": 17
+            "currentVersion": 22,
+            "newElementCount": 18
           }
         '';
       };
@@ -116,30 +126,20 @@ in
         behind-the-overlay-revival # Block overlay mask
         browserpass # GPG passwordstore
         darkreader # Dark mode
-        # floccus # Sync bookmark
         onepassword-password-manager # Password manager
-        simple-tab-groups # Tab group
         simple-translate # Translate
-        # tomato-clock # Pomodoro timer
         ublock-origin # addblocker
 
         # Install manually addons
         # On addon website, get download link of the addon (install/uninstall button)
         # Fromt firefox (about:support) copy the addonId
 
-        # LanguageTool, grammar and spell checker
-        (buildFirefoxXpiAddon rec {
-          pname = "fireshot";
-          version = "8.3.0";
-          addonId = "languagetool-webextension@languagetool.org";
-          url = "https://addons.mozilla.org/firefox/downloads/file/4199245/languagetool-${version}.xpi";
-          sha256 = "sha256-41dCTj353eS6EOufjzcZrEgwaBVwVX9NUdsVpGLNdmc=";
-          meta = { };
-        })
+        # - https://addons.mozilla.org/firefox/downloads/file/4528991/francais_language_pack-140.0.20250707.120347.xpi
+        # - https://addons.mozilla.org/firefox/downloads/file/3581786/dictionnaire_francais1-7.0b.xpi
 
         # LanguageTool, grammar and spell checker
         (buildFirefoxXpiAddon rec {
-          pname = "fireshot";
+          pname = "languagetool";
           version = "8.3.0";
           addonId = "languagetool-webextension@languagetool.org";
           url = "https://addons.mozilla.org/firefox/downloads/file/4199245/languagetool-${version}.xpi";
@@ -157,15 +157,15 @@ in
           meta = { };
         })
 
-        # imtranslatoe
-        # (buildFirefoxXpiAddon rec {
-        #   pname = "imtranslator";
-        #   version = "16.30";
-        #   addonId = "{9AA46F4F-4DC7-4c06-97AF-5035170634FE}";
-        #   url = "https://addons.mozilla.org/firefox/downloads/file/4028792/imtranslator-${version}.xpi";
-        #   sha256 = "sha256-9ZC3FmYXUWgZ+4VADX66cApOyJKmkgHWAi0zzovcn8U=";
-        #   meta = { };
-        # })
+        # Fireshot, screenshot
+        (buildFirefoxXpiAddon rec {
+          pname = "ublacklist";
+          version = "9.3.0";
+          addonId = "@ublacklist";
+          url = "https://addons.mozilla.org/firefox/downloads/file/4602896/ublacklist-9.3.0.xpi";
+          sha256 = "sha256-UYBHYlyCaroqurtIDeueFHyfJCxJpjQV4FCuzLFF9cY=";
+          meta = { };
+        })
 
         # Clean bookmark (duplicate links & unavailable links )
         # (buildFirefoxXpiAddon rec {
@@ -174,16 +174,6 @@ in
         #   addonId = "{a1087d5d-d793-445a-b988-088b1d86f2a6}";
         #   url = "https://addons.mozilla.org/firefox/downloads/file/3610512/bookmarks_clean_up-${version}.xpi";
         #   sha256 = "sha256-4FNojXUkm+8lFEBbQOfpdlZgt/SfB8AAGCOiGyWnsuo=";
-        #   meta = { };
-        # })
-
-        # trydactyl
-        # (buildFirefoxXpiAddon rec {
-        #   pname = "trydactyl";
-        #   version = "1.24.4";
-        #   addonId = "tridactyl.vim@cmcaine.co.uk";
-        #   url = "https://addons.mozilla.org/firefox/downloads/file/4549492/tridactyl_vim-${version}.xpi";
-        #   sha256 = "sha256-m6fWvDvlVWMcmBw6zdJcq2lCwfSm8MtRG76PqB153Z0=";
         #   meta = { };
         # })
       ];
