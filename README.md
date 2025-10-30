@@ -84,7 +84,7 @@ Here are the main services running in my homelab:
         <th>Name</th>
         <th>Type</th>
         <th>Links</th>
-        <th>Hosts</th>
+        <th>online service</th>
         <th>Description</th>
     </tr>
     <tr>
@@ -96,52 +96,76 @@ Here are the main services running in my homelab:
         <td>Let's Encrypt Automatic Certificate Management Environment</td>
     </tr>
     <tr>
-        <td><a href="./docs/authelia.md"><img width="32" src="https://www.authelia.com/favicon.svg"></a></td>
+        <td><img width="32" src="https://www.authelia.com/favicon.svg"></td>
         <td><a href="https://www.authelia.com/">Authelia</a></td>
         <td>NixOS</td>
         <td><a href="./machines/houston/modules/authelia.nix">module</a>, <a href="./docs/authelia.md">doc</a></td>
-        <td>houston</td>
+        <td><a href="https://douane.ma-cabane.eu/">douane.ma-cabane.eu</a></td>
         <td>An open-source authentication and single sign-on (SSO)</td>
     </tr>
     <tr>
-        <td><a href="./docs/dokuwiki.md"><img width="32" src="https://www.dokuwiki.org/lib/tpl/dokuwiki/images/favicon.ico"></a></td>
+        <td><img width="32" src="https://www.dokuwiki.org/lib/tpl/dokuwiki/images/favicon.ico"></td>
         <td><a href="https://www.dokuwiki.org/">Dokuwiki</a></td>
-        <td>Podman</td>
+        <td>Podman rootless</td>
         <td><a href="./machines/houston/modules/dokuwiki.nix">module</a>, <a href="./docs/dokuwiki.md">doc</a></td>
-        <td>houston</td>
+        <td><a href="https://encyclopedie.ma-cabane.eu/">encyclopedie.ma-cabane.eu</a></td>
         <td>Simple to use and highly versatile Open Source wiki software</td>
     </tr>
     <tr>
-        <td><a href="https://goaccess.io/"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"></a></td>
+        <td><img width="32" src="https://goaccess.io/assets/ico/favicon.ico"></td>
         <td><a href="https://goaccess.io/">GoAccess</a></td>
         <td>NixOS</td>
         <td><a href="./machines/houston/modules/goaccess.nix">module</a></td>
-        <td>houston</td>
+        <td><a href="https://stats.ma-cabane.eu/">stats.ma-cabane.eu</a></td>
         <td>Real-time web log analyzer</td>
     </tr>
     <tr>
-        <td><a href="./docs/grafana.md"><img width="32" src="https://grafana.com/static/assets/img/fav32.png"></a></td>
+        <td><img width="32" src="https://grafana.com/static/assets/img/fav32.png"></td>
         <td><a href="https://grafana.com/">Grafana</a></td>
         <td>NixOS</td>
         <td><a href="./machines/houston/modules/grafana.nix">module</a>, <a href="./docs/grafana.md">doc</a></td>
-        <td>houston</td>
+        <td><a href="https://lampiotes.ma-cabane.eu/d/2cd7b23e-e05f-4c13-99aa-bbc1e323337c/attack?var-interval=1h&orgId=1&from=now-24h&to=now&timezone=browser&refresh=1m">lampiotes.ma-cabane.eu</a></td>
         <td>The open and composable observability and data visualization platform [service port 3000]</td>
     </tr>
     <tr>
-        <td><a href="./docs/linkding/README.md"><img width="32" src="https://linkding.link/favicon.svg"></a></td>
+        <td><img width="32" src="https://linkding.link/favicon.svg"></td>
         <td><a href="https://linkding.link/">linkding</a></td>
-        <td>Podman</td>
+        <td>Podman rootless</td>
         <td><a href="./machines/houston/modules/linkding.nix">module</a></td>
-        <td>houston</td>
+        <td><a href="https://bonnes-adresses.ma-cabane.eu/bookmarks/shared">bonnes-adresses.ma-cabane.eu</a></td>
         <td>Bookmark manager</td>
     </tr>
     <tr>
-        <td><a href="https://goaccess.io/"><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"></a></td>
+        <td><img width="32" src="https://avatars.githubusercontent.com/u/129409591?s=48&v=4"></td>
         <td><a href="https://github.com/lldap/lldap">LLDAP</a></td>
-        <td>Podman</td>
+        <td>Podman rootless</td>
         <td><a href="./machines/houston/modules/lldap.nix">module</a>, <a href="./docs/lldap.md">doc</a></td>
         <td>houston</td>
         <td>Lightweight LDAP directory service for authentication</td>
+    </tr>
+    <tr>
+        <td><img width="32" src="https://gethomepage.dev/assets/favicon.ico"></td>
+        <td><a href="https://gethomepage.dev/">homepage-dashboard</a></td>
+        <td>NixOS</td>
+        <td><a href="./machines/houston/modules/homepage-dashboard.nix">module</a></td>
+        <td><a href="https://salon.ma-cabane.eu/">salon.ma-cabane.eu</a></td>
+        <td>Highly customizable homepage dashboard</td>
+    </tr>
+    <tr>
+        <td><img width="32" src="https://miniflux.app/favicon.ico"></td>
+        <td><a href="https://miniflux.app/">Miniflux</a></td>
+        <td>NixOS</td>
+        <td><a href="./machines/houston/modules/miniflux.nix">module</a></td>
+        <td><a href="https://journaliste.ma-cabane.eu/">journaliste.ma-cabane.eu</a></td>
+        <td>Minimalist RSS feed reader</td>
+    </tr>
+    <tr>
+        <td><img width="32" src="https://raw.githubusercontent.com/Jackysi/PawTunes/refs/heads/master/assets/img/favicon-32x32.png"></td>
+        <td><a href="https://github.com/Jackysi/PawTunes">Pawtunes</a></td>
+        <td>Podman rootless</td>
+        <td><a href="./machines/houston/modules/pawtunes.nix">module</a></td>
+        <td><a href="https://radio.ma-cabane.eu/">radio.ma-cabane.eu</a></td>
+        <td>Favorites Radio streaming player</td>
     </tr>
     <tr>
         <td><img width="32" src="https://reaction.ppom.me/favicon.svg"></td>
@@ -152,6 +176,14 @@ Here are the main services running in my homelab:
         <td>Block some network attacks</td>
     </tr>
     <tr>
+        <td><img width="32" src="https://shaarli.readthedocs.io/en/master/_static/icon.png"></td>
+        <td><a href="https://shaarli.readthedocs.io/">Shaarli</a></td>
+        <td>Podman rootless</td>
+        <td><a href="./machines/houston/modules/shaarli.nix">module</a></td>
+        <td><a href="https://megaphone.ma-cabane.eu/">megaphone.ma-cabane.eu</a></td>
+        <td>Personal, minimalist, super-fast bookmarking service</td>
+    </tr>
+    <tr>
         <td><img width="32" src="https://vector.dev/favicon.ico"></td>
         <td><a href="https://vector.dev/">Vector</a></td>
         <td>NixOS</td>
@@ -160,7 +192,7 @@ Here are the main services running in my homelab:
         <td>High-performance observability data pipeline</td>
     </tr>
     <tr>
-        <td><a href="./docs/victoriametrics.md"><img width="32" src="https://victoriametrics.com/icons/favicon.ico"></a></td>
+        <td><img width="32" src="https://victoriametrics.com/icons/favicon.ico"></td>
         <td><a href="https://victoriametrics.com/">VictoriaMetrics</a></td>
         <td>NixOS</td>
         <td><a href="./machines/houston/modules/victoriametrics.nix">module</a>, <a href="./docs/victoriametrics.md">doc</a></td>
@@ -172,7 +204,7 @@ Here are the main services running in my homelab:
         <td><a href="https://github.com/matze/wastebin">Wastebin</a></td>
         <td>NixOS</td>
         <td><a href="./machines/houston/modules/wastebin.nix">module</a></td>
-        <td>houston</td>
+        <td><a href="https://codes.ma-cabane.eu/">codes.ma-cabane.eu</a></td>
         <td>Minimalist pastebin</td>
     </tr>
 </table>
