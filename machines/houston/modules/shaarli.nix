@@ -6,22 +6,20 @@
 }:
 let
   domain = "${config.networking.fqdn}";
+  authdomain = "douane.${domain}";
   appDomain = "megaphone.${domain}";
-  appPath = "/data/podman/shaarli";
-  listenPort = 10005;
 
-  rangeStart = listenPort * 10000;
-  rangeCount = 9999;
+  version = "v0.12.2";
+  appPath = "/data/podman/shaarli";
+  appId = 5;
+
+  listenPort = 10000 + appId;
+  subIdRangeStart = (100 + appId) * 100000;
+  appUser = "shaarli";
+  appGroup = "shaarli";
 
   containerUID = 100; # nginx user (on container)
   containerGID = 101; # nginx group (on container)
-
-  hostUID = rangeStart + containerUID;
-  hostGID = rangeStart + containerGID;
-
-  # Image
-  version = "v0.12.2";
-
 in
 {
   imports = [
@@ -29,58 +27,100 @@ in
     ../../../nix/modules/nixos/homelab
   ];
 
-  networking.firewall.allowedTCPPorts = [
-    443
-  ];
+  networking.firewall.allowedTCPPorts = [ 443 ];
 
   ############################################################################
-  # Container user mapping
+  # Rootless podman user
   ############################################################################
-  users.users.shaarli = {
-    isSystemUser = true;
-    group = "shaarli";
-    uid = hostUID;
+  users = {
+    users.${appUser} = {
+      isSystemUser = true;
+      group = appGroup;
+      home = "/var/lib/podman/users/${appUser}";
+      createHome = true;
+      subUidRanges = [
+        {
+          startUid = subIdRangeStart;
+          count = 65536;
+        }
+      ];
+      subGidRanges = [
+        {
+          startGid = subIdRangeStart;
+          count = 65536;
+        }
+      ];
+    };
+    groups.${appGroup} = { };
   };
-  users.groups.shaarli.gid = hostGID;
 
-  # Podman rootless configuration
-  # podman run with root account
-  users.users.root.subUidRanges = [
-    {
-      startUid = rangeStart;
-      count = rangeCount;
-    }
-  ];
-  users.users.root.subGidRanges = [
-    {
-      startGid = rangeStart;
-      count = rangeCount;
-    }
-  ];
+  ############################################################################
+  # Service configuration
+  ############################################################################
 
   systemd.tmpfiles.rules = [
-    "d ${appPath}/data 0750 shaarli shaarli -"
-    "d ${appPath}/cache 0750 shaarli shaarli -"
-    "d /var/backup/shaarli 0750 shaarli shaarli -"
+    # Enable linger for shaarli user
+    "f /var/lib/systemd/linger/${appUser} 0644 root root - -"
+
+    # Application data
+    "d ${appPath}/data 0750 ${appUser} ${appGroup} -"
+    "d ${appPath}/cache 0750 ${appUser} ${appGroup} -"
+
+    # Backup directory
+    "d /var/backup/shaarli 0750 ${appUser} ${appGroup} -"
   ];
 
-  virtualisation.oci-containers = {
-    containers = {
-      shaarli = {
-        image = "shaarli/shaarli:${version}";
-        autoStart = true;
-        ports = [ "${toString listenPort}:80" ];
+  systemd.services.shaarli = {
+    description = "Shaarli bookmarking service (rootless podman)";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network-online.target" ];
+    requires = [ "network-online.target" ];
 
-        volumes = [
-          "${appPath}/data:/var/www/shaarli/data"
-          "${appPath}/cache:/var/www/shaarli/cache"
-        ];
+    # Required to make `newuidmap` available to the systemd service
+    path = [
+      "/run/wrappers"
+      pkgs.podman
+    ];
 
-        extraOptions = [
-          "--uidmap=0:${toString rangeStart}:${toString rangeCount}"
-          "--gidmap=0:${toString rangeStart}:${toString rangeCount}"
-        ];
-      };
+    serviceConfig = {
+      Type = "simple";
+      User = appUser;
+      Group = appGroup;
+
+      # Restart policy
+      Restart = "on-failure";
+      RestartSec = "30s";
+      TimeoutStartSec = 120;
+      TimeoutStopSec = 120;
+
+      ExecStartPre = [
+        # Pull the image if needed
+        "${pkgs.podman}/bin/podman pull shaarli/shaarli:${version}"
+        # Remove existing container if it exists
+        "-${pkgs.podman}/bin/podman rm -f shaarli"
+      ];
+
+      ExecStart = ''
+        ${pkgs.podman}/bin/podman run \
+          --rm \
+          --name=shaarli \
+          -p 127.0.0.1:${toString listenPort}:80 \
+          -v ${appPath}/data:/var/www/shaarli/data \
+          -v ${appPath}/cache:/var/www/shaarli/cache \
+          --add-host=${authdomain}:host-gateway \
+          --cap-drop=ALL \
+          --cap-add=CHOWN \
+          --cap-add=SETUID \
+          --cap-add=SETGID \
+          --cap-add=DAC_OVERRIDE \
+          --cap-add=NET_BIND_SERVICE \
+          --userns=keep-id:uid=${toString containerUID},gid=${toString containerGID} \
+          --cgroup-manager=cgroupfs \
+          shaarli/shaarli:${version}
+      '';
+
+      ExecStop = "${pkgs.podman}/bin/podman stop -t 10 shaarli";
+      ExecStopPost = "-${pkgs.podman}/bin/podman rm -f shaarli";
     };
   };
 
@@ -94,35 +134,33 @@ in
       proxyWebsockets = true;
 
       extraConfig = ''
-        # Forward auth to Authelia
-        auth_request /authelia;
+        # Force HTTPS (for 1 year)
+        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
 
-        # Transmit headers for authentification
-        auth_request_set $user $upstream_http_remote_user;
-        auth_request_set $groups $upstream_http_remote_groups;
-        auth_request_set $email $upstream_http_remote_email;
+        # XSS and clickjacking protection
+        add_header X-Frame-Options "SAMEORIGIN" always;
 
-        proxy_set_header Remote-User $user;
-        proxy_set_header Remote-Groups $groups;
-        proxy_set_header Remote-Email $email;
+        # No execution of untrusted MIME types
+        add_header X-Content-Type-Options "nosniff" always;
 
-        # Error redirection
-        error_page 401 =302 https://douane.${config.networking.fqdn}/?rd=$scheme://$http_host$request_uri;
-      '';
-    };
+        # Send only domain with URL referer
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 
-    locations."/authelia" = {
-      proxyPass = "http://127.0.0.1:9091/api/verify";
-      extraConfig = ''
-        internal;
-        proxy_set_header X-Original-URL $scheme://$http_host$request_uri;
-        proxy_set_header X-Forwarded-Method $request_method;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_set_header X-Forwarded-Host $http_host;
-        proxy_set_header X-Forwarded-Uri $request_uri;
-        proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_set_header Content-Length "";
-        proxy_pass_request_body off;
+        # Disable all unused browser features for better privacy
+        add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+
+        # Allow only specific sources to load content (CSP)
+        # Shaarli needs 'unsafe-inline' for inline scripts/styles
+        add_header Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: https:; media-src 'self' blob: https:; connect-src 'self' https:; frame-ancestors 'self';" always;
+
+        # Modern CORS headers
+        add_header Cross-Origin-Opener-Policy "same-origin" always;
+        add_header Cross-Origin-Resource-Policy "same-origin" always;
+        add_header Cross-Origin-Embedder-Policy "require-corp" always;
+
+        # Cross-domain policy
+        add_header X-Permitted-Cross-Domain-Policies "none" always;
+
       '';
     };
 
@@ -134,7 +172,6 @@ in
   #############################################################################
   clan.core.state.shaarli = {
     folders = [ appPath ];
-
     preBackupScript = ''
       export PATH=${
         lib.makeBinPath [
@@ -144,15 +181,13 @@ in
         ]
       }
 
-      service_status=$(systemctl is-active podman-shaarli)
-
+      service_status=$(systemctl is-active shaarli)
       if [ "$service_status" = "active" ]; then
-        systemctl stop podman-shaarli
+        systemctl stop shaarli
         rsync -avH --delete --numeric-ids "${appPath}/" /var/backup/shaarli/
-        systemctl start podman-shaarli
+        systemctl start shaarli
       fi
     '';
-
     postRestoreScript = ''
       export PATH=${
         lib.makeBinPath [
@@ -162,19 +197,22 @@ in
         ]
       }
 
-      service_status="$(systemctl is-active podman-shaarli)"
+      service_status="$(systemctl is-active shaarli)"
 
       if [ "$service_status" = "active" ]; then
-        systemctl stop podman-shaarli
+        systemctl stop shaarli
 
-        # Backup localy current shaarli data
+        # Backup current shaarli data locally
         DATE=$(date +%Y%m%d-%H%M%S)
         cp -rp "${appPath}" "${appPath}.$DATE.bak"
 
         # Restore from borgbackup
         rsync -avH --delete --numeric-ids /var/backup/shaarli/ "${appPath}/"
 
-        systemctl start podman-shaarli
+        # Fix permissions after restore
+        chown -R ${appUser}:${appGroup} "${appPath}"
+
+        systemctl start shaarli
       fi
     '';
   };
