@@ -9,20 +9,15 @@ let
   subDomain = "bonnes-adresses";
   authdomain = "douane.${domain}";
   appDomain = "${subDomain}.${domain}";
-  appPath = "/data/podman/linkding";
-  listenPort = 10004;
 
-  rangeStart = listenPort * 10000;
-  rangeCount = 9999;
-
-  containerUID = 33; # root user (on container)
-  containerGID = 33; # root group (on container)
-
-  hostUID = rangeStart + containerUID;
-  hostGID = rangeStart + containerGID;
-
-  # Image
   version = "1.41.0-plus";
+  appPath = "/data/podman/linkding";
+  appId = 4;
+
+  listenPort = 10000 + appId;
+  subIdRangeStart = (100 + appId) * 100000;
+  appUser = "linkding";
+  appGroup = "linkding";
 in
 {
   imports = [
@@ -30,42 +25,52 @@ in
     ../../../nix/modules/nixos/homelab
   ];
 
-  networking.firewall.allowedTCPPorts = [
-    443
-  ];
+  networking.firewall.allowedTCPPorts = [ 443 ];
 
   ############################################################################
-  # Container user mapping
+  # Rootless podman user
   ############################################################################
-  users.users.linkding = {
-    isSystemUser = true;
-    group = "linkding";
-    uid = hostUID;
+  users = {
+    users.${appUser} = {
+      isSystemUser = true;
+      group = appGroup;
+      home = "/var/lib/podman/users/${appUser}";
+      createHome = true;
+      subUidRanges = [
+        {
+          startUid = subIdRangeStart;
+          count = 65536;
+        }
+      ];
+      subGidRanges = [
+        {
+          startGid = subIdRangeStart;
+          count = 65536;
+        }
+      ];
+    };
+    groups.${appGroup} = { };
   };
-  users.groups.linkding.gid = hostGID;
-
-  # Podman rootless configuration
-  # podman run with root account
-  users.users.root.subUidRanges = [
-    {
-      startUid = rangeStart;
-      count = rangeCount;
-    }
-  ];
-  users.users.root.subGidRanges = [
-    {
-      startGid = rangeStart;
-      count = rangeCount;
-    }
-  ];
 
   ############################################################################
   # Clan Credentials
   ############################################################################
   clan.core.vars.generators.linkding = {
-    files.oauth2-client-secret = { };
-    files.digest-client-secret = { };
-    files.envfile = { };
+    files.oauth2-client-secret = {
+      owner = "linkding";
+      group = "linkding";
+      mode = "0400";
+    };
+    files.digest-client-secret = {
+      owner = "linkding";
+      group = "linkding";
+      mode = "0400";
+    };
+    files.envfile = {
+      owner = "linkding";
+      group = "linkding";
+      mode = "0400";
+    };
 
     runtimeInputs = [
       pkgs.pwgen
@@ -89,10 +94,79 @@ in
     '';
   };
 
+  ############################################################################
+  # Service configuration
+  ############################################################################
+
   systemd.tmpfiles.rules = [
-    "d ${appPath} 0750 linkding linkding  -"
-    "d /var/backup/linkding 0750 linkding linkding -"
+    # Enable linger for linkding user
+    "f /var/lib/systemd/linger/${appUser} 0644 root root - -"
+
+    # Application data
+    "d ${appPath} 0750 ${appUser} ${appGroup} -"
+
+    # Backup directory
+    "d /var/backup/linkding 0750 ${appUser} ${appGroup} -"
   ];
+
+  systemd.services.linkding = {
+    description = "Linkding bookmark manager service (rootless podman)";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network-online.target" ];
+    requires = [ "network-online.target" ];
+
+    # Required to make `newuidmap` available to the systemd service
+    path = [
+      "/run/wrappers"
+      pkgs.podman
+    ];
+
+    serviceConfig = {
+      Type = "simple";
+      User = appUser;
+      Group = appGroup;
+
+      # Restart policy
+      Restart = "on-failure";
+      RestartSec = "30s";
+      TimeoutStartSec = 120;
+      TimeoutStopSec = 120;
+
+      ExecStartPre = [
+        # Pull the image if needed
+        "${pkgs.podman}/bin/podman pull ghcr.io/sissbruecker/linkding:${version}"
+        # Remove existing container if it exists
+        "-${pkgs.podman}/bin/podman rm -f linkding"
+      ];
+
+      ExecStart = ''
+        ${pkgs.podman}/bin/podman run \
+          --rm \
+          --name=linkding \
+          -p 127.0.0.1:${toString listenPort}:9090 \
+          -v ${appPath}:/etc/linkding/data \
+          --env-file=${config.clan.core.vars.generators."linkding".files."envfile".path} \
+          --env LD_ENABLE_OIDC=true \
+          --env OIDC_OP_AUTHORIZATION_ENDPOINT=https://${authdomain}/api/oidc/authorization \
+          --env OIDC_OP_TOKEN_ENDPOINT=https://${authdomain}/api/oidc/token \
+          --env OIDC_OP_USER_ENDPOINT=https://${authdomain}/api/oidc/userinfo \
+          --env OIDC_OP_JWKS_ENDPOINT=https://${authdomain}/jwks.json \
+          --env OIDC_RP_CLIENT_ID=linkding \
+          --cap-drop=ALL \
+          --cap-add=CHOWN \
+          --cap-add=SETUID \
+          --cap-add=SETGID \
+          --cap-add=DAC_OVERRIDE \
+          --cap-add=NET_BIND_SERVICE \
+          --userns=keep-id:uid=33,gid=33 \
+          --cgroup-manager=cgroupfs \
+          ghcr.io/sissbruecker/linkding:${version}
+      '';
+
+      ExecStop = "${pkgs.podman}/bin/podman stop -t 10 linkding";
+      ExecStopPost = "-${pkgs.podman}/bin/podman rm -f linkding";
+    };
+  };
 
   services.authelia.instances.main.settings.identity_providers.oidc.clients = [
     {
@@ -115,54 +189,48 @@ in
     }
   ];
 
-  virtualisation.oci-containers = {
-    containers = {
-      linkding = {
-        image = "ghcr.io/sissbruecker/linkding:${version}";
-        autoStart = true;
-        ports = [ "127.0.0.1:${toString listenPort}:9090" ];
-
-        volumes = [ "${appPath}:/etc/linkding/data" ];
-
-        extraOptions = [
-          "--uidmap=0:${toString rangeStart}:${toString rangeCount}"
-          "--gidmap=0:${toString rangeStart}:${toString rangeCount}"
-        ];
-        # extraOptions = [
-        #   "--cap-drop=ALL"
-        #   # for nginx
-        #   "--cap-add=CHOWN"
-        #   "--cap-add=SETUID"
-        #   "--cap-add=SETGID"
-        #   "--cap-add=DAC_OVERRIDE"
-        # ];
-
-        environmentFiles = [
-          config.clan.core.vars.generators."linkding".files."envfile".path
-        ];
-        environment = {
-          # https://github.com/sissbruecker/linkding/blob/4e8318d0ae5859f61fbc05ec0cc007cd00247eb2/docs/src/content/docs/options.md#oidc-and-ld_superuser_name
-          LD_ENABLE_OIDC = "true";
-
-          OIDC_OP_AUTHORIZATION_ENDPOINT = "https://${authdomain}/api/oidc/authorization";
-          OIDC_OP_TOKEN_ENDPOINT = "https://${authdomain}/api/oidc/token";
-          OIDC_OP_USER_ENDPOINT = "https://${authdomain}/api/oidc/userinfo";
-          OIDC_OP_JWKS_ENDPOINT = "https://${authdomain}/jwks.json";
-          OIDC_RP_CLIENT_ID = "linkding";
-        };
-      };
-    };
-  };
-
   services.nginx.virtualHosts."${appDomain}" = {
     forceSSL = true;
     enableACME = true;
+
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString listenPort}";
       recommendedProxySettings = true;
       proxyWebsockets = true;
+
+      # Security headers
+      extraConfig = ''
+        # Force HTTPS (for 1 year)
+        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+
+        # XSS and clickjacking protection
+        add_header X-Frame-Options "SAMEORIGIN" always;
+
+        # No execution of untrusted MIME types
+        add_header X-Content-Type-Options "nosniff" always;
+
+        # Send only domain with URL referer
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+        # Disable all unused browser features for better privacy
+        add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+
+        # Allow only specific sources to load content (CSP)
+        add_header Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:; media-src 'self' blob: https:; connect-src 'self' https:;" always;
+
+        # Modern CORS headers
+        add_header Cross-Origin-Opener-Policy "same-origin" always;
+        add_header Cross-Origin-Resource-Policy "same-origin" always;
+        add_header Cross-Origin-Embedder-Policy "require-corp" always;
+
+        # Cross-domain policy
+        add_header X-Permitted-Cross-Domain-Policies "none" always;
+      '';
     };
-    extraConfig = ''access_log /var/log/nginx/public.log vcombined;'';
+
+    extraConfig = ''
+      access_log /var/log/nginx/public.log vcombined;
+    '';
   };
 
   #############################################################################
@@ -170,7 +238,6 @@ in
   #############################################################################
   clan.core.state.linkding = {
     folders = [ appPath ];
-
     preBackupScript = ''
       export PATH=${
         lib.makeBinPath [
@@ -180,15 +247,13 @@ in
         ]
       }
 
-      service_status=$(systemctl is-active podman-linkding)
-
+      service_status=$(systemctl is-active linkding)
       if [ "$service_status" = "active" ]; then
-        systemctl stop podman-linkding
+        systemctl stop linkding
         rsync -avH --delete --numeric-ids "${appPath}/" /var/backup/linkding/
-        systemctl start podman-linkding
+        systemctl start linkding
       fi
     '';
-
     postRestoreScript = ''
       export PATH=${
         lib.makeBinPath [
@@ -198,19 +263,22 @@ in
         ]
       }
 
-      service_status="$(systemctl is-active podman-linkding)"
+      service_status="$(systemctl is-active linkding)"
 
       if [ "$service_status" = "active" ]; then
-        systemctl stop podman-linkding
+        systemctl stop linkding
 
-        # Backup localy current linkding data
+        # Backup current linkding data locally
         DATE=$(date +%Y%m%d-%H%M%S)
         cp -rp "${appPath}" "${appPath}.$DATE.bak"
 
         # Restore from borgbackup
         rsync -avH --delete --numeric-ids /var/backup/linkding/ "${appPath}/"
 
-        systemctl start podman-linkding
+        # Fix permissions after restore
+        chown -R ${appUser}:${appGroup} "${appPath}"
+
+        systemctl start linkding
       fi
     '';
   };
