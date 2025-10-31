@@ -253,12 +253,12 @@ in
         vim = "nvim"; # alternative vim (nvim)
 
         # navi
-        navi = "my-navi"; # Show cheat commands
-        pnavi = "my-navi --print"; # Show cheat commands
+        navi = "@navi"; # Show cheat commands
+        pnavi = "@navi --print"; # Show cheat commands
         lnavi =
-          "my-navi --path ~/ghq/github.com/badele/cheats"; # Show cheat commands
+          "@navi --path ~/ghq/github.com/badele/cheats"; # Show cheat commands
         lpnavi =
-          "my-navi --print --path ~/ghq/github.com/badele/cheats"; # Show cheat commands
+          "@navi --print --path ~/ghq/github.com/badele/cheats"; # Show cheat commands
 
         # Date & Time
         clock =
