@@ -87,7 +87,9 @@ in
           border = border;
         };
 
-        focus = { newWindow = "smart"; };
+        focus = {
+          newWindow = "smart";
+        };
 
         gaps = {
           # Set inner/outer gaps
@@ -106,8 +108,7 @@ in
           "${mod}+Return" = "exec ${cfg.terminal}";
           "${mod}+Shift+r" = ''restart; exec notify-send "i3 restarted"'';
           "${mod}+q" = "kill";
-          "${mod}+k" =
-            "--release exec --no-startup-id //home/badele/private/projects/rokeys/rokeys";
+          "${mod}+k" = "--release exec --no-startup-id //home/badele/private/projects/rokeys/rokeys";
 
           # # Lock screen
           # # || Super+l || Blurred screen lock | i3
@@ -132,12 +133,10 @@ in
           # # || Super+p || Pause media player | i3
           # # || Super+m || Show TUI pulseaudio mixer | i3
           # # || Super+d || Show TUI mount disk | i3
-          "XF86AudioMute" =
-            "exec --no-startup-id ~/.local/bin/mixer output mute";
-          "XF86AudioMicMute" =
-            "exec --no-startup-id ~/.local/bin/mixer mic mute";
-          "XF86AudioLowerVolume" = "exec --no-startup-id my-mixer output down";
-          "XF86AudioRaiseVolume" = "exec --no-startup-id my-mixer output up";
+          "XF86AudioMute" = "exec --no-startup-id ~/.local/bin/mixer output mute";
+          "XF86AudioMicMute" = "exec --no-startup-id ~/.local/bin/mixer mic mute";
+          "XF86AudioLowerVolume" = "exec --no-startup-id @mixer output down";
+          "XF86AudioRaiseVolume" = "exec --no-startup-id @mixer output up";
           "${mod}+p" = "exec --no-startup-id ${playerctl} play-pause";
           "${mod}+s" = "exec --no-startup-id ${playerctl} next";
           "${mod}+a" = "exec --no-startup-id autorandr -c";
@@ -148,14 +147,11 @@ in
           "${mod}+t" = "exec --no-startup-id ${cfg.terminal} --class winfloat -- btop";
 
           # # Screen brightness controls
-          "XF86MonBrightnessUp" =
-            execAndNotify "brightnessctl set 5%+" "brightness up";
-          "XF86MonBrightnessDown" =
-            execAndNotify "brightnessctl set 5%-" "brightness down";
+          "XF86MonBrightnessUp" = execAndNotify "brightnessctl set 5%+" "brightness up";
+          "XF86MonBrightnessDown" = execAndNotify "brightnessctl set 5%-" "brightness down";
 
           # # Video
-          "${mod}+ctrl+r" =
-            "exec --no-startup-id ~/.local/bin/video_toggle_record_desktop";
+          "${mod}+ctrl+r" = "exec --no-startup-id ~/.local/bin/video_toggle_record_desktop";
 
           # # Window focus
           # # || Super+Direction || Change focus | i3
@@ -246,41 +242,40 @@ in
           };
         };
 
-        bars = [{
-          #mode = "hide";
-          position = "top";
+        bars = [
+          {
+            #mode = "hide";
+            position = "top";
 
-          # statusCommand = "py3status -c .config/py3status.conf";
-          statusCommand =
-            "${i3status-rust} ~/.config/i3status-rust/config-top.toml";
+            # statusCommand = "py3status -c .config/py3status.conf";
+            statusCommand = "${i3status-rust} ~/.config/i3status-rust/config-top.toml";
 
-          # colors = {
-          #   background = hexPalette.background;
-          #   statusline = hexPalette.normal.white;
-          #
-          #   inactiveWorkspace = {
-          #     border = hexPalette.normal.black;
-          #     background = hexPalette.background;
-          #     text = hexPalette.bright.black;
-          #   };
-          #   focusedWorkspace = {
-          #     border = hexPalette.normal.blue;
-          #     background = hexPalette.normal.blue;
-          #     text = hexPalette.bright.white;
-          #   };
-          #   urgentWorkspace = {
-          #     border = hexPalette.bright.red;
-          #     background = hexPalette.normal.red;
-          #     text = hexPalette.bright.white;
-          #   };
-          # };
-        }];
+            # colors = {
+            #   background = hexPalette.background;
+            #   statusline = hexPalette.normal.white;
+            #
+            #   inactiveWorkspace = {
+            #     border = hexPalette.normal.black;
+            #     background = hexPalette.background;
+            #     text = hexPalette.bright.black;
+            #   };
+            #   focusedWorkspace = {
+            #     border = hexPalette.normal.blue;
+            #     background = hexPalette.normal.blue;
+            #     text = hexPalette.bright.white;
+            #   };
+            #   urgentWorkspace = {
+            #     border = hexPalette.bright.red;
+            #     background = hexPalette.normal.red;
+            #     text = hexPalette.bright.white;
+            #   };
+            # };
+          }
+        ];
 
         startup = [
           {
-            command = "${xidlehook} --not-when-fullscreen --timer ${
-                toString lockTime
-              } '${lockCmd}' ''";
+            command = "${xidlehook} --not-when-fullscreen --timer ${toString lockTime} '${lockCmd}' ''";
             always = false;
             notification = false;
           }
@@ -298,10 +293,13 @@ in
 
         # Get window class name with xprop | grep WM_CLASS
         assigns = {
-          "${w2}" = [{ class = "Spotify"; }];
-          "${w3}" = [{ class = "Discord"; }];
-          "${w7}" = [{ class = "Google-chrome"; } { class = "firefox"; }];
-          "${w9}" = [{ class = "VSCodium"; }];
+          "${w2}" = [ { class = "Spotify"; } ];
+          "${w3}" = [ { class = "Discord"; } ];
+          "${w7}" = [
+            { class = "Google-chrome"; }
+            { class = "firefox"; }
+          ];
+          "${w9}" = [ { class = "VSCodium"; } ];
         };
 
         # Get window class name with xprop | grep WM_CLASS
