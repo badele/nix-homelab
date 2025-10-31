@@ -218,31 +218,31 @@ productivity tools.
 
 ### Desktop Applications
 
-| Logo                                                                                                                                                                                      | Application | Description                                                                 |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------- |
-| [<img width="32" src="https://www.borgbackup.org/favicon.ico">](./docs/borgbackup/README.md)                                                                                              | borgbackup  | [Deduplication backup tool](./docs/borgbackup/README.md)                    |
-| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Firefox_logo%2C_2019.svg/32px-Firefox_logo%2C_2019.svg.png">](./users/badele/firefox.nix)                 | Firefox     | [Web browser](./users/badele/firefox.nix)                                   |
-| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/The_GIMP_icon_-_gnome.svg/32px-The_GIMP_icon_-_gnome.svg.png">](./users/badele/commons.nix)               | Gimp        | [Raster graphics editor](./users/badele/commons.nix)                        |
-| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/I3_window_manager_logo.svg/32px-I3_window_manager_logo.svg.png">](./users/badele/commons.nix)             | i3          | [Tiling window manager](./nix/home-manager/features/desktop/xorg/wm/i3.nix) |
-| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Inkscape_Logo.svg/32px-Inkscape_Logo.svg.png">](./users/badele/commons.nix)                               | Inkscape    | [Vector graphics editor](./users/badele/commons.nix)                        |
-| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/LibreOffice_icon_3.3.1_48_px.svg/32px-LibreOffice_icon_3.3.1_48_px.svg.png">](./users/badele/commons.nix) | LibreOffice | [Office suite](./users/badele/commons.nix)                                  |
-| [<img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Meld_Logo.svg/128px-Meld_Logo.svg.png">](./users/badele/commons.nix)                                      | Meld        | [Visual diff tool](./users/badele/commons.nix)                              |
-| [<img width="32" src="https://raw.githubusercontent.com/denisidoro/navi/master/assets/icon.png">](./nix/home-manager/features/term/base.nix)                                              | Navi        | [Interactive cheatsheet tool](https://github.com/badele/vide)               |
-| [<img width="32" src="https://user-images.githubusercontent.com/28633984/66519056-2e840c80-eaef-11e9-8670-c767213c26ba.png">](https://github.com/badele/vide)                             | Neovim      | [**VIDE** - My customized Neovim config](/docs/nvim/README.md)              |
+| Logo                                                                                                                                                          | Application | Description                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------- |
+| [<img width="32" src="https://www.borgbackup.org/favicon.ico">](./docs/borgbackup/README.md)                                                                  | borgbackup  | [Deduplication backup tool](./docs/borgbackup/README.md)                    |
+| <img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Firefox_logo%2C_2019.svg/32px-Firefox_logo%2C_2019.svg.png">                   | Firefox     | Web browser                                                                 |
+| <img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/The_GIMP_icon_-_gnome.svg/32px-The_GIMP_icon_-_gnome.svg.png">                 | Gimp        | Raster graphics editor                                                      |
+| <img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/I3_window_manager_logo.svg/32px-I3_window_manager_logo.svg.png">               | i3          | [Tiling window manager](./nix/home-manager/features/desktop/xorg/wm/i3.nix) |
+| <img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Inkscape_Logo.svg/32px-Inkscape_Logo.svg.png">                                 | Inkscape    | Vector graphics editor                                                      |
+| <img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/LibreOffice_icon_3.3.1_48_px.svg/32px-LibreOffice_icon_3.3.1_48_px.svg.png">   | LibreOffice | Office suite                                                                |
+| <img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Meld_Logo.svg/128px-Meld_Logo.svg.png">                                        | Meld        | Visual diff tool                                                            |
+| [<img width="32" src="https://raw.githubusercontent.com/denisidoro/navi/master/assets/icon.png">](./nix/home-manager/features/term/base.nix)                  | Navi        | [Interactive cheatsheet tool](https://github.com/badele/vide)               |
+| [<img width="32" src="https://user-images.githubusercontent.com/28633984/66519056-2e840c80-eaef-11e9-8670-c767213c26ba.png">](https://github.com/badele/vide) | Neovim      | [**VIDE** - My customized Neovim config](https://github.com/badele/vide)    |
 
 ### Floating TUI Panels
 
 Quick access to system controls via i3 floating terminals:
 
-| Bluetooth Manager                                                                      | Disk Manager                                                                 |
-| -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| [<img width="320" src="./docs/floating_bluetooth.png">](./docs/floating_bluetooth.gif) | [<img width="320" src="./docs/floating_disk.png">](./docs/floating_disk.gif) |
-| `bluetuith`                                                                            | `bashmount`                                                                  |
+| Bluetooth Manager                                     | Disk Manager                                     |
+| ----------------------------------------------------- | ------------------------------------------------ |
+| <img width="320" src="./docs/floating_bluetooth.png"> | <img width="320" src="./docs/floating_disk.png"> |
+| `bluetuith`                                           | `bashmount`                                      |
 
-| Audio Mixer                                                                    | Network Manager                                                                    |
-| ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
-| [<img width="320" src="./docs/floating_mixer.png">](./docs/floating_mixer.gif) | [<img width="320" src="./docs/floating_network.png">](./docs/floating_network.gif) |
-| `pulsemixer`                                                                   | `nmtui`                                                                            |
+| Audio Mixer                                       | Network Manager                                     |
+| ------------------------------------------------- | --------------------------------------------------- |
+| <img width="320" src="./docs/floating_mixer.png"> | <img width="320" src="./docs/floating_network.png"> |
+| `pulsemixer`                                      | `nmtui`                                             |
 
 ## 🌐 Infrastructure
 
@@ -331,13 +331,13 @@ Complete list of hosts in the homelab (auto-generated with `just doc-update`):
             <td>NixOS</td>
             <td>Dell XPS 9570 Latop</td>
         </tr><tr>
-            <td><a href="./docs/hosts/vm-test.md"><img width="32" src="https://cdn.icon-icons.com/icons2/2699/PNG/512/qemu_logo_icon_169821.png"></a></td>
-            <td><a href="./docs/hosts/vm-test.md">vm-test</a>&nbsp;(127.0.0.1)</td>
+            <td><img width="32" src="https://cdn.icon-icons.com/icons2/2699/PNG/512/qemu_logo_icon_169821.png"></td>
+            <td>vm-test&nbsp;(127.0.0.1)</td>
             <td>NixOS</td>
             <td>qemu VM (SSH on port 2222)</td>
         </tr><tr>
-            <td><a href="./docs/hosts/cab1e.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
-            <td><a href="./docs/hosts/cab1e.md">cab1e</a>&nbsp;(84.234.31.97)</td>
+            <td><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></td>
+            <td>cab1e&nbsp;(84.234.31.97)</td>
             <td>NixOS</td>
             <td>Wireguard VPN anonymizer server</td>
         </tr>
