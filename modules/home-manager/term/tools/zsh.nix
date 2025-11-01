@@ -199,6 +199,7 @@ in
         # git
         gs = "git status";
         gl = "git log";
+        glm = "git diff --name-only | xargs ls -lt"; # show last file modified (sort by reverse date)
         gd = "git diff";
         gds = "git diff --staged";
         gbl = "git branch";
