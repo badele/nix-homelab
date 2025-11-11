@@ -193,11 +193,6 @@ in
 
         ];
 
-        # environment = {
-        #   DOCKER_STEPCA_INIT_NAME = config.homelab.domain;
-        #   DOCKER_STEPCA_INIT_DNS_NAMES = "step-ca.${config.homelab.domain}";
-        # };
-
         extraOptions = [
           "--cap-drop=ALL"
 

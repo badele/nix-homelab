@@ -46,74 +46,6 @@ in
 
       openFirewall = mkEnableOption "Open firewall ports (incoming)";
       enableMonitoring = mkEnableOption "Enable monitoring features";
-
-      # these external DNS resolvers will be used. Blocky picks 2 random resolvers from the list for each query
-      # format for resolver: [net:]host:[port][/path]. net could be empty (default, shortcut for tcp+udp), tcp+udp, tcp, udp, tcp-tls or https (DoH). If port is empty, default port will be used (53 for udp and tcp, 853 for tcp-tls, 443 for https (Doh))
-      # this configuration is mandatory, please define at least one external DNS resolver
-      #
-      # https://www.privacyguides.org/en/dns
-      # https://dnsprivacy.org/public_resolvers
-      # https://www.joindns4.eu/for-public
-      # upstreams = mkOption {
-      #   type = attrs;
-      #   default = {
-      #     groups = {
-      #       default = [
-      #         "9.9.9.9"
-      #         "149.112.112.112"
-      #         "https://dns.quad9.net/dns-query"
-      #         "tcp-tls:dns.quad9.net"
-      #       ];
-      #     };
-      #   };
-      #   description = ''
-      #     Upstream DNS resolvers configuration.
-      #     Format: { groups = { <group-name> = [ "resolver1" "resolver2" ... ]; }; }
-      #     See: https://0xerr0r.github.io/blocky/configuration/#upstreams
-      #   '';
-      # };
-
-      # denylists = mkOption {
-      #   type = attrs;
-      #   default = {
-      #     ads = [
-      #       "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
-      #       "https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/wildcard/pro.txt"
-      #     ];
-      #     fakenews = [
-      #       "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-only/hosts"
-      #     ];
-      #     gambling = [
-      #       "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/gambling-only/hosts"
-      #     ];
-      #     adult = [
-      #       "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/porn-only/hosts"
-      #     ];
-      #   };
-      #   description = ''
-      #     Blocklists configuration.
-      #     Format: { <list-name> = [ "url1" "url2" ... ]; }
-      #     See: https://0xerr0r.github.io/blocky/configuration/#blocking
-      #   '';
-      # };
-
-      # clientGroupsBlock = mkOption {
-      #   type = attrs;
-      #   default = {
-      #     default = [
-      #       "ads"
-      #       "fakenews"
-      #       "gambling"
-      #       "adult"
-      #     ];
-      #   };
-      #   description = ''
-      #     Client groups blocking configuration.
-      #     Format: { <client-group> = [ "list1" "list2" ... ]; }
-      #     See: https://0xerr0r.github.io/blocky/configuration/#blocking
-      #   '';
-      # };
-
     };
   };
 
@@ -169,23 +101,6 @@ in
               };
           })
         ];
-
-        # Monitoring section
-        # homelab.features.grafana = lib.mkIf cfg.enableMonitoring {
-        #   dashboards = [ ./grafana_dashboard.json ];
-        # };
-        #
-        # homelab.features.prometheus.settings = lib.mkIf cfg.enablePrometheusExport {
-        #   scrape_configs = [
-        #     {
-        #       job_name = "blocky";
-        #       honor_timestamps = true;
-        #       metrics_path = "/metrics";
-        #       scheme = "http";
-        #       static_configs = [ { targets = [ (appName + ":443") ]; } ];
-        #     }
-        #   ];
-        # };
 
         networking.firewall.allowedUDPPorts = mkIf cfg.openFirewall [
           53

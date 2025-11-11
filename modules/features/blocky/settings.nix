@@ -1,21 +1,3 @@
-# {
-#   config,
-#   lib,
-#   appName,
-#   ...
-# }:
-# let
-#   cfg = config.homelab.features.${appName};
-#
-#   # Generate mapping from homelab.alias
-#   # For each alias, map it to the current host's IP
-#   aliasMapping = lib.listToAttrs (
-#     map (alias: {
-#       name = alias;
-#       value = config.homelab.host.address;
-#     }) config.homelab.alias
-#   );
-# in
 {
   # these external DNS resolvers will be used. Blocky picks 2 random resolvers from the list for each query
   # format for resolver: [net:]host:[port][/path]. net could be empty (default, shortcut for tcp+udp),
@@ -63,12 +45,6 @@
       ];
     };
   };
-
-  # customDNS = {
-  #   customTTL = "1h";
-  #   filterUnmappedTypes = true;
-  #   mapping = aliasMapping;
-  # };
 
   ports = {
     dns = 53;
