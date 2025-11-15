@@ -1,4 +1,4 @@
-{ lib }:
+{ lib, inputs }:
 let
   # Auto-discover all feature modules in this directory
   # Each subdirectory with a default.nix is considered a feature module
@@ -22,6 +22,9 @@ let
   validModules = lib.filter (x: x != null) featureModules;
 in
 {
+  # Make inputs available to all imported modules
+  _module.args = { inherit inputs; };
+
   # Return list of all feature modules to import
   imports = validModules;
 }

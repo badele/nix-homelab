@@ -53,11 +53,19 @@ let
       '';
     };
 
-    version = mkOption {
+    pinnedVersion = mkOption {
       type = nullOr str;
       default = null;
       description = ''
         Application/container version
+      '';
+    };
+
+    nixpkgsVersion = mkOption {
+      type = nullOr str;
+      default = null;
+      description = ''
+        last Application/container version
       '';
     };
 
@@ -83,7 +91,6 @@ let
     }:
     {
       enable = mkEnableOption "Enable this feature";
-      remoteAccess = mkEnableOption "Allow remote access to this application (create new listening port 20000 + appId";
 
       appInfos = mkOption {
         type = submodule { options = appInfosOptions; };
@@ -92,6 +99,27 @@ let
           Application informations
         '';
       };
+
+      homepage = mkOption {
+        type = nullOr attrs;
+        default = null;
+        description = ''
+          Homepage dashboard configuration for this service.
+          If set, this service will appear in the homepage dashboard.
+        '';
+      };
+
+      gatus = mkOption {
+        type = nullOr attrs;
+        default = null;
+        description = ''
+          gatus configuration for this service.
+          If set, this service will appear in the gatus dashboard.
+        '';
+      };
+
+      remoteAccess = mkEnableOption "Allow remote access to this application (create new listening port 20000 + appId";
+
     }
     // extraOptions;
 
@@ -107,7 +135,16 @@ let
     "@service-${appName}-restart" = "systemctl restart podman-${appName}";
     "@service-${appName}-status" = "systemctl status podman-${appName}";
   };
+
+  mkServiceAliases = appName: {
+    "@service-${appName}-logs" = "journalctl -u ${appName}";
+    "@service-${appName}-start" = "systemctl start ${appName}";
+    "@service-${appName}-stop" = "systemctl stop ${appName}";
+    "@service-${appName}-restart" = "systemctl restart ${appName}";
+    "@service-${appName}-status" = "systemctl status ${appName}";
+  };
+
 in
 {
-  inherit mkFeatureOptions mkPodmanAliases;
+  inherit mkFeatureOptions mkPodmanAliases mkServiceAliases;
 }

@@ -8,6 +8,11 @@
   # https://www.privacyguides.org/en/dns
   # https://dnsprivacy.org/public_resolvers
   # https://www.joindns4.eu/for-public
+  bootstrapDns = [
+    "9.9.9.9"
+    "1.1.1.1"
+  ];
+
   upstreams = {
     groups = {
       default = [
@@ -44,10 +49,5 @@
         "adult"
       ];
     };
-  };
-
-  ports = {
-    dns = 53;
-    http = 4000;
   };
 }

@@ -4,7 +4,7 @@ with types;
 
 let
   helpers = import ./helpers.nix { inherit lib; };
-  inherit (helpers) mkFeatureOptions mkPodmanAliases;
+  inherit (helpers) mkFeatureOptions mkPodmanAliases mkServiceAliases;
 
   hostOptions =
     with lib;
@@ -112,37 +112,42 @@ in
     # Central port registry with predefined appIds
     homelab.portRegistry = {
       blocky = {
-        appId = 1;
-        httpPort = 10001;
+        appId = 0;
+        httpPort = 10000;
       };
       step-ca = {
-        appId = 2;
-        httpPort = 10002;
+        appId = 10;
+        httpPort = 10010;
       };
       lldap = {
-        appId = 3;
-        httpPort = 10003;
+        appId = 20;
+        httpPort = 10020;
       };
       grafana = {
-        appId = 4;
-        httpPort = 10004;
+        appId = 30;
+        httpPort = 10030;
       };
       victoriametrics = {
-        appId = 5;
-        httpPort = 10005;
+        appId = 40;
+        httpPort = 10040;
       };
-      homepage = {
-        appId = 6;
-        httpPort = 10006;
+      homepage-dashboard = {
+        appId = 50;
+        httpPort = 10050;
       };
       homelab-summary = {
-        appId = 7;
-        httpPort = 10007;
+        appId = 60;
+        httpPort = 10060;
+      };
+      gatus = {
+        appId = 70;
+        httpPort = 10070;
       };
     };
 
     # Export the helper functions so feature modules can use them
     _module.args.mkFeatureOptions = mkFeatureOptions;
     _module.args.mkPodmanAliases = mkPodmanAliases;
+    _module.args.mkServiceAliases = mkServiceAliases;
   };
 }

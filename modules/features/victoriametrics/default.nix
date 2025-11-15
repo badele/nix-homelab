@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   pkgs,
   mkFeatureOptions,
@@ -11,30 +12,66 @@ with types;
 
 let
   appName = "victoriametrics";
+  appCategory = "System Health";
+  appDisplayName = "Victoriametrics";
+  appPlatform = "nixos";
+  appIcon = "victoriametrics";
+  appDescription = "${pkgs.${appName}.meta.description}";
+  appUrl = pkgs.${appName}.meta.homepage;
+  appPinnedVersion = inputs.nixpkgs-victoriametrics.legacyPackages.${pkgs.system}.${appName}.version;
+  appNixpkgsVersion = pkgs.${appName}.version;
+
   cfg = config.homelab.features.${appName};
-  ip = config.homelab.host.address;
+
+  prometheusConfig = {
+    scrape_configs = cfg.scrapeConfigs;
+  };
 
   # Get port from central registry
-  listenPort = config.homelab.portRegistry.${appName}.httpPort;
-  appPath = "${config.homelab.podmanBaseStorage}/${appName}";
+  listenHttpPort = config.homelab.portRegistry.${appName}.httpPort;
 
-  containerUid = 0; # root
-  containerGid = 0; # root
-
-  hostUid = (builtins.elemAt config.users.users.root.subUidRanges 0).startUid + containerUid;
-  hostGid = (builtins.elemAt config.users.users.root.subGidRanges 0).startGid + containerGid;
+  # Service URL: use nginx domain if firewall is open, otherwise use direct IP:port
+  serviceURL =
+    if cfg.openFirewall then
+      "https://${cfg.serviceDomain}"
+    else
+      "http://127.0.0.1:${toString listenHttpPort}";
 
 in
 {
-  imports = [
-
-    ./vmagent.nix
-  ];
   ############################################################################
   # Options
   ############################################################################
   options.homelab.features.${appName} = mkFeatureOptions {
     extraOptions = {
+      agentRewriteUrl = mkOption {
+        type = str;
+        default = "https://${cfg.serviceDomain}/api/v1/write";
+        description = "victoriametrics URL for pushing metrics";
+      };
+
+      scrapeConfigs = mkOption {
+        type = listOf attrs;
+        default = [ ];
+        description = ''
+          Additional Prometheus scrape configurations for the agent.
+          See: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config
+
+          example:
+            [
+              {
+                job_name = "telegraf-exporter";
+                metrics_path = "/metrics";
+                static_configs = [
+                  {
+                    targets = [ "127.0.0.1:9273" ];
+                    labels.type = "telegraf";
+                  }
+                ];
+              }
+            ]
+        '';
+      };
 
       serviceDomain = mkOption {
         type = str;
@@ -43,7 +80,7 @@ in
       };
 
       openFirewall = mkEnableOption "Open firewall ports (incoming)";
-
+      openTailscale = mkEnableOption "Open firewall ports for tailscale (incoming)";
     };
   };
 
@@ -53,78 +90,102 @@ in
   config = lib.mkMerge [
     # Always set appInfos, even when disabled
     {
+
       homelab.features.${appName} = {
         appInfos = {
-          category = "System Health";
-          displayName = "Victoriametrics Server";
-          description = "Simple, Reliable, Efficient Monitoring.";
-          platform = "podman";
-          icon = "victoriametrics";
-          url = "https://victoriametrics.com";
-          image = "victoriametrics/victoria-metrics";
-          version = "v1.129.1";
+          category = appCategory;
+          displayName = appDisplayName;
+          platform = appPlatform;
+          icon = appIcon;
+          description = appDescription;
+          url = appUrl;
+          pinnedVersion = appPinnedVersion;
+          nixpkgsVersion = appNixpkgsVersion;
         };
       };
+
     }
 
     # Only apply when enabled
     (lib.mkIf cfg.enable {
+
+      homelab.features.${appName} = {
+        homepage = {
+          icon = appIcon;
+          href = serviceURL;
+          description = appDescription;
+          siteMonitor = serviceURL;
+        };
+
+        gatus = mkIf cfg.enable {
+          name = appDisplayName;
+          url = serviceURL;
+          group = appCategory;
+          type = "HTTP";
+          interval = "5m";
+          conditions = [
+            "[STATUS] == 200"
+            "[BODY] == pat(*Single-node VictoriaMetrics*)"
+            "[RESPONSE_TIME] < 50"
+          ];
+        };
+
+      };
+
       networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [
         443
       ];
 
-      systemd.tmpfiles.rules = [
-        # Application data
-        "d ${appPath} 0750 root root -"
-        "d ${appPath}/data 0750 root root -"
-
-        # Backup directory
-        "d /var/backup/lldap 0750 root root -"
+      services.grafana.provision.datasources.settings.datasources = [
+        {
+          name = "VictoriaMetrics";
+          type = "victoriametrics-metrics-datasource";
+          access = "proxy";
+          url = "https://${config.homelab.features.victoriametrics.serviceDomain}";
+          version = 1;
+          editable = false;
+          isDefault = true;
+          jsonData = {
+            httpMethod = "POST";
+            timeInterval = "30s";
+          };
+        }
+        {
+          name = "Prometheus";
+          type = "prometheus";
+          access = "proxy";
+          url = "https://${config.homelab.features.victoriametrics.serviceDomain}";
+          version = 1;
+          editable = false;
+          isDefault = false;
+        }
       ];
 
-      # Update secrets permissions before starting the container
-      systemd.services."podman-${appName}" = {
-        preStart = lib.mkAfter ''
-          chown ${toString hostUid}:${toString hostGid} ${appPath}/data 
-        '';
-      };
+      services.victoriametrics = {
+        enable = true;
+        package = inputs.nixpkgs-victoriametrics.legacyPackages.${pkgs.system}.victoriametrics;
 
-      # Add Podman management aliases
-      programs.bash.shellAliases = mkPodmanAliases appName;
+        # webui and prometheus remote write endpoint
+        listenAddress = "127.0.0.1:${toString listenHttpPort}";
 
-      # victoria-metrics
-      virtualisation.oci-containers.containers.${appName} = {
-        image = "${cfg.appInfos.image}:${cfg.appInfos.version}";
+        retentionPeriod = "100y";
 
-        cmd = [
-          "-storageDataPath=/data/victoriametrics"
-          "-retentionPeriod=100y"
+        extraOptions = [
           "-selfScrapeInterval=5s"
         ];
 
-        ports = [
-          "127.0.0.1:${toString listenPort}:8428"
-        ];
-
-        volumes = [
-          "${appPath}/data:/data/victoriametrics"
-        ];
-
-        extraOptions = [
-          "--cap-drop=ALL"
-
-          # for nginx
-          "--cap-add=CHOWN"
-          "--cap-add=SETUID"
-          "--cap-add=SETGID"
-          "--cap-add=DAC_OVERRIDE"
-          "--cap-add=NET_BIND_SERVICE"
-          "--subuidname=root"
-          "--subgidname=root"
-        ];
       };
 
-      homelab.alias = lib.mkIf cfg.openFirewall [ "${cfg.serviceDomain}" ];
+      services.vmagent = {
+        enable = true;
+        package = inputs.nixpkgs-victoriametrics.legacyPackages.${pkgs.system}.vmagent;
+
+        remoteWrite.url = "${cfg.agentRewriteUrl}";
+
+        prometheusConfig = prometheusConfig;
+      };
+
+      homelab.alias = [ "${cfg.serviceDomain}" ];
 
       services.nginx.virtualHosts = lib.mkIf cfg.openFirewall {
         "${cfg.serviceDomain}" = {
@@ -132,7 +193,7 @@ in
           enableACME = true;
 
           locations."/" = {
-            proxyPass = "http://127.0.0.1:${toString listenPort}";
+            proxyPass = "http://127.0.0.1:${toString listenHttpPort}";
             recommendedProxySettings = true;
             proxyWebsockets = true;
 

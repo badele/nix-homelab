@@ -10,19 +10,10 @@ with lib;
 with types;
 
 let
-  appName = "lldap";
-  appCategory = "Core Services";
-  appDisplayName = "LLDAP";
-  appPlatform = "nixos";
-  appIcon = "lldap";
-  appUrl = pkgs.${appName}.meta.homepage;
-  appDescription = "${pkgs.${appName}.meta.description}";
-  appPinnedVersion = pkgs.${appName}.version;
-
+  appName = "gatus";
   cfg = config.homelab.features.${appName};
 
   listenHttpPort = config.homelab.portRegistry.${appName}.httpPort;
-  listenLDAPPort = config.homelab.portRegistry.${appName}.httpPort + 1;
 
   # Service URL: use nginx domain if firewall is open, otherwise use direct IP:port
   serviceURL =
@@ -30,6 +21,12 @@ let
       "https://${cfg.serviceDomain}"
     else
       "http://127.0.0.1:${toString listenHttpPort}";
+
+  # Collect all features with homepage configuration
+  featuresWithGatus = lib.filterAttrs (
+    name: feature: feature.enable or false && feature.gatus != null
+  ) config.homelab.features;
+
 in
 {
   ############################################################################
@@ -43,12 +40,6 @@ in
         type = str;
         default = "${appName}.${config.homelab.domain}";
         description = "${appName} service domain name";
-      };
-
-      ldapDomain = mkOption {
-        type = str;
-        default = "dc=homelab,dc=lan";
-        description = "Base DN for the LDAP directory";
       };
 
       openFirewall = mkEnableOption "Open firewall ports (incoming)";
@@ -65,14 +56,15 @@ in
       {
         homelab.features.${appName} = {
           appInfos = {
-            category = appCategory;
-            displayName = appDisplayName;
-            icon = appIcon;
-            platform = appPlatform;
-            url = appUrl;
-            description = appDescription;
-            pinnedVersion = appPinnedVersion;
+            category = "System Health";
+            displayName = "Gatus";
+            icon = "gatus";
+            platform = "nixos";
+            description = "${pkgs.${appName}.meta.description}";
+            url = pkgs.${appName}.meta.homepage;
+            pinnedVersion = pkgs.${appName}.version;
           };
+
         };
       }
 
@@ -81,96 +73,40 @@ in
 
         homelab.features.${appName} = {
           homepage = mkIf cfg.enable {
-            icon = appIcon;
+            icon = cfg.appInfos.icon;
             href = serviceURL;
-            description = appDescription;
+            description = cfg.appInfos.description;
             siteMonitor = serviceURL;
           };
-
-          gatus = mkIf cfg.enable {
-            name = appDisplayName;
-            url = "${serviceURL}/api/health";
-            group = appCategory;
-            type = "HTTP";
-            interval = "5m";
-            conditions = [
-              "[STATUS] == 200"
-              "[BODY] == pat(*LLDAP Administration*)"
-              "[RESPONSE_TIME] < 50"
-            ];
-          };
-
         };
 
         # Open firewall ports if openFirewall is enabled
         networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [
-          listenLDAPPort
           443
         ];
-
-        users.users.lldap = {
-          isSystemUser = true;
-          description = "LLDAP service user";
-          home = "/var/lib/lldap";
-          createHome = true;
-          shell = pkgs.bash;
-          group = "lldap";
-        };
-
-        users.groups.lldap = { };
-
-        clan.core.vars.generators.lldap = {
-          files.jwt-secret = {
-            owner = "lldap";
-            group = "lldap";
-          };
-          files.password = {
-            owner = "lldap";
-            group = "lldap";
-          };
-          files.envfile = {
-            owner = "lldap";
-            group = "lldap";
-          };
-
-          runtimeInputs = [
-            pkgs.pwgen
-          ];
-
-          script = ''
-            pwgen -s 32 1 > "$out/jwt-secret"
-            pwgen -s 16 1 > "$out/password"
-
-            KEYSEED="$(pwgen -s 32 1)"
-            cat > "$out/envfile" << EOF
-            LLDAP_KEY_SEED=$KEYSEED
-            EOF
-          '';
-        };
 
         # Add domain alias
         homelab.alias = [ "${cfg.serviceDomain}" ];
 
-        services.lldap = {
-          enable = true;
-
-          settings = {
-            http_port = listenHttpPort;
-            ldap_port = listenLDAPPort;
-
-            ldap_base_dn = cfg.ldapDomain;
-          };
-
-          environment = {
-            LLDAP_LDAP_BASE_DN = cfg.ldapDomain;
-            LLDAP_JWT_SECRET_FILE = config.clan.core.vars.generators.${appName}.files."jwt-secret".path;
-            LLDAP_LDAP_USER_PASS_FILE = config.clan.core.vars.generators.${appName}.files."password".path;
-          };
-
-          environmentFile = config.clan.core.vars.generators.${appName}.files."envfile".path;
+        # Add service alias
+        programs.bash.shellAliases = (mkServiceAliases appName) // {
         };
 
-        # Enable lldap in TLS mode with nginx reverse proxy if openFirewall is enabled
+        # Enable Gatus service
+        services.${appName} = {
+          enable = true;
+          settings = {
+            web.port = listenHttpPort;
+            storage = {
+              type = "sqlite";
+              path = "/var/lib/gatus/gatus.db";
+            };
+
+            endpoints = lib.mapAttrsToList (name: feature: feature.gatus) featuresWithGatus;
+          };
+        };
+
+        # Enable gatus in TLS mode with nginx reverse proxy if openFirewall is enabled
         services.nginx.virtualHosts = mkIf cfg.openFirewall {
           "${cfg.serviceDomain}" = {
             forceSSL = true;
@@ -193,9 +129,13 @@ in
                 add_header X-Content-Type-Options "nosniff" always;
 
                 # Send only domain with URL referer
+                add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 
+                # Disable all unused browser features for better privacy
+                add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
 
-                add_header Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; img-src 'self' data:; media-src 'self' blob: https:; connect-src 'self' https:;" always;
+                # Allow only specific sources to load content (CSP)
+                add_header Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob: https:; connect-src 'self' https:;" always;
 
                 # Modern CORS headers
                 add_header Cross-Origin-Opener-Policy "same-origin" always;

@@ -3,17 +3,31 @@
   lib,
   pkgs,
   mkFeatureOptions,
-  mkPodmanAliases,
+  mkServiceAliases,
   ...
 }:
+with lib;
+with types;
 let
   appName = "step-ca";
+  appCategory = "Core Services";
+  appDisplayName = "Step CA";
+  appPlatform = "nixos";
+  appIcon = "step-ca";
+  appDescription = "${pkgs.${appName}.meta.description}";
+  appUrl = pkgs.${appName}.meta.homepage;
+  appHealthUrl = "${serviceURL}/health";
+  appPinnedVersion = pkgs.${appName}.version;
+
   cfg = config.homelab.features.${appName};
   secrets = config.clan.core.vars.generators;
   ip = config.homelab.host.address;
 
   # Get port from central registry
-  listenPort = config.homelab.portRegistry.${appName}.httpPort;
+  listenHttpPort = config.homelab.portRegistry.${appName}.httpPort;
+
+  # Service URL: use nginx domain if firewall is open, otherwise use direct IP:port
+  serviceURL = "https://${cfg.serviceDomain}:${toString listenHttpPort}";
 
   yaml = pkgs.formats.json { };
 in
@@ -21,37 +35,33 @@ in
   ############################################################################
   # Options
   ############################################################################
-  options.homelab.features.${appName} =
-    with lib;
-    with types;
-    mkFeatureOptions {
-      extraOptions = {
-        serviceDomain = mkOption {
-          type = str;
-          default = "ca.${config.homelab.domain}";
-          description = "${appName} service domain name / API REST (ACME)";
-        };
-
-        settings = mkOption {
-          type = yaml.type;
-          apply = yaml.generate "ca.json";
-          default = import ./settings.nix {
-            inherit
-              config
-              lib
-              appName
-              ;
-          };
-          description = ''
-            Step CA configuration.
-            See: https://smallstep.com/docs/step-ca/configuration
-          '';
-        };
-
-        openFirewall = mkEnableOption "Open firewall ports (incoming)";
-
+  options.homelab.features.${appName} = mkFeatureOptions {
+    extraOptions = {
+      serviceDomain = mkOption {
+        type = str;
+        default = "ca.${config.homelab.domain}";
+        description = "${appName} service domain name / API REST (ACME)";
       };
+
+      settings = mkOption {
+        type = yaml.type;
+        default = import ./settings.nix {
+          inherit
+            config
+            lib
+            appName
+            ;
+        };
+        description = ''
+          Step CA configuration.
+          See: https://smallstep.com/docs/step-ca/configuration
+        '';
+      };
+
+      openFirewall = mkEnableOption "Open firewall ports (incoming)";
+
     };
+  };
 
   ############################################################################
   # Configuration
@@ -61,20 +71,42 @@ in
     {
       homelab.features.${appName} = {
         appInfos = {
-          category = "Core Services";
-          displayName = "Step CA";
-          description = "Online Certificate Authority for secure automated certificate management";
-          platform = "podman";
-          icon = "step-ca";
-          url = "https://smallstep.com/docs/step-ca";
-          image = "smallstep/step-ca";
-          version = "0.28.4";
+          category = appCategory;
+          displayName = appDisplayName;
+          platform = appPlatform;
+          icon = appIcon;
+          description = appDescription;
+          url = appUrl;
+          pinnedVersion = appPinnedVersion;
         };
       };
     }
 
     # Only apply when enabled
     (lib.mkIf cfg.enable {
+      homelab.features.${appName} = {
+        homepage = {
+          icon = appIcon;
+          href = appHealthUrl;
+          description = appDescription;
+          siteMonitor = appHealthUrl;
+        };
+
+        gatus = mkIf cfg.enable {
+          name = appDisplayName;
+          url = appHealthUrl;
+          group = appCategory;
+          type = "HTTP";
+          interval = "5m";
+          conditions = [
+            "[STATUS] == 200"
+            "[BODY].status == ok"
+            "[RESPONSE_TIME] < 50"
+          ];
+        };
+
+      };
+
       # Root CA
       clan.core.vars.generators = {
         step-ca-root-ca = {
@@ -114,6 +146,9 @@ in
           files."intermediate-ca.key" = {
             secret = true;
             deploy = true; # Needed for step-ca
+
+            owner = "step-ca";
+            group = "step-ca";
           };
           files."intermediate-ca.crt" = {
             secret = false;
@@ -147,7 +182,7 @@ in
       };
 
       networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [
-        listenPort
+        listenHttpPort
       ];
 
       # Trust the root CA system-wide
@@ -158,56 +193,28 @@ in
       # ACME configuration for automatic certs
       security.acme = {
         acceptTerms = true;
-        defaults.server = "https://${cfg.serviceDomain}:${toString listenPort}/acme/acme/directory";
+        defaults.server = "https://${cfg.serviceDomain}:${toString listenHttpPort}/acme/acme/directory";
         defaults.email = "admin@ma-cabane";
       };
 
       homelab.alias = [ "${cfg.serviceDomain}" ];
 
-      # Add Podman management aliases
-      programs.bash.shellAliases = mkPodmanAliases appName // {
+      # Add service management aliases
+      programs.bash.shellAliases = mkServiceAliases appName // {
         # TODO: create script for best visibility
         "@service-${appName}-reset-all-acme-certs" =
           "systemctl stop 'acme-*' ; rm -rf /var/lib/acme/.lego/* ; rm -rf /var/lib/acme/* ; rm -rf /var/lib/acme/.lego ; systemctl start --all 'acme-order-renew-*'";
       };
 
-      virtualisation.oci-containers.containers.${appName} = {
-        image = "${cfg.appInfos.image}:${cfg.appInfos.version}";
+      services.${appName} = {
+        enable = true;
+        port = listenHttpPort;
+        address = ip;
+        settings = cfg.settings;
 
-        ports = [
-          "${ip}:${toString listenPort}:9000"
-        ];
-
-        volumes = [
-          "${cfg.settings}:/home/step/config/ca.json:ro"
-          "${secrets.step-ca-root-ca.files."root-ca.crt".path}:/home/step/certs/root_ca.crt:ro"
-          "${
-            secrets.step-ca-intermediate-ca.files."intermediate-ca.key".path
-          }:/home/step/secrets/intermediate_ca_key:U,ro"
-          "${
-            secrets.step-ca-intermediate-ca.files."intermediate-ca.crt".path
-          }:/home/step/certs/intermediate_ca.crt:ro"
-          "${
-            secrets.step-ca-intermediate-ca.files."intermediate-password.txt".path
-          }:/home/step/secrets/password:U,ro"
-
-        ];
-
-        extraOptions = [
-          "--cap-drop=ALL"
-
-          # for nginx
-          "--cap-add=CHOWN"
-          "--cap-add=SETUID"
-          "--cap-add=SETGID"
-          "--cap-add=DAC_OVERRIDE"
-          "--cap-add=NET_BIND_SERVICE"
-          "--subuidname=root"
-          "--subgidname=root"
-        ];
-
+        intermediatePasswordFile = secrets.step-ca-intermediate-ca.files."intermediate-password.txt".path;
       };
-      # // cfg.containerInfos;
+
     })
   ];
 }

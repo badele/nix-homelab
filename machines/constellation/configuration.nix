@@ -19,7 +19,7 @@ in
 
   # Host information
   homelab = {
-    nameServer = targetIP;
+    nameServer = "192.168.254.154";
     host = {
       hostname = "constellation";
       description = "Constellation private server";
@@ -35,7 +35,12 @@ in
 
       blocky.enable = true;
       blocky.openFirewall = true;
+      blocky.enableMonitoring = true;
       blocky.serviceDomain = "stop-pub.${config.homelab.domain}";
+
+      homepage-dashboard.enable = true;
+      homepage-dashboard.openFirewall = true;
+      homepage-dashboard.serviceDomain = "labrique.${config.homelab.domain}";
 
       step-ca.enable = true;
       step-ca.openFirewall = true;
@@ -50,14 +55,27 @@ in
       grafana.serviceDomain = "lampiotes.${config.homelab.domain}";
 
       victoriametrics.enable = true;
-      victoriametrics-agent.enable = true; # scrapping
       victoriametrics.openFirewall = true;
       victoriametrics.serviceDomain = "sondes.${config.homelab.domain}";
+
+      gatus.enable = true;
+      gatus.openFirewall = true;
     };
   };
 
   # Static networking configuration
+  services.resolved = {
+    enable = true;
+
+    # disable stub listener to avoid port conflict with blocky DNS
+    extraConfig = ''
+      DNSStubListener=no
+    '';
+  };
+
   networking = {
+    enableIPv6 = false;
+
     useDHCP = false;
     interfaces."${config.homelab.host.interface}" = {
       useDHCP = false;

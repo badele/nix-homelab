@@ -3,26 +3,32 @@
   lib,
   pkgs,
   mkFeatureOptions,
-  mkPodmanAliases,
+  mkServiceAliases,
   ...
 }:
 with lib;
 with types;
 let
   appName = "grafana";
+  appCategory = "System Health";
+  appDisplayName = "Grafana";
+  appIcon = "grafana";
+  appPlatform = "nixos";
+  appUrl = pkgs.${appName}.meta.homepage;
+  appDescription = "${pkgs.${appName}.meta.description}";
+  appPinnedVersion = pkgs.${appName}.version;
+
   cfg = config.homelab.features.${appName};
-  ip = config.homelab.host.address;
 
   # Get port from central registry
-  listenPort = config.homelab.portRegistry.${appName}.httpPort;
+  listenHttpPort = config.homelab.portRegistry.${appName}.httpPort;
 
-  ini = pkgs.formats.ini { };
-
-  containerUid = 472; # grafana
-  containerGid = 0; # root
-
-  hostUid = (builtins.elemAt config.users.users.root.subUidRanges 0).startUid + containerUid;
-  hostGid = (builtins.elemAt config.users.users.root.subGidRanges 0).startGid + containerGid;
+  # Service URL: use nginx domain if firewall is open, otherwise use direct IP:port
+  serviceURL =
+    if cfg.openFirewall then
+      "https://${cfg.serviceDomain}"
+    else
+      "http://127.0.0.1:${toString listenHttpPort}";
 
 in
 {
@@ -33,28 +39,10 @@ in
     extraOptions = {
       enable = lib.mkEnableOption appName;
 
-      settings = lib.mkOption {
-        type = ini.type;
-        default = { };
-        apply = ini.generate "grafana.ini";
-        description = ''
-          Grafana settings. See <https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/>
-          for available options. INI format is used.
-        '';
-      };
-
       serviceDomain = mkOption {
         type = str;
         default = "${appName}.${config.homelab.domain}";
         description = "${appName} service domain name";
-      };
-
-      createAdminAccount = mkOption {
-        type = bool;
-        default = true;
-        description = ''
-          Create admin account with random password, use clan vars get <machine> grafana/admin_password
-        '';
       };
 
       openFirewall = mkEnableOption "Open firewall ports (incoming)";
@@ -68,34 +56,52 @@ in
     {
       homelab.features.${appName} = {
         appInfos = {
-          category = "System Health";
-          displayName = "Grafana";
-          description = "Monitoring and observability, providing powerful tools for visualizing and analyzing metrics.";
-          platform = "podman";
-          icon = "grafana";
-          url = "https://github.com/grafana/grafana";
-          image = "grafana/grafana";
-          version = "12.2.1";
+          category = appCategory;
+          displayName = appDisplayName;
+          icon = appIcon;
+          platform = appPlatform;
+          url = appUrl;
+          description = appDescription;
+          pinnedVersion = appPinnedVersion;
         };
       };
     }
 
     # Only apply when enabled
     (lib.mkIf cfg.enable {
-      clan.core.vars.generators.${appName} = lib.mkIf cfg.createAdminAccount {
-        # files.oauth2-client-secret = {
-        #   owner = "grafana";
-        #   group = "grafana";
-        #   mode = "0400";
-        # };
-        # files.digest-client-secret = {
-        #   owner = "grafana";
-        #   group = "grafana";
-        #   mode = "0400";
-        # };
+      homelab.features.${appName} = {
+        homepage = mkIf cfg.enable {
+          icon = appIcon;
+          href = serviceURL;
+          description = appDescription;
+          siteMonitor = serviceURL;
+        };
 
-        files.admin_password = { };
-        files.secret_key = { };
+        gatus = mkIf cfg.enable {
+          name = appDisplayName;
+          url = "${serviceURL}/api/health";
+          group = appCategory;
+          type = "HTTP";
+          interval = "5m";
+          conditions = [
+            "[STATUS] == 200"
+            "[BODY].database == ok"
+            "[RESPONSE_TIME] < 50"
+          ];
+        };
+      };
+
+      clan.core.vars.generators.${appName} = {
+        files.admin_password = {
+          owner = "grafana";
+          group = "grafana";
+          mode = "0400";
+        };
+        files.secret_key = {
+          owner = "grafana";
+          group = "grafana";
+          mode = "0400";
+        };
 
         runtimeInputs = [
           pkgs.pwgen
@@ -119,75 +125,54 @@ in
         '';
       };
 
-      # Grafana settings
-      homelab.features.${appName}.settings = lib.mkIf cfg.createAdminAccount {
-        security = {
-          cookie_secure = true;
-          admin_password = "$__file{${
-            config.clan.core.vars.generators.${appName}.files.admin_password.path
-          }}";
-          secret_key = "$__file{${config.clan.core.vars.generators.${appName}.files.secret_key.path}}";
-        };
-      };
-
-      networking.firewall.allowedUDPPorts = lib.mkIf cfg.openFirewall [
-        53
-      ];
       networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [
-        53
         443
       ];
 
-      # Update secrets permissions before starting the container
-      systemd.services."podman-${appName}" = {
-        preStart = lib.mkAfter ''
-          chown ${toString hostUid}:${toString hostGid} ${
-            config.clan.core.vars.generators.${appName}.files."admin_password".path
-          } 
-          chown ${toString hostUid}:${toString hostGid} ${
-            config.clan.core.vars.generators.${appName}.files."secret_key".path
-          }
-        '';
+      homelab.alias = [ "${cfg.serviceDomain}" ];
+      programs.bash.shellAliases = (mkServiceAliases appName) // {
+        "@service-${appName}-config" =
+          "cat $(systemctl cat ${appName} | grep ExecStart= | grep -oP '(?<=--config )\\S+')";
       };
 
-      # Add Podman management aliases
-      programs.bash.shellAliases = mkPodmanAliases appName;
+      services.grafana = {
+        enable = true;
+        provision.enable = true;
 
-      virtualisation.oci-containers.containers.${appName} = {
-        image = "${cfg.appInfos.image}:${cfg.appInfos.version}";
+        settings = {
+          server = {
+            http_port = listenHttpPort;
+            http_addr = "127.0.0.1";
+            domain = cfg.serviceDomain;
+            root_url = "https://${cfg.serviceDomain}";
+            protocol = "http";
+          };
 
-        ports = [
-          "127.0.0.1:${toString listenPort}:3000"
-        ];
+          users = {
+            allow_signup = false;
+          };
+          # TODO: enable anonymous access from NixOS option
+          "auth.anonymous" = {
+            enabled = true;
+            org_name = "ma cabane";
+            org_role = "Viewer";
+            hide_version = true;
+          };
+          security = {
+            cookie_secure = true;
+            admin_password = "$__file{${
+              config.clan.core.vars.generators."grafana".files."admin_password".path
+            }}";
+            secret_key = "$__file{${config.clan.core.vars.generators."grafana".files."secret_key".path}}";
+          };
 
-        volumes = [
-          "${cfg.settings}:/etc/grafana/grafana.ini"
+          analytics = {
+            reporting_enabled = false;
+            check_for_updates = false;
+          };
 
-          "${config.clan.core.vars.generators.${appName}.files.admin_password.path}:${
-            config.clan.core.vars.generators.${appName}.files.admin_password.path
-          }"
-
-          "${config.clan.core.vars.generators.${appName}.files.secret_key.path}:${
-            config.clan.core.vars.generators.${appName}.files.secret_key.path
-          }"
-        ];
-
-        extraOptions = [
-          "--cap-drop=ALL"
-
-          # for nginx
-          "--cap-add=CHOWN"
-          "--cap-add=SETUID"
-          "--cap-add=SETGID"
-          "--cap-add=DAC_OVERRIDE"
-          "--cap-add=NET_BIND_SERVICE"
-          "--subuidname=root"
-          "--subgidname=root"
-        ];
+        };
       };
-      # // cfg.containerInfos;
-
-      homelab.alias = lib.mkIf cfg.openFirewall [ "${cfg.serviceDomain}" ];
 
       services.nginx.virtualHosts = lib.mkIf cfg.openFirewall {
         "${cfg.serviceDomain}" = {
@@ -195,7 +180,7 @@ in
           enableACME = true;
 
           locations."/" = {
-            proxyPass = "http://127.0.0.1:${toString listenPort}";
+            proxyPass = "http://127.0.0.1:${toString listenHttpPort}";
             recommendedProxySettings = true;
             proxyWebsockets = true;
 

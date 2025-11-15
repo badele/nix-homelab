@@ -36,7 +36,7 @@ in
           icon = "";
           url = "https://github.com/badele/nix-homelab";
           image = "";
-          version = "";
+          pinnedVersion = "";
         };
       };
     }
@@ -59,7 +59,7 @@ in
             icon
             url
             image
-            version
+            pinnedVersion
             ;
           enabled = feature.enable;
           httpPort = feature.httpPort or null;
@@ -90,7 +90,8 @@ in
                   "[${service.displayName}](${service.url})"
                 else
                   service.displayName;
-              version = if service.version != null && service.version != "" then service.version else "-";
+              version =
+                if service.pinnedVersion != null && service.pinnedVersion != "" then service.pinnedVersion else "-";
               platform = service.platform;
               description = service.description;
             in
@@ -114,7 +115,7 @@ in
       in
       {
         # Generate features summary JSON
-        environment.etc."nix-homelab/features.json" = {
+        environment.etc."homelab/features.json" = {
           text = builtins.toJSON {
             hostname = config.networking.hostName;
             domain = config.homelab.domain;
@@ -123,7 +124,7 @@ in
         };
 
         # Generate features summary Markdown
-        environment.etc."nix-homelab/features.md" = {
+        environment.etc."homelab/features.md" = {
           text = mkMarkdownContent;
         };
       }

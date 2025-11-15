@@ -48,7 +48,7 @@
           ./homelab
 
           # Import all features definition
-          (import ./features { inherit lib; })
+          (import ./features { inherit lib inputs; })
         ];
       };
 

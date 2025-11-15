@@ -30,7 +30,7 @@
   services.earlyoom = {
     enable = true;
     enableNotifications = true;
-    freeMemThreshold = 5; # Déclenche quand <5% de RAM libre
+    freeMemThreshold = 10; # Déclenche quand <5% de RAM libre
     freeSwapThreshold = 100; # Pas de swap, donc on met 100
   };
 

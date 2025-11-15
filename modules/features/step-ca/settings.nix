@@ -5,12 +5,13 @@
 }:
 let
   cfg = config.homelab.features.${appName};
+  secrets = config.clan.core.vars.generators;
+
 in
 {
-  root = "/home/step/certs/root_ca.crt";
-  crt = "/home/step/certs/intermediate_ca.crt";
-  key = "/home/step/secrets/intermediate_ca_key";
-  address = ":9000";
+  root = secrets.step-ca-root-ca.files."root-ca.crt".path;
+  crt = secrets.step-ca-intermediate-ca.files."intermediate-ca.crt".path;
+  key = secrets.step-ca-intermediate-ca.files."intermediate-ca.key".path;
   dnsNames = [
     cfg.serviceDomain
   ];
@@ -19,7 +20,7 @@ in
   };
   db = {
     type = "badgerv2";
-    dataSource = "/home/step/db";
+    dataSource = "/var/lib/step-ca/db";
   };
   authority = {
     provisioners = [

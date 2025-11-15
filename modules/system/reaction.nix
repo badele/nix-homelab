@@ -112,8 +112,7 @@ in
         enable = true;
         description = "Daemon to ban hosts that cause multiple authentication errors";
         after = [ "network.target" ];
-        #wantedBy = [ "multi-user.target" ];
-        wantedBy = [ ];
+        wantedBy = [ "multi-user.target" ];
         path = [
           pkgs.iptables
           pkgs.sudo

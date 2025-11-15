@@ -3,7 +3,7 @@
   lib,
   pkgs,
   mkFeatureOptions,
-  mkPodmanAliases,
+  mkServiceAliases,
   ...
 }:
 with lib;
@@ -11,13 +11,24 @@ with types;
 
 let
   appName = "blocky";
+  appDisplayName = "Blocky";
+  appCategory = "Core Services";
+  appIcon = "blocky";
+  appPlatform = "nixos";
+  appDescription = "${pkgs.${appName}.meta.description}";
+  appUrl = pkgs.${appName}.meta.homepage;
+  appPinnedVersion = pkgs.${appName}.version;
+
   cfg = config.homelab.features.${appName};
-  ip = config.homelab.host.address;
 
-  # Get port from central registry
-  listenPort = config.homelab.portRegistry.${appName}.httpPort;
+  listenHttpPort = config.homelab.portRegistry.${appName}.httpPort;
 
-  yaml = pkgs.formats.yaml { };
+  # Service URL: use nginx domain if firewall is open, otherwise use direct IP:port
+  serviceURL =
+    if cfg.openFirewall then
+      "https://${cfg.serviceDomain}"
+    else
+      "http://127.0.0.1:${toString listenHttpPort}";
 in
 {
   ############################################################################
@@ -28,15 +39,16 @@ in
       enable = mkEnableOption appName;
 
       settings = mkOption {
-        type = yaml.type;
-        apply = yaml.generate "config.yml";
+        type = lib.types.attrsOf lib.types.anything;
         default = import ./settings.nix { inherit config lib appName; };
         description = ''
-          Blocky configuration. Refer to
+          ${appDisplayName} configuration. Refer to
           <https://0xerr0r.github.io/blocky/configuration/>
           for details on supported values.
         '';
       };
+
+      metricsExporter = mkEnableOption "Enable Prometheus metrics exporter";
 
       serviceDomain = mkOption {
         type = str;
@@ -44,8 +56,10 @@ in
         description = "${appName} service domain name";
       };
 
-      openFirewall = mkEnableOption "Open firewall ports (incoming)";
       enableMonitoring = mkEnableOption "Enable monitoring features";
+
+      openFirewall = mkEnableOption "Open firewall ports (incoming)";
+      openTailscale = mkEnableOption "Open firewall ports for tailscale (incoming)";
     };
   };
 
@@ -58,50 +72,116 @@ in
       {
         homelab.features.${appName} = {
           appInfos = {
-            category = "Core Services";
-            displayName = "Blocky";
-            description = "Fast and lightweight DNS proxy as ad-blocker";
-            platform = "podman";
-            icon = "blocky";
-            url = "https://0xerr0r.github.io/blocky/";
-            image = "ghcr.io/0xerr0r/blocky";
-            version = "v0.27.0";
+            category = appCategory;
+            displayName = appDisplayName;
+            icon = appIcon;
+            platform = appPlatform;
+            description = appDescription;
+            url = appUrl;
+            pinnedVersion = appPinnedVersion;
           };
+
         };
       }
 
       # Only apply when enabled
       (mkIf cfg.enable {
 
-        # blocky section
-        homelab.features.${appName}.settings = mkMerge [
-          # Default configuration
-          (import ./settings.nix)
+        homelab.features.${appName} = {
+          homepage = mkIf cfg.enable {
+            icon = appIcon;
+            href = serviceURL;
+            description = appDescription;
+            siteMonitor = serviceURL;
+          };
 
-          # monitoring settings
-          (mkIf cfg.enableMonitoring {
-            prometheus.enable = true;
-          })
+          gatus = mkIf cfg.enable {
+            name = appDisplayName;
+            url = serviceURL;
+            group = appCategory;
+            type = "HTTP";
+            interval = "5m";
+            conditions = [
+              "[STATUS] == 200"
+              "[BODY] == pat(*Version ${appPinnedVersion}*)"
+              "[RESPONSE_TIME] < 50"
+            ];
+          };
 
-          # Alias
-          (mkIf (config.homelab.alias != [ ]) {
-            customDNS =
-              let
-                aliasMapping = listToAttrs (
-                  map (alias: {
-                    name = alias;
-                    value = config.homelab.host.address;
-                  }) config.homelab.alias
-                );
-              in
-              {
-                customTTL = "1h";
-                filterUnmappedTypes = true;
-                mapping = aliasMapping;
+          settings = mkMerge [
+            # Default configuration
+            (import ./settings.nix)
+
+            # monitoring settings
+            (mkIf cfg.enableMonitoring {
+              prometheus.enable = true;
+            })
+
+            # Serve alias domain
+            (mkIf (config.homelab.alias != [ ]) {
+              customDNS =
+                let
+                  aliasMapping = listToAttrs (
+                    map (alias: {
+                      name = alias;
+                      value = config.homelab.host.address;
+                    }) config.homelab.alias
+                  );
+                in
+                {
+                  customTTL = "1h";
+                  filterUnmappedTypes = true;
+                  mapping = aliasMapping;
+                };
+            })
+
+            {
+              ports = {
+                dns = 53;
+                http = listenHttpPort;
               };
-          })
+            }
+
+          ];
+        };
+
+        # Add VictoriaMetrics scrape config if monitoring is enabled
+        homelab.features.victoriametrics.scrapeConfigs = lib.mkIf cfg.enableMonitoring [
+          {
+            job_name = "blocky";
+            metrics_path = "/metrics";
+            static_configs = [
+              {
+                targets = [ serviceURL ];
+                labels = {
+                  instance = config.networking.hostName;
+                  hostname = cfg.serviceDomain;
+                };
+              }
+            ];
+          }
         ];
 
+        # Add Grafana dashboard if monitoring is enabled
+        services.grafana.provision.dashboards.settings.providers = lib.mkIf cfg.enableMonitoring [
+          {
+            name = "blocky";
+            orgId = 1;
+            type = "file";
+            disableDeletion = true;
+            options.path =
+              let
+                dashboardContent = builtins.readFile ./grafana_dashboard.json;
+                # Replace the hardcoded domain with the actual serviceURL
+                customizedDashboard =
+                  builtins.replaceStrings [ "BLOCKY_URL_CONTENT" ] [ cfg.serviceDomain ]
+                    dashboardContent;
+              in
+              "${pkgs.writeTextDir "${appName}-dashboard.json" customizedDashboard}/${appName}-dashboard.json";
+          }
+        ];
+
+        # Open firewall ports if openFirewall is enabled
         networking.firewall.allowedUDPPorts = mkIf cfg.openFirewall [
           53
         ];
@@ -110,46 +190,29 @@ in
           443
         ];
 
-        # Add Podman management aliases
-        programs.bash.shellAliases = mkPodmanAliases appName;
+        # Add domain alias
+        homelab.alias = [ "${cfg.serviceDomain}" ];
 
-        virtualisation.oci-containers.containers.${appName} = {
-          image = "${cfg.appInfos.image}:${cfg.appInfos.version}";
-
-          ports = [
-            "${ip}:53:53/udp"
-            "${ip}:53:53/tcp"
-            "127.0.0.1:${toString listenPort}:4000"
-          ];
-
-          volumes = [
-            "${cfg.settings}:/app/config.yml"
-          ];
-
-          extraOptions = [
-            "--cap-drop=ALL"
-
-            # for nginx
-            "--cap-add=CHOWN"
-            "--cap-add=SETUID"
-            "--cap-add=SETGID"
-            "--cap-add=DAC_OVERRIDE"
-            "--cap-add=NET_BIND_SERVICE"
-            "--subuidname=root"
-            "--subgidname=root"
-          ];
+        # Add service alias
+        programs.bash.shellAliases = (mkServiceAliases appName) // {
+          "@service-${appName}-config" =
+            "cat $(systemctl cat ${appName} | grep ExecStart= | grep -oP '(?<=--config )\\S+')";
         };
-        # // cfg.containerInfos;
 
-        homelab.alias = mkIf cfg.openFirewall [ "${cfg.serviceDomain}" ];
+        # Enable Blocky service
+        services.${appName} = {
+          enable = true;
+          settings = cfg.settings;
+        };
 
+        # Enable blocky in TLS mode with nginx reverse proxy if openFirewall is enabled
         services.nginx.virtualHosts = mkIf cfg.openFirewall {
           "${cfg.serviceDomain}" = {
             forceSSL = true;
             enableACME = true;
 
             locations."/" = {
-              proxyPass = "http://127.0.0.1:${toString listenPort}";
+              proxyPass = "http://127.0.0.1:${toString listenHttpPort}";
               recommendedProxySettings = true;
               proxyWebsockets = true;
 

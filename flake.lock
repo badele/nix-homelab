@@ -462,6 +462,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-victoriametrics": {
+      "locked": {
+        "lastModified": 1762381381,
+        "narHash": "sha256-5KWsdsuwQQV3qyUb9My7ft7vWiritFk7XsdqUrZT6wI=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "fd3242d8141a871affe1f3bedc2145eab5d2ae64",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "fd3242d8141a871affe1f3bedc2145eab5d2ae64",
+        "type": "github"
+      }
+    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1761672384,
@@ -570,6 +586,7 @@
         "home-manager": "home-manager",
         "impermanence": "impermanence",
         "nixpkgs": "nixpkgs_2",
+        "nixpkgs-victoriametrics": "nixpkgs-victoriametrics",
         "nixunits": "nixunits",
         "nur": "nur",
         "sops-nix": "sops-nix_2",
