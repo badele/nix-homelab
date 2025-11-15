@@ -61,7 +61,7 @@
 
           # Wireguard
           pkgs.wireguard-tools
-          pkgs.openssl_3_0.bin
+          pkgs.openssl_3.bin
 
           # Openstack
           pkgs.openstackclient

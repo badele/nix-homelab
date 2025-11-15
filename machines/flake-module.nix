@@ -85,14 +85,8 @@ in
           };
         };
 
-        # https://docs.clan.lol/guides/mesh-vpn/
-        # list zerotier network ID - zerotier-cli info
-        # zerotier = {
-        #   roles.controller.machines."houston" = { };
-        #   roles.moon.machines."houston".settings.stableEndpoints = [ houston_ipv4 ];
-        #   roles.peer.machines."gagarin" = { };
-        # };
-
+        # TODO: add postbackup to write to /var/logs/telegraf/borgbackup metric
+        # try to contribute to borgbackup module to add this feature
         borgbackup = {
           roles.client.machines."houston".settings = {
             destinations."storagebox" = {
