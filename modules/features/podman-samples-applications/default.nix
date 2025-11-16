@@ -7,7 +7,8 @@
   ...
 }:
 let
-  appName = "lldap";
+  # appName = "lldap";
+  appName = "podman-lldap";
   cfg = config.homelab.features.${appName};
   ip = config.homelab.host.address;
 
@@ -63,7 +64,7 @@ in
           icon = "podman";
           url = "https://github.com/badele/nix-homelab";
           image = "lldap/lldap";
-          version = "2025-09-28-alpine";
+          pinnedVersion = "2025-09-28-alpine";
         };
       };
     }

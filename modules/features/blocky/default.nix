@@ -79,6 +79,7 @@ in
             description = appDescription;
             url = appUrl;
             pinnedVersion = appPinnedVersion;
+            serviceURL = serviceURL;
           };
 
         };
@@ -104,7 +105,6 @@ in
             conditions = [
               "[STATUS] == 200"
               "[BODY] == pat(*Version ${appPinnedVersion}*)"
-              "[RESPONSE_TIME] < 50"
             ];
           };
 

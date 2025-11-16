@@ -41,7 +41,8 @@ let
       };
 
       gateway = mkOption {
-        type = str;
+        type = nullOr str;
+        default = null;
         description = ''
           Gateway address
         '';
@@ -66,7 +67,8 @@ in
     };
 
     homelab.nameServer = mkOption {
-      type = str;
+      type = nullOr str;
+      default = null;
       description = ''
         host or Ip for the main name server
       '';
@@ -142,6 +144,18 @@ in
       gatus = {
         appId = 70;
         httpPort = 10070;
+      };
+      goaccess = {
+        appId = 80;
+        httpPort = 10080;
+      };
+      wastebin = {
+        appId = 90;
+        httpPort = 10090;
+      };
+      pawtunes = {
+        appId = 100;
+        httpPort = 10100;
       };
     };
 

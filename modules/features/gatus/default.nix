@@ -63,6 +63,7 @@ in
             description = "${pkgs.${appName}.meta.description}";
             url = pkgs.${appName}.meta.homepage;
             pinnedVersion = pkgs.${appName}.version;
+            serviceURL = serviceURL;
           };
 
         };

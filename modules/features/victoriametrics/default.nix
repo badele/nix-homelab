@@ -101,6 +101,7 @@ in
           url = appUrl;
           pinnedVersion = appPinnedVersion;
           nixpkgsVersion = appNixpkgsVersion;
+          serviceURL = serviceURL;
         };
       };
 
@@ -126,7 +127,6 @@ in
           conditions = [
             "[STATUS] == 200"
             "[BODY] == pat(*Single-node VictoriaMetrics*)"
-            "[RESPONSE_TIME] < 50"
           ];
         };
 

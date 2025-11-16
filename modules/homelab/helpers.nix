@@ -81,6 +81,16 @@ let
         - "podman": Deploy as a Podman container
       '';
     };
+
+    public = mkEnableOption "Is this application publicly accessible?";
+
+    serviceURL = mkOption {
+      type = nullOr str;
+      default = null;
+      description = ''
+        URL to access the application/service
+      '';
+    };
   };
 
   # Helper function to create common feature options

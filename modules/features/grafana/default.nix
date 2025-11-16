@@ -63,6 +63,7 @@ in
           url = appUrl;
           description = appDescription;
           pinnedVersion = appPinnedVersion;
+          serviceURL = serviceURL;
         };
       };
     }
@@ -86,7 +87,6 @@ in
           conditions = [
             "[STATUS] == 200"
             "[BODY].database == ok"
-            "[RESPONSE_TIME] < 50"
           ];
         };
       };

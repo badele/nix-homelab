@@ -90,6 +90,7 @@ in
             description = appDescription;
             url = appUrl;
             pinnedVersion = appPinnedVersion;
+            serviceURL = serviceURL;
           };
         };
       }
@@ -105,8 +106,7 @@ in
             interval = "5m";
             conditions = [
               "[STATUS] == 200"
-              "[BODY] == pat(*${config.services.homepage-dashboard.settings.description}*)"
-              "[RESPONSE_TIME] < 50"
+              ''[BODY] == pat(*<title data-next-head="">*</title>*)''
             ];
           };
         };
