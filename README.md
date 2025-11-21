@@ -10,11 +10,9 @@
         <a href="https://nixos.org">NixOS</a> and <a href="./docs/clan.md"/>Clan</a>. This repository contains
         all configurations for my servers, desktops, and network devices.
     </p>
-
     <p align="center">
         <a target="_blank" href="https://github.com/badele/nix-homelab">Home</a> | <a target="_blank" href="https://labrique.ma-cabane.eu/">Public Server</a> | <a target="_blank" href="https://lampiotes.ma-cabane.eu/d/2cd7b23e-e05f-4c13-99aa-bbc1e323337c/attack?var-interval=1h&orgId=1&from=now-24h&to=now&timezone=browser&refresh=1m">Grafana Dashboard</a> | <a target="_blank" href="https://bonnes-adresses.ma-cabane.eu/bookmarks/shared">My bookmarks</a>
     </p>
-
 </div>
 
 ### What is this?
