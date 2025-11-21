@@ -44,6 +44,9 @@
       { lib, ... }:
       {
         imports = [
+          # Import authentik-nix module to make services.authentik available
+          inputs.authentik-nix.nixosModules.default
+
           # Import common homeab definition
           ./homelab
 

@@ -10,34 +10,22 @@ with lib;
 with types;
 
 let
-  appName = "pawtunes";
+  appName = "it-tools";
   appCategory = "Essentials";
-  appDisplayName = "Pawtunes";
-  appIcon = "airsonic";
+  appDisplayName = "it-tools";
+  appIcon = "it-tools";
   appPlatform = "podman";
-  appDescription = "The Ultimate HTML5 Internet Radio Player";
-  appUrl = "https://github.com/Jackysi/PawTunes";
-  appImage = "jackyprahec/pawtunes";
-  appPinnedVersion = "1.0.6";
-  appPath = "/data/podman/pawtunes";
-  appServiceURL = serviceURL;
+  appDescription = "Collection of handy online tools for developers, with great UX";
+  appUrl = "https://github.com/CorentinTh/it-tools";
+  appImage = "ghcr.io/corentinth/it-tools";
+  appPinnedVersion = "2024.10.22-7ca5933";
 
   cfg = config.homelab.features.${appName};
 
-  listenHttpPort = config.homelab.portRegistry.${appName}.httpPort;
+  listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
 
-  containerUid = 33; # www-data
-  containerGid = 33; # www-data
-
-  hostUid = (builtins.elemAt config.users.users.root.subUidRanges 0).startUid + containerUid;
-  hostGid = (builtins.elemAt config.users.users.root.subGidRanges 0).startGid + containerGid;
-
-  # Service URL: use nginx domain if firewall is open, otherwise use direct IP:port
-  serviceURL =
-    if cfg.openFirewall then
-      "https://${cfg.serviceDomain}"
-    else
-      "http://127.0.0.1:${toString listenHttpPort}";
+  exposedURL = "https://${cfg.serviceDomain}";
+  internalURL = "http://127.0.0.1:${toString listenHttpPort}";
 in
 {
   ############################################################################
@@ -74,7 +62,7 @@ in
             description = appDescription;
             url = appUrl;
             pinnedVersion = appPinnedVersion;
-            serviceURL = appServiceURL;
+            serviceURL = exposedURL;
           };
 
         };
@@ -87,16 +75,16 @@ in
         # Monitoring
         #######################################################################
         homelab.features.${appName} = {
-          homepage = mkIf cfg.enable {
+          homepage = mkIf config.services.homepage-dashboard.enable {
             icon = "sh-${appIcon}";
-            href = serviceURL;
-            description = appDescription;
-            siteMonitor = serviceURL;
+            href = exposedURL;
+            description = "${appDescription} [${cfg.serviceDomain}]";
+            siteMonitor = internalURL;
           };
 
-          gatus = mkIf cfg.enable {
+          gatus = mkIf config.services.gatus.enable {
             name = appDisplayName;
-            url = serviceURL;
+            url = internalURL;
             group = appCategory;
             type = "HTTP";
             interval = "5m";
@@ -104,6 +92,7 @@ in
               "[STATUS] == 200"
               # ''[BODY] == pat(*"version": "${appPinnedVersion}"*)''
             ];
+            ui.hide-hostname = true;
           };
 
         };
@@ -124,29 +113,14 @@ in
         programs.bash.shellAliases = (mkServiceAliases appName) // {
         };
 
-        systemd.tmpfiles.rules = [
-          # Application data
-          "d ${appPath} 0751 root root -"
-          "d ${appPath}/data 0750 ${toString hostUid} ${toString hostGid} -"
-          "d ${appPath}/data/cache 0750 ${toString hostUid} ${toString hostGid} -"
-          "d ${appPath}/inc 0750 ${toString hostUid} ${toString hostGid} -"
-          "d ${appPath}/inc/config 0750 ${toString hostUid} ${toString hostGid} -"
-          "d ${appPath}/inc/locale 0750 ${toString hostUid} ${toString hostGid} -"
-
-          # Backup directory
-          "d /var/backup/pawtunes 0750 root root -"
-        ];
-
         virtualisation.oci-containers.containers.${appName} = {
           image = "${appImage}:${appPinnedVersion}";
           autoStart = true;
-          ports = [ "${toString listenHttpPort}:80" ];
+          ports = [ "127.0.0.1:${toString listenHttpPort}:80" ];
 
-          volumes = [
-            "${appPath}/inc/config:/var/www/html/inc/config"
-            "${appPath}/inc/locale:/var/www/html/inc/locale"
-            "${appPath}/data:/var/www/html/data"
-          ];
+          environment = {
+            TZ = config.time.timeZone;
+          };
 
           extraOptions = [
             "--cap-drop=ALL"
@@ -155,7 +129,6 @@ in
             "--cap-add=CHOWN"
             "--cap-add=SETUID"
             "--cap-add=SETGID"
-            "--cap-add=DAC_OVERRIDE"
             "--cap-add=NET_BIND_SERVICE"
             "--subgidname=root"
             "--subuidname=root"
@@ -164,8 +137,10 @@ in
 
         services.nginx.virtualHosts = mkIf cfg.openFirewall {
           "${cfg.serviceDomain}" = {
+
+            # Use wildcard domain
+            useACMEHost = config.homelab.domain;
             forceSSL = true;
-            enableACME = true;
 
             locations."/" = {
               proxyPass = "http://127.0.0.1:${toString listenHttpPort}";
@@ -190,7 +165,7 @@ in
                 add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
 
                 # Allow only specific sources to load content (CSP)
-                add_header Content-Security-Policy "default-src 'self'; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob: http: https:; connect-src 'self' http: https:;" always;
+                add_header Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob:  https:; connect-src 'self' https:;" always;
 
                 # Modern CORS headers
                 add_header Cross-Origin-Opener-Policy "same-origin" always;

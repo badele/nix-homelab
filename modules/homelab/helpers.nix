@@ -101,6 +101,7 @@ let
     }:
     {
       enable = mkEnableOption "Enable this feature";
+      manualConfiguration = mkEnableOption "This feature requires manual configuration";
 
       appInfos = mkOption {
         type = submodule { options = appInfosOptions; };
@@ -136,7 +137,7 @@ let
   # Helper function to create Podman container management aliases
   mkPodmanAliases = appName: {
     "@service-${appName}-config" = "cat $(podman inspect ${appName} | jq -r .[0].Mounts[0].Source)";
-    "@service-${appName}-logs" = "journalctl -u podman-${appName}";
+    "@service-${appName}-journal" = "journalctl -u podman-${appName}";
     "@service-${appName}-podman-config" =
       "cat $(systemctl cat podman-${appName} | grep ExecStart= | cut -d= -f2)";
     "@service-${appName}-shell" = "podman exec -it ${appName} bash";
@@ -147,7 +148,7 @@ let
   };
 
   mkServiceAliases = appName: {
-    "@service-${appName}-logs" = "journalctl -u ${appName}";
+    "@service-${appName}-journal" = "journalctl -u ${appName}";
     "@service-${appName}-start" = "systemctl start ${appName}";
     "@service-${appName}-stop" = "systemctl stop ${appName}";
     "@service-${appName}-restart" = "systemctl restart ${appName}";

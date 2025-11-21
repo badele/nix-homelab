@@ -21,15 +21,11 @@ let
 
   cfg = config.homelab.features.${appName};
 
-  listenHttpPort = config.homelab.portRegistry.${appName}.httpPort;
-  listenLDAPPort = config.homelab.portRegistry.${appName}.httpPort + 1;
+  listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
+  listenLDAPPort = listenHttpPort + 1;
 
-  # Service URL: use nginx domain if firewall is open, otherwise use direct IP:port
-  serviceURL =
-    if cfg.openFirewall then
-      "https://${cfg.serviceDomain}"
-    else
-      "http://127.0.0.1:${toString listenHttpPort}";
+  exposedURL = "https://${cfg.serviceDomain}";
+  internalURL = "http://127.0.0.1:${toString listenHttpPort}";
 in
 {
   ############################################################################
@@ -72,7 +68,7 @@ in
             url = appUrl;
             description = appDescription;
             pinnedVersion = appPinnedVersion;
-            serviceURL = serviceURL;
+            serviceURL = exposedURL;
           };
         };
       }
@@ -81,16 +77,16 @@ in
       (mkIf cfg.enable {
 
         homelab.features.${appName} = {
-          homepage = mkIf cfg.enable {
+          homepage = mkIf config.services.homepage-dashboard.enable {
             icon = appIcon;
-            href = serviceURL;
-            description = appDescription;
-            siteMonitor = serviceURL;
+            href = exposedURL;
+            description = "${appDescription} [${cfg.serviceDomain}]";
+            siteMonitor = internalURL;
           };
 
-          gatus = mkIf cfg.enable {
+          gatus = mkIf config.services.gatus.enable {
             name = appDisplayName;
-            url = "${serviceURL}/api/health";
+            url = "${internalURL}/api/health";
             group = appCategory;
             type = "HTTP";
             interval = "5m";
@@ -98,6 +94,7 @@ in
               "[STATUS] == 200"
               "[BODY] == pat(*LLDAP Administration*)"
             ];
+            ui.hide-hostname = true;
           };
 
         };
@@ -171,10 +168,12 @@ in
         };
 
         # Enable lldap in TLS mode with nginx reverse proxy if openFirewall is enabled
+
         services.nginx.virtualHosts = mkIf cfg.openFirewall {
           "${cfg.serviceDomain}" = {
+            # Use wildcard domain
+            useACMEHost = config.homelab.domain;
             forceSSL = true;
-            enableACME = true;
 
             locations."/" = {
               proxyPass = "http://127.0.0.1:${toString listenHttpPort}";

@@ -18,18 +18,13 @@ let
   appDescription = "${pkgs.${appName}.meta.description}";
   appUrl = pkgs.${appName}.meta.homepage;
   appPinnedVersion = pkgs.${appName}.version;
-  appServiceURL = serviceURL;
 
   cfg = config.homelab.features.${appName};
 
-  listenHttpPort = config.homelab.portRegistry.${appName}.httpPort;
+  listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
 
-  # Service URL: use nginx domain if firewall is open, otherwise use direct IP:port
-  serviceURL =
-    if cfg.openFirewall then
-      "https://${cfg.serviceDomain}"
-    else
-      "http://127.0.0.1:${toString listenHttpPort}";
+  exposedURL = "https://${cfg.serviceDomain}";
+  internalURL = "http://127.0.0.1:${toString listenHttpPort}";
 in
 {
   ############################################################################
@@ -66,7 +61,7 @@ in
             description = appDescription;
             url = appUrl;
             pinnedVersion = appPinnedVersion;
-            serviceURL = appServiceURL;
+            serviceURL = exposedURL;
           };
 
         };
@@ -79,16 +74,16 @@ in
         # Monitoring
         #######################################################################
         homelab.features.${appName} = {
-          homepage = mkIf cfg.enable {
+          homepage = mkIf config.services.homepage-dashboard.enable {
             icon = "sh-${appIcon}";
-            href = serviceURL;
-            description = appDescription;
-            siteMonitor = serviceURL;
+            href = exposedURL;
+            description = "${appDescription}  [${cfg.serviceDomain}]";
+            siteMonitor = internalURL;
           };
 
-          gatus = mkIf cfg.enable {
+          gatus = mkIf config.services.gatus.enable {
             name = appDisplayName;
-            url = serviceURL;
+            url = internalURL;
             group = appCategory;
             type = "HTTP";
             interval = "5m";
@@ -96,6 +91,7 @@ in
               "[STATUS] == 200"
               # ''[BODY] == pat(*"version": "${appPinnedVersion}"*)''
             ];
+            ui.hide-hostname = true;
           };
 
         };
@@ -139,8 +135,9 @@ in
 
         services.nginx.virtualHosts = mkIf cfg.openFirewall {
           "${cfg.serviceDomain}" = {
+            # Use wildcard domain
+            useACMEHost = config.homelab.domain;
             forceSSL = true;
-            enableACME = true;
 
             locations."/" = {
               proxyPass = "http://127.0.0.1:${toString listenHttpPort}";

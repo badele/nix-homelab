@@ -6,6 +6,9 @@
   mkPodmanAliases,
   ...
 }:
+with lib;
+with types;
+
 let
   # appName = "lldap";
   appName = "podman-lldap";
@@ -26,33 +29,30 @@ in
   ############################################################################
   # Options
   ############################################################################
-  options.homelab.features.${appName} =
-    with lib;
-    with types;
-    mkFeatureOptions {
-      extraOptions = {
+  options.homelab.features.${appName} = mkFeatureOptions {
+    extraOptions = {
 
-        serviceDomain = mkOption {
-          type = str;
-          default = "${appName}.${config.homelab.domain}";
-          description = "${appName} service domain name";
-        };
-
-        ldapDomain = mkOption {
-          type = str;
-          default = "dc=homelab,dc=lan";
-          description = "Base DN for the LDAP directory";
-        };
-
-        openFirewall = mkEnableOption "Open firewall ports (incoming)";
-
+      serviceDomain = mkOption {
+        type = str;
+        default = "${appName}.${config.homelab.domain}";
+        description = "${appName} service domain name";
       };
+
+      ldapDomain = mkOption {
+        type = str;
+        default = "dc=homelab,dc=lan";
+        description = "Base DN for the LDAP directory";
+      };
+
+      openFirewall = mkEnableOption "Open firewall ports (incoming)";
+
     };
+  };
 
   ############################################################################
   # Configuration
   ############################################################################
-  config = lib.mkMerge [
+  config = mkMerge [
     # Always set appInfos, even when disabled
     {
       homelab.features.${appName} = {
@@ -70,8 +70,8 @@ in
     }
 
     # Only apply when enabled
-    (lib.mkIf cfg.enable {
-      networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [
+    (mkIf cfg.enable {
+      networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [
         3890
         17170
       ];
@@ -107,7 +107,7 @@ in
 
       # Update secrets permissions before starting the container
       systemd.services."podman-${appName}" = {
-        preStart = lib.mkAfter ''
+        preStart = mkAfter ''
           chown ${toString hostUid}:${toString hostGid} ${
             config.clan.core.vars.generators.${appName}.files."jwt-secret".path
           } 

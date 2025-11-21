@@ -14,10 +14,6 @@
     ../modules/virtualisation/podman.nix
   ];
 
-  homelab = {
-    domain = "ma-cabane";
-  };
-
   console.keyMap = "fr"; # French keyboard layout
 
   # Enable proprietary firmware

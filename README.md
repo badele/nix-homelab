@@ -1,23 +1,33 @@
-# 🏠 nix-homelab
+---
 
-<img width="100%" src="./docs/imgs/nixos.gif" />
+<div align="center">
+    <h1>
+        <img src="./docs/imgs/nix-homelab-logo.png"/>
+    </h1>
+    <h3 align="center"><strong>Centralize the configuration of your immutable NixOS machines</strong></h3>
+    <p>
+        My personal homelab infrastructure, fully managed with
+        <a href="https://nixos.org">NixOS</a> and <a href="./docs/clan.md"/>Clan</a>. This repository contains
+        all configurations for my servers, desktops, and network devices.
+    </p>
 
-My personal homelab infrastructure, fully managed with
-[NixOS](https://nixos.org/) and [Clan](./docs/clan.md). This repository contains
-all configurations for my servers, desktops, and network devices.
+    <p align="center">
+        <a target="_blank" href="https://github.com/badele/nix-homelab">Home</a> | <a target="_blank" href="https://labrique.ma-cabane.eu/">Public Server</a> | <a target="_blank" href="https://lampiotes.ma-cabane.eu/d/2cd7b23e-e05f-4c13-99aa-bbc1e323337c/attack?var-interval=1h&orgId=1&from=now-24h&to=now&timezone=browser&refresh=1m">Grafana Dashboard</a> | <a target="_blank" href="https://bonnes-adresses.ma-cabane.eu/bookmarks/shared">My bookmarks</a>
+    </p>
 
-## What is this?
+</div>
+
+### What is this?
 
 This is a complete NixOS homelab setup that manages:
 
 - **Servers**: Public VPS (Hetzner, Infomaniak), physical servers, Raspberry Pi
 - **Desktops**: Personal laptops and workstations
-- **Network**: Routers, IoT devices, and monitoring
 
 Everything is declarative, reproducible, and version-controlled whenever
 possible.
 
-## Why Clan?
+### Why Clan?
 
 I'm using [Clan](./docs/clan.md) to simplify infrastructure management:
 
@@ -29,14 +39,14 @@ Or as I like to say:
 
 **[→ Learn more about Clan and why I use it](./docs/clan.md)**
 
-### Key benefits
+#### Key benefits
 
 - **Simple host management**: Easy inventory system
 - **Automatic secrets**: Built-in secret generation and management
 - **Backup made easy**: Integrated backup solution
 - **Declarative**: Everything in code, no manual steps
 
-## 🛠️ Deployment Strategy
+### 🛠️ Deployment Strategy
 
 I follow a hybrid approach:
 
@@ -49,7 +59,7 @@ I follow a hybrid approach:
 This gives me the best of both worlds: NixOS reproducibility with container
 flexibility.
 
-## Project Structure
+### Project Structure
 
 > [!NOTE]
 > 🚧 Work in Progress - The project is being migrated to Clan architecture.
@@ -59,20 +69,20 @@ flexibility.
 The homelab uses a modular flake-parts architecture with Clan: **Key
 directories:**
 
-#### 🚧 New structure (managed with clan command)
+##### 🚧 New structure (managed with clan command)
 
 - `machines/`: Per-host configurations `clan machines update "machine-name"`
 - `modules/`: Shared modules and legacy configurations
 - `vars/`: Secrets `clan vars list "machine-name"` and on nix expression
   `clan.core.vars.generators."secret-bucket-name"`
 
-#### 💥 Legacy structure
+##### 💥 Legacy structure
 
 - `nix/nixos/roles/`: Service roles
 - `nix/home-manager/`: User environment configs
 - `sops/`: SOPS secrets
 
-## 📦 Services & Applications
+### 📦 Services & Applications
 
 Here are the main services running in my homelab:
 
@@ -211,12 +221,12 @@ Here are the main services running in my homelab:
 
 [comment]: (<<ROLES)
 
-## 💻 Desktop Environment
+### 💻 Desktop Environment
 
 My workstations run a customized NixOS setup with i3 window manager and various
 productivity tools.
 
-### Desktop Applications
+#### Desktop Applications
 
 | Logo                                                                                                                                                          | Application | Description                                                                 |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------- |
@@ -230,7 +240,7 @@ productivity tools.
 | [<img width="32" src="https://raw.githubusercontent.com/denisidoro/navi/master/assets/icon.png">](./nix/home-manager/features/term/base.nix)                  | Navi        | [Interactive cheatsheet tool](https://github.com/badele/vide)               |
 | [<img width="32" src="https://user-images.githubusercontent.com/28633984/66519056-2e840c80-eaef-11e9-8670-c767213c26ba.png">](https://github.com/badele/vide) | Neovim      | [**VIDE** - My customized Neovim config](https://github.com/badele/vide)    |
 
-### Floating TUI Panels
+#### Floating TUI Panels
 
 Quick access to system controls via i3 floating terminals:
 
@@ -244,9 +254,9 @@ Quick access to system controls via i3 floating terminals:
 | <img width="320" src="./docs/floating_mixer.png"> | <img width="320" src="./docs/floating_network.png"> |
 | `pulsemixer`                                      | `nmtui`                                             |
 
-## 🌐 Infrastructure
+### 🌐 Infrastructure
 
-### 🚀 [Houston Server](./machines/houston/README.md)
+#### 🚀 [Houston Server](./machines/houston/README.md)
 
 My main public VPS running on [Hetzner Cloud](https://www.hetzner.com/cloud/)
 (CX32: 4 vCPU, 8GB RAM, 80GB SSD).
@@ -254,13 +264,12 @@ My main public VPS running on [Hetzner Cloud](https://www.hetzner.com/cloud/)
 **What it does:**
 
 - **🔐 Authentication Hub**: Authelia + LLDAP for SSO across all services
-- **📊 Full Observability Stack**: Grafana, VictoriaMetrics, InfluxDB, Telegraf,
-  Vector
+- **📊 Full Observability Stack**: Grafana, VictoriaMetrics, Telegraf, Vector
 - **📱 Self-Hosted Apps**: DokuWiki, Linkding, Miniflux, Shaarli, and more
 
 **[→ See complete service list and details](./machines/houston/README.md)**
 
-### 💻 [Gagarin Workstation](./machines/gagarin/README.md)
+#### 💻 [Gagarin Workstation](./machines/gagarin/README.md)
 
 My main desktop workstation for daily development and productivity.
 
@@ -273,7 +282,7 @@ My main desktop workstation for daily development and productivity.
 
 **[→ See complete configuration and tools](./machines/gagarin/README.md)**
 
-### All Hosts
+#### All Hosts
 
 Complete list of hosts in the homelab (auto-generated with `just doc-update`):
 
@@ -357,15 +366,15 @@ Complete list of hosts in the homelab (auto-generated with `just doc-update`):
 
 [comment]: (<<HOSTS)
 
-### Network Topology
+#### Network Topology
 
 ![Network diagram](./docs/network.png)
 
-### Common Commands
+#### Common Commands
 
 ![Available commands](docs/commands.png)
 
-## ❤️ Thanks
+### ❤️ Thanks
 
 A big thank to the contributors of OpenSource projects in particular :
 

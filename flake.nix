@@ -56,6 +56,11 @@
     terranix.inputs.nixpkgs.follows = "nixpkgs";
 
     godown.url = "github:badele/godown";
+    gosect.url = "github:badele/gosect";
+
+    radio.url = "github:pinpox/radio/85634dd2dc402f568b695d8ffb41c5707bfa2540";
+
+    authentik-nix.url = "github:nix-community/authentik-nix";
   };
 
   outputs =

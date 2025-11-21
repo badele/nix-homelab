@@ -21,14 +21,10 @@ let
   cfg = config.homelab.features.${appName};
 
   # Get port from central registry
-  listenHttpPort = config.homelab.portRegistry.${appName}.httpPort;
+  listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
 
-  # Service URL: use nginx domain if firewall is open, otherwise use direct IP:port
-  serviceURL =
-    if cfg.openFirewall then
-      "https://${cfg.serviceDomain}"
-    else
-      "http://127.0.0.1:${toString listenHttpPort}";
+  exposedURL = "https://${cfg.serviceDomain}";
+  internalURL = "http://127.0.0.1:${toString listenHttpPort}";
 
 in
 {
@@ -63,7 +59,7 @@ in
           url = appUrl;
           description = appDescription;
           pinnedVersion = appPinnedVersion;
-          serviceURL = serviceURL;
+          serviceURL = exposedURL;
         };
       };
     }
@@ -71,16 +67,16 @@ in
     # Only apply when enabled
     (lib.mkIf cfg.enable {
       homelab.features.${appName} = {
-        homepage = mkIf cfg.enable {
+        homepage = mkIf config.services.homepage-dashboard.enable {
           icon = appIcon;
-          href = serviceURL;
-          description = appDescription;
-          siteMonitor = serviceURL;
+          href = exposedURL;
+          description = "${appDescription} [${cfg.serviceDomain}]";
+          siteMonitor = internalURL;
         };
 
-        gatus = mkIf cfg.enable {
+        gatus = mkIf config.services.gatus.enable {
           name = appDisplayName;
-          url = "${serviceURL}/api/health";
+          url = "${internalURL}/api/health";
           group = appCategory;
           type = "HTTP";
           interval = "5m";
@@ -88,6 +84,7 @@ in
             "[STATUS] == 200"
             "[BODY].database == ok"
           ];
+          ui.hide-hostname = true;
         };
       };
 
@@ -132,7 +129,7 @@ in
       homelab.alias = [ "${cfg.serviceDomain}" ];
       programs.bash.shellAliases = (mkServiceAliases appName) // {
         "@service-${appName}-config" =
-          "cat $(systemctl cat ${appName} | grep ExecStart= | grep -oP '(?<=--config )\\S+')";
+          "cat $(cat $(systemctl cat ${appName} | grep -oP '(?<=ExecStart=)\\S+') | grep -oP '(?<=-config )\\S+')";
       };
 
       services.grafana = {
@@ -176,8 +173,9 @@ in
 
       services.nginx.virtualHosts = lib.mkIf cfg.openFirewall {
         "${cfg.serviceDomain}" = {
+          # Use wildcard domain
+          useACMEHost = config.homelab.domain;
           forceSSL = true;
-          enableACME = true;
 
           locations."/" = {
             proxyPass = "http://127.0.0.1:${toString listenHttpPort}";

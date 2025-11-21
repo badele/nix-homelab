@@ -83,6 +83,7 @@
 
           # markdown web server
           inputs.godown.packages.${system}.godown
+          inputs.gosect.packages.${system}.gosect
           #
         ];
         env.UEFI_FILE = uefi_file;

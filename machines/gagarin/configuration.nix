@@ -30,42 +30,43 @@ in
     };
   };
 
-  clan.core.vars.generators = {
+  # clan.core.vars.generators = {
+  #
+  #   # Root CA
+  #   step-ca-root-ca = {
+  #     share = true;
+  #     files."root-password.txt" = {
+  #       secret = true;
+  #       deploy = false;
+  #     };
+  #     files."root-ca.key" = {
+  #       secret = true;
+  #       deploy = false;
+  #     };
+  #     files."root-ca.crt" = {
+  #       secret = false; # exportable aux autres machines
+  #     };
+  #
+  #     runtimeInputs = [ pkgs.step-cli ];
+  #     script = ''
+  #       # Générer mot de passe root CA
+  #       step crypto rand --format upper 32 > $out/root-password.txt
+  #
+  #       # Créer root CA
+  #       step certificate create "The ${config.homelab.domain} Root CA" \
+  #         $out/root-ca.crt $out/root-ca.key \
+  #         --profile root-ca \
+  #         --password-file $out/root-password.txt \
+  #         --not-after 87600h
+  #     '';
+  #   };
+  # };
 
-    # Root CA
-    step-ca-root-ca = {
-      share = true;
-      files."root-password.txt" = {
-        secret = true;
-        deploy = false;
-      };
-      files."root-ca.key" = {
-        secret = true;
-        deploy = false;
-      };
-      files."root-ca.crt" = {
-        secret = false; # exportable aux autres machines
-      };
-
-      runtimeInputs = [ pkgs.step-cli ];
-      script = ''
-        # Générer mot de passe root CA
-        step crypto rand --format upper 32 > $out/root-password.txt
-
-        # Créer root CA
-        step certificate create "The ${config.homelab.domain} Root CA" \
-          $out/root-ca.crt $out/root-ca.key \
-          --profile root-ca \
-          --password-file $out/root-password.txt \
-          --not-after 87600h
-      '';
-    };
-  };
   # Trust the root CA system-wide
-  security.pki.certificateFiles = [
-    secrets.step-ca-root-ca.files."root-ca.crt".path
-
-  ];
+  # security.pki.certificateFiles = [
+  #   secrets.step-ca-root-ca.files."root-ca.crt".path
+  #
+  # ];
 
   # Static DNS resolver configuration using systemd-resolved
   environment.etc."resolv.conf".source = "/run/systemd/resolve/stub-resolv.conf";

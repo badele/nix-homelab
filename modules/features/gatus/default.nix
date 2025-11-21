@@ -13,14 +13,10 @@ let
   appName = "gatus";
   cfg = config.homelab.features.${appName};
 
-  listenHttpPort = config.homelab.portRegistry.${appName}.httpPort;
+  listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
 
-  # Service URL: use nginx domain if firewall is open, otherwise use direct IP:port
-  serviceURL =
-    if cfg.openFirewall then
-      "https://${cfg.serviceDomain}"
-    else
-      "http://127.0.0.1:${toString listenHttpPort}";
+  exposedURL = "https://${cfg.serviceDomain}";
+  internalURL = "http://127.0.0.1:${toString listenHttpPort}";
 
   # Collect all features with homepage configuration
   featuresWithGatus = lib.filterAttrs (
@@ -63,7 +59,7 @@ in
             description = "${pkgs.${appName}.meta.description}";
             url = pkgs.${appName}.meta.homepage;
             pinnedVersion = pkgs.${appName}.version;
-            serviceURL = serviceURL;
+            serviceURL = exposedURL;
           };
 
         };
@@ -73,11 +69,11 @@ in
       (mkIf cfg.enable {
 
         homelab.features.${appName} = {
-          homepage = mkIf cfg.enable {
+          homepage = mkIf config.services.homepage-dashboard.enable {
             icon = cfg.appInfos.icon;
-            href = serviceURL;
-            description = cfg.appInfos.description;
-            siteMonitor = serviceURL;
+            href = exposedURL;
+            description = "${cfg.serviceDomain} // ${cfg.appInfos.description}";
+            siteMonitor = internalURL;
           };
         };
 
@@ -108,10 +104,12 @@ in
         };
 
         # Enable gatus in TLS mode with nginx reverse proxy if openFirewall is enabled
+
         services.nginx.virtualHosts = mkIf cfg.openFirewall {
           "${cfg.serviceDomain}" = {
+            # Use wildcard domain
+            useACMEHost = config.homelab.domain;
             forceSSL = true;
-            enableACME = true;
 
             locations."/" = {
               proxyPass = "http://127.0.0.1:${toString listenHttpPort}";

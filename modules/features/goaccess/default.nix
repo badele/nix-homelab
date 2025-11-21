@@ -18,18 +18,14 @@ let
   appDescription = "${pkgs.${appName}.meta.description}";
   appUrl = pkgs.${appName}.meta.homepage;
   appPinnedVersion = pkgs.${appName}.version;
-  appServiceURL = serviceURL;
 
   cfg = config.homelab.features.${appName};
 
-  listenHttpPort = config.homelab.portRegistry.${appName}.httpPort;
+  listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
 
   # Service URL: use nginx domain if firewall is open, otherwise use direct IP:port
-  serviceURL =
-    if cfg.openFirewall then
-      "https://${cfg.serviceDomain}"
-    else
-      "http://127.0.0.1:${toString listenHttpPort}";
+  exposedURL = "https://${cfg.serviceDomain}";
+  internalURL = "http://127.0.0.1:${toString listenHttpPort}";
 
   priv_goaccess = "/var/lib/goaccess";
   pub_goaccess = "/var/www/goaccess";
@@ -75,7 +71,7 @@ in
             description = appDescription;
             url = appUrl;
             pinnedVersion = appPinnedVersion;
-            serviceURL = appServiceURL;
+            serviceURL = exposedURL;
           };
 
         };
@@ -89,16 +85,20 @@ in
         #######################################################################
 
         homelab.features.${appName} = {
-          homepage = mkIf cfg.enable {
+          homepage = mkIf config.services.homepage-dashboard.enable {
             icon = appIcon;
-            href = serviceURL;
-            description = appDescription;
-            siteMonitor = appServiceURL;
+            href = exposedURL;
+            description = "${appDescription}  [${cfg.serviceDomain}]";
+            #TODO: switch to internalURL if you want to monitor via direct access
+            # use websocket URL for goaccess
+            siteMonitor = exposedURL;
           };
 
-          gatus = mkIf cfg.enable {
+          gatus = mkIf config.services.gatus.enable {
             name = appDisplayName;
-            url = serviceURL;
+            #TODO: switch to internalURL if you want to monitor via direct access
+            # use websocket URL for goaccess
+            url = exposedURL;
             group = appCategory;
             type = "HTTP";
             interval = "5m";
@@ -106,6 +106,7 @@ in
               "[STATUS] == 200"
               ''[BODY] == pat(*"version": "${appPinnedVersion}"*)''
             ];
+            ui.hide-hostname = true;
           };
 
         };
@@ -200,8 +201,10 @@ in
 
         services.nginx.virtualHosts = mkIf cfg.openFirewall {
           "${cfg.serviceDomain}" = {
+            # Use wildcard domain
+            useACMEHost = config.homelab.domain;
             addSSL = true;
-            enableACME = true;
+
             root = "${pub_goaccess}";
 
             locations."/ws" = {

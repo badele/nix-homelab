@@ -28,14 +28,10 @@ let
   };
 
   # Get port from central registry
-  listenHttpPort = config.homelab.portRegistry.${appName}.httpPort;
+  listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
 
-  # Service URL: use nginx domain if firewall is open, otherwise use direct IP:port
-  serviceURL =
-    if cfg.openFirewall then
-      "https://${cfg.serviceDomain}"
-    else
-      "http://127.0.0.1:${toString listenHttpPort}";
+  exposedURL = "https://${cfg.serviceDomain}";
+  internalURL = "http://127.0.0.1:${toString listenHttpPort}";
 
 in
 {
@@ -101,7 +97,7 @@ in
           url = appUrl;
           pinnedVersion = appPinnedVersion;
           nixpkgsVersion = appNixpkgsVersion;
-          serviceURL = serviceURL;
+          serviceURL = exposedURL;
         };
       };
 
@@ -113,14 +109,14 @@ in
       homelab.features.${appName} = {
         homepage = {
           icon = appIcon;
-          href = serviceURL;
-          description = appDescription;
-          siteMonitor = serviceURL;
+          href = exposedURL;
+          description = "${appDescription}  [${cfg.serviceDomain}]";
+          siteMonitor = internalURL;
         };
 
-        gatus = mkIf cfg.enable {
+        gatus = mkIf config.services.gatus.enable {
           name = appDisplayName;
-          url = serviceURL;
+          url = internalURL;
           group = appCategory;
           type = "HTTP";
           interval = "5m";
@@ -128,6 +124,7 @@ in
             "[STATUS] == 200"
             "[BODY] == pat(*Single-node VictoriaMetrics*)"
           ];
+          ui.hide-hostname = true;
         };
 
       };
@@ -136,30 +133,32 @@ in
         443
       ];
 
-      services.grafana.provision.datasources.settings.datasources = [
-        {
-          name = "VictoriaMetrics";
-          type = "victoriametrics-metrics-datasource";
-          access = "proxy";
-          url = "https://${config.homelab.features.victoriametrics.serviceDomain}";
-          version = 1;
-          editable = false;
-          isDefault = true;
-          jsonData = {
-            httpMethod = "POST";
-            timeInterval = "30s";
-          };
-        }
-        {
-          name = "Prometheus";
-          type = "prometheus";
-          access = "proxy";
-          url = "https://${config.homelab.features.victoriametrics.serviceDomain}";
-          version = 1;
-          editable = false;
-          isDefault = false;
-        }
-      ];
+      services.grafana.provision.datasources.settings = {
+        datasources = [
+          {
+            name = "VictoriaMetrics";
+            type = "victoriametrics-metrics-datasource";
+            access = "proxy";
+            url = "https://${config.homelab.features.victoriametrics.serviceDomain}";
+            version = 1;
+            editable = true;
+            isDefault = true;
+            jsonData = {
+              httpMethod = "POST";
+              timeInterval = "30s";
+            };
+          }
+          {
+            name = "Prometheus";
+            type = "prometheus";
+            access = "proxy";
+            url = "https://${config.homelab.features.victoriametrics.serviceDomain}";
+            version = 1;
+            editable = true;
+            isDefault = false;
+          }
+        ];
+      };
 
       services.victoriametrics = {
         enable = true;
@@ -189,8 +188,9 @@ in
 
       services.nginx.virtualHosts = lib.mkIf cfg.openFirewall {
         "${cfg.serviceDomain}" = {
+          # Use wildcard domain
+          useACMEHost = config.homelab.domain;
           forceSSL = true;
-          enableACME = true;
 
           locations."/" = {
             proxyPass = "http://127.0.0.1:${toString listenHttpPort}";

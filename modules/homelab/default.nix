@@ -66,6 +66,16 @@ in
       description = "Default domain name for homelab";
     };
 
+    homelab.domainEmailAdmin = mkOption {
+      type = str;
+      default = "admin@${config.homelab.domain}";
+    };
+
+    homelab.stmpAccountUsername = mkOption {
+      type = str;
+      default = "admin@${config.homelab.domain}";
+    };
+
     homelab.nameServer = mkOption {
       type = nullOr str;
       default = null;
@@ -113,50 +123,21 @@ in
   config = {
     # Central port registry with predefined appIds
     homelab.portRegistry = {
-      blocky = {
-        appId = 0;
-        httpPort = 10000;
-      };
-      step-ca = {
-        appId = 10;
-        httpPort = 10010;
-      };
-      lldap = {
-        appId = 20;
-        httpPort = 10020;
-      };
-      grafana = {
-        appId = 30;
-        httpPort = 10030;
-      };
-      victoriametrics = {
-        appId = 40;
-        httpPort = 10040;
-      };
-      homepage-dashboard = {
-        appId = 50;
-        httpPort = 10050;
-      };
-      homelab-summary = {
-        appId = 60;
-        httpPort = 10060;
-      };
-      gatus = {
-        appId = 70;
-        httpPort = 10070;
-      };
-      goaccess = {
-        appId = 80;
-        httpPort = 10080;
-      };
-      wastebin = {
-        appId = 90;
-        httpPort = 10090;
-      };
-      pawtunes = {
-        appId = 100;
-        httpPort = 10100;
-      };
+      blocky.appId = 0;
+      lldap.appId = 10;
+      grafana.appId = 20;
+      victoriametrics.appId = 30;
+      homepage-dashboard.appId = 40;
+      homelab-summary.appId = 50;
+      gatus.appId = 60;
+      goaccess.appId = 70;
+      wastebin.appId = 80;
+      it-tools.appId = 90;
+      linkding.appId = 100;
+      shaarli.appId = 110;
+      radio.appId = 120;
+      grist.appId = 130;
+      authentik.appId = 140;
     };
 
     # Export the helper functions so feature modules can use them

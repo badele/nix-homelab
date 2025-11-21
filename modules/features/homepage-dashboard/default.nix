@@ -21,14 +21,17 @@ let
 
   cfg = config.homelab.features.${appName};
 
-  listenHttpPort = config.homelab.portRegistry.${appName}.httpPort;
+  listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
 
-  # Service URL: use nginx domain if firewall is open, otherwise use direct IP:port
-  serviceURL =
-    if cfg.openFirewall then
-      "https://${cfg.serviceDomain}"
-    else
-      "http://127.0.0.1:${toString listenHttpPort}";
+  exposedURL = "https://${cfg.serviceDomain}";
+  internalURL = "http://127.0.0.1:${toString listenHttpPort}";
+
+  categoryOrder = [
+    "Essentials"
+    "Media"
+    "System Health"
+    "Core Services"
+  ];
 
   # Collect all features with homepage configuration
   featuresWithHomepage = lib.filterAttrs (
@@ -52,9 +55,18 @@ let
   ) { } (builtins.attrNames featuresWithHomepage);
 
   # Convert to homepage-dashboard format: [ { "Category" = [ ... ]; } ]
-  homepageServices = lib.mapAttrsToList (category: services: {
-    ${category} = services;
-  }) servicesByCategory;
+  # Respect categoryOrder for categories that exist
+  orderedCategories =
+    # First, get categories from categoryOrder that exist in servicesByCategory
+    (lib.filter (cat: servicesByCategory ? ${cat}) categoryOrder)
+    # Then add remaining categories not in categoryOrder (sorted alphabetically)
+    ++ (lib.sort (a: b: a < b) (
+      lib.filter (cat: !(builtins.elem cat categoryOrder)) (builtins.attrNames servicesByCategory)
+    ));
+
+  homepageServices = map (category: {
+    ${category} = servicesByCategory.${category};
+  }) orderedCategories;
 in
 {
   ############################################################################
@@ -90,7 +102,7 @@ in
             description = appDescription;
             url = appUrl;
             pinnedVersion = appPinnedVersion;
-            serviceURL = serviceURL;
+            serviceURL = exposedURL;
           };
         };
       }
@@ -98,9 +110,9 @@ in
       # Only apply when enabled
       (mkIf cfg.enable {
         homelab.features.${appName} = {
-          gatus = mkIf cfg.enable {
+          gatus = mkIf config.services.gatus.enable {
             name = appDisplayName;
-            url = serviceURL;
+            url = internalURL;
             group = appCategory;
             type = "HTTP";
             interval = "5m";
@@ -108,6 +120,7 @@ in
               "[STATUS] == 200"
               ''[BODY] == pat(*<title data-next-head="">*</title>*)''
             ];
+            ui.hide-hostname = true;
           };
         };
 
@@ -550,11 +563,14 @@ in
         # };
 
         # Enable blocky in TLS mode with nginx reverse proxy if openFirewall is enabled
+
         services.nginx.virtualHosts = mkIf cfg.openFirewall {
           "${cfg.serviceDomain}" = {
 
+            # Use wildcard domain
+            useACMEHost = config.homelab.domain;
             forceSSL = true;
-            enableACME = true;
+
             locations."/" = {
               proxyPass = "http://127.0.0.1:${toString listenHttpPort}";
               recommendedProxySettings = true;

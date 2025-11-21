@@ -21,14 +21,10 @@ let
 
   cfg = config.homelab.features.${appName};
 
-  listenHttpPort = config.homelab.portRegistry.${appName}.httpPort;
+  listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
 
-  # Service URL: use nginx domain if firewall is open, otherwise use direct IP:port
-  serviceURL =
-    if cfg.openFirewall then
-      "https://${cfg.serviceDomain}"
-    else
-      "http://127.0.0.1:${toString listenHttpPort}";
+  exposedURL = "https://${cfg.serviceDomain}";
+  internalURL = "http://127.0.0.1:${toString listenHttpPort}";
 in
 {
   ############################################################################
@@ -47,8 +43,6 @@ in
           for details on supported values.
         '';
       };
-
-      metricsExporter = mkEnableOption "Enable Prometheus metrics exporter";
 
       serviceDomain = mkOption {
         type = str;
@@ -79,7 +73,7 @@ in
             description = appDescription;
             url = appUrl;
             pinnedVersion = appPinnedVersion;
-            serviceURL = serviceURL;
+            serviceURL = exposedURL;
           };
 
         };
@@ -89,16 +83,16 @@ in
       (mkIf cfg.enable {
 
         homelab.features.${appName} = {
-          homepage = mkIf cfg.enable {
+          homepage = mkIf config.services.homepage-dashboard.enable {
             icon = appIcon;
-            href = serviceURL;
-            description = appDescription;
-            siteMonitor = serviceURL;
+            href = exposedURL;
+            description = "${appDescription}  [${cfg.serviceDomain}]";
+            siteMonitor = internalURL;
           };
 
-          gatus = mkIf cfg.enable {
+          gatus = mkIf config.services.gatus.enable {
             name = appDisplayName;
-            url = serviceURL;
+            url = internalURL;
             group = appCategory;
             type = "HTTP";
             interval = "5m";
@@ -106,6 +100,7 @@ in
               "[STATUS] == 200"
               "[BODY] == pat(*Version ${appPinnedVersion}*)"
             ];
+            ui.hide-hostname = true;
           };
 
           settings = mkMerge [
@@ -152,7 +147,7 @@ in
             metrics_path = "/metrics";
             static_configs = [
               {
-                targets = [ serviceURL ];
+                targets = [ "http://127.0.0.1:${toString listenHttpPort}" ];
                 labels = {
                   instance = config.networking.hostName;
                   hostname = cfg.serviceDomain;
@@ -206,10 +201,12 @@ in
         };
 
         # Enable blocky in TLS mode with nginx reverse proxy if openFirewall is enabled
+        security.acme.acceptTerms = mkIf cfg.openFirewall true;
         services.nginx.virtualHosts = mkIf cfg.openFirewall {
           "${cfg.serviceDomain}" = {
+            # Use wildcard domain
+            useACMEHost = config.homelab.domain;
             forceSSL = true;
-            enableACME = true;
 
             locations."/" = {
               proxyPass = "http://127.0.0.1:${toString listenHttpPort}";
@@ -218,6 +215,32 @@ in
 
               # Security headers
               extraConfig = ''
+                ##############################
+                # authentik-specific config
+                ##############################
+                auth_request     /outpost.goauthentik.io/auth/nginx;
+                error_page       401 = @goauthentik_proxy_signin;
+                auth_request_set $auth_cookie $upstream_http_set_cookie;
+                add_header       Set-Cookie $auth_cookie;
+
+                # translate headers from the outposts back to the actual upstream
+                auth_request_set $authentik_username $upstream_http_x_authentik_username;
+                auth_request_set $authentik_groups $upstream_http_x_authentik_groups;
+                auth_request_set $authentik_entitlements $upstream_http_x_authentik_entitlements;
+                auth_request_set $authentik_email $upstream_http_x_authentik_email;
+                auth_request_set $authentik_name $upstream_http_x_authentik_name;
+                auth_request_set $authentik_uid $upstream_http_x_authentik_uid;
+
+                proxy_set_header X-authentik-username $authentik_username;
+                proxy_set_header X-authentik-groups $authentik_groups;
+                proxy_set_header X-authentik-entitlements $authentik_entitlements;
+                proxy_set_header X-authentik-email $authentik_email;
+                proxy_set_header X-authentik-name $authentik_name;
+                proxy_set_header X-authentik-uid $authentik_uid;
+
+                ##############################
+                # Service Security Headers
+                ##############################
                 # Force HTTPS (for 1 year)
                 add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
 
@@ -246,7 +269,35 @@ in
               '';
             };
 
+            # all requests to /outpost.goauthentik.io must be accessible without authentication
+            locations."/outpost.goauthentik.io" = {
+              proxyPass = "http://127.0.0.1:9000/outpost.goauthentik.io";
+              extraConfig = ''
+                proxy_set_header        X-Original-URL $scheme://$http_host$request_uri;
+                add_header              Set-Cookie $auth_cookie;
+                auth_request_set        $auth_cookie $upstream_http_set_cookie;
+                proxy_pass_request_body off;
+                proxy_set_header        Content-Length "";
+              '';
+            };
+
+            # Special location for when the /auth endpoint returns a 401,
+            # redirect to the /start URL which initiates SSO
+            locations."@goauthentik_proxy_signin" = {
+              extraConfig = ''
+                internal;
+                add_header Set-Cookie $auth_cookie;
+                return 302 /outpost.goauthentik.io/start?rd=$scheme://$http_host$request_uri;
+                # For domain level, use the below error_page to redirect to your authentik server with the full redirect path
+                # return 302 https://authentik.company/outpost.goauthentik.io/start?rd=$scheme://$http_host$request_uri;
+              '';
+            };
+
             extraConfig = ''
+              # Buffer sizes pour Authentik (IMPORTANT)
+              proxy_buffers 8 16k;
+              proxy_buffer_size 32k;
+
               access_log /var/log/nginx/public.log vcombined;
             '';
           };
