@@ -13,7 +13,7 @@ let
   appName = "radio";
   appDisplayName = "Radio";
   appCategory = "Essentials";
-  appIcon = "https://radio.ma-cabane.net/static/parrot.gif";
+  appIcon = "https://radio.0cx.de/static/parrot.gif";
   appPlatform = "nixos";
 
   cfg = config.homelab.features.${appName};
