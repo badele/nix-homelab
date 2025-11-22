@@ -13,7 +13,7 @@ let
   appName = "pawtunes";
   appCategory = "Essentials";
   appDisplayName = "Pawtunes";
-  appIcon = "airsonic";
+  appIcon = "https://prahec.com/projects/pawtunes/demo/assets/img/apple-touch-icon.png";
   appPlatform = "podman";
   appDescription = "The Ultimate HTML5 Internet Radio Player";
   appUrl = "https://github.com/Jackysi/PawTunes";

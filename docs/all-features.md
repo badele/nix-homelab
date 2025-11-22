@@ -257,7 +257,7 @@ Voici une liste des applications ou services que nix-homelab propose
   <tbody>
     <tr>
       <td align="center">
-        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/airsonic.png" width="48" height="48" alt="Pawtunes"/>
+        <img src="https://prahec.com/projects/pawtunes/demo/assets/img/apple-touch-icon.png" width="48" height="48" alt="Pawtunes"/>
       </td>
       <td>
         <a href="/docs/features/pawtunes.md">Pawtunes 📚</a>

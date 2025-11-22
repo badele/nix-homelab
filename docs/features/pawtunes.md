@@ -2,7 +2,7 @@
 
 <div class="feature-detail">
   <h1 id="pawtunes">
-    <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/airsonic.png" width="64" height="64" alt="Pawtunes" style="vertical-align: middle; margin-right: 10px;"/>
+    <img src="https://prahec.com/projects/pawtunes/demo/assets/img/apple-touch-icon.png" width="64" height="64" alt="Pawtunes" style="vertical-align: middle; margin-right: 10px;"/>
     Pawtunes
   </h1>
   <h2>Basic Information</h2>
