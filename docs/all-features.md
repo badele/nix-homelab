@@ -135,7 +135,7 @@ Voici une liste des applications ou services que nix-homelab propose
     </tr>
     <tr>
       <td align="center">
-        <img src="https://radio.ma-cabane.net/static/parrot.gif" width="48" height="48" alt="Radio"/>
+        <img src="https://radio.0cx.de/static/parrot.gif" width="48" height="48" alt="Radio"/>
       </td>
       <td>
         <a href="/docs/features/radio.md">Radio 📚</a>

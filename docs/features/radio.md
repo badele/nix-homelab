@@ -2,7 +2,7 @@
 
 <div class="feature-detail">
   <h1 id="radio">
-    <img src="https://radio.ma-cabane.net/static/parrot.gif" width="64" height="64" alt="Radio" style="vertical-align: middle; margin-right: 10px;"/>
+    <img src="https://radio.0cx.de/static/parrot.gif" width="64" height="64" alt="Radio" style="vertical-align: middle; margin-right: 10px;"/>
     Radio
   </h1>
   <h2>Basic Information</h2>
