@@ -33,7 +33,7 @@ in
           displayName = "Nix homelab summary";
           description = "Generate a static HTML summary of your Nix homelab instance";
           platform = "nixos";
-          icon = "";
+          icon = "homebox";
           url = "https://github.com/badele/nix-homelab";
           image = "";
           pinnedVersion = "";

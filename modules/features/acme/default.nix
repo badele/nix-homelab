@@ -63,7 +63,7 @@ in
             description = appDescription;
             url = appUrl;
             pinnedVersion = appPinnedVersion;
-            serviceURL = serviceURL;
+            serviceURL = "";
           };
 
         };

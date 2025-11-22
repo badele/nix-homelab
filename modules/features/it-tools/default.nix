@@ -16,9 +16,9 @@ let
   appIcon = "it-tools";
   appPlatform = "podman";
   appDescription = "Collection of handy online tools for developers, with great UX";
-  appUrl = "https://github.com/CorentinTh/it-tools";
-  appImage = "ghcr.io/corentinth/it-tools";
-  appPinnedVersion = "2024.10.22-7ca5933";
+  appUrl = "https://github.com/sharevb/it-tools";
+  appImage = "ghcr.io/sharevb/it-tools";
+  appPinnedVersion = "2025.10.12";
 
   cfg = config.homelab.features.${appName};
 
@@ -116,7 +116,7 @@ in
         virtualisation.oci-containers.containers.${appName} = {
           image = "${appImage}:${appPinnedVersion}";
           autoStart = true;
-          ports = [ "127.0.0.1:${toString listenHttpPort}:80" ];
+          ports = [ "127.0.0.1:${toString listenHttpPort}:8080" ];
 
           environment = {
             TZ = config.time.timeZone;
@@ -165,7 +165,7 @@ in
                 add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
 
                 # Allow only specific sources to load content (CSP)
-                add_header Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob:  https:; connect-src 'self' https:;" always;
+                add_header Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:; media-src 'self' blob:  https:; connect-src 'self' https:;" always;
 
                 # Modern CORS headers
                 add_header Cross-Origin-Opener-Policy "same-origin" always;

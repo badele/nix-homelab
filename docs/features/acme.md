@@ -1,4 +1,41 @@
-# ACME - Automatic Certificate Management
+<!-- BEGIN SECTION feature_informations file=./.templates/feature_acme.html -->
+
+<div class="feature-detail">
+  <h1 id="acme">
+    <img src="https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/lets-encrypt.webp" width="64" height="64" alt="ACME" style="vertical-align: middle; margin-right: 10px;"/>
+    ACME
+  </h1>
+  <h2>Basic Information</h2>
+  <p>Let's Encrypt client and ACME library written in Go</p>
+  <table>
+    <tbody>
+      <tr>
+        <th>Category</th>
+        <td>
+<a href="/docs/all-features.md#core-services">Core Services</a>
+        </td>
+      </tr>
+      <tr>
+        <th>Platform</th>
+        <td>nixos</td>
+      </tr>
+      <tr>
+        <th>Version</th>
+        <td>4.27.0</td>
+      </tr>
+      <tr>
+        <th>Site link</th>
+        <td><a href="https://go-acme.github.io/lego/">https://go-acme.github.io/lego/</a></td>
+      </tr>
+      <tr>
+        <th>Nix Homelab Module</th>
+        <td><a href="../../modules/features/acme">modules/features/acme</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- END SECTION feature_informations -->
 
 ## What is ACME?
 
@@ -58,18 +95,12 @@ browsers.
 
 ### Global ACME Settings
 
-Global ACME configuration is defined in
-[modules/system/acme.nix](../modules/system/acme.nix):
+enable ACME [modules/features/acme.nix](../modules/system/acme.nix):
 
 ```nix
 security.acme.acceptTerms = true;
 security.acme.defaults.email = "admin@ma-cabane.eu";
 ```
-
-This configuration:
-
-- Accepts Let's Encrypt Terms of Service
-- Sets the admin email for certificate notifications
 
 ### Per-Service Configuration
 
@@ -84,6 +115,18 @@ ACME supports different challenge types to verify domain ownership.
 
 The HTTP-01 challenge is the most common method. Let's Encrypt verifies domain
 ownership by requesting a specific file via HTTP.
+
+> [!WARNING]
+> Important for Private Servers
+>
+> When using HTTP-01 challenge with private servers, **port 80 must be publicly
+> accessible** from the internet. This can be a security concern for homelab
+> setups.
+>
+> **Recommendation**: When your DNS provider supports it, prefer the **DNS-01
+> challenge** method instead. DNS-01 doesn't require opening port 80 and works
+> entirely through DNS records, making it more suitable for private
+> infrastructure.
 
 **Requirements:**
 
@@ -112,9 +155,59 @@ services.nginx.virtualHosts."encyclopedie.ma-cabane.eu" = {
 4. Let's Encrypt verifies the token
 5. Certificate is issued
 
-### DNS-01 Challenge (Wildcard)
+### DNS-01 Challenge
 
-currently not used in this homelab
+The DNS-01 challenge verifies domain ownership by creating a DNS TXT record.
+This method is **preferred for private servers** as it doesn't require opening
+port 80 to the internet.
+
+**Advantages:**
+
+- **No Port 80 Required**: Works entirely through DNS records
+- **Wildcard Certificates**: Supports wildcard domains (*.example.com)
+- **Private Infrastructure**: Ideal for internal/private servers
+- **Better Security**: No need to expose services to the internet for validation
+
+**Requirements:**
+
+- DNS provider with API support (Hetzner, Cloudflare, etc.)
+- API credentials for DNS provider
+- DNS provider must be supported by ACME module
+
+**Usage in this Homelab:**
+
+This homelab uses **Hetzner** as the DNS provider for DNS-01 challenges:
+
+```nix
+homelab.features.acme = {
+  enable = true;
+  email = "admin@ma-cabane.eu";
+  dnsProvider = "hetzner";  # Default DNS provider
+};
+```
+
+**How it works:**
+
+1. Service requests a certificate from Let's Encrypt
+2. Let's Encrypt responds with a DNS challenge
+3. ACME client automatically creates a TXT record via Hetzner API:
+   `_acme-challenge.example.com TXT "validation-token"`
+4. Let's Encrypt verifies the DNS record
+5. Certificate is issued
+6. TXT record is automatically removed
+
+**DNS Provider Configuration:**
+
+The homelab ACME module supports various DNS providers. To use a different
+provider:
+
+```nix
+homelab.features.acme = {
+  enable = true;
+  email = "admin@ma-cabane.eu";
+  dnsProvider = "hetzner";  # or "gandi", "ovh", etc.
+};
+```
 
 ## Operations
 
@@ -210,4 +303,3 @@ testing!
 - [ACME Protocol Documentation](https://letsencrypt.org/docs/)
 - [Let's Encrypt Rate Limits](https://letsencrypt.org/docs/rate-limits/)
 - [NixOS ACME Module Documentation](https://nixos.org/manual/nixos/stable/index.html#module-security-acme)
-- [NixOS Configuration](../modules/system/acme.nix)

@@ -10,18 +10,34 @@ with lib;
 with types;
 
 let
-  appName = "wastebin";
+  appName = "pawtunes";
   appCategory = "Essentials";
-  appDisplayName = "Wastebin";
-  appIcon = "sh-wastebin";
-  appPlatform = "nixos";
-  appDescription = "${pkgs.${appName}.meta.description}";
-  appUrl = pkgs.${appName}.meta.homepage;
-  appPinnedVersion = pkgs.${appName}.version;
+  appDisplayName = "Pawtunes";
+  appIcon = "airsonic";
+  appPlatform = "podman";
+  appDescription = "The Ultimate HTML5 Internet Radio Player";
+  appUrl = "https://github.com/Jackysi/PawTunes";
+  appImage = "jackyprahec/pawtunes";
+  appPinnedVersion = "1.0.6";
+  appPath = "/data/podman/pawtunes";
+  deprecatedMessage = ''
+    This feature is deprecated due to Docker image initialization complexity.
+
+    Recommended alternative: Use the simpler Radio application which provides
+    a lightweight internet radio player without the Docker initialization overhead
+    // https://github.com/pinpox/radio
+
+  '';
 
   cfg = config.homelab.features.${appName};
 
   listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
+
+  containerUid = 33; # www-data
+  containerGid = 33; # www-data
+
+  hostUid = (builtins.elemAt config.users.users.root.subUidRanges 0).startUid + containerUid;
+  hostGid = (builtins.elemAt config.users.users.root.subGidRanges 0).startGid + containerGid;
 
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenHttpPort}";
@@ -62,6 +78,7 @@ in
             url = appUrl;
             pinnedVersion = appPinnedVersion;
             serviceURL = exposedURL;
+            deprecated = deprecatedMessage;
           };
 
         };
@@ -74,14 +91,14 @@ in
         # Monitoring
         #######################################################################
         homelab.features.${appName} = {
-          homepage = mkIf config.services.homepage-dashboard.enable {
+          homepage = mkIf cfg.enable {
             icon = "sh-${appIcon}";
             href = exposedURL;
-            description = "${appDescription}  [${cfg.serviceDomain}]";
+            description = appDescription;
             siteMonitor = internalURL;
           };
 
-          gatus = mkIf config.services.gatus.enable {
+          gatus = mkIf cfg.enable {
             name = appDisplayName;
             url = internalURL;
             group = appCategory;
@@ -91,7 +108,6 @@ in
               "[STATUS] == 200"
               # ''[BODY] == pat(*"version": "${appPinnedVersion}"*)''
             ];
-            ui.hide-hostname = true;
           };
 
         };
@@ -112,32 +128,48 @@ in
         programs.bash.shellAliases = (mkServiceAliases appName) // {
         };
 
-        clan.core.vars.generators.wastebin = {
-          files.envfile = { };
-          runtimeInputs = [ pkgs.pwgen ];
-          script = ''
-            echo "WASTEBIN_PASSWORD_SALT=$(pwgen -s 64 1)" >> $out/envfile
-            echo "WASTEBIN_SIGNING_KEY=$(pwgen -s 64 1)" >> $out/envfile
-          '';
-        };
+        systemd.tmpfiles.rules = [
+          # Application data
+          "d ${appPath} 0751 root root -"
+          "d ${appPath}/data 0750 ${toString hostUid} ${toString hostGid} -"
+          "d ${appPath}/data/cache 0750 ${toString hostUid} ${toString hostGid} -"
+          "d ${appPath}/inc 0750 ${toString hostUid} ${toString hostGid} -"
+          "d ${appPath}/inc/config 0750 ${toString hostUid} ${toString hostGid} -"
+          "d ${appPath}/inc/locale 0750 ${toString hostUid} ${toString hostGid} -"
 
-        services.wastebin = {
-          enable = true;
+          # Backup directory
+          "d /var/backup/pawtunes 0750 root root -"
+        ];
 
-          secretFile = config.clan.core.vars.generators."wastebin".files."envfile".path;
+        virtualisation.oci-containers.containers.${appName} = {
+          image = "${appImage}:${appPinnedVersion}";
+          autoStart = true;
+          ports = [ "${toString listenHttpPort}:80" ];
 
-          settings = {
-            WASTEBIN_ADDRESS_PORT = "127.0.0.1:${toString listenHttpPort}";
-            WASTEBIN_TITLE = "codes";
-            WASTEBIN_BASE_URL = "https://codes.ma-cabane.eu";
-          };
+          volumes = [
+            "${appPath}/inc/config:/var/www/html/inc/config"
+            "${appPath}/inc/locale:/var/www/html/inc/locale"
+            "${appPath}/data:/var/www/html/data"
+          ];
+
+          extraOptions = [
+            "--cap-drop=ALL"
+
+            # for nginx
+            "--cap-add=CHOWN"
+            "--cap-add=SETUID"
+            "--cap-add=SETGID"
+            "--cap-add=DAC_OVERRIDE"
+            "--cap-add=NET_BIND_SERVICE"
+            "--subgidname=root"
+            "--subuidname=root"
+          ];
         };
 
         services.nginx.virtualHosts = mkIf cfg.openFirewall {
           "${cfg.serviceDomain}" = {
-            # Use wildcard domain
-            useACMEHost = config.homelab.domain;
             forceSSL = true;
+            enableACME = true;
 
             locations."/" = {
               proxyPass = "http://127.0.0.1:${toString listenHttpPort}";
@@ -162,7 +194,7 @@ in
                 add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
 
                 # Allow only specific sources to load content (CSP)
-                add_header Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob: https:; connect-src 'self' https:;" always;
+                add_header Content-Security-Policy "default-src 'self'; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob: http: https:; connect-src 'self' http: https:;" always;
 
                 # Modern CORS headers
                 add_header Cross-Origin-Opener-Policy "same-origin" always;

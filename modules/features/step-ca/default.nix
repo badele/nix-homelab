@@ -16,18 +16,25 @@ let
   appIcon = "step-ca";
   appDescription = "${pkgs.${appName}.meta.description}";
   appUrl = pkgs.${appName}.meta.homepage;
-  appHealthUrl = "${serviceURL}/health";
   appPinnedVersion = pkgs.${appName}.version;
+  deprecatedMessage = ''
+    This feature is deprecated. While it works fine, it has significant limitations:
+    it's difficult to add the self-signed CA to all devices. For example, Firefox
+    on Android doesn't use the Android root CA store.
+
+    Recommended alternative: Use public domain names (with private IPs) and DNS-01
+    challenge for automated certificate management with Let's Encrypt.
+  '';
 
   cfg = config.homelab.features.${appName};
   secrets = config.clan.core.vars.generators;
   ip = config.homelab.host.address;
 
   # Get port from central registry
-  listenHttpPort = config.homelab.portRegistry.${appName}.httpPort;
+  listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
 
-  # Service URL: use nginx domain if firewall is open, otherwise use direct IP:port
-  serviceURL = "https://${cfg.serviceDomain}:${toString listenHttpPort}";
+  exposedURL = "https://${cfg.serviceDomain}";
+  internalURL = "http://127.0.0.1:${toString listenHttpPort}";
 
   yaml = pkgs.formats.json { };
 in
@@ -78,7 +85,8 @@ in
           description = appDescription;
           url = appUrl;
           pinnedVersion = appPinnedVersion;
-          serviceURL = serviceURL;
+          serviceURL = exposedURL;
+          deprecated = deprecatedMessage;
         };
       };
     }
@@ -88,14 +96,14 @@ in
       homelab.features.${appName} = {
         homepage = {
           icon = appIcon;
-          href = appHealthUrl;
+          href = exposedURL;
           description = appDescription;
-          siteMonitor = appHealthUrl;
+          siteMonitor = "${internalURL}/health";
         };
 
         gatus = mkIf cfg.enable {
           name = appDisplayName;
-          url = appHealthUrl;
+          url = "${internalURL}/health";
           group = appCategory;
           type = "HTTP";
           interval = "5m";

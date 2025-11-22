@@ -138,6 +138,8 @@ in
       radio.appId = 120;
       grist.appId = 130;
       authentik.appId = 140;
+      step-ca.appId = 150;
+      pawtunes.appId = 160;
     };
 
     # Export the helper functions so feature modules can use them

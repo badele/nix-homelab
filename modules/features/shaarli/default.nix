@@ -42,12 +42,6 @@ in
   options.homelab.features.${appName} = mkFeatureOptions {
     extraOptions = {
       enable = mkEnableOption appName;
-      manualConfiguration = mkOption {
-        type = bool;
-        default = true;
-        readOnly = true;
-        description = "This feature requires manual configuration";
-      };
 
       serviceDomain = mkOption {
         type = str;

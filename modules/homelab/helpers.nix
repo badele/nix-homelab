@@ -91,6 +91,14 @@ let
         URL to access the application/service
       '';
     };
+
+    deprecated = mkOption {
+      type = str;
+      default = "";
+      description = ''
+        An message for the reason this feature is deprecated
+      '';
+    };
   };
 
   # Helper function to create common feature options
@@ -101,7 +109,10 @@ let
     }:
     {
       enable = mkEnableOption "Enable this feature";
-      manualConfiguration = mkEnableOption "This feature requires manual configuration";
+      manualConfiguration = mkEnableOption ''
+        This feature requires manual configuration, 
+         ex: init account, add new OIDC application (authentik)
+      '';
 
       appInfos = mkOption {
         type = submodule { options = appInfosOptions; };
