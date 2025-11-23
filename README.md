@@ -15,6 +15,8 @@
     </p>
 </div>
 
+---
+
 ### What is this?
 
 This is a complete NixOS homelab setup that manages:
@@ -56,29 +58,6 @@ I follow a hybrid approach:
 
 This gives me the best of both worlds: NixOS reproducibility with container
 flexibility.
-
-### Project Structure
-
-> [!NOTE]
-> 🚧 Work in Progress - The project is being migrated to Clan architecture.
-> During this transition, you'll find both old and new directory structures
-> coexisting.
-
-The homelab uses a modular flake-parts architecture with Clan: **Key
-directories:**
-
-##### 🚧 New structure (managed with clan command)
-
-- `machines/`: Per-host configurations `clan machines update "machine-name"`
-- `modules/`: Shared modules and legacy configurations
-- `vars/`: Secrets `clan vars list "machine-name"` and on nix expression
-  `clan.core.vars.generators."secret-bucket-name"`
-
-##### 💥 Legacy structure
-
-- `nix/nixos/roles/`: Service roles
-- `nix/home-manager/`: User environment configs
-- `sops/`: SOPS secrets
 
 ### 📦 Services & Applications
 
