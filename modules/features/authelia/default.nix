@@ -20,6 +20,8 @@ let
   appPinnedVersion = pkgs.${appName}.version;
   deprecatedMessage = ''
     Migrated from Authelia to Authentik. While Authentik requires some manual configuration, it offers more features and better integration capabilities.
+    // https://github.com/badele/nix-homelab/docs/features/authentik.md
+
   '';
 
   cfg = config.homelab.features.${appName};
@@ -43,10 +45,10 @@ in
     extraOptions = {
       enable = mkEnableOption appName;
 
-      serviceDomain = mkOption {
+      authDomain = mkOption {
         type = str;
-        default = "douane.${config.homelab.domain}";
-        description = "${appName} service domain name";
+        default = "${config.homelab.features.authentik.serviceDomain}";
+        description = "OIDC service domain name";
       };
 
       baseDN = mkOption {

@@ -39,7 +39,7 @@
 
 Recommended alternative: Use the simpler Radio application which provides
 a lightweight internet radio player without the Docker initialization overhead
-// https://github.com/pinpox/radio
+// https://github.com/badele/nix-homelab/docs/features/radio.md
 
 </em></p>
   </div>

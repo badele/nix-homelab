@@ -95,7 +95,7 @@ All Available homelab features :
       </a>
     </td>
     <td align="center" width="16%">
-      <a href="/docs/all-features.md#core-services" title="Single Sign-On multi-factor portal for web apps">
+      <a href="/docs/all-features.md#deprecated-services" title="Single Sign-On multi-factor portal for web apps">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/authelia.png" width="48" height="48" alt="Authelia"/>
         <br/>Authelia
       </a>
@@ -113,19 +113,25 @@ All Available homelab features :
       </a>
     </td>
     <td align="center" width="16%">
+      <a href="/docs/all-features.md#essentials" title="Simple to use and highly versatile wiki software">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/dokuwiki.png" width="48" height="48" alt="DokuWiki"/>
+        <br/>DokuWiki
+      </a>
+    </td>
+    <td align="center" width="16%">
       <a href="/docs/all-features.md#system-health" title="Automated developer-oriented status page">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/gatus.png" width="48" height="48" alt="Gatus"/>
         <br/>Gatus
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#core-services" title="Real-time web log analyzer and interactive viewer that runs in a terminal in *nix systems">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/goaccess.png" width="48" height="48" alt="GoAccess"/>
         <br/>GoAccess
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#system-health" title="Gorgeous metric viz, dashboards & editors for Graphite, InfluxDB & OpenTSDB">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png" width="48" height="48" alt="Grafana"/>
@@ -156,14 +162,14 @@ All Available homelab features :
         <br/>Linkding
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
-      <a href="/docs/all-features.md#core-services" title="Lightweight authentication server that provides an opinionated, simplified LDAP interface for authentication">
+      <a href="/docs/all-features.md#deprecated-services" title="Lightweight authentication server that provides an opinionated, simplified LDAP interface for authentication">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/lldap.png" width="48" height="48" alt="LLDAP"/>
         <br/>LLDAP
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Minimalist and opinionated feed reader">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/miniflux.png" width="48" height="48" alt="Miniflux"/>
@@ -177,7 +183,7 @@ All Available homelab features :
       </a>
     </td>
     <td align="center" width="16%">
-      <a href="/docs/all-features.md#essentials" title="The Ultimate HTML5 Internet Radio Player">
+      <a href="/docs/all-features.md#deprecated-services" title="The Ultimate HTML5 Internet Radio Player">
         <img src="https://prahec.com/projects/pawtunes/demo/assets/img/apple-touch-icon.png" width="48" height="48" alt="Pawtunes"/>
         <br/>Pawtunes
       </a>
@@ -194,16 +200,16 @@ All Available homelab features :
         <br/>Sample Podman application
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Personal, minimalist, super-fast, database free, bookmarking service - community repo">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/shaarli.png" width="48" height="48" alt="Shaarli"/>
         <br/>Shaarli
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
-      <a href="/docs/all-features.md#core-services" title="Private certificate authority (X.509 & SSH) & ACME server for secure automated certificate management, so you can use TLS everywhere & SSO for SSH">
+      <a href="/docs/all-features.md#deprecated-services" title="Private certificate authority (X.509 & SSH) & ACME server for secure automated certificate management, so you can use TLS everywhere & SSO for SSH">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/step-ca.png" width="48" height="48" alt="Step CA"/>
         <br/>Step CA
       </a>
@@ -220,7 +226,6 @@ All Available homelab features :
         <br/>Wastebin
       </a>
     </td>
-    <td width="16%"></td>
     <td width="16%"></td>
     <td width="16%"></td>
   </tr>

@@ -3,27 +3,35 @@
   lib,
   pkgs,
   mkFeatureOptions,
-  mkServiceAliases,
+  mkPodmanAliases,
   ...
 }:
 with lib;
 with types;
 
 let
-  appName = "miniflux";
+  appName = "dokuwiki";
   appCategory = "Essentials";
-  appDisplayName = "Miniflux";
-  appIcon = "miniflux";
-  appPlatform = "nixos";
-  appDescription = "Minimalist and opinionated feed reader";
-  appUrl = "https://miniflux.app";
-  appPinnedVersion = pkgs.${appName}.version;
+  appDisplayName = "DokuWiki";
+  appIcon = "dokuwiki";
+  appPlatform = "podman";
+  appDescription = "Simple to use and highly versatile wiki software";
+  appUrl = "https://www.dokuwiki.org/";
+  appPinnedVersion = "version-2025-05-14b";
+  appImage = "linuxserver/dokuwiki";
+  appPath = "${config.homelab.podmanBaseStorage}/${appName}";
   appSubDomain = head (splitString "." cfg.serviceDomain);
 
   cfg = config.homelab.features.${appName};
 
   # Get port from central registry
   listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
+
+  containerUID = 1000;
+  containerGID = 1000;
+
+  hostUid = (builtins.elemAt config.users.users.root.subUidRanges 0).startUid + containerUID;
+  hostGid = (builtins.elemAt config.users.users.root.subGidRanges 0).startGid + containerGID;
 
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenHttpPort}";
@@ -59,6 +67,8 @@ in
   config = mkMerge [
     {
       homelab.features.${appName} = {
+        manualConfiguration = true;
+
         appInfos = {
           category = appCategory;
           displayName = appDisplayName;
@@ -102,9 +112,9 @@ in
       #######################################################################
       # Service
       #######################################################################
-      clan.core.vars.generators.miniflux = {
+
+      clan.core.vars.generators.${appName} = {
         files.oauth2-client-secret = { };
-        files.miniflux-env = { };
 
         runtimeInputs = [
           pkgs.pwgen
@@ -112,56 +122,50 @@ in
 
         script = ''
           CLIENTSECRET="$(pwgen -s 64 1)"
-          ADMINPASSWORD="$(pwgen -s 48 1)"
 
           echo "$CLIENTSECRET" > "$out/oauth2-client-secret"
-
-          cat > "$out/miniflux-env" << EOF
-          OAUTH2_CLIENT_SECRET=$CLIENTSECRET
-          ADMIN_USERNAME=admin
-          ADMIN_PASSWORD=$ADMINPASSWORD
-          EOF
         '';
       };
 
-      # Open firewall ports if openFirewall is enabled
+      # Create application directories
+      systemd.tmpfiles.rules = [
+        # Application data
+        "d ${appPath} 0750 root root -"
+        "d ${appPath}/config 0750 ${toString hostUid} ${toString hostGid} -"
+
+        # Backup directory
+        "d /var/backup/${appName} 0750 root root -"
+      ];
+
+      # Open firewall ports if enabled
       networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [ 443 ];
 
       # Add domain alias
       homelab.alias = [ "${cfg.serviceDomain}" ];
 
       # Add service alias
-      programs.bash.shellAliases = (mkServiceAliases appName) // { };
+      programs.bash.shellAliases = (mkPodmanAliases appName) // { };
 
-      # User and group for miniflux
-      users.users.miniflux = {
-        isSystemUser = true;
-        group = "miniflux";
-        createHome = true;
-        homeMode = "0774";
-      };
+      # DokuWiki container
+      virtualisation.oci-containers.containers.${appName} = {
+        image = "${appImage}:${appPinnedVersion}";
+        autoStart = true;
+        ports = [ "127.0.0.1:${toString listenHttpPort}:80" ];
 
-      users.groups.miniflux = { };
+        volumes = [
+          "${appPath}/config:/config"
+        ];
 
-      # Miniflux service configuration
-      services.miniflux = {
-        enable = true;
-        createDatabaseLocally = true;
-
-        config = {
-          LISTEN_ADDR = "127.0.0.1:${toString listenHttpPort}";
-          BASE_URL = exposedURL;
-          HTTP_CLIENT_MAX_BODY_SIZE = "33554432";
-
-          # Authentik OAuth2 configuration
-          OAUTH2_PROVIDER = "oidc";
-          OAUTH2_CLIENT_ID = "${appSubDomain}-${appName}";
-          OAUTH2_REDIRECT_URL = "${exposedURL}/oauth2/oidc/callback";
-          OAUTH2_OIDC_DISCOVERY_ENDPOINT = "https://${cfg.authDomain}/application/o/${appSubDomain}-${appName}/";
-          OAUTH2_USER_CREATION = "1";
+        environment = {
+          PUID = toString containerUID;
+          PGID = toString containerGID;
         };
 
-        adminCredentialsFile = config.clan.core.vars.generators."miniflux".files."miniflux-env".path;
+        extraOptions = [
+          "--add-host=${cfg.authDomain}:host-gateway"
+          "--subgidname=root"
+          "--subuidname=root"
+        ];
       };
 
       # Nginx configuration
@@ -176,8 +180,14 @@ in
             recommendedProxySettings = true;
             proxyWebsockets = true;
 
-            # Security headers
             extraConfig = ''
+              # URL rewriting for DokuWiki
+              # This allows clean URLs like /wiki/page instead of /doku.php?id=wiki:page
+              rewrite ^/_media/(.*)              /lib/exe/fetch.php?media=$1  last;
+              rewrite ^/_detail/(.*)             /lib/exe/detail.php?media=$1 last;
+              rewrite ^/_export/([^/]+)/(.*)     /doku.php?do=export_$1&id=$2 last;
+              rewrite ^/(?!lib/|_media|_detail|_export|doku\.php|feed\.php|install\.php)([^\?]*)(\?(.*))?$ /doku.php?id=$1&$3 last;
+
               ##############################
               # Service Security Headers
               ##############################
@@ -197,12 +207,13 @@ in
               add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
 
               # Allow only specific sources to load content (CSP)
-              add_header Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob: https:; connect-src 'self' https:;" always;
+              # Note: DokuWiki needs 'unsafe-inline' for inline scripts/styles and CDN access
+              # Relaxed CSP for DokuWiki compatibility with plugins and OAuth
+              add_header Content-Security-Policy "default-src 'self'; font-src 'self' data: https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; img-src 'self' data: https: http:; media-src 'self' blob: https:; connect-src 'self' https: wss:; frame-ancestors 'self';" always;
 
-              # Modern CORS headers
-              add_header Cross-Origin-Opener-Policy "same-origin" always;
-              add_header Cross-Origin-Resource-Policy "same-origin" always;
-              add_header Cross-Origin-Embedder-Policy "require-corp" always;
+              # Modern CORS headers (relaxed for OAuth flows)
+              add_header Cross-Origin-Opener-Policy "same-origin-allow-popups" always;
+              add_header Cross-Origin-Resource-Policy "cross-origin" always;
 
               # Cross-domain policy
               add_header X-Permitted-Cross-Domain-Policies "none" always;
@@ -216,15 +227,53 @@ in
       #############################################################################
       # Backup
       #############################################################################
-      # TODO: Implement PostgreSQL backup with clan.core.postgresql
-      # clan.postgresql.databases = {
-      #   miniflux = {
-      #     service = "miniflux";
-      #     restore = {
-      #       stopOnRestore = [ "miniflux" ];
-      #     };
-      #   };
-      # };
+      clan.core.state.${appName} = {
+        folders = [ appPath ];
+
+        # Backup service data locally, used by borgbackup
+        preBackupScript = ''
+          export PATH=${
+            lib.makeBinPath [
+              config.systemd.package
+              pkgs.coreutils
+              pkgs.rsync
+            ]
+          }
+
+          service_status=$(systemctl is-active ${appName})
+          if [ "$service_status" = "active" ]; then
+            systemctl stop ${appName}
+            rsync -avH --delete --numeric-ids "${appPath}/" /var/backup/${appName}/
+            systemctl start ${appName}
+          fi
+        '';
+
+        # Restore files to service (files restored by borgbackup)
+        postRestoreScript = ''
+          export PATH=${
+            lib.makeBinPath [
+              config.systemd.package
+              pkgs.coreutils
+              pkgs.rsync
+            ]
+          }
+
+          service_status="$(systemctl is-active ${appName})"
+
+          if [ "$service_status" = "active" ]; then
+            systemctl stop ${appName}
+
+            # Backup current dokuwiki data locally
+            DATE=$(date +%Y%m%d-%H%M%S)
+            cp -rp "${appPath}" "${appPath}.$DATE.bak"
+
+            # Restore from borgbackup
+            rsync -avH --delete --numeric-ids /var/backup/${appName}/ "${appPath}/"
+
+            systemctl start ${appName}
+          fi
+        '';
+      };
 
     })
   ];

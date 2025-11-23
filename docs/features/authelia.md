@@ -36,6 +36,7 @@
   <h2>⚠️ Deprecation Notice</h2>
   <div class="deprecation-notice">
     <p><em>Migrated from Authelia to Authentik. While Authentik requires some manual configuration, it offers more features and better integration capabilities.
+// https://github.com/badele/nix-homelab/docs/features/authentik.md
 </em></p>
   </div>
 </div>

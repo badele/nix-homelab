@@ -65,17 +65,6 @@ Voici une liste des applications ou services que nix-homelab propose
     </tr>
     <tr>
       <td align="center">
-        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/lldap.png" width="48" height="48" alt="LLDAP"/>
-      </td>
-      <td>
-        <a href="/docs/features/lldap.md">LLDAP 📚</a>
-      </td>
-      <td>nixos</td>
-      <td>0.6.2</td>
-      <td>Lightweight authentication server that provides an opinionated, simplified LDAP interface for authentication</td>
-    </tr>
-    <tr>
-      <td align="center">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homebox.png" width="48" height="48" alt="Nix homelab summary"/>
       </td>
       <td>
@@ -100,6 +89,17 @@ Voici une liste des applications ou services que nix-homelab propose
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td align="center">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/dokuwiki.png" width="48" height="48" alt="DokuWiki"/>
+      </td>
+      <td>
+        <a href="/docs/features/dokuwiki.md">DokuWiki 📚</a>
+      </td>
+      <td>podman</td>
+      <td>version-2025-05-14b</td>
+      <td>Simple to use and highly versatile wiki software</td>
+    </tr>
     <tr>
       <td align="center">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grist.png" width="48" height="48" alt="grist"/>
@@ -253,7 +253,7 @@ Voici une liste des applications ou services que nix-homelab propose
 
 ---
 
-<h2 id="deprecated">Deprecated Services</h2>
+<h2 id="deprecated-services">Deprecated Services</h2>
 <table>
   <thead>
     <tr>
@@ -277,6 +277,20 @@ Voici une liste des applications ou services que nix-homelab propose
       <td>nixos</td>
       <td>Single Sign-On multi-factor portal for web apps</td>
       <td><em>Migrated from Authelia to Authentik. While Authentik requires some manual configuration, it offers more features and better integration capabilities.
+// https://github.com/badele/nix-homelab/docs/features/authentik.md
+</em></td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/lldap.png" width="48" height="48" alt="LLDAP"/>
+      </td>
+      <td>
+        <a href="/docs/features/lldap.md">LLDAP 📚</a>
+      </td>
+      <td>Core Services</td>
+      <td>nixos</td>
+      <td>Lightweight authentication server that provides an opinionated, simplified LDAP interface for authentication</td>
+      <td><em>Previously used LLDAP with Authelia, now migrated to Authentik. Authentik provides built-in user management and more integrated features, eliminating the need for a separate LDAP server.
 </em></td>
     </tr>
     <tr>
@@ -293,7 +307,7 @@ Voici une liste des applications ou services que nix-homelab propose
 
 Recommended alternative: Use the simpler Radio application which provides
 a lightweight internet radio player without the Docker initialization overhead
-// https://github.com/pinpox/radio
+// https://github.com/badele/nix-homelab/docs/features/radio.md
 
 </em></td>
     </tr>

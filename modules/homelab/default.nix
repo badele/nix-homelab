@@ -141,6 +141,8 @@ in
       step-ca.appId = 150;
       pawtunes.appId = 160;
       miniflux.appId = 170;
+      authelia.appId = 180;
+      dokuwiki.appId = 190;
     };
 
     # Export the helper functions so feature modules can use them

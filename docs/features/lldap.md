@@ -33,6 +33,11 @@
       </tr>
     </tbody>
   </table>
+  <h2>⚠️ Deprecation Notice</h2>
+  <div class="deprecation-notice">
+    <p><em>Previously used LLDAP with Authelia, now migrated to Authentik. Authentik provides built-in user management and more integrated features, eliminating the need for a separate LDAP server.
+</em></p>
+  </div>
 </div>
 
 <!-- END SECTION feature_informations -->
@@ -123,3 +128,4 @@ dc=homelab,dc=lan ├── ou=people │ ├── uid=admin │ └── uid=
 
 - [GitHub Repository](https://github.com/lldap/lldap)
 - [Authelia Integration Guide](https://www.authelia.com/integration/ldap/introduction/)
+- [Alternative: Authentik](./authentik.md)

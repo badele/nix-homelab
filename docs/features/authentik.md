@@ -57,7 +57,8 @@ enabling unified user management and secure access control.
 - **Single Sign-On**: One login for all applications
 - **Multiple Protocols**: OAuth2/OIDC, SAML, LDAP support
 - **Forward Auth**: Protect legacy apps without OIDC support
-- **User Management**: Centralized user and group administration
+- **User Management**: Centralized user and group administration, can replace
+  LLDAP server.
 - **MFA Support**: Multi-factor authentication options
 - **Flexible Flows**: Customizable authentication workflows
 
@@ -112,24 +113,25 @@ curl -v http://127.0.0.1:9000/outpost.goauthentik.io/auth/nginx
 
 ### minixflux
 
-**Examples :**
+**Sample datas :**
 
-- subDomaion = `journaliste`
 - appDomain : `journaliste.ma-cabane.eu`
-- appName: miniflux
+- appName: `miniflux`
 
 1. Log in to authentik as an administrator and open the authentik Admin
    interface.
-1. Navigate to `Applications => Applications`
+1. Navigate to `Applications => Applications (Create with provider)`
    - **Application:** provide a descriptive name
-     - name: `${subDomain}(${appName})`
+     - name: `${subDomain}`
      - slug `${subDomain}-${appName}`
    - **Choose a Provider type:** Select `OAuth2/OpenID` Provider as the provider
      type.
    - **Configure the Provider:** provide a name (or accept the auto-provided
      name), the authorization flow to use for this provider (`implicit`), and
      the following required configurations.
-     - Update the `client secret` from generated module features
+     - Define `ClientID` to `journaliste-miniflux`
+     - Update the `client secret` with
+       `clan vars get houston miniflux/oauth2-client-secret`
      - Set a `Strict` redirect URI to
        `https://${appDomain}/oauth2/oidc/callback`
      - Select any available signing key.
@@ -137,6 +139,45 @@ curl -v http://127.0.0.1:9000/outpost.goauthentik.io/auth/nginx
      or user) to manage the listing and access to applications on a user's My
      applications page.
 1. Click **Submit** to save the new application and provider.
+
+Source: https://integrations.goauthentik.io/media/miniflux/
+
+### dokuwiki
+
+**Examples :**
+
+- appDomain : `encyclopedie.ma-cabane.eu`
+- appName: `dokuwiki`
+
+1. Log in to authentik as an administrator and open the authentik Admin
+   interface.
+1. Navigate to `Applications => Applications (Create with provider)`
+   - **Application:** provide a descriptive name
+     - name: `${subDomain}`
+     - slug `${subDomain}-${appName}`
+     - Optional: Under UI Settings, set the Launch URL to
+       `https://${appDomain}/doku.php?id=start&oauthlogin=generic`. This will
+       allow you to login directly to DokuWiki from the authentik applications
+       dashboard and skip the DokuWiki OAuth Login button.
+   - **Choose a Provider type:** Select `OAuth2/OpenID` Provider as the provider
+     type.
+   - **Configure the Provider:** provide a name (or accept the auto-provided
+     name), the authorization flow to use for this provider (`implicit`), and
+     the following required configurations.
+     - Define `ClientID` to `encyclopedie-dokuwiki`
+     - Update the `client secret` with
+       `clan vars get houston dokuwiki/oauth2-client-secret`
+     - Set a `Strict` redirect URI to `https://${appDomain}/doku.php`
+     - Under **Advanced protocol settings**, add the following OAuth mapping
+       under **Scopes:** `authentik default OAuth Mapping`:
+       `OpenID offline_access`
+     - Select any available signing key.
+   - **Configure Bindings** (optional): you can create a binding (policy, group,
+     or user) to manage the listing and access to applications on a user's My
+     applications page.
+1. Click **Submit** to save the new application and provider.
+
+Source: https://integrations.goauthentik.io/documentation/dokuwiki/
 
 ## Operations
 
@@ -163,3 +204,4 @@ Navigate to **Events → Notification transports** to check message status.
 - [Forward Auth with Nginx](https://docs.goauthentik.io/add-secure-apps/providers/proxy/forward_auth)
 - [Proxy Provider Setup](https://docs.goauthentik.io/add-secure-apps/providers/proxy/server_nginx)
 - [GoAuthentik de A à Y (FR)](https://une-tasse-de.cafe/blog/goauthentik/)
+- [Alternative: LLDAP](./lldap.md)

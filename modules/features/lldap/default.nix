@@ -18,6 +18,9 @@ let
   appUrl = pkgs.${appName}.meta.homepage;
   appDescription = "${pkgs.${appName}.meta.description}";
   appPinnedVersion = pkgs.${appName}.version;
+  deprecatedMessage = ''
+    Previously used LLDAP with Authelia, now migrated to Authentik. Authentik provides built-in user management and more integrated features, eliminating the need for a separate LDAP server.
+  '';
 
   cfg = config.homelab.features.${appName};
 
@@ -69,6 +72,7 @@ in
             description = appDescription;
             pinnedVersion = appPinnedVersion;
             serviceURL = exposedURL;
+            deprecated = deprecatedMessage;
           };
         };
       }
