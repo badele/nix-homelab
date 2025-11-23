@@ -268,6 +268,19 @@ Voici une liste des applications ou services que nix-homelab propose
   <tbody>
     <tr>
       <td align="center">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/authelia.png" width="48" height="48" alt="Authelia"/>
+      </td>
+      <td>
+        <a href="/docs/features/authelia.md">Authelia 📚</a>
+      </td>
+      <td>Core Services</td>
+      <td>nixos</td>
+      <td>Single Sign-On multi-factor portal for web apps</td>
+      <td><em>Migrated from Authelia to Authentik. While Authentik requires some manual configuration, it offers more features and better integration capabilities.
+</em></td>
+    </tr>
+    <tr>
+      <td align="center">
         <img src="https://prahec.com/projects/pawtunes/demo/assets/img/apple-touch-icon.png" width="48" height="48" alt="Pawtunes"/>
       </td>
       <td>

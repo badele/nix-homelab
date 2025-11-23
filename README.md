@@ -95,6 +95,12 @@ All Available homelab features :
       </a>
     </td>
     <td align="center" width="16%">
+      <a href="/docs/all-features.md#core-services" title="Single Sign-On multi-factor portal for web apps">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/authelia.png" width="48" height="48" alt="Authelia"/>
+        <br/>Authelia
+      </a>
+    </td>
+    <td align="center" width="16%">
       <a href="/docs/all-features.md#core-services" title="The authentication glue you need. ">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/authentik.png" width="48" height="48" alt="authentik"/>
         <br/>authentik
@@ -118,14 +124,14 @@ All Available homelab features :
         <br/>GoAccess
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#system-health" title="Gorgeous metric viz, dashboards & editors for Graphite, InfluxDB & OpenTSDB">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png" width="48" height="48" alt="Grafana"/>
         <br/>Grafana
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Next generation of spreadsheets">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grist.png" width="48" height="48" alt="grist"/>
@@ -156,14 +162,14 @@ All Available homelab features :
         <br/>LLDAP
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Minimalist and opinionated feed reader">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/miniflux.png" width="48" height="48" alt="Miniflux"/>
         <br/>Miniflux
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#core-services" title="Generate a static HTML summary of your Nix homelab instance">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homebox.png" width="48" height="48" alt="Nix homelab summary"/>
@@ -194,14 +200,14 @@ All Available homelab features :
         <br/>Shaarli
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#core-services" title="Private certificate authority (X.509 & SSH) & ACME server for secure automated certificate management, so you can use TLS everywhere & SSO for SSH">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/step-ca.png" width="48" height="48" alt="Step CA"/>
         <br/>Step CA
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#system-health" title="Fast, cost-effective and scalable time series database, long-term remote storage for Prometheus">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/victoriametrics.png" width="48" height="48" alt="Victoriametrics"/>
@@ -214,7 +220,6 @@ All Available homelab features :
         <br/>Wastebin
       </a>
     </td>
-    <td width="16%"></td>
     <td width="16%"></td>
     <td width="16%"></td>
     <td width="16%"></td>
