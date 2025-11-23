@@ -75,7 +75,7 @@ in
         #######################################################################
         homelab.features.${appName} = {
           homepage = mkIf config.services.homepage-dashboard.enable {
-            icon = "sh-${appIcon}";
+            icon = "${appIcon}";
             href = exposedURL;
             description = "${appDescription}  [${cfg.serviceDomain}]";
             siteMonitor = internalURL;

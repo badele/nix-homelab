@@ -157,22 +157,28 @@ All Available homelab features :
       </a>
     </td>
     <td align="center" width="16%">
-      <a href="/docs/all-features.md#core-services" title="Generate a static HTML summary of your Nix homelab instance">
-        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homebox.png" width="48" height="48" alt="Nix homelab summary"/>
-        <br/>Nix homelab summary
+      <a href="/docs/all-features.md#essentials" title="Minimalist and opinionated feed reader">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/miniflux.png" width="48" height="48" alt="Miniflux"/>
+        <br/>Miniflux
       </a>
     </td>
   </tr>
   <tr>
     <td align="center" width="16%">
+      <a href="/docs/all-features.md#core-services" title="Generate a static HTML summary of your Nix homelab instance">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homebox.png" width="48" height="48" alt="Nix homelab summary"/>
+        <br/>Nix homelab summary
+      </a>
+    </td>
+    <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="The Ultimate HTML5 Internet Radio Player">
-        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/airsonic.png" width="48" height="48" alt="Pawtunes"/>
+        <img src="https://prahec.com/projects/pawtunes/demo/assets/img/apple-touch-icon.png" width="48" height="48" alt="Pawtunes"/>
         <br/>Pawtunes
       </a>
     </td>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Internet Radio">
-        <img src="https://radio.ma-cabane.net/static/parrot.gif" width="48" height="48" alt="Radio"/>
+        <img src="https://radio.0cx.de/static/parrot.gif" width="48" height="48" alt="Radio"/>
         <br/>Radio
       </a>
     </td>
@@ -194,21 +200,20 @@ All Available homelab features :
         <br/>Step CA
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#system-health" title="Fast, cost-effective and scalable time series database, long-term remote storage for Prometheus">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/victoriametrics.png" width="48" height="48" alt="Victoriametrics"/>
         <br/>Victoriametrics
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Pastebin service">
         <img src="https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/wastebin.webp" width="48" height="48" alt="Wastebin"/>
         <br/>Wastebin
       </a>
     </td>
-    <td width="16%"></td>
     <td width="16%"></td>
     <td width="16%"></td>
     <td width="16%"></td>

@@ -122,6 +122,14 @@ in
         #######################################################################
         # Service
         #######################################################################
+        users.users.authentik = {
+          isSystemUser = true;
+          group = "authentik";
+          home = "/var/lib/authentik";
+          createHome = true;
+        };
+        users.groups.authentik = { };
+
         clan.core.vars.generators.gmail-application-password = {
           prompts."token" = {
             description = "Please insert your GMail application password";
@@ -133,7 +141,6 @@ in
           files = {
             adminAccount = {
               secret = false;
-              value = "akadmin";
             };
 
             envfile = {
@@ -155,6 +162,8 @@ in
             BOOTSTRAP_PASSWORD="$(pwgen -s 64 1)"
             BOOTSTRAP_TOKEN="$(pwgen -s 64 1)"
             GMAIL_APP_PASSWORD="$(cat $in/gmail-application-password/token)"
+
+            echo "akadmin" > "$out/adminAccount"
 
             cat > "$out/envfile" << EOF
             AUTHENTIK_SECRET_KEY=$SECRET_KEY

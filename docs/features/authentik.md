@@ -61,6 +61,15 @@ enabling unified user management and secure access control.
 - **MFA Support**: Multi-factor authentication options
 - **Flexible Flows**: Customizable authentication workflows
 
+## Login
+
+Administration account
+
+```
+user: akadmin
+pass: clan vars get houston authentik/envfile | grep AUTHENTIK_BOOTSTRAP_PASSWORD | cut -d= -f2
+```
+
 ## Configuration
 
 ### Forward Auth for Nginx
@@ -101,6 +110,34 @@ curl -v http://127.0.0.1:9000/outpost.goauthentik.io/ping
 curl -v http://127.0.0.1:9000/outpost.goauthentik.io/auth/nginx
 ```
 
+### minixflux
+
+**Examples :**
+
+- subDomaion = `journaliste`
+- appDomain : `journaliste.ma-cabane.eu`
+- appName: miniflux
+
+1. Log in to authentik as an administrator and open the authentik Admin
+   interface.
+1. Navigate to `Applications => Applications`
+   - **Application:** provide a descriptive name
+     - name: `${subDomain}(${appName})`
+     - slug `${subDomain}-${appName}`
+   - **Choose a Provider type:** Select `OAuth2/OpenID` Provider as the provider
+     type.
+   - **Configure the Provider:** provide a name (or accept the auto-provided
+     name), the authorization flow to use for this provider (`implicit`), and
+     the following required configurations.
+     - Update the `client secret` from generated module features
+     - Set a `Strict` redirect URI to
+       `https://${appDomain}/oauth2/oidc/callback`
+     - Select any available signing key.
+   - **Configure Bindings** (optional): you can create a binding (policy, group,
+     or user) to manage the listing and access to applications on a user's My
+     applications page.
+1. Click **Submit** to save the new application and provider.
+
 ## Operations
 
 ### Password Recovery
@@ -109,7 +146,7 @@ Enable password recovery flow:
 
 1. Navigate to **Flows and Stages → Flows**
 2. Import
-   [Recovery with email verification](https://next.goauthentik.io/assets/files/flows-unenrollment-7a90ebae106a5e04da35b9fad2479b2e.yaml/)
+   [Recovery with email verification](https://docs.goauthentik.io/add-secure-apps/flows-stages/flow/examples/flows/#recovery-with-email-verification)
    flow
 3. Go to **System → Brands**
 4. Enable `recovery` in **Default flow section**

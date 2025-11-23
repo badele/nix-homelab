@@ -135,6 +135,17 @@ Voici une liste des applications ou services que nix-homelab propose
     </tr>
     <tr>
       <td align="center">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/miniflux.png" width="48" height="48" alt="Miniflux"/>
+      </td>
+      <td>
+        <a href="/docs/features/miniflux.md">Miniflux 📚</a>
+      </td>
+      <td>nixos</td>
+      <td>2.2.14</td>
+      <td>Minimalist and opinionated feed reader</td>
+    </tr>
+    <tr>
+      <td align="center">
         <img src="https://radio.0cx.de/static/parrot.gif" width="48" height="48" alt="Radio"/>
       </td>
       <td>
