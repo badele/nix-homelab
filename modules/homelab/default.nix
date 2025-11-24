@@ -143,6 +143,7 @@ in
       miniflux.appId = 170;
       authelia.appId = 180;
       dokuwiki.appId = 190;
+      kanidm.appId = 200;
     };
 
     # Export the helper functions so feature modules can use them

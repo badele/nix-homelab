@@ -110,6 +110,10 @@ in
       miniflux.openFirewall = true;
       miniflux.serviceDomain = "journaliste.${config.homelab.domain}";
 
+      dokuwiki.enable = true;
+      dokuwiki.openFirewall = true;
+      dokuwiki.serviceDomain = "encyclopedie.${config.homelab.domain}";
+
       radio.enable = true;
       radio.openFirewall = true;
       radio.stations = [

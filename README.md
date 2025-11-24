@@ -136,13 +136,19 @@ All Available homelab features :
       </a>
     </td>
     <td align="center" width="16%">
+      <a href="/docs/all-features.md#deprecated-services" title="Simple, secure and fast identity management platform">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/kanidm.png" width="48" height="48" alt="Kanidm"/>
+        <br/>Kanidm
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Bookmark manager designed to be minimal, fast, and easy to set up">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/linkding.png" width="48" height="48" alt="Linkding"/>
         <br/>Linkding
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#deprecated-services" title="Lightweight authentication server that provides an opinionated, simplified LDAP interface for authentication">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/lldap.png" width="48" height="48" alt="LLDAP"/>
@@ -173,14 +179,14 @@ All Available homelab features :
         <br/>Radio
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Sample podman application with hardening options.">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/podman.png" width="48" height="48" alt="Sample Podman application"/>
         <br/>Sample Podman application
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Personal, minimalist, super-fast, database free, bookmarking service - community repo">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/shaarli.png" width="48" height="48" alt="Shaarli"/>
@@ -205,7 +211,6 @@ All Available homelab features :
         <br/>Wastebin
       </a>
     </td>
-    <td width="16%"></td>
     <td width="16%"></td>
   </tr>
 </table>

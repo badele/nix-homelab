@@ -282,6 +282,19 @@ Voici une liste des applications ou services que nix-homelab propose
     </tr>
     <tr>
       <td align="center">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/kanidm.png" width="48" height="48" alt="Kanidm"/>
+      </td>
+      <td>
+        <a href="/docs/features/kanidm.md">Kanidm 📚</a>
+      </td>
+      <td>Core Services</td>
+      <td>nixos</td>
+      <td>Simple, secure and fast identity management platform</td>
+      <td><em>While lightweight and performant, Kanidm requires manual configuration for some operations. Migrated to Authentik for better web UI.
+</em></td>
+    </tr>
+    <tr>
+      <td align="center">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/lldap.png" width="48" height="48" alt="LLDAP"/>
       </td>
       <td>

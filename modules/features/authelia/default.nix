@@ -21,7 +21,6 @@ let
   deprecatedMessage = ''
     Migrated from Authelia to Authentik. While Authentik requires some manual configuration, it offers more features and better integration capabilities.
     // https://github.com/badele/nix-homelab/docs/features/authentik.md
-
   '';
 
   cfg = config.homelab.features.${appName};
@@ -55,6 +54,12 @@ in
         type = str;
         default = base_dn;
         description = "LDAP base DN";
+      };
+
+      serviceDomain = mkOption {
+        type = str;
+        default = "${appName}.${config.homelab.domain}";
+        description = "${appName} service domain name";
       };
 
       openFirewall = mkEnableOption "Open firewall ports (incoming)";
