@@ -22,6 +22,7 @@ let
   appImage = "ghcr.io/sissbruecker/linkding";
   appPinnedVersion = "1.41.0-plus";
   appPath = "${config.homelab.podmanBaseStorage}/${appName}";
+  appSubDomain = head (splitString "." cfg.serviceDomain);
 
   cfg = config.homelab.features.${appName};
 
@@ -172,11 +173,11 @@ in
 
         environment = {
           LD_ENABLE_OIDC = "true";
-          OIDC_OP_AUTHORIZATION_ENDPOINT = "https://${authdomain}/api/oidc/authorization";
-          OIDC_OP_TOKEN_ENDPOINT = "https://${authdomain}/api/oidc/token";
-          OIDC_OP_USER_ENDPOINT = "https://${authdomain}/api/oidc/userinfo";
-          OIDC_OP_JWKS_ENDPOINT = "https://${authdomain}/jwks.json";
-          OIDC_RP_CLIENT_ID = "linkding";
+          OIDC_OP_AUTHORIZATION_ENDPOINT = "https://${authdomain}/application/o/authorize/";
+          OIDC_OP_TOKEN_ENDPOINT = "https://${authdomain}/application/o/token/";
+          OIDC_OP_USER_ENDPOINT = "https://${authdomain}/application/o/userinfo/";
+          OIDC_OP_JWKS_ENDPOINT = "https://${authdomain}/application/o/${appSubDomain}-${appName}/jwks/";
+          OIDC_RP_CLIENT_ID = "${appSubDomain}-${appName}";
         };
 
         extraOptions = [

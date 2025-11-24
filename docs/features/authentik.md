@@ -115,8 +115,9 @@ curl -v http://127.0.0.1:9000/outpost.goauthentik.io/auth/nginx
 
 **Sample datas :**
 
-- appDomain : `journaliste.ma-cabane.eu`
+- subDomain : `journaliste`
 - appName: `miniflux`
+- appDomain : `${subDomain}.ma-cabane.eu`
 
 1. Log in to authentik as an administrator and open the authentik Admin
    interface.
@@ -124,12 +125,16 @@ curl -v http://127.0.0.1:9000/outpost.goauthentik.io/auth/nginx
    - **Application:** provide a descriptive name
      - name: `${subDomain}`
      - slug `${subDomain}-${appName}`
+     - Optional: Under UI Settings, set the Launch URL to
+       `https://${appDomain}/oauth2/oidc/redirect`. This will allow you to login
+       directly to Miniflux from the authentik applications dashboard and skip
+       the Miniflux OAuth Login button.
    - **Choose a Provider type:** Select `OAuth2/OpenID` Provider as the provider
      type.
    - **Configure the Provider:** provide a name (or accept the auto-provided
      name), the authorization flow to use for this provider (`implicit`), and
      the following required configurations.
-     - Define `ClientID` to `journaliste-miniflux`
+     - Define `ClientID` to `${subDomaion}-${appName}`
      - Update the `client secret` with
        `clan vars get houston miniflux/oauth2-client-secret`
      - Set a `Strict` redirect URI to
@@ -146,8 +151,9 @@ Source: https://integrations.goauthentik.io/media/miniflux/
 
 **Examples :**
 
-- appDomain : `encyclopedie.ma-cabane.eu`
+- subDomain : `encyclopedie`
 - appName: `dokuwiki`
+- appDomain : `${subDomain}.ma-cabane.eu`
 
 1. Log in to authentik as an administrator and open the authentik Admin
    interface.
@@ -156,15 +162,15 @@ Source: https://integrations.goauthentik.io/media/miniflux/
      - name: `${subDomain}`
      - slug `${subDomain}-${appName}`
      - Optional: Under UI Settings, set the Launch URL to
-       `https://${appDomain}/doku.php?id=start&oauthlogin=generic`. This will
-       allow you to login directly to DokuWiki from the authentik applications
-       dashboard and skip the DokuWiki OAuth Login button.
+       `https:/${appDomain}/start?oauthlogin=generic`. This will allow you to
+       login directly to DokuWiki from the authentik applications dashboard and
+       skip the DokuWiki OAuth Login button.
    - **Choose a Provider type:** Select `OAuth2/OpenID` Provider as the provider
      type.
    - **Configure the Provider:** provide a name (or accept the auto-provided
      name), the authorization flow to use for this provider (`implicit`), and
      the following required configurations.
-     - Define `ClientID` to `encyclopedie-dokuwiki`
+     - Define `ClientID` to `${subDomaion}-${appName}`
      - Update the `client secret` with
        `clan vars get houston dokuwiki/oauth2-client-secret`
      - Set a `Strict` redirect URI to `https://${appDomain}/doku.php`
@@ -178,6 +184,42 @@ Source: https://integrations.goauthentik.io/media/miniflux/
 1. Click **Submit** to save the new application and provider.
 
 Source: https://integrations.goauthentik.io/documentation/dokuwiki/
+
+### linkding
+
+**Examples :**
+
+- subDomain : `bonnes-adresses`
+- appName: `linkding`
+- appDomain : `${subDomain}.ma-cabane.eu`
+
+1. Log in to authentik as an administrator and open the authentik Admin
+   interface.
+1. Navigate to `Applications => Applications (Create with provider)`
+   - **Application:** provide a descriptive name
+     - name: `${subDomain}`
+     - slug `${subDomain}-${appName}`
+     - Optional: Under UI Settings, set the Launch URL to
+       `https://${appDomain}/oidc/authenticate/`. This will allow you to login
+       directly to Linkding from the authentik applications dashboard and skip
+       the linkding OAuth Login button.
+   - **Choose a Provider type:** Select `OAuth2/OpenID` Provider as the provider
+     type.
+   - **Configure the Provider:** provide a name (or accept the auto-provided
+     name), the authorization flow to use for this provider (`implicit`), and
+     the following required configurations.
+     - Define `ClientID` to `${subDomaion}-${appName}`
+     - Update the `client secret` with
+       `clan vars get houston linkding/oauth2-client-secret`
+     - Set a `Strict` redirect URI to `https://${appDomain}/oidc/callback/`
+     - Under **Advanced protocol settings**, add the following OAuth mapping
+       under **Scopes:** `authentik default OAuth Mapping`:
+       `OpenID offline_access`
+     - Select any available signing key.
+   - **Configure Bindings** (optional): you can create a binding (policy, group,
+     or user) to manage the listing and access to applications on a user's My
+     applications page.
+1. Click **Submit** to save the new application and provider.
 
 ## Operations
 

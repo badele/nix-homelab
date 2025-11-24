@@ -20,7 +20,6 @@ let
   appPinnedVersion = "version-2025-05-14b";
   appImage = "linuxserver/dokuwiki";
   appPath = "${config.homelab.podmanBaseStorage}/${appName}";
-  appSubDomain = head (splitString "." cfg.serviceDomain);
 
   cfg = config.homelab.features.${appName};
 
