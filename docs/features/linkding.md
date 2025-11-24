@@ -90,6 +90,18 @@ To get the superuser password:
 grep LD_SUPERUSER_PASSWORD /run/secrets/vars/linkding/envfile
 ```
 
+### OIDC
+
+OIDC with [Authentik](./authentik.md]
+
+```
+OIDC_OP_AUTHORIZATION_ENDPOINT = "https://${authdomain}/application/o/authorize/";
+OIDC_OP_TOKEN_ENDPOINT = "https://${authdomain}/application/o/token/";
+OIDC_OP_USER_ENDPOINT = "https://${authdomain}/application/o/userinfo/";
+OIDC_OP_JWKS_ENDPOINT = "https://${authdomain}/application/o/${appSubDomain}-${appName}/jwks/";
+OIDC_RP_CLIENT_ID = "${appSubDomain}-${appName}";
+```
+
 ## Operations
 
 ### Import Bookmarks from Browser
