@@ -1,5 +1,10 @@
 { inputs }:
 [
+  # Radio package from external flake input
+  (final: prev: {
+    radio = inputs.radio.packages.${final.system}.default;
+  })
+
   (final: prev: {
     reaction = prev.rustPlatform.buildRustPackage rec {
       pname = "reaction";

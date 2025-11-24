@@ -30,7 +30,6 @@
 
     # Server profile
     server.imports = [
-      self.nixosModules.hardware-hetzner-cloud
       inputs.srvos.nixosModules.server
       inputs.srvos.nixosModules.mixins-terminfo
       inputs.srvos.nixosModules.mixins-telegraf
@@ -39,6 +38,22 @@
     desktop.imports = [
       ./desktop/wm/xorg/lightdm.nix
     ];
+
+    # Homelab common modules
+    homelab =
+      { lib, ... }:
+      {
+        imports = [
+          # Import authentik-nix module to make services.authentik available
+          inputs.authentik-nix.nixosModules.default
+
+          # Import common homeab definition
+          ./homelab
+
+          # Import all features definition
+          (import ./features { inherit lib inputs; })
+        ];
+      };
 
   };
 

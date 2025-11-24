@@ -1,23 +1,33 @@
-# 🏠 nix-homelab
+---
 
-<img width="100%" src="./docs/imgs/nixos.gif" />
+<div align="center">
+    <h1>
+        <img src="./docs/imgs/nix-homelab-logo.png"/>
+    </h1>
+    <h3 align="center"><strong>Centralize the configuration of your immutable NixOS machines</strong></h3>
+    <p>
+        My personal homelab infrastructure, fully managed with
+        <a href="https://nixos.org">NixOS</a> and <a href="./docs/clan.md"/>Clan</a>. This repository contains
+        all configurations for my servers, desktops, and network devices.
+    </p>
+    <p align="center">
+        <a target="_blank" href="https://github.com/badele/nix-homelab">Home</a> | <a target="_blank" href="https://labrique.ma-cabane.eu/">Public Server</a> | <a target="_blank" href="https://lampiotes.ma-cabane.eu/d/2cd7b23e-e05f-4c13-99aa-bbc1e323337c/attack?var-interval=1h&orgId=1&from=now-24h&to=now&timezone=browser&refresh=1m">Grafana Dashboard</a> | <a target="_blank" href="https://bonnes-adresses.ma-cabane.eu/bookmarks/shared">My bookmarks</a>
+    </p>
+</div>
 
-My personal homelab infrastructure, fully managed with
-[NixOS](https://nixos.org/) and [Clan](./docs/clan.md). This repository contains
-all configurations for my servers, desktops, and network devices.
+---
 
-## What is this?
+### What is this?
 
 This is a complete NixOS homelab setup that manages:
 
 - **Servers**: Public VPS (Hetzner, Infomaniak), physical servers, Raspberry Pi
 - **Desktops**: Personal laptops and workstations
-- **Network**: Routers, IoT devices, and monitoring
 
 Everything is declarative, reproducible, and version-controlled whenever
 possible.
 
-## Why Clan?
+### Why Clan?
 
 I'm using [Clan](./docs/clan.md) to simplify infrastructure management:
 
@@ -29,194 +39,190 @@ Or as I like to say:
 
 **[→ Learn more about Clan and why I use it](./docs/clan.md)**
 
-### Key benefits
+#### Key benefits
 
 - **Simple host management**: Easy inventory system
 - **Automatic secrets**: Built-in secret generation and management
 - **Backup made easy**: Integrated backup solution
 - **Declarative**: Everything in code, no manual steps
 
-## 🛠️ Deployment Strategy
+### 🛠️ Deployment Strategy
 
 I follow a hybrid approach:
 
 - **NixOS services first**: Most applications run as native NixOS services
 - **Podman when needed**: Some apps use containers to:
-  - Avoid service interruptions during system updates
   - Use plugins or features not well-supported in NixOS (e.g., DokuWiki)
+  - Avoid service interruptions during system updates
   - Maintain stability during version upgrades
 
 This gives me the best of both worlds: NixOS reproducibility with container
 flexibility.
 
-## Project Structure
+### 📦 Services & Applications
 
-> [!NOTE]
-> 🚧 Work in Progress - The project is being migrated to Clan architecture.
-> During this transition, you'll find both old and new directory structures
-> coexisting.
+All Available homelab features :
 
-The homelab uses a modular flake-parts architecture with Clan: **Key
-directories:**
+<!-- BEGIN SECTION services_icon file=./.templates/generate_all_available_icons_features_table.html -->
 
-#### 🚧 New structure (managed with clan command)
-
-- `machines/`: Per-host configurations `clan machines update "machine-name"`
-- `modules/`: Shared modules and legacy configurations
-- `vars/`: Secrets `clan vars list "machine-name"` and on nix expression
-  `clan.core.vars.generators."secret-bucket-name"`
-
-#### 💥 Legacy structure
-
-- `nix/nixos/roles/`: Service roles
-- `nix/home-manager/`: User environment configs
-- `sops/`: SOPS secrets
-
-## 📦 Services & Applications
-
-Here are the main services running in my homelab:
-
-[comment]: (>>ROLES)
-
-<table>
-    <tr>
-        <th>Logo</th>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Links</th>
-        <th>online service</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://www.kevinsubileau.fr/wp-content/uploads/2016/03/letsencrypt-logo-pad.png"></td>
-        <td><a href="https://letsencrypt.org/fr/docs/client-options/">ACME</a></td>
-        <td>NixOS</td>
-        <td><a href="./docs/acme.md">doc</a></td>
-        <td>rpi40, bootstore, houston</td>
-        <td>Let's Encrypt Automatic Certificate Management Environment</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://www.authelia.com/favicon.svg"></td>
-        <td><a href="https://www.authelia.com/">Authelia</a></td>
-        <td>NixOS</td>
-        <td><a href="./machines/houston/modules/authelia.nix">module</a>, <a href="./docs/authelia.md">doc</a></td>
-        <td><a href="https://douane.ma-cabane.eu/">douane.ma-cabane.eu</a></td>
-        <td>An open-source authentication and single sign-on (SSO)</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://www.dokuwiki.org/lib/tpl/dokuwiki/images/favicon.ico"></td>
-        <td><a href="https://www.dokuwiki.org/">Dokuwiki</a></td>
-        <td>Podman rootless</td>
-        <td><a href="./machines/houston/modules/dokuwiki.nix">module</a>, <a href="./docs/dokuwiki.md">doc</a></td>
-        <td><a href="https://encyclopedie.ma-cabane.eu/">encyclopedie.ma-cabane.eu</a></td>
-        <td>Simple to use and highly versatile Open Source wiki software</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://goaccess.io/assets/ico/favicon.ico"></td>
-        <td><a href="https://goaccess.io/">GoAccess</a></td>
-        <td>NixOS</td>
-        <td><a href="./machines/houston/modules/goaccess.nix">module</a></td>
-        <td><a href="https://stats.ma-cabane.eu/">stats.ma-cabane.eu</a></td>
-        <td>Real-time web log analyzer</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://grafana.com/static/assets/img/fav32.png"></td>
-        <td><a href="https://grafana.com/">Grafana</a></td>
-        <td>NixOS</td>
-        <td><a href="./machines/houston/modules/grafana.nix">module</a>, <a href="./docs/grafana.md">doc</a></td>
-        <td><a href="https://lampiotes.ma-cabane.eu/d/2cd7b23e-e05f-4c13-99aa-bbc1e323337c/attack?var-interval=1h&orgId=1&from=now-24h&to=now&timezone=browser&refresh=1m">lampiotes.ma-cabane.eu</a></td>
-        <td>The open and composable observability and data visualization platform [service port 3000]</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://linkding.link/favicon.svg"></td>
-        <td><a href="https://linkding.link/">linkding</a></td>
-        <td>Podman rootless</td>
-        <td><a href="./machines/houston/modules/linkding.nix">module</a></td>
-        <td><a href="https://bonnes-adresses.ma-cabane.eu/bookmarks/shared">bonnes-adresses.ma-cabane.eu</a></td>
-        <td>Bookmark manager</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://avatars.githubusercontent.com/u/129409591?s=48&v=4"></td>
-        <td><a href="https://github.com/lldap/lldap">LLDAP</a></td>
-        <td>Podman rootless</td>
-        <td><a href="./machines/houston/modules/lldap.nix">module</a>, <a href="./docs/lldap.md">doc</a></td>
-        <td>houston</td>
-        <td>Lightweight LDAP directory service for authentication</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://gethomepage.dev/assets/favicon.ico"></td>
-        <td><a href="https://gethomepage.dev/">homepage-dashboard</a></td>
-        <td>NixOS</td>
-        <td><a href="./machines/houston/modules/homepage-dashboard.nix">module</a></td>
-        <td><a href="https://salon.ma-cabane.eu/">salon.ma-cabane.eu</a></td>
-        <td>Highly customizable homepage dashboard</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://miniflux.app/favicon.ico"></td>
-        <td><a href="https://miniflux.app/">Miniflux</a></td>
-        <td>NixOS</td>
-        <td><a href="./machines/houston/modules/miniflux.nix">module</a></td>
-        <td><a href="https://journaliste.ma-cabane.eu/">journaliste.ma-cabane.eu</a></td>
-        <td>Minimalist RSS feed reader</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://raw.githubusercontent.com/Jackysi/PawTunes/refs/heads/master/assets/img/favicon-32x32.png"></td>
-        <td><a href="https://github.com/Jackysi/PawTunes">Pawtunes</a></td>
-        <td>Podman rootless</td>
-        <td><a href="./machines/houston/modules/pawtunes.nix">module</a></td>
-        <td><a href="https://radio.ma-cabane.eu/">radio.ma-cabane.eu</a></td>
-        <td>Favorites Radio streaming player</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://reaction.ppom.me/favicon.svg"></td>
-        <td><a href="https://reaction.ppom.me/">Reaction</a></td>
-        <td>NixOS</td>
-        <td><a href="./machines/houston/modules/reaction.nix">module</a>, <a href="./docs/reaction.md">doc</a></td>
-        <td>houston</td>
-        <td>Block some network attacks</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://shaarli.readthedocs.io/en/master/_static/icon.png"></td>
-        <td><a href="https://shaarli.readthedocs.io/">Shaarli</a></td>
-        <td>Podman rootless</td>
-        <td><a href="./machines/houston/modules/shaarli.nix">module</a></td>
-        <td><a href="https://megaphone.ma-cabane.eu/">megaphone.ma-cabane.eu</a></td>
-        <td>Personal, minimalist, super-fast bookmarking service</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://vector.dev/favicon.ico"></td>
-        <td><a href="https://vector.dev/">Vector</a></td>
-        <td>NixOS</td>
-        <td><a href="./machines/houston/modules/vector/default.nix">module</a>, <a href="./docs/reaction.md">doc</a></td>
-        <td>houston</td>
-        <td>High-performance observability data pipeline</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://victoriametrics.com/icons/favicon.ico"></td>
-        <td><a href="https://victoriametrics.com/">VictoriaMetrics</a></td>
-        <td>NixOS</td>
-        <td><a href="./machines/houston/modules/victoriametrics.nix">module</a>, <a href="./docs/victoriametrics.md">doc</a></td>
-        <td>houston</td>
-        <td>Fast and scalable time series database</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://bin.bloerg.net/favicon.ico"></td>
-        <td><a href="https://github.com/matze/wastebin">Wastebin</a></td>
-        <td>NixOS</td>
-        <td><a href="./machines/houston/modules/wastebin.nix">module</a></td>
-        <td><a href="https://codes.ma-cabane.eu/">codes.ma-cabane.eu</a></td>
-        <td>Minimalist pastebin</td>
-    </tr>
+<table align="center">
+  <tr>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#core-services" title="Let's Encrypt client and ACME library written in Go">
+        <img src="https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/lets-encrypt.webp" width="48" height="48" alt="ACME"/>
+        <br/>ACME
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#deprecated-services" title="Single Sign-On multi-factor portal for web apps">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/authelia.png" width="48" height="48" alt="Authelia"/>
+        <br/>Authelia
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#core-services" title="The authentication glue you need. ">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/authentik.png" width="48" height="48" alt="authentik"/>
+        <br/>authentik
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#core-services" title="Fast and lightweight DNS proxy as ad-blocker for local network with many features">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/blocky.png" width="48" height="48" alt="Blocky"/>
+        <br/>Blocky
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#essentials" title="Simple to use and highly versatile wiki software">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/dokuwiki.png" width="48" height="48" alt="DokuWiki"/>
+        <br/>DokuWiki
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#system-health" title="Automated developer-oriented status page">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/gatus.png" width="48" height="48" alt="Gatus"/>
+        <br/>Gatus
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#core-services" title="Real-time web log analyzer and interactive viewer that runs in a terminal in *nix systems">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/goaccess.png" width="48" height="48" alt="GoAccess"/>
+        <br/>GoAccess
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#system-health" title="Gorgeous metric viz, dashboards & editors for Graphite, InfluxDB & OpenTSDB">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png" width="48" height="48" alt="Grafana"/>
+        <br/>Grafana
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#essentials" title="Next generation of spreadsheets">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grist.png" width="48" height="48" alt="grist"/>
+        <br/>grist
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#system-health" title="Highly customisable dashboard with Docker and service API integrations">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homepage.png" width="48" height="48" alt="Homepage"/>
+        <br/>Homepage
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#essentials" title="Collection of handy online tools for developers, with great UX">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/it-tools.png" width="48" height="48" alt="it-tools"/>
+        <br/>it-tools
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#deprecated-services" title="Simple, secure and fast identity management platform">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/kanidm.png" width="48" height="48" alt="Kanidm"/>
+        <br/>Kanidm
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#essentials" title="Bookmark manager designed to be minimal, fast, and easy to set up">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/linkding.png" width="48" height="48" alt="Linkding"/>
+        <br/>Linkding
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#deprecated-services" title="Lightweight authentication server that provides an opinionated, simplified LDAP interface for authentication">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/lldap.png" width="48" height="48" alt="LLDAP"/>
+        <br/>LLDAP
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#essentials" title="Minimalist and opinionated feed reader">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/miniflux.png" width="48" height="48" alt="Miniflux"/>
+        <br/>Miniflux
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#core-services" title="Generate a static HTML summary of your Nix homelab instance">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homebox.png" width="48" height="48" alt="Nix homelab summary"/>
+        <br/>Nix homelab summary
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#deprecated-services" title="The Ultimate HTML5 Internet Radio Player">
+        <img src="https://prahec.com/projects/pawtunes/demo/assets/img/apple-touch-icon.png" width="48" height="48" alt="Pawtunes"/>
+        <br/>Pawtunes
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#essentials" title="Internet Radio">
+        <img src="https://radio.0cx.de/static/parrot.gif" width="48" height="48" alt="Radio"/>
+        <br/>Radio
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#essentials" title="Sample podman application with hardening options.">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/podman.png" width="48" height="48" alt="Sample Podman application"/>
+        <br/>Sample Podman application
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#essentials" title="Personal, minimalist, super-fast, database free, bookmarking service - community repo">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/shaarli.png" width="48" height="48" alt="Shaarli"/>
+        <br/>Shaarli
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#deprecated-services" title="Private certificate authority (X.509 & SSH) & ACME server for secure automated certificate management, so you can use TLS everywhere & SSO for SSH">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/step-ca.png" width="48" height="48" alt="Step CA"/>
+        <br/>Step CA
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#system-health" title="Fast, cost-effective and scalable time series database, long-term remote storage for Prometheus">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/victoriametrics.png" width="48" height="48" alt="Victoriametrics"/>
+        <br/>Victoriametrics
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#essentials" title="Pastebin service">
+        <img src="https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/wastebin.webp" width="48" height="48" alt="Wastebin"/>
+        <br/>Wastebin
+      </a>
+    </td>
+    <td width="16%"></td>
+  </tr>
 </table>
 
-[comment]: (<<ROLES)
+<!-- END SECTION services_icon -->
 
-## 💻 Desktop Environment
+### 💻 Desktop Environment
 
 My workstations run a customized NixOS setup with i3 window manager and various
 productivity tools.
 
-### Desktop Applications
+#### Desktop Applications
 
 | Logo                                                                                                                                                          | Application | Description                                                                 |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------- |
@@ -230,7 +236,7 @@ productivity tools.
 | [<img width="32" src="https://raw.githubusercontent.com/denisidoro/navi/master/assets/icon.png">](./nix/home-manager/features/term/base.nix)                  | Navi        | [Interactive cheatsheet tool](https://github.com/badele/vide)               |
 | [<img width="32" src="https://user-images.githubusercontent.com/28633984/66519056-2e840c80-eaef-11e9-8670-c767213c26ba.png">](https://github.com/badele/vide) | Neovim      | [**VIDE** - My customized Neovim config](https://github.com/badele/vide)    |
 
-### Floating TUI Panels
+#### Floating TUI Panels
 
 Quick access to system controls via i3 floating terminals:
 
@@ -244,9 +250,9 @@ Quick access to system controls via i3 floating terminals:
 | <img width="320" src="./docs/floating_mixer.png"> | <img width="320" src="./docs/floating_network.png"> |
 | `pulsemixer`                                      | `nmtui`                                             |
 
-## 🌐 Infrastructure
+### 🌐 Infrastructure
 
-### 🚀 [Houston Server](./machines/houston/README.md)
+#### 🚀 [Houston Server](./machines/houston/README.md)
 
 My main public VPS running on [Hetzner Cloud](https://www.hetzner.com/cloud/)
 (CX32: 4 vCPU, 8GB RAM, 80GB SSD).
@@ -254,13 +260,12 @@ My main public VPS running on [Hetzner Cloud](https://www.hetzner.com/cloud/)
 **What it does:**
 
 - **🔐 Authentication Hub**: Authelia + LLDAP for SSO across all services
-- **📊 Full Observability Stack**: Grafana, VictoriaMetrics, InfluxDB, Telegraf,
-  Vector
+- **📊 Full Observability Stack**: Grafana, VictoriaMetrics, Telegraf, Vector
 - **📱 Self-Hosted Apps**: DokuWiki, Linkding, Miniflux, Shaarli, and more
 
 **[→ See complete service list and details](./machines/houston/README.md)**
 
-### 💻 [Gagarin Workstation](./machines/gagarin/README.md)
+#### 💻 [Gagarin Workstation](./machines/gagarin/README.md)
 
 My main desktop workstation for daily development and productivity.
 
@@ -273,7 +278,7 @@ My main desktop workstation for daily development and productivity.
 
 **[→ See complete configuration and tools](./machines/gagarin/README.md)**
 
-### All Hosts
+#### All Hosts
 
 Complete list of hosts in the homelab (auto-generated with `just doc-update`):
 
@@ -357,15 +362,15 @@ Complete list of hosts in the homelab (auto-generated with `just doc-update`):
 
 [comment]: (<<HOSTS)
 
-### Network Topology
+#### Network Topology
 
 ![Network diagram](./docs/network.png)
 
-### Common Commands
+#### Common Commands
 
 ![Available commands](docs/commands.png)
 
-## ❤️ Thanks
+### ❤️ Thanks
 
 A big thank to the contributors of OpenSource projects in particular :
 

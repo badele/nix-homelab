@@ -61,7 +61,7 @@
 
           # Wireguard
           pkgs.wireguard-tools
-          pkgs.openssl_3_0.bin
+          pkgs.openssl_3.bin
 
           # Openstack
           pkgs.openstackclient
@@ -83,6 +83,7 @@
 
           # markdown web server
           inputs.godown.packages.${system}.godown
+          inputs.gosect.packages.${system}.gosect
           #
         ];
         env.UEFI_FILE = uefi_file;

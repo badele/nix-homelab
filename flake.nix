@@ -7,6 +7,10 @@
   inputs = {
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    # Sample pinned nixpkgs revision for specific packages
+    nixpkgs-victoriametrics.url = "github:NixOS/nixpkgs/fd3242d8141a871affe1f3bedc2145eab5d2ae64";
+
     # nixpkgs.url = "github:nixos/nixpkgs/23.05";
     # nixpkgs.url = "path:/home/badele/ghq/github.com/badele/fork-nixpkgs";
     # nixpkgs.url = "github:badele/fork-nixpkgs/unstable-fix-smokeping-symbolic-links";
@@ -52,10 +56,20 @@
     terranix.inputs.nixpkgs.follows = "nixpkgs";
 
     godown.url = "github:badele/godown";
+    gosect.url = "github:badele/gosect";
+
+    radio.url = "github:pinpox/radio/85634dd2dc402f568b695d8ffb41c5707bfa2540";
+
+    authentik-nix.url = "github:nix-community/authentik-nix";
   };
 
   outputs =
-    inputs@{ self, flake-parts, ... }:
+    inputs@{
+      self,
+      flake-parts,
+      nixpkgs-victoriametrics,
+      ...
+    }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [
         "aarch64-linux"
