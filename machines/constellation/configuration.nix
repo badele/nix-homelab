@@ -14,7 +14,6 @@ in
     # Default configuration for the clan machines.
     ./disko.nix
     ../../modules/shared.nix
-    ../../modules/system/tailscale.nix
   ];
 
   # Fix nixos build limits
@@ -39,6 +38,8 @@ in
 
     features = {
       homelab-summary.enable = true;
+
+      tailscale.enable = true;
 
       acme.enable = true;
       acme.email = config.homelab.domainEmailAdmin;

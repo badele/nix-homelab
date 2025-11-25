@@ -15,7 +15,6 @@ in
     # Default configuration for the clan machines.
     ./disko.nix
     ../../modules/shared.nix
-    ../../modules/system/tailscale.nix
   ];
   homelab = {
     nameServer = "192.168.254.154";
@@ -27,6 +26,11 @@ in
       gateway = "192.168.254.254";
 
       nproc = 8;
+    };
+
+    features = {
+      homelab-summary.enable = true;
+      tailscale.enable = true;
     };
   };
 

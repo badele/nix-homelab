@@ -200,6 +200,12 @@ All Available homelab features :
       </a>
     </td>
     <td align="center" width="16%">
+      <a href="/docs/all-features.md#core-services" title="Node agent for Tailscale, a mesh VPN built on WireGuard">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/tailscale.png" width="48" height="48" alt="Tailscale"/>
+        <br/>Tailscale
+      </a>
+    </td>
+    <td align="center" width="16%">
       <a href="/docs/all-features.md#system-health" title="Fast, cost-effective and scalable time series database, long-term remote storage for Prometheus">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/victoriametrics.png" width="48" height="48" alt="Victoriametrics"/>
         <br/>Victoriametrics
@@ -211,7 +217,6 @@ All Available homelab features :
         <br/>Wastebin
       </a>
     </td>
-    <td width="16%"></td>
   </tr>
 </table>
 
