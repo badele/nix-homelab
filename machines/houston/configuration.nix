@@ -20,12 +20,12 @@ in
     ../../modules/server.nix
     ../../modules/system/borgbackup.nix
     ../../modules/system/reaction.nix
-    ../../modules/system/tailscale.nix
 
     # houston infra
     ./disko.nix
 
     # houston apps
+    ./modules/grafana.nix
     ./modules/influxdb.nix
     ./modules/reaction.nix
     ./modules/telegraf

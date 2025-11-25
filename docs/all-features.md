@@ -74,6 +74,17 @@ Voici une liste des applications ou services que nix-homelab propose
       <td></td>
       <td>Generate a static HTML summary of your Nix homelab instance</td>
     </tr>
+    <tr>
+      <td align="center">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/tailscale.png" width="48" height="48" alt="Tailscale"/>
+      </td>
+      <td>
+        <a href="/docs/features/tailscale.md">Tailscale 📚</a>
+      </td>
+      <td>nixos</td>
+      <td>1.90.6</td>
+      <td>Node agent for Tailscale, a mesh VPN built on WireGuard</td>
+    </tr>
   </tbody>
 </table>
 
