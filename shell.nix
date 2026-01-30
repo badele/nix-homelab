@@ -38,17 +38,13 @@ in {
         ssh-to-age
         git-crypt
 
-        # Required by invoke
-        wireguard-tools
-        openssl_3_0.bin
-
         # diagrams
         graphviz
         d2
 
         # Wireguard
         wireguard-tools
-        openssl_3_0.bin
+        openssl_3.bin
 
         # Openstack
         openstackclient

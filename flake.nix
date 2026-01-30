@@ -78,7 +78,7 @@
         # "x86_64-darwin"
       ];
 
-      pkgs = import nixpkgs { overlays = [ nur.overlay ]; };
+      pkgs = import nixpkgs { overlays = [ nur.overlays.default ]; };
     in
     rec {
       # Your custom packages
@@ -134,7 +134,7 @@
                   root = import ./configuration/users/root/demovm.nix;
                   demo = {
                     imports = [
-                      stylix.homeManagerModules.stylix
+                      stylix.homeModules.stylix
                       ./configuration/users/demo/demovm.nix
                     ];
                   };
@@ -152,6 +152,9 @@
             ./nix/modules/nixos/default.nix
             ./configuration/hosts/b4d14
 
+            # NUR overlay at system level (required when using home-manager.useGlobalPkgs)
+            { nixpkgs.overlays = [ nur.overlays.default ]; }
+
             home-manager.nixosModules.home-manager
             {
               home-manager = {
@@ -164,14 +167,13 @@
                   root = import ./configuration/users/root/b4d14.nix;
                   badele = {
                     imports = [
-                      stylix.homeManagerModules.stylix
+                      stylix.homeModules.stylix
                       ./configuration/users/badele/b4d14.nix
                     ];
                   };
                 };
               };
 
-              nixpkgs.overlays = [ nur.overlay ];
               _module.args.nur = { inherit nur; };
             }
           ];
@@ -187,6 +189,9 @@
             ./nix/modules/nixos/default.nix
             ./configuration/hosts/badxps
 
+            # NUR overlay at system level (required when using home-manager.useGlobalPkgs)
+            { nixpkgs.overlays = [ nur.overlays.default ]; }
+
             home-manager.nixosModules.home-manager
             {
               home-manager = {
@@ -199,14 +204,13 @@
                   root = import ./configuration/users/root/badxps.nix;
                   badele = {
                     imports = [
-                      stylix.homeManagerModules.stylix
+                      stylix.homeModules.stylix
                       ./configuration/users/badele/badxps.nix
                     ];
                   };
                 };
               };
 
-              nixpkgs.overlays = [ nur.overlay ];
               _module.args.nur = { inherit nur; };
             }
           ];
@@ -253,7 +257,7 @@
                   badele = {
                     imports = [
                       nur.modules.homeManager
-                      stylix.homeManagerModules.stylix
+                      stylix.homeModules.stylix
                       ./configuration/users/badele/hype16.nix
                     ];
                   };
@@ -308,7 +312,7 @@
                   root = import ./configuration/users/root/cab1e.nix;
                   badele = {
                     imports = [
-                      stylix.homeManagerModules.stylix
+                      stylix.homeModules.stylix
                       ./configuration/users/badele/cab1e.nix
                     ];
                   };

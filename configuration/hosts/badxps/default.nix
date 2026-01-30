@@ -53,7 +53,7 @@ in {
 
     # Modules
     ../../../nix/modules/nixos/homelab
-    ../../../nix/modules/nixos/qbittorrent-nox.nix
+    # ../../../nix/modules/nixos/qbittorrent-nox.nix
 
     # Users account
     ../root.nix
@@ -73,8 +73,8 @@ in {
     # Services
     # ./services/homepage.nix
     # ./services/netbox.nix
-    ./services/torrent.nix
-    ./services/traefik.nix
+    # ./services/torrent.nix
+    # ./services/traefik.nix
 
     # # Roles
     ../../../nix/nixos/roles # Automatically load service from <host.modules> sectionn from `homelab.json` file
@@ -95,11 +95,6 @@ in {
   # Docker
   virtualisation.docker.storageDriver = "zfs";
 
-  nixpkgs.config = {
-    # allowBroken = true;
-    # nvidia.acceptLicense = true;
-  };
-
   # xorg
   # services.xserver.videoDrivers = [ "intel" "i965" "nvidia" ];
   services.xserver.videoDrivers = [ "modesetting" ];
@@ -116,28 +111,29 @@ in {
   networking.useDHCP = lib.mkDefault true;
 
   networking = {
-    wireguard = {
-      enable = true;
-      interfaces = {
-        wg-cab1e = {
-          mtu = 1384; # Permet de réduire la taille des paquets
-          ips = cfg.params.wireguard.privateIPs;
-          privateKeyFile =
-            config.sops.secrets."services/wireguard/private_peer".path;
-
-          postSetup = ''
-            ${pkgs.iproute2}/bin/ip route add default via 10.123.0.2
-          '';
-
-          peers = [{
-            publicKey = cfg.params.wireguard.publicKey;
-            allowedIPs = [ "0.0.0.0/0" ]; # Tout le trafic passe par le VPN
-            endpoint = cfg.params.wireguard.endpoint;
-            persistentKeepalive = 25; # Permet de maintenir la connexion active
-          }];
-        };
-      };
-    };
+    # wireguard = {
+    #   enable = true;
+    #   interfaces = {
+    #     wg-cab1e = {
+    #       mtu = 1384; # Permet de réduire la taille des paquets
+    #       ips = cfg.params.wireguard.privateIPs;
+    #       privateKeyFile = config.sops.secrets."services/wireguard/private_peer".path;
+    #
+    #       postSetup = ''
+    #         ${pkgs.iproute2}/bin/ip route add default via 10.123.0.2
+    #       '';
+    #
+    #       peers = [
+    #         {
+    #           publicKey = cfg.params.wireguard.publicKey;
+    #           allowedIPs = [ "0.0.0.0/0" ]; # Tout le trafic passe par le VPN
+    #           endpoint = cfg.params.wireguard.endpoint;
+    #           persistentKeepalive = 25; # Permet de maintenir la connexion active
+    #         }
+    #       ];
+    #     };
+    #   };
+    # };
 
     # Firewall
     firewall = {

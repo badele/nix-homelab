@@ -10,7 +10,7 @@
     ./linkding.nix
     ./loki/loki.nix
     ./mosquitto.nix
-    ./netbox.nix
+    # ./netbox.nix
     ./nfs.nix
     ./nix-serve.nix
     ./ntp.nix

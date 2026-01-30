@@ -39,8 +39,7 @@ let
   lockCmd = "${i3lock} --blur 5";
   # terminal = "${pkgs.wezterm}/bin/wezterm";
   terminal = "${pkgs.kitty}/bin/kitty";
-in
-{
+in {
 
   imports = [
     # ./py3status.nix
@@ -51,7 +50,6 @@ in
     enable = true;
     windowManager.i3 = {
       enable = true;
-      package = pkgs.i3-gaps;
       config = {
         modifier = mod;
         terminal = terminal;
@@ -141,11 +139,16 @@ in
           "${mod}+p" = "exec --no-startup-id ${playerctl} play-pause";
           "${mod}+s" = "exec --no-startup-id ${playerctl} next";
           "${mod}+a" = "exec --no-startup-id autorandr -c";
-          "${mod}+b" = "exec --no-startup-id ${cfg.terminal} --class winfloat -- bluetuith";
-          "${mod}+d" = "exec --no-startup-id ${cfg.terminal} --class winfloat -- bashmount";
-          "${mod}+m" = "exec --no-startup-id ${cfg.terminal} --class winfloat -- pulsemixer";
-          "${mod}+n" = "exec --no-startup-id ${cfg.terminal} --class winfloat -- nmtui";
-          "${mod}+t" = "exec --no-startup-id ${cfg.terminal} --class winfloat -- btop";
+          "${mod}+b" =
+            "exec --no-startup-id ${cfg.terminal} --class winfloat -- bluetuith";
+          "${mod}+d" =
+            "exec --no-startup-id ${cfg.terminal} --class winfloat -- bashmount";
+          "${mod}+m" =
+            "exec --no-startup-id ${cfg.terminal} --class winfloat -- pulsemixer";
+          "${mod}+n" =
+            "exec --no-startup-id ${cfg.terminal} --class winfloat -- nmtui";
+          "${mod}+t" =
+            "exec --no-startup-id ${cfg.terminal} --class winfloat -- btop";
 
           # # Screen brightness controls
           "XF86MonBrightnessUp" =
@@ -300,7 +303,7 @@ in
         assigns = {
           "${w2}" = [{ class = "Spotify"; }];
           "${w3}" = [{ class = "Discord"; }];
-          "${w7}" = [{ class = "Google-chrome"; } { class = "firefox"; }];
+          "${w7}" = [ { class = "Google-chrome"; } { class = "firefox"; } ];
           "${w9}" = [{ class = "VSCodium"; }];
         };
 

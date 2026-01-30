@@ -25,7 +25,6 @@ in
     zsh = {
       enable = true;
       enableCompletion = true;
-      dotDir = ".config/zsh";
 
       history = {
         size = 100000;
@@ -107,7 +106,7 @@ in
         test -f ~/.nix-profile/etc/grc.zsh  && source ~/.nix-profile/etc/grc.zsh
       '';
 
-      initExtra = ''
+      initContent = ''
         ##############################################################################
         # keys binding
         ##############################################################################
