@@ -1,12 +1,7 @@
-##########################################################
+# #########################################################
 # HOME-MANAGER (user)
 ##########################################################
-{ config
-, inputs
-, pkgs
-, lib
-, ...
-}:
+{ config, inputs, pkgs, lib, ... }:
 let
   feh = "${pkgs.feh}/bin/feh";
   theme = "${pkgs.base16-schemes}/share/themes/catppuccin-latte.yaml";
@@ -15,8 +10,7 @@ let
     COLOR="#"$COLOR
     ${pkgs.imagemagick}/bin/magick convert -size 1920x1080 xc:$COLOR $out
   '';
-in
-{
+in {
   imports = [
     # Modules
     ../../nix/modules/home-manager/font.nix
@@ -48,19 +42,20 @@ in
     ../../nix/home-manager/features/desktop/apps/development/vscode.nix
   ];
 
-
   ###############################################################################
   # Packages
   ###############################################################################
-  home.packages = with pkgs; [
-    # Insert your packages here
-  ];
+  home.packages = with pkgs;
+    [
+      # Insert your packages here
+    ];
 
   # You can preview the palette at ~/.config/stylix/palette.html
   stylix.enable = true;
   stylix.autoEnable = true;
 
-  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+  stylix.base16Scheme =
+    "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
   stylix.image = pkgs.fetchurl {
     url = "https://w.wallhaven.cc/full/0w/wallhaven-0w3pdr.jpg";
     sha256 = "sha256-xrLfcRkr6TjTW464GYf9XNFHRe5HlLtjpB0LQAh/l6M=";
@@ -86,7 +81,7 @@ in
     };
 
     emoji = {
-      package = pkgs.noto-fonts-emoji;
+      package = pkgs.noto-fonts-color-emoji;
       name = "Noto Color Emoji";
     };
   };

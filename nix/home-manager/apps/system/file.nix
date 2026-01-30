@@ -1,7 +1,7 @@
 # Graphics
 { pkgs, ... }: {
   home.packages = with pkgs; [
-    du-dust # Disk usage in rust
+    dust # Disk usage in rust
     duf # Disk usage in Go
     eza # ls alternative
     fd # find alternative

@@ -9,7 +9,7 @@ in
     enable = true;
     enableSshSupport = true;
     sshKeys = [ config.home.userconf.user.gpg.id ];
-    pinentryPackage =
+    pinentry.package =
       if config.gtk.enable
       then pkgs.pinentry-qt
       else pkgs.pinentry-curses;

@@ -54,7 +54,7 @@
   ####################################
 
   services.pipewire.enable = false;
-  hardware.pulseaudio = {
+  services.pulseaudio = {
     enable = true;
     support32Bit =
       true; # # If compatibility with 32-bit applications is desired
@@ -66,10 +66,7 @@
   ####################################
 
   # Enable OpenGL acceleration
-  hardware.graphics.enable = true;
-
-  # intel
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
     extraPackages = with pkgs;
       [

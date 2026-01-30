@@ -1,5 +1,8 @@
 { pkgs, ... }: {
 
+  # Configure Stylix for Firefox profile
+  stylix.targets.firefox.profileNames = [ "badele" ];
+
   programs.firefox = {
     enable = true;
     profiles.badele = {
