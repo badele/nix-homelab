@@ -1,3 +1,9 @@
+# Template documentation file
+.templates
+
+# Unused some file
+*_unused.*
+
 .decrypted*.yml
 
 # Project
@@ -5,6 +11,15 @@ docs/nvim/tags
 
 # direnv
 .direnv
+
+# terraform
+.terraform
+*.tfstate.backup
+*.tfstate.lock.info
+.terraform-deploy-key
+
+# terranix
+config.tf.json
 
 # Private keys
 configuration/hosts/*/ssh_host_rsa_key
@@ -21,6 +36,3 @@ result
 # Some secrets
 *.openstackrc
 *.priv
-
-# AI pair programming
-.aider*

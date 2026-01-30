@@ -1,5 +1,36 @@
 # Nix
 
+## nix-repl
+
+### Show and debug NixosConfigurations
+
+```bash
+just debug-repl
+```
+
+### Show all values
+
+Lors d'un `just debug-repl` si vous obtenez des résultats de la forme suivante
+
+```ŧext
+[
+  { ... }
+  { ... }
+]
+```
+
+Vous pouvez utiliser l'option `:p` afin d'afficher tous les attributs
+
+```bash
+just debug-repl
+:p NixosConfigurations.xxx.xxx
+```
+
+Vous pouvez égallement évaluer avec la commande suivante
+
+```bash
+nix eval .#nixosConfigurations.xxx.xxx
+
 ## Content and file managment
 
 ### Convert nix attribute to file
@@ -11,25 +42,24 @@ varname = "${pkgs.writeText "<filename>" (builtins.toJSON <attrname>)}";
 ### Write to /etc folder
 
 ```
-  environment.etc."installed-packages".text =
-  '''
-  content
-  ''';
+environment.etc."installed-packages".text =
+'''
+content
+''';
 ```
 
 ### Get remote file
 
 ```
-  objname = pkgs.writeText "filename.yml" (
-    builtins.readFile (
-      builtins.fetchurl {
-        url = "https://raw.githubusercontent.com/Kerwood/snmp-exporter-mikrotik/master/snmp.yml";
-        sha256 = "sha256-11pmg9z0w7jzlwfgplmd6dvy559pvj1lp024jvbsqddsajfbmqcd";
-      }
-    )
-  );
+objname = pkgs.writeText "filename.yml" (
+  builtins.readFile (
+    builtins.fetchurl {
+      url = "https://raw.githubusercontent.com/Kerwood/snmp-exporter-mikrotik/master/snmp.yml";
+      sha256 = "sha256-11pmg9z0w7jzlwfgplmd6dvy559pvj1lp024jvbsqddsajfbmqcd";
+    }
+  )
+);
 ```
-
 
 ## Debug content
 
@@ -59,7 +89,8 @@ in
 
 ## Change executable permission without change it
 
- allows adding setuid/setgid bits, capabilities, changing file ownership and permissions of a program without directly modifying it.
+allows adding setuid/setgid bits, capabilities, changing file ownership and
+permissions of a program without directly modifying it.
 
 ```
 {
