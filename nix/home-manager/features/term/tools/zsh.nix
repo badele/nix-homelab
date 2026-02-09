@@ -273,6 +273,8 @@ in
           "extra-experimental-features = nix-command flakes";
 
         PATH = lib.concatStringsSep ":" [
+          "${config.home.homeDirectory}/go/bin"
+          "${config.home.homeDirectory}/.cargo/bin"
           "${config.home.homeDirectory}/.deno/bin"
           "${config.home.homeDirectory}/.local/bin"
           "\${PATH}"
