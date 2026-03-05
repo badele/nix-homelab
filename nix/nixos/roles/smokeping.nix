@@ -1,4 +1,10 @@
-{ outputs, lib, config, pkgs, ... }:
+{
+  outputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 let
   roleName = "smokeping";
   roleEnabled = lib.elem roleName config.homelab.currentHost.roles;
@@ -13,8 +19,7 @@ let
   ];
   toPing = lib.filterAttrs (hostname: hostinfo: !lib.elem hostinfo.os noPing) config.homelab.hosts;
 in
-lib.mkIf (roleEnabled)
-{
+lib.mkIf (roleEnabled) {
   services.smokeping = {
     enable = true;
     webService = false; # Use nginx instead
@@ -63,16 +68,14 @@ lib.mkIf (roleEnabled)
 
 
       # Host from homelab.json
-      ${lib.concatStringsSep "\n"
-          (lib.mapAttrsToList
-            (hostname: hostinfo:
-              ''
-              ++ ping-${hostname}
-              menu = ${hostname}
-              title = The ${hostname} net performance
-              host = ${hostinfo.ipv4}
-              '')
-            toPing)}
+      ${lib.concatStringsSep "\n" (
+        lib.mapAttrsToList (hostname: hostinfo: ''
+          ++ ping-${hostname}
+          menu = ${hostname}
+          title = The ${hostname} net performance
+          host = ${hostinfo.ipv4}
+        '') toPing
+      )}
 
       + DNS
 
@@ -199,12 +202,7 @@ lib.mkIf (roleEnabled)
   };
 
   # Check if host alias is defined in homelab.json alias section
-  warnings =
-    lib.optional aliasdefined "No `${alias}` alias defined in alias section ${config.networking.hostName}.dnsalias [ ${toString config.homelab.currentHost.dnsalias} ] in `homelab.json` file";
-
-  services.fcgiwrap = {
-    enable = true;
-  };
+  warnings = lib.optional aliasdefined "No `${alias}` alias defined in alias section ${config.networking.hostName}.dnsalias [ ${toString config.homelab.currentHost.dnsalias} ] in `homelab.json` file";
 
   services.nginx.enable = true;
   services.nginx.virtualHosts."${alias}.${config.homelab.domain}" = {

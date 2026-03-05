@@ -60,12 +60,12 @@
   #############################################################################
   # Terraform recipes
   #############################################################################
-  flake.modules.terranix.base = ./terranix/base.nix;
+  flake.lib.terranixModules.base = ./terranix/base.nix;
 
-  flake.modules.terranix.with-dns = moduleWithSystem (
+  flake.lib.terranixModules.with-dns = moduleWithSystem (
     { config }: flake-parts-lib.importApply ./terranix/with-dns.nix { config' = config; }
   );
-  flake.modules.terranix.dns = ./terranix/dns.nix;
+  flake.lib.terranixModules.dns = ./terranix/dns.nix;
 
-  flake.modules.terranix.hcloud = ./terranix/hcloud.nix;
+  flake.lib.terranixModules.hcloud = ./terranix/hcloud.nix;
 }

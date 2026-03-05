@@ -1,10 +1,11 @@
 ##########################################################
 # NIXOS
 ##########################################################
-{ pkgs
-, config
-, lib
-, ...
+{
+  pkgs,
+  config,
+  lib,
+  ...
 }:
 let
   ifTheyExist = groups: builtins.filter (group: builtins.hasAttr group config.users.groups) groups;
@@ -12,7 +13,8 @@ let
     "audio"
     "video"
     "wheel"
-  ] ++ ifTheyExist [
+  ]
+  ++ ifTheyExist [
     "docker"
     "git"
     "libvirtd"
@@ -38,7 +40,7 @@ in
       inherit extraGroups;
       shell = pkgs.zsh;
       uid = 1000;
-      passwordFile = config.sops.secrets."system/user/demo-hash".path;
+      hashedPasswordFile = config.sops.secrets."system/user/demo-hash".path;
       openssh.authorizedKeys.keys = [
       ];
     };

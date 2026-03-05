@@ -19,7 +19,6 @@ in
 
     ../../modules/server.nix
     ../../modules/system/borgbackup.nix
-    ../../modules/system/reaction.nix
 
     # houston infra
     ./disko.nix
@@ -170,10 +169,10 @@ in
     };
   };
 
-  services.resolved = {
-    extraConfig = ''
-      MulticastDNS=no
-    '';
+  services.resolved.settings = {
+    Resolve = {
+      MulticastDNS = "no";
+    };
   };
 
   # This is your user login name.

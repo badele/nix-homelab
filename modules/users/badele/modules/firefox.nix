@@ -1,12 +1,13 @@
 {
   pkgs,
+  inputs,
   ...
 }:
 let
   user = "badele";
 in
 {
-  # config.stylix.targets.firefox.profileNames = [ user ];
+  stylix.targets.firefox.profileNames = [ user ];
 
   programs.firefox = {
     enable = true;
@@ -122,61 +123,61 @@ in
 
       # Search firefox extension
       #https://nur.nix-community.org/repos/rycee/
-      extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
-        behind-the-overlay-revival # Block overlay mask
-        browserpass # GPG passwordstore
-        darkreader # Dark mode
-        onepassword-password-manager # Password manager
-        simple-translate # Translate
-        ublock-origin # addblocker
+      extensions.packages =
+        with inputs.nur.legacyPackages.${pkgs.stdenv.hostPlatform.system}.repos.rycee.firefox-addons; [
+          behind-the-overlay-revival # Block overlay mask
+          browserpass # GPG passwordstore
+          darkreader # Dark mode
+          simple-translate # Translate
+          ublock-origin # addblocker
 
-        # Install manually addons
-        # On addon website, get download link of the addon (install/uninstall button)
-        # Fromt firefox (about:support) copy the addonId
+          # Install manually addons
+          # On addon website, get download link of the addon (install/uninstall button)
+          # Fromt firefox (about:support) copy the addonId
 
-        # - https://addons.mozilla.org/firefox/downloads/file/4528991/francais_language_pack-140.0.20250707.120347.xpi
-        # - https://addons.mozilla.org/firefox/downloads/file/3581786/dictionnaire_francais1-7.0b.xpi
+          # - https://addons.mozilla.org/firefox/downloads/file/4528991/francais_language_pack-140.0.20250707.120347.xpi
+          # - https://addons.mozilla.org/firefox/downloads/file/3581786/dictionnaire_francais1-7.0b.xpi
 
-        # LanguageTool, grammar and spell checker
-        (buildFirefoxXpiAddon rec {
-          pname = "languagetool";
-          version = "8.3.0";
-          addonId = "languagetool-webextension@languagetool.org";
-          url = "https://addons.mozilla.org/firefox/downloads/file/4199245/languagetool-${version}.xpi";
-          sha256 = "sha256-41dCTj353eS6EOufjzcZrEgwaBVwVX9NUdsVpGLNdmc=";
-          meta = { };
-        })
+          # LanguageTool, grammar and spell checker
+          (buildFirefoxXpiAddon rec {
+            pname = "languagetool";
+            version = "8.3.0";
+            addonId = "languagetool-webextension@languagetool.org";
+            url = "https://addons.mozilla.org/firefox/downloads/file/4199245/languagetool-${version}.xpi";
+            sha256 = "sha256-41dCTj353eS6EOufjzcZrEgwaBVwVX9NUdsVpGLNdmc=";
+            meta = { };
+          })
 
-        # Fireshot, screenshot
-        (buildFirefoxXpiAddon rec {
-          pname = "fireshot";
-          version = "1.12.18";
-          addonId = "{0b457cAA-602d-484a-8fe7-c1d894a011ba}";
-          url = "https://addons.mozilla.org/firefox/downloads/file/4120150/fireshot-${version}.xpi";
-          sha256 = "sha256-YAhLt3FW019rASp0wleegXdNXfoCHyzXd6JcrBjafyM=";
-          meta = { };
-        })
+          # Fireshot, screenshot
+          (buildFirefoxXpiAddon rec {
+            pname = "fireshot";
+            version = "1.12.18";
+            addonId = "{0b457cAA-602d-484a-8fe7-c1d894a011ba}";
+            url = "https://addons.mozilla.org/firefox/downloads/file/4120150/fireshot-${version}.xpi";
+            sha256 = "sha256-YAhLt3FW019rASp0wleegXdNXfoCHyzXd6JcrBjafyM=";
+            meta = { };
+          })
 
-        # Fireshot, screenshot
-        (buildFirefoxXpiAddon rec {
-          pname = "ublacklist";
-          version = "9.3.0";
-          addonId = "@ublacklist";
-          url = "https://addons.mozilla.org/firefox/downloads/file/4602896/ublacklist-9.3.0.xpi";
-          sha256 = "sha256-UYBHYlyCaroqurtIDeueFHyfJCxJpjQV4FCuzLFF9cY=";
-          meta = { };
-        })
+          # Fireshot, screenshot
+          (buildFirefoxXpiAddon rec {
+            pname = "ublacklist";
+            version = "9.3.0";
+            addonId = "@ublacklist";
+            url = "https://addons.mozilla.org/firefox/downloads/file/4602896/ublacklist-9.3.0.xpi";
+            sha256 = "sha256-UYBHYlyCaroqurtIDeueFHyfJCxJpjQV4FCuzLFF9cY=";
+            meta = { };
+          })
 
-        # Clean bookmark (duplicate links & unavailable links )
-        # (buildFirefoxXpiAddon rec {
-        #   pname = "clean-up";
-        #   version = "0.1.0";
-        #   addonId = "{a1087d5d-d793-445a-b988-088b1d86f2a6}";
-        #   url = "https://addons.mozilla.org/firefox/downloads/file/3610512/bookmarks_clean_up-${version}.xpi";
-        #   sha256 = "sha256-4FNojXUkm+8lFEBbQOfpdlZgt/SfB8AAGCOiGyWnsuo=";
-        #   meta = { };
-        # })
-      ];
+          # Clean bookmark (duplicate links & unavailable links )
+          # (buildFirefoxXpiAddon rec {
+          #   pname = "clean-up";
+          #   version = "0.1.0";
+          #   addonId = "{a1087d5d-d793-445a-b988-088b1d86f2a6}";
+          #   url = "https://addons.mozilla.org/firefox/downloads/file/3610512/bookmarks_clean_up-${version}.xpi";
+          #   sha256 = "sha256-4FNojXUkm+8lFEBbQOfpdlZgt/SfB8AAGCOiGyWnsuo=";
+          #   meta = { };
+          # })
+        ];
     };
   };
 

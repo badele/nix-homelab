@@ -29,14 +29,17 @@
         {
           home-manager = {
             backupFileExtension = "hm-backup";
-            useGlobalPkgs = true;
+            useGlobalPkgs = false;
             useUserPackages = true;
             verbose = true;
+            extraSpecialArgs = {
+              inputs = self.inputs;
+            };
             users = {
               root = import ../configuration/users/root/demovm.nix;
               demo = {
                 imports = [
-                  inputs.stylix.homeManagerModules.stylix
+                  inputs.stylix.homeModules.stylix
                   ../configuration/users/demo/demovm.nix
                 ];
               };
@@ -61,7 +64,7 @@
         {
           home-manager = {
             backupFileExtension = "hm-backup";
-            useGlobalPkgs = true;
+            useGlobalPkgs = false;
             useUserPackages = true;
             verbose = true;
             extraSpecialArgs = {
@@ -71,15 +74,13 @@
               root = import ../configuration/users/root/b4d14.nix;
               badele = {
                 imports = [
-                  inputs.stylix.homeManagerModules.stylix
+                  inputs.stylix.homeModules.stylix
                   ../configuration/users/badele/b4d14.nix
                 ];
               };
             };
           };
 
-          nixpkgs.overlays = [ inputs.nur.overlay ];
-          _module.args.nur = { inherit (inputs) nur; };
         }
       ];
     };
@@ -101,7 +102,7 @@
         {
           home-manager = {
             backupFileExtension = "hm-backup";
-            useGlobalPkgs = true;
+            useGlobalPkgs = false;
             useUserPackages = true;
             verbose = true;
             extraSpecialArgs = {
@@ -111,15 +112,13 @@
               root = import ../configuration/users/root/badxps.nix;
               badele = {
                 imports = [
-                  inputs.stylix.homeManagerModules.stylix
+                  inputs.stylix.homeModules.stylix
                   ../configuration/users/badele/badxps.nix
                 ];
               };
             };
           };
 
-          nixpkgs.overlays = [ inputs.nur.overlay ];
-          _module.args.nur = { inherit (inputs) nur; };
         }
       ];
     };
@@ -175,7 +174,7 @@
     #           root = import ../configuration/users/root/hype10.nix;
     #           badele = {
     #             imports = [
-    #               inputs.stylix.homeManagerModules.stylix
+    #               inputs.stylix.homeModules.stylix
     #               ../configuration/users/badele/hype10.nix
     #             ];
     #           };
@@ -189,23 +188,23 @@
     # Hypervised applications
     #######################################################################
 
-    gw-dmz = inputs.nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [
-        "${inputs.nixpkgs}/nixos/modules/virtualisation/lxc-container.nix"
-        inputs.sops-nix.nixosModules.sops
-        ../configuration/hosts/hypervised/gw-dmz
-      ];
-    };
-
-    trilium = inputs.nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [
-        "${inputs.nixpkgs}/nixos/modules/virtualisation/lxc-container.nix"
-        inputs.sops-nix.nixosModules.sops
-        ../configuration/hosts/hypervised/trilium
-      ];
-    };
+    # gw-dmz = inputs.nixpkgs.lib.nixosSystem {
+    #   system = "x86_64-linux";
+    #   modules = [
+    #     "${inputs.nixpkgs}/nixos/modules/virtualisation/lxc-container.nix"
+    #     inputs.sops-nix.nixosModules.sops
+    #     ../configuration/hosts/hypervised/gw-dmz
+    #   ];
+    # };
+    #
+    # trilium = inputs.nixpkgs.lib.nixosSystem {
+    #   system = "x86_64-linux";
+    #   modules = [
+    #     "${inputs.nixpkgs}/nixos/modules/virtualisation/lxc-container.nix"
+    #     inputs.sops-nix.nixosModules.sops
+    #     ../configuration/hosts/hypervised/trilium
+    #   ];
+    # };
 
     ########################################################################
     # cab1e (Wireguard VPN server)
@@ -225,7 +224,7 @@
         {
           home-manager = {
             backupFileExtension = "hm-backup";
-            useGlobalPkgs = true;
+            useGlobalPkgs = false;
             useUserPackages = true;
             verbose = true;
             extraSpecialArgs = {
@@ -235,7 +234,7 @@
               root = import ../configuration/users/root/cab1e.nix;
               badele = {
                 imports = [
-                  inputs.stylix.homeManagerModules.stylix
+                  inputs.stylix.homeModules.stylix
                   ../configuration/users/badele/cab1e.nix
                 ];
               };

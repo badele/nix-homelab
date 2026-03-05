@@ -44,8 +44,8 @@ in
       enable = mkEnableOption appName;
 
       package = mkOption {
-        type = types.package;
-        default = pkgs.radio;
+        type = types.nullOr types.package;
+        default = if pkgs ? radio then pkgs.radio else null;
         defaultText = literalExpression "pkgs.radio";
         description = "The radio package to use";
       };
@@ -116,6 +116,12 @@ in
 
       # Only apply when enabled
       (mkIf cfg.enable {
+        assertions = [
+          {
+            assertion = cfg.package != null;
+            message = "homelab.features.radio.package is null; add inputs.radio or set an explicit package.";
+          }
+        ];
 
         homelab.features.${appName} = {
           homepage = mkIf config.services.homepage-dashboard.enable {

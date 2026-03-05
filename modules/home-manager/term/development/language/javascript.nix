@@ -14,6 +14,6 @@
     # nodePackages.jsonlint
 
     # Dockerfile
-    nodePackages.dockerfile-language-server-nodejs
+    dockerfile-language-server
   ];
 }

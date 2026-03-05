@@ -386,7 +386,7 @@ in
             '';
           };
 
-          extraConfig = ''access_log /var/log/nginx/public.log vcombined;'';
+          extraConfig = "access_log /var/log/nginx/public.log vcombined;";
         };
       };
 
