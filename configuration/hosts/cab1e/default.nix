@@ -1,15 +1,19 @@
 # #########################################################
 # NIXOS (hosts)
 ##########################################################
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
 
   cfg = config.homelab.hosts.badxps;
   hostconfiguration = {
     description = "Infomaniak cab1e instance";
     dnsalias = null;
-    icon =
-      "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png";
+    icon = "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png";
     ipv4 = "10.123.0.2";
     os = "NixOS";
     parent = "internet";
@@ -24,11 +28,13 @@ let
         interface = "wg-cab1e";
         serverIPs = [ "10.123.0.1/32" ];
         listenPort = 54321;
-        peers = [{
-          # badxps
-          publicKey = "77u+Uy2Gt0j/Fu0GOw01Ex7B13c7HEfdYoANYP5rqEU=";
-          allowedIPs = [ "${cfg.params.torrent.clientIP}/32" ];
-        }];
+        peers = [
+          {
+            # badxps
+            publicKey = "77u+Uy2Gt0j/Fu0GOw01Ex7B13c7HEfdYoANYP5rqEU=";
+            allowedIPs = [ "${cfg.params.torrent.clientIP}/32" ];
+          }
+        ];
       };
 
       torrent = {
@@ -47,16 +53,13 @@ in
     ./hardware-configuration.nix
     ./disks.nix
 
-    # homelab modules
-    ../../nix/modules/nixos/host.nix
-
     # Users
     ../root.nix
     ../badele.nix
 
     # Commons
-    ../../nix/modules/nixos/homelab
-    ../../nix/nixos/features/commons
+    ../../../nix/modules/nixos/homelab
+    ../../../nix/nixos/features/commons
   ];
 
   ####################################
@@ -64,7 +67,9 @@ in
   ####################################
 
   homelab.hosts.badxps = hostconfiguration;
-  hostprofile = { nproc = 2; };
+  hostprofile = {
+    nproc = 2;
+  };
 
   ####################################
   # Network
@@ -78,8 +83,7 @@ in
     wireguard = {
       enable = true;
       interfaces."${cfg.params.wireguard.interface}" = {
-        privateKeyFile =
-          config.sops.secrets."services/wireguard/private_peer".path;
+        privateKeyFile = config.sops.secrets."services/wireguard/private_peer".path;
         ips = cfg.params.wireguard.serverIPs;
         listenPort = cfg.params.wireguard.listenPort;
 
@@ -117,16 +121,12 @@ in
       forwardPorts = [
         {
           sourcePort = cfg.params.torrent.clientPort;
-          destination = "${cfg.params.torrent.clientIP}:${
-              toString cfg.params.torrent.clientPort
-            }";
+          destination = "${cfg.params.torrent.clientIP}:${toString cfg.params.torrent.clientPort}";
           proto = "tcp";
         }
         {
           sourcePort = cfg.params.torrent.clientPort;
-          destination = "${cfg.params.torrent.clientIP}:${
-              toString cfg.params.torrent.clientPort
-            }";
+          destination = "${cfg.params.torrent.clientIP}:${toString cfg.params.torrent.clientPort}";
           proto = "udp";
         }
       ];

@@ -23,12 +23,6 @@ in
       group = "grafana";
       mode = "0400";
     };
-    files.digest-client-secret = {
-      owner = "grafana";
-      group = "grafana";
-      mode = "0400";
-    };
-
     files.admin_password = {
       owner = "grafana";
       group = "grafana";
@@ -42,48 +36,21 @@ in
 
     runtimeInputs = [
       pkgs.pwgen
-      pkgs.authelia
       pkgs.gnugrep
       pkgs.gawk
     ];
 
     script = ''
       CLIENTSECRET="$(pwgen -s 48 1)"
-      DIGETSECRET="$(authelia crypto hash generate argon2 --password "$CLIENTSECRET" | grep Digest | awk '{ print $2 }')";
-
       ADMINPASSWORD="$(pwgen -s 48 1)"
       SECRETKEY="$(pwgen -s 48 1)"
 
       echo "$CLIENTSECRET" > "$out/oauth2-client-secret"
-      echo "$DIGETSECRET" > "$out/digest-client-secret"
 
       echo "$ADMINPASSWORD" > "$out/admin_password"
       echo "$SECRETKEY" > "$out/secret_key"
     '';
   };
-
-  services.authelia.instances.main.settings.identity_providers.oidc.clients = [
-    {
-      client_id = "grafana";
-      client_name = "Grafana monitoring dashboard";
-      # clan vars get houston grafana/digest-client-secret
-      client_secret = "$argon2id$v=19$m=65536,t=3,p=4$BBam7HuVu1Anr5FH13gL3w$lXDFvDk1j0f66qrWxKqKyewEZuzY2USUgdp4Ug46bc4";
-      public = false;
-      token_endpoint_auth_method = "client_secret_basic";
-      authorization_policy = "two_factor";
-      require_pkce = true;
-      pkce_challenge_method = "S256";
-      redirect_uris = [
-        "https://${subDomain}.${config.networking.fqdn}/login/generic_oauth"
-      ];
-      scopes = [
-        "openid"
-        "email"
-        "profile"
-        "groups"
-      ];
-    }
-  ];
 
   ############################################################################
   # Services
@@ -195,22 +162,11 @@ in
       recommendedProxySettings = true;
       proxyWebsockets = true;
     };
-    extraConfig = ''access_log /var/log/nginx/public.log vcombined;'';
+    extraConfig = "access_log /var/log/nginx/public.log vcombined;";
   };
 
   networking.firewall.allowedTCPPorts = [
     443
   ];
 
-  #############################################################################
-  # Backup
-  #############################################################################
-  clan.postgresql.databases = {
-    grafana = {
-      service = "grafana";
-      restore = {
-        stopOnRestore = [ "grafana" ];
-      };
-    };
-  };
 }

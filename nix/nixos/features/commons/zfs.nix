@@ -1,10 +1,11 @@
-{ lib, pkgs, ... }: {
+{ lib, pkgs, ... }:
+{
   services.zfs = {
     autoSnapshot.enable = true;
     autoSnapshot.monthly = 1;
     autoScrub.enable = true;
   };
-  boot.kernelPackages = lib.mkDefault pkgs.zfs.latestCompatibleLinuxPackages;
+  boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_6_6;
 
   # ZFS already has its own scheduler. Without this my(@Artturin) computer froze for a second when i nix build something.
   # Source: https://github.com/TUM-DSE/doctor-cluster-config/blob/master/modules/zfs.nix

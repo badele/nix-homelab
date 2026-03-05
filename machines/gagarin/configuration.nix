@@ -76,15 +76,16 @@ in
   environment.etc."resolv.conf".source = "/run/systemd/resolve/stub-resolv.conf";
   services.resolved = {
     enable = true;
-    dnssec = "false";
-    llmnr = "false";
-    fallbackDns = [
-      "9.9.9.9"
-      "1.1.1.1"
-      "8.8.8.8"
-    ];
-
-    domains = [ config.homelab.domain ];
+    settings.Resolve = {
+      DNSSEC = "false";
+      LLMNR = "false";
+      FallbackDNS = [
+        "9.9.9.9"
+        "1.1.1.1"
+        "8.8.8.8"
+      ];
+      Domains = [ config.homelab.domain ];
+    };
 
     # extraConfig = ''
     #   DNS=${config.homelab.nameServer}:${config.homelab.portRegistry.block.httpPort + 1}

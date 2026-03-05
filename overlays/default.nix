@@ -1,9 +1,16 @@
 { inputs }:
 [
   # Radio package from external flake input
-  (final: prev: {
-    radio = inputs.radio.packages.${final.system}.default;
-  })
+  (
+    final: prev:
+    prev.lib.optionalAttrs (inputs ? radio) {
+      radio = inputs.radio.packages.${final.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
+        meta = (old.meta or { }) // {
+          mainProgram = "radio";
+        };
+      });
+    }
+  )
 
   (final: prev: {
     reaction = prev.rustPlatform.buildRustPackage rec {

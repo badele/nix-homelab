@@ -70,11 +70,11 @@
           (pkgs.opentofu.withPlugins (
             p:
             builtins.map convert2Tofu [
-              p.external
-              p.hetznerdns
-              p.hcloud
-              p.local
-              p.null
+              p.hashicorp_external
+              p.timohirt_hetznerdns
+              p.hetznercloud_hcloud
+              p.hashicorp_local
+              p.hashicorp_null
             ]
           ))
 

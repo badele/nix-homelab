@@ -160,6 +160,7 @@ in
             ldap_port = listenLDAPPort;
 
             ldap_base_dn = cfg.ldapDomain;
+            force_ldap_user_pass_reset = "always";
           };
 
           environment = {

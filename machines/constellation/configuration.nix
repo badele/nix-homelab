@@ -151,12 +151,10 @@ in
   # Static networking configuration
   services.resolved = {
     enable = true;
-
-    # disable stub listener to avoid port conflict with blocky DNS
-    extraConfig = ''
-      DNSStubListener=no
-      MulticastDNS=no
-    '';
+    settings.Resolve = {
+      DNSStubListener = "no";
+      MulticastDNS = "no";
+    };
   };
 
   networking = {

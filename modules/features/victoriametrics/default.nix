@@ -162,7 +162,7 @@ in
 
       services.victoriametrics = {
         enable = true;
-        package = inputs.nixpkgs-victoriametrics.legacyPackages.${pkgs.system}.victoriametrics;
+        package = pkgs.victoriametrics;
 
         # webui and prometheus remote write endpoint
         listenAddress = "127.0.0.1:${toString listenHttpPort}";
@@ -177,7 +177,7 @@ in
 
       services.vmagent = {
         enable = true;
-        package = inputs.nixpkgs-victoriametrics.legacyPackages.${pkgs.system}.vmagent;
+        package = pkgs.vmagent;
 
         remoteWrite.url = "${cfg.agentRewriteUrl}";
 

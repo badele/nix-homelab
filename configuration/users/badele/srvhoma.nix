@@ -1,12 +1,13 @@
 ##########################################################
 # HOME-MANAGER (user)
 ##########################################################
-{ config
-, inputs
-, outputs
-, pkgs
-, lib
-, ...
+{
+  config,
+  inputs,
+  outputs,
+  pkgs,
+  lib,
+  ...
 }:
 let
   feh = "${pkgs.feh}/bin/feh";
@@ -17,14 +18,14 @@ in
     ./commons.nix
 
     # Commons packages
-    ../../nix/home-manager/commons/packages.nix
+    ../../../nix/home-manager/commons/packages.nix
 
     # Editor
-    ../../nix/home-manager/features/term/editor/lazyvim.nix
+    ../../../nix/home-manager/features/term/editor/lazyvim.nix
 
     # Term
-    ../../nix/home-manager/features/term/base.nix
-    ../../nix/home-manager/features/term/security
+    ../../../nix/home-manager/features/term/base.nix
+    ../../../nix/home-manager/features/term/security
 
     # Language
     # ../../nix/home-manager/features/language/c.nix
@@ -53,8 +54,8 @@ in
     # Virtualisation
     # ../../nix/home-manager/features/desktop/xorg/virtualisation.nix
 
-  ] ++ (builtins.attrValues outputs.homeManagerModules);
-
+  ]
+  ++ (builtins.attrValues outputs.homeManagerModules);
 
   ###############################################################################
   # Packages
@@ -65,7 +66,6 @@ in
     librecad
     solvespace
   ];
-
 
   programs = {
     ####################################

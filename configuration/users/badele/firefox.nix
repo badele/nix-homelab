@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 {
 
   # Configure Stylix for Firefox profile
@@ -129,12 +129,11 @@
 
       # Search firefox extension
       #https://nur.nix-community.org/repos/rycee/
-      extensions.packages = with pkgs.nur.repos; [
+      extensions.packages = with inputs.nur.legacyPackages.${pkgs.stdenv.hostPlatform.system}.repos; [
         rycee.firefox-addons.behind-the-overlay-revival # Block overlay mask
         rycee.firefox-addons.browserpass # GPG passwordstore
         rycee.firefox-addons.darkreader # Dark mode
         rycee.firefox-addons.floccus # Sync bookmark
-        rycee.firefox-addons.onepassword-password-manager # Password manager
         rycee.firefox-addons.simple-tab-groups # Tab group
         rycee.firefox-addons.simple-translate # Translate
         rycee.firefox-addons.ublock-origin # addblocker

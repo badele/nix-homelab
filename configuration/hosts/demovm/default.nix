@@ -1,12 +1,17 @@
 # #########################################################
 # NIXOS (hosts)
 ##########################################################
-{ inputs, config, pkgs, lib, ... }: {
+{
+  inputs,
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
   imports = [
     ./hardware-configuration.nix
     ./disks.nix
-    ../../nix/modules/nixos/host.nix
-
     # Users
     # /home/badele/ghq/github.com/badele/nix-homelab/nix/nixos/features/commons/sops.nix
     # Secret loaded from hosts/${config.networking.hostName}/secrets.yml";
@@ -16,11 +21,11 @@
     ../demo.nix
 
     # Commons
-    ../../nix/modules/nixos/homelab
-    ../../nix/nixos/features/commons
+    ../../../nix/modules/nixos/homelab
+    ../../../nix/nixos/features/commons
 
     # i3
-    ../../nix/nixos/features/desktop/wm/xorg/lightdm.nix
+    ../../../nix/nixos/features/desktop/wm/xorg/lightdm.nix
 
     # Gnome
     # ../../nix/nixos/features/desktop/wm/xorg/gdm.nix # Gnome
@@ -58,7 +63,11 @@
         "9p"
         "9pnet_virtio"
       ];
-      kernelModules = [ "virtio_balloon" "virtio_console" "virtio_rng" ];
+      kernelModules = [
+        "virtio_balloon"
+        "virtio_console"
+        "virtio_rng"
+      ];
       postDeviceCommands = lib.mkIf (!config.boot.initrd.systemd.enable) ''
         # Set the system time from the hardware clock to work around a
         # bug in qemu-kvm > 1.5.2 (where the VM clock is initialised
@@ -88,10 +97,9 @@
 
   # Pulseaudio
   services.pipewire.enable = false;
-  hardware.pulseaudio = {
+  services.pulseaudio = {
     enable = true;
-    support32Bit =
-      true; # # If compatibility with 32-bit applications is desired
+    support32Bit = true; # # If compatibility with 32-bit applications is desired
     #extraConfig = "load-module module-combine-sink";
   };
 
@@ -102,7 +110,9 @@
   # Programs
   ####################################
   powerManagement.powertop.enable = true;
-  programs = { dconf.enable = true; };
+  programs = {
+    dconf.enable = true;
+  };
 
   nixpkgs.hostPlatform.system = "x86_64-linux";
   system.stateVersion = "24.05";
