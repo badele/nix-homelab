@@ -1,14 +1,38 @@
-{ lib, pkgs, inputs, outputs, ... }: {
+{
+  lib,
+  pkgs,
+  inputs,
+  outputs,
+  ...
+}:
+{
   imports = [ ];
 
   services.udisks2.enable = true;
 
-  # # LD_LIBRARY_PATH
-  # programs.nix-ld = {
-  #   enable = true;
-  #   libraries = with pkgs; [ zlib ];
-  # };
-  programs.nix-ld.enable = true;
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      stdenv.cc.cc
+
+      # X11 / input
+      xorg.libX11
+      xorg.libXcursor
+      xorg.libXi
+      xorg.libXrandr
+      xorg.libXrender
+      xorg.libXext
+      xorg.libXfixes
+      xorg.libxcb
+      xorg.libXinerama
+      libxkbcommon
+
+      # OpenGL / EGL
+      libglvnd
+      mesa
+      libdrm
+    ];
+  };
 
   environment.systemPackages = with pkgs; [
 

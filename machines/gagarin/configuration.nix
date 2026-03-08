@@ -123,7 +123,29 @@ in
   };
 
   # Enable nix-ld to allow running Nix programs without a full Nix installation
-  programs.nix-ld.enable = true;
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      stdenv.cc.cc
+
+      # X11 / input
+      xorg.libX11
+      xorg.libXcursor
+      xorg.libXi
+      xorg.libXrandr
+      xorg.libXrender
+      xorg.libXext
+      xorg.libXfixes
+      xorg.libxcb
+      xorg.libXinerama
+      libxkbcommon
+
+      # OpenGL / EGL
+      libglvnd
+      mesa
+      libdrm
+    ];
+  };
 
   # networking.firewall = {
   #   enable = true;
