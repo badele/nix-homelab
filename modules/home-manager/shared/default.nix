@@ -65,6 +65,30 @@
     git.enable = true;
     nix-index.enable = true; # command not found and nix-locate
 
+    mise = {
+      enable = true; # dev tools, env vars, task runner
+      enableZshIntegration = true; # mise integration for zsh
+
+      settings = {
+        experimental = false;
+        verbose = false;
+        auto_install = true;
+        all_compile = true;
+      };
+
+      globalConfig = {
+      };
+    };
+
+    direnv = {
+      enable = true; # load environment when on the current directory
+      enableZshIntegration = true;
+      silent = true;
+
+      nix-direnv.enable = true; # direnv integration for nix-direnv
+      mise.enable = true; # direnv integration for mise
+    };
+
     # Autojump
     zoxide = {
       enable = true;
@@ -113,8 +137,6 @@
     act # Run your GitHub Actions locally
     delta # A syntax-highlighting pager for git
     ghq # Remote repository management made easy
-    direnv # load environment when on the current directory
-
     bat # cat alternative
     curl # HTTP client
     dconf # Dconf editor
