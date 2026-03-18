@@ -42,6 +42,7 @@
     # - nix/home-manager/features/language/nix.nix
     # - nix/home-manager/features/language/openscad.nix
     # - nix/home-manager/features/language/python.nix
+    # - nix/home-manager/features/language/rust.nix
     # - nix/home-manager/features/language/scala.nix
     # - nix/home-manager/features/language/terraform.nix
     # - nix/home-manager/features/language/yaml.nix
