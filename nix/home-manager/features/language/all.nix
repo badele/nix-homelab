@@ -1,4 +1,5 @@
-{ ... }: {
+{ ... }:
+{
   imports = [
     ./ansible.nix
     ./bash.nix
@@ -13,6 +14,7 @@
     ./nix.nix
     ./openscad.nix
     ./python.nix
+    ./rust.nix
     ./scala.nix
     ./terraform.nix
     ./yaml.nix
