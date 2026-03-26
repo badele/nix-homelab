@@ -1,9 +1,17 @@
 # #########################################################
 # NIXOS (hosts)
 ##########################################################
-{ inputs, config, pkgs, lib, ... }:
-let cfg = config.homelab.hosts.badxps;
-in {
+{
+  inputs,
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+let
+  cfg = config.homelab.hosts.badxps;
+in
+{
   imports = [
     inputs.hardware.nixosModules.dell-xps-15-9570-intel
     ./hardware-configuration.nix
@@ -29,6 +37,9 @@ in {
     # Desktop
     ../../../nix/nixos/features/system/bluetooth.nix
     ../../../nix/nixos/features/desktop/wm/xorg/lightdm.nix
+
+    # Printer
+    ../../../nix/nixos/features/system/printer.nix
 
     # Services
     # ./services/homepage.nix
@@ -114,7 +125,9 @@ in {
   # Programs
   ####################################
   powerManagement.powertop.enable = true;
-  programs = { dconf.enable = true; };
+  programs = {
+    dconf.enable = true;
+  };
   environment.systemPackages = [ ];
 
   ####################################
