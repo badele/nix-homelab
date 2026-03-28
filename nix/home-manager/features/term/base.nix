@@ -61,10 +61,14 @@
       enableZshIntegration = true; # mise integration for zsh
 
       settings = {
+        lockfile = true;
         experimental = false;
         verbose = false;
         auto_install = true;
-        all_compile = true;
+        #all_compile = true;
+        node = {
+          compile = false;
+        };
       };
 
       globalConfig = {
