@@ -12,7 +12,12 @@
 # 4) .zlogin is for login shells. It is sourced on the start of a login shell but after .zshrc, if the shell is also interactive. This file is often used to start X using startx. Some systems start X on boot, so this file is not always very useful.
 # 5) .zlogout is sometimes used to clear and reset the terminal. It is called when exiting, not when opening.
 
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   xprop = "${pkgs.xorg.xprop}/bin/xprop";
   hexyl = "${pkgs.xorg.xprop}/bin/hexyl";
@@ -56,11 +61,13 @@ in
         ];
       };
 
-      plugins = [{
-        name = "zsh-fast-syntax-highlighting";
-        src = pkgs.zsh-fast-syntax-highlighting;
-        file = "share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh";
-      }];
+      plugins = [
+        {
+          name = "zsh-fast-syntax-highlighting";
+          src = pkgs.zsh-fast-syntax-highlighting;
+          file = "share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh";
+        }
+      ];
 
       profileExtra = ''
         setopt no_beep                                              # no beep
@@ -136,12 +143,9 @@ in
         nsp = "nix-shell --pure";
 
         # My tools
-        calc_latency =
-          "_calc_latency"; # Compute approximatively internet latency
-        toclipboard =
-          "${xclip} -selection clipboard"; # Copy output to clipboard
-        get_i3_window_name =
-          "${xprop} | grep CLASS | cut -d\",\" -f2 | sed 's/\"//g'";
+        calc_latency = "_calc_latency"; # Compute approximatively internet latency
+        toclipboard = "${xclip} -selection clipboard"; # Copy output to clipboard
+        get_i3_window_name = "${xprop} | grep CLASS | cut -d\",\" -f2 | sed 's/\"//g'";
 
         # Tools
         calc = "eva"; # launch calc computing (eva)
@@ -150,8 +154,7 @@ in
         hexyl = "hexyl --border none"; # hexdump alternative
 
         # ZSH
-        my-zkeys =
-          "cat $HOME/.config/zsh/.zprofile | grep -Eo '# [.*' | sed 's/# //g'";
+        my-zkeys = "cat $HOME/.config/zsh/.zprofile | grep -Eo '# [.*' | sed 's/# //g'";
 
         # ps & top  alternative
         psc = "procs --sortd cpu";
@@ -249,16 +252,13 @@ in
         vim = "nvim"; # alternative vim (nvim)
 
         # navi
-        navi = "my-navi"; # Show cheat commands
-        pnavi = "my-navi --print"; # Show cheat commands
-        lnavi =
-          "my-navi --path ~/ghq/github.com/badele/cheats"; # Show cheat commands
-        lpnavi =
-          "my-navi --print --path ~/ghq/github.com/badele/cheats"; # Show cheat commands
+        navi = "@navi"; # Show cheat commands
+        pnavi = "@navi --print"; # Show cheat commands
+        lnavi = "@navi --path ~/ghq/github.com/badele/cheats"; # Show cheat commands
+        lpnavi = "@navi --print --path ~/ghq/github.com/badele/cheats"; # Show cheat commands
 
         # Date & Time
-        clock =
-          "peaclock --config-dir ~/.config/peaclock"; # Show terminal clock
+        clock = "peaclock --config-dir ~/.config/peaclock"; # Show terminal clock
 
         # Color
         colors_table = "${pkgs.gettext}/bin/msgcat --color=test | head -n 11";
@@ -269,8 +269,7 @@ in
       sessionVariables = {
 
         # NixOS experimental support
-        NIX_CONFIG =
-          "extra-experimental-features = nix-command flakes";
+        NIX_CONFIG = "extra-experimental-features = nix-command flakes";
 
         PATH = lib.concatStringsSep ":" [
           "${config.home.homeDirectory}/go/bin"
@@ -294,8 +293,7 @@ in
         LESS_TERMCAP_mb = "$(tput bold; tput setaf 2)"; # green
         LESS_TERMCAP_md = "$(tput bold; tput setaf 6)"; # cyan
         LESS_TERMCAP_me = "$(tput sgr0)";
-        LESS_TERMCAP_so =
-          "$(tput bold; tput setaf 3; tput setab 4)"; # yellow on blue
+        LESS_TERMCAP_so = "$(tput bold; tput setaf 3; tput setab 4)"; # yellow on blue
         LESS_TERMCAP_se = "$(tput rmso; tput sgr0)";
         LESS_TERMCAP_us = "$(tput smul; tput bold; tput setaf 4)"; # purple
         LESS_TERMCAP_ue = "$(tput rmul; tput sgr0)";
