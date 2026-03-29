@@ -23,7 +23,7 @@
       "acpi_osi=!"
       ''acpi_osi="Windows 2015"''
       "acpi_backlight=vendor"
-      "usbcore.autosuspend=30"
+      "usbcore.autosuspend=1800"
     ];
 
     blacklistedKernelModules = [
@@ -61,16 +61,6 @@
       kernelModules = [ ];
     };
   };
-
-  ####################################
-  # Disable autosuspend for some USB devices
-  ####################################
-  # Bus 001 Device 020: ID 0db0:0d11 Micro Star International MSI GM11 Gaming Mouse
-  # Bus 001 Device 023: ID 0db0:0b30 Micro Star International MSI GK30 Gaming Keyboard
-  services.udev.extraRules = ''
-    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0db0", ATTR{idProduct}=="0d11", TEST=="power/control", ATTR{power/control}="on"
-    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0db0", ATTR{idProduct}=="0b30", TEST=="power/control", ATTR{power/control}="on"
-  '';
 
   ####################################
   # Pulseaudio
