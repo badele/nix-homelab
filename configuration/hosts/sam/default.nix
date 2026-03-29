@@ -1,5 +1,6 @@
-{ lib
-, ...
+{
+  lib,
+  ...
 }:
 {
   imports = [
@@ -9,5 +10,5 @@
   networking.hostName = "sam";
   networking.useDHCP = lib.mkDefault true;
 
-  system.stateVersion = "22.11";
+  system.stateVersion = "26.05";
 }

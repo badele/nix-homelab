@@ -23,7 +23,7 @@
   home = {
     username = lib.mkDefault "badele";
     homeDirectory = lib.mkDefault "/home/${config.home.username}";
-    stateVersion = lib.mkDefault "22.11";
+    stateVersion = lib.mkDefault "26.05";
 
     userconf = {
       user = {

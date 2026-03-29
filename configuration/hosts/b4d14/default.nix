@@ -161,5 +161,5 @@ in
   };
 
   nixpkgs.hostPlatform.system = "x86_64-linux";
-  system.stateVersion = "24.05";
+  system.stateVersion = "26.05";
 }

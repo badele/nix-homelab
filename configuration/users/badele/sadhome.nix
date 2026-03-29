@@ -89,6 +89,6 @@ in
     };
   };
 
-  # inv home.deploy ; neofetch ; ll
+  
   wallpaper = pkgs.wallpapers.forest-deer-landscape;
 }

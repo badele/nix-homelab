@@ -19,8 +19,8 @@
   ...
 }:
 let
-  xprop = "${pkgs.xorg.xprop}/bin/xprop";
-  hexyl = "${pkgs.xorg.xprop}/bin/hexyl";
+  xprop = "${pkgs.xprop}/bin/xprop";
+  hexyl = "${pkgs.xprop}/bin/hexyl";
   prj_devtools = "${config.home.homeDirectory}/ghq/github.com/cynapps/devtools";
 in
 {

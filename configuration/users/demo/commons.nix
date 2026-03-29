@@ -22,7 +22,7 @@
       };
     };
 
-    stateVersion = lib.mkDefault "22.11";
+    stateVersion = lib.mkDefault "26.05";
   };
 
   nixpkgs.config = {

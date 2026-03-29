@@ -16,7 +16,6 @@
 
     # # Misc
     ./tools/htop.nix
-    ./tools/neofetch.nix
     ./tools/top
     ./tools/user-scripts
   ];
@@ -132,6 +131,7 @@
     act # Run your GitHub Actions locally
     delta # A syntax-highlighting pager for git
     ghq # Remote repository management made easy
+    fastfetch # neofetch like
   ];
 
 }

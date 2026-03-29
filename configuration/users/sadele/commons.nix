@@ -1,9 +1,10 @@
-{ config
-, inputs
-, outputs
-, pkgs
-, lib
-, ...
+{
+  config,
+  inputs,
+  outputs,
+  pkgs,
+  lib,
+  ...
 }:
 let
   mkTuple = lib.hm.gvariant.mkTuple;
@@ -16,7 +17,7 @@ in
   home = {
     username = lib.mkDefault "sadele";
     homeDirectory = lib.mkDefault "/home/${config.home.username}";
-    stateVersion = lib.mkDefault "22.11";
+    stateVersion = lib.mkDefault "26.05";
   };
 
   programs = { };
@@ -37,7 +38,12 @@ in
   dconf.settings = {
     "org/gnome/desktop/input-sources" = {
       "current" = "uint32 0";
-      "sources" = [ (mkTuple [ "xkb" "fr" ]) ];
+      "sources" = [
+        (mkTuple [
+          "xkb"
+          "fr"
+        ])
+      ];
     };
   };
 }

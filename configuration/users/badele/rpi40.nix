@@ -24,6 +24,6 @@ in
   ]
   ++ (builtins.attrValues outputs.homeManagerModules);
 
-  # inv home.deploy ; neofetch ; ll
+  
   wallpaper = pkgs.wallpapers.forest-deer-landscape;
 }
