@@ -24,7 +24,6 @@
 
     # # Misc
     ../../home-manager/term/tools/htop.nix
-    ../../home-manager/term/tools/neofetch.nix
     ../../home-manager/term/tools/top
     ../../home-manager/term/tools/user-scripts
 
@@ -145,5 +144,6 @@
     tmux # Terminal multiplexer
     up # UI interactively pipe
     wget # HTTP client
+    fastfetch # neofetch like
   ];
 }

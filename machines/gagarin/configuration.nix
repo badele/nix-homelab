@@ -129,15 +129,15 @@ in
       stdenv.cc.cc
 
       # X11 / input
-      xorg.libX11
-      xorg.libXcursor
-      xorg.libXi
-      xorg.libXrandr
-      xorg.libXrender
-      xorg.libXext
-      xorg.libXfixes
-      xorg.libxcb
-      xorg.libXinerama
+      libX11
+      libXcursor
+      libXi
+      libXrandr
+      libXrender
+      libXext
+      libXfixes
+      libxcb
+      libXinerama
       libxkbcommon
 
       # OpenGL / EGL

@@ -212,7 +212,7 @@ nixos-install hostname targetip port="22":
 
 [private]
 nixos-command action hostname="" options="":
-    sudo nixos-rebuild {{ action }} {{ options }} --fast --option accept-flake-config true --flake .#{{ hostname }}
+    sudo nixos-rebuild {{ action }} {{ options }} --no-reexec --option accept-flake-config true --flake .#{{ hostname }}
 
 # Nixos clean build cache and garbage unused derivations
 [group('nixos')]
