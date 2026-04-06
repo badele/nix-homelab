@@ -132,6 +132,7 @@
     delta # A syntax-highlighting pager for git
     ghq # Remote repository management made easy
     fastfetch # neofetch like
+    cpufetch # get CPU information
   ];
 
 }

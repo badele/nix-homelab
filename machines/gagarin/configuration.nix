@@ -128,6 +128,10 @@ in
     libraries = with pkgs; [
       stdenv.cc.cc
 
+      # Misc
+      expat
+      zlib
+
       # X11 / input
       libX11
       libXcursor
@@ -144,6 +148,7 @@ in
       libglvnd
       mesa
       libdrm
+      libGL
     ];
   };
 
