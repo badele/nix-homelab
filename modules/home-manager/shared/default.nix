@@ -145,5 +145,6 @@
     up # UI interactively pipe
     wget # HTTP client
     fastfetch # neofetch like
+    cpufetch # get CPU information
   ];
 }
