@@ -87,6 +87,7 @@ in
 
       # Term Apps
       ../../home-manager/term/apps/neovim.nix
+      ../../home-manager/term/apps/emacs.nix
       ../../home-manager/term/apps/system.nix
 
       # Desktop Apps
