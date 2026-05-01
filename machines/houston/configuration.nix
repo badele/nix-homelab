@@ -26,7 +26,6 @@ in
     # houston apps
     ./modules/grafana.nix
     ./modules/influxdb.nix
-    ./modules/reaction.nix
     ./modules/telegraf
     ./modules/vector
     ./modules/victoriametrics.nix
