@@ -239,6 +239,7 @@ in
         # Cloud & co
         #unalias kubectl # Disable clourify for using P10K plugin
         a = "aws"; # aws alias
+        e = "emacsclient -t"; # emacs
         g = "gcloud"; # gcloud alias
         i = "incus"; # LXD & VM
         j = "just"; # just
@@ -277,8 +278,11 @@ in
         NIX_CONFIG = "extra-experimental-features = nix-command flakes";
 
         PATH = lib.concatStringsSep ":" [
+          "${config.home.homeDirectory}/go/bin"
+          "${config.home.homeDirectory}/.cargo/bin"
           "${config.home.homeDirectory}/.deno/bin"
           "${config.home.homeDirectory}/.local/bin"
+          "${config.home.homeDirectory}/.config/emacs/bin"
           "\${PATH}"
         ];
 
