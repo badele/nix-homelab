@@ -1,4 +1,8 @@
-{ config, pkgs, ... }:
+{
+  lib,
+  pkgs,
+  ...
+}:
 rec {
   gtk = {
     enable = true;
@@ -6,10 +10,10 @@ rec {
     #   name = config.fontProfiles.regular.family;
     #   size = 12;
     # };
-    # theme = {
-    #   name = "${config.colorscheme.slug}";
-    #   package = gtkThemeFromScheme { scheme = config.colorscheme; };
-    # };
+    theme = {
+      package = lib.mkForce pkgs.gnome-themes-extra;
+      name = lib.mkForce "Adwaita-dark";
+    };
     iconTheme = {
       name = "Papirus";
       package = pkgs.papirus-icon-theme;

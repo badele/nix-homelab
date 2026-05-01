@@ -1,5 +1,6 @@
 # Graphics
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     geeqie # graphics file viewer
     gifsicle # create, edit, and inspect GIFs
@@ -7,5 +8,6 @@
     imagemagick # Image manipulation tools
     inkscape # Vector graphics editor
     pastel # A command-line tool to generate, analyze, convert and manipulate colors
+    sweethome3d.application # Sweet home 3D
   ];
 }
