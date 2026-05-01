@@ -33,8 +33,7 @@
                  "display-anchors_robwu_nl-browser-action",
                  "massunfollow_fork_plasmmer_com-browser-action",
                  "bookmarksorganizer_agenedia_com-browser-action",
-                 "sky-follower-bridge_ryo_kawamata-browser-action",
-                 "wappalyzer_crunchlabz_com-browser-action"
+                 "sky-follower-bridge_ryo_kawamata-browser-action"
                ],
                "nav-bar": [
                  "back-button",
@@ -54,13 +53,11 @@
                  "sponsorblocker_ajay_app-browser-action",
                  "_154cddeb-4c8b-4627-a478-c7e5b427ffdf_-browser-action",
                  "ublock0_raymondhill_net-browser-action",
-                 "floccus_handmadeideas_org-browser-action",
                  "library-button",
                  "downloads-button",
                  "_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action",
                  "simple-translate_sienori-browser-action",
                  "_9aa46f4f-4dc7-4c06-97af-5035170634fe_-browser-action",
-                 "_a1087d5d-d793-445a-b988-088b1d86f2a6_-browser-action",
                  "unified-extensions-button",
                  "reset-pbm-toolbar-button",
                  "_20fc2e06-e3e4-4b2b-812b-ab431220cada_-browser-action",
@@ -85,9 +82,7 @@
                "save-to-pocket-button",
                "developer-button",
                "ublock0_raymondhill_net-browser-action",
-               "_a1087d5d-d793-445a-b988-088b1d86f2a6_-browser-action",
                "_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action",
-               "floccus_handmadeideas_org-browser-action",
                "simple-tab-groups_drive4ik-browser-action",
                "simple-translate_sienori-browser-action",
                "_9aa46f4f-4dc7-4c06-97af-5035170634fe_-browser-action",
@@ -107,7 +102,6 @@
                "bookmarksorganizer_agenedia_com-browser-action",
                "retrotxt_defacto2_net-browser-action",
                "sky-follower-bridge_ryo_kawamata-browser-action",
-               "wappalyzer_crunchlabz_com-browser-action",
                "screenshot-button",
                "sponsorblocker_ajay_app-browser-action",
                "_154cddeb-4c8b-4627-a478-c7e5b427ffdf_-browser-action"
@@ -133,7 +127,6 @@
         rycee.firefox-addons.behind-the-overlay-revival # Block overlay mask
         rycee.firefox-addons.browserpass # GPG passwordstore
         rycee.firefox-addons.darkreader # Dark mode
-        rycee.firefox-addons.floccus # Sync bookmark
         rycee.firefox-addons.simple-tab-groups # Tab group
         rycee.firefox-addons.simple-translate # Translate
         rycee.firefox-addons.ublock-origin # addblocker
@@ -145,17 +138,7 @@
 
         # LanguageTool, grammar and spell checker
         (rycee.firefox-addons.buildFirefoxXpiAddon rec {
-          pname = "fireshot";
-          version = "8.3.0";
-          addonId = "languagetool-webextension@languagetool.org";
-          url = "https://addons.mozilla.org/firefox/downloads/file/4199245/languagetool-${version}.xpi";
-          sha256 = "sha256-41dCTj353eS6EOufjzcZrEgwaBVwVX9NUdsVpGLNdmc=";
-          meta = { };
-        })
-
-        # LanguageTool, grammar and spell checker
-        (rycee.firefox-addons.buildFirefoxXpiAddon rec {
-          pname = "fireshot";
+          pname = "languagetool-webextension";
           version = "8.3.0";
           addonId = "languagetool-webextension@languagetool.org";
           url = "https://addons.mozilla.org/firefox/downloads/file/4199245/languagetool-${version}.xpi";
@@ -165,7 +148,7 @@
 
         # Fireshot, screenshot
         (rycee.firefox-addons.buildFirefoxXpiAddon rec {
-          pname = "fireshot";
+          pname = "fireshot-webextension";
           version = "1.12.18";
           addonId = "{0b457cAA-602d-484a-8fe7-c1d894a011ba}";
           url = "https://addons.mozilla.org/firefox/downloads/file/4120150/fireshot-${version}.xpi";
@@ -175,7 +158,7 @@
 
         # imtranslatoe
         (rycee.firefox-addons.buildFirefoxXpiAddon rec {
-          pname = "imtranslator";
+          pname = "imtranslator-webextension";
           version = "16.30";
           addonId = "{9AA46F4F-4DC7-4c06-97AF-5035170634FE}";
           url = "https://addons.mozilla.org/firefox/downloads/file/4028792/imtranslator-${version}.xpi";
@@ -183,19 +166,9 @@
           meta = { };
         })
 
-        # Clean bookmark (duplicate links & unavailable links )
+        # linkding, self-hosted bookmark manager
         (rycee.firefox-addons.buildFirefoxXpiAddon rec {
-          pname = "clean-up";
-          version = "0.1.0";
-          addonId = "{a1087d5d-d793-445a-b988-088b1d86f2a6}";
-          url = "https://addons.mozilla.org/firefox/downloads/file/3610512/bookmarks_clean_up-${version}.xpi";
-          sha256 = "sha256-4FNojXUkm+8lFEBbQOfpdlZgt/SfB8AAGCOiGyWnsuo=";
-          meta = { };
-        })
-
-        # Clean bookmark (duplicate links & unavailable links )
-        (rycee.firefox-addons.buildFirefoxXpiAddon rec {
-          pname = "linkding-extension";
+          pname = "linkding-extension-webextension";
           version = "1.14.0";
           addonId = "{61a05c39-ad45-4086-946f-32adb0a40a9d}";
           url = "https://addons.mozilla.org/firefox/downloads/file/4449452/linkding_extension-${version}.xpi";
@@ -205,7 +178,7 @@
 
         # popupoff
         (rycee.firefox-addons.buildFirefoxXpiAddon rec {
-          pname = "popupoff";
+          pname = "popupoff-webextension";
           version = "2.1.3";
           addonId = "{154cddeb-4c8b-4627-a478-c7e5b427ffdf}";
           url = "https://addons.mozilla.org/firefox/downloads/file/4150911/popupoff-${version}.xpi";
