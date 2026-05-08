@@ -1,6 +1,14 @@
-{ pkgs, inputs, lib, config, ... }:
-let domain = config.networking.domain;
-in {
+{
+  pkgs,
+  inputs,
+  lib,
+  config,
+  ...
+}:
+let
+  domain = config.networking.domain;
+in
+{
   # Proprietary software
   nixpkgs.config.unfree = true;
   nixpkgs.config.allowUnfree = true;
@@ -14,8 +22,7 @@ in {
     registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
 
     # Add all flake inputs to legacy / CMD: echo $NIX_PATH | tr ":" "\n"
-    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}")
-      config.nix.registry;
+    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
 
     settings = {
       substituters = [
@@ -28,9 +35,15 @@ in {
         # "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
-      trusted-users = [ "root" "@wheel" ];
+      trusted-users = [
+        "root"
+        "@wheel"
+      ];
       auto-optimise-store = lib.mkDefault true;
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
       warn-dirty = false;
     };
 
@@ -50,13 +63,11 @@ in {
   ];
 
   # Enable cron service
-  services.cron = {
-    enable = true;
-    systemCronJobs = [
-      # update nix-index database from https://github.com/Mic92/nix-index-database project
-      "@reboot      badele    /home/badele/.nix-profile/bin/my-download-nixpkgs-cache-index"
-    ];
-  };
+  services.cron.enable = true;
+  services.cron.systemCronJobs = [
+    # update nix-index database from https://github.com/Mic92/nix-index-database project
+    "@reboot      badele    /home/badele/.nix-profile/bin/@download-nixpkgs-cache-index"
+  ];
 
   # Show installed packages (https://www.reddit.com/r/NixOS/comments/fsummx/comment/fm45htj/?utm_source=share&utm_medium=web2x&context=3)
   environment.etc."installed-packages".text =

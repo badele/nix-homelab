@@ -1,4 +1,10 @@
-{ pkgs, lib, config, ... }: {
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
+{
   imports = [
     #    ./loki/promtail.nix
     ./acme.nix
@@ -10,14 +16,13 @@
     ./linkding.nix
     ./loki/loki.nix
     ./mosquitto.nix
-    ./netbox.nix
+    # ./netbox.nix
     ./nfs.nix
     ./nix-serve.nix
     ./ntp.nix
     ./prometheus
     ./smokeping.nix
     ./statping.nix
-    ./uptime.nix
     ./virtualization.nix
     ./zigbee2mqtt.nix
   ];

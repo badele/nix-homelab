@@ -61,7 +61,7 @@
 
           # Wireguard
           pkgs.wireguard-tools
-          pkgs.openssl_3_0.bin
+          pkgs.openssl_3.bin
 
           # Openstack
           pkgs.openstackclient
@@ -70,11 +70,11 @@
           (pkgs.opentofu.withPlugins (
             p:
             builtins.map convert2Tofu [
-              p.external
-              p.hetznerdns
-              p.hcloud
-              p.local
-              p.null
+              p.hashicorp_external
+              p.timohirt_hetznerdns
+              p.hetznercloud_hcloud
+              p.hashicorp_local
+              p.hashicorp_null
             ]
           ))
 
@@ -83,6 +83,7 @@
 
           # markdown web server
           inputs.godown.packages.${system}.godown
+          inputs.gosect.packages.${system}.gosect
           #
         ];
         env.UEFI_FILE = uefi_file;

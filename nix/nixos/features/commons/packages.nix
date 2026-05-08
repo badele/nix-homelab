@@ -1,14 +1,43 @@
-{ lib, pkgs, inputs, outputs, ... }: {
+{
+  lib,
+  pkgs,
+  inputs,
+  outputs,
+  ...
+}:
+{
   imports = [ ];
 
   services.udisks2.enable = true;
 
-  # # LD_LIBRARY_PATH
-  # programs.nix-ld = {
-  #   enable = true;
-  #   libraries = with pkgs; [ zlib ];
-  # };
-  programs.nix-ld.enable = true;
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      stdenv.cc.cc
+
+      # Misc
+      expat
+      zlib
+
+      # X11 / input
+      libX11
+      libXcursor
+      libXi
+      libXrandr
+      libXrender
+      libXext
+      libXfixes
+      libxcb
+      libXinerama
+      libxkbcommon
+
+      # OpenGL / EGL
+      libglvnd
+      mesa
+      libdrm
+      libGL
+    ];
+  };
 
   environment.systemPackages = with pkgs; [
 
@@ -34,8 +63,8 @@
     pciutils # pci cards info
 
     # xorg
-    xorg.xev
-    xorg.xmodmap
+    xev
+    xmodmap
     mesa-demos
 
     # Bluetooth

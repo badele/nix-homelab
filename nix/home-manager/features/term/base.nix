@@ -1,4 +1,11 @@
-{ config, inputs, lib, pkgs, ... }: {
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
+{
 
   imports = [
     # Hardware informations
@@ -9,7 +16,6 @@
 
     # # Misc
     ./tools/htop.nix
-    ./tools/neofetch.nix
     ./tools/top
     ./tools/user-scripts
   ];
@@ -29,12 +35,14 @@
     registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
 
     #Add all flake inputs to legacy / CMD: echo $NIX_PATH | tr ":" "\n"
-    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}")
-      config.nix.registry;
+    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
 
     package = lib.mkForce pkgs.nix;
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
       warn-dirty = false;
     };
   };
@@ -47,6 +55,34 @@
     git.enable = true;
     nix-index.enable = true; # command not found and nix-locate
 
+    mise = {
+      enable = true; # dev tools, env vars, task runner
+      enableZshIntegration = true; # mise integration for zsh
+
+      settings = {
+        lockfile = true;
+        experimental = false;
+        verbose = false;
+        auto_install = true;
+        #all_compile = true;
+        node = {
+          compile = false;
+        };
+      };
+
+      globalConfig = {
+      };
+    };
+
+    direnv = {
+      enable = true; # load environment when on the current directory
+      enableZshIntegration = true;
+      silent = true;
+
+      nix-direnv.enable = true; # direnv integration for nix-direnv
+      mise.enable = true; # direnv integration for mise
+    };
+
     # Autojump
     zoxide = {
       enable = true;
@@ -58,7 +94,10 @@
       enable = true;
       enableZshIntegration = false; # # OMZ
       defaultCommand = "fd --type file --follow --hidden --exclude .git";
-      historyWidgetOptions = [ "--sort" "--exact" ];
+      historyWidgetOptions = [
+        "--sort"
+        "--exact"
+      ];
     };
 
     # Cheats navigators
@@ -92,7 +131,8 @@
     act # Run your GitHub Actions locally
     delta # A syntax-highlighting pager for git
     ghq # Remote repository management made easy
-    direnv # load environment when on the current directory
+    fastfetch # neofetch like
+    cpufetch # get CPU information
   ];
 
 }

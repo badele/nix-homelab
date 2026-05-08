@@ -1,4 +1,9 @@
-{ outputs, lib, config, ... }:
+{
+  outputs,
+  lib,
+  config,
+  ...
+}:
 let
   roleName = "adguard";
   roleEnabled = lib.elem roleName config.homelab.currentHost.roles;
@@ -8,39 +13,28 @@ let
 
   # Function
   # Get Hosts IP
-  hostsIps = lib.mapAttrsToList
-    (
-      name: host:
-        {
-          domain = name;
-          answer = host.ipv4;
-        }
-    )
-    config.homelab.hosts;
+  hostsIps = lib.mapAttrsToList (name: host: {
+    domain = name;
+    answer = host.ipv4;
+  }) config.homelab.hosts;
 
   # Function
   # Get Alias IP
-  aliasIps = lib.flatten
-    (
+  aliasIps = lib.flatten (
 
-      lib.mapAttrsToList
-        (
-          name: host:
-            let
-              alias = lib.optionals (host.dnsalias != null) host.dnsalias;
-            in
-            map
-              (entry: {
-                domain = entry;
-                answer = host.ipv4;
-              })
-              alias
-        )
-        config.homelab.hosts
-    );
+    lib.mapAttrsToList (
+      name: host:
+      let
+        alias = lib.optionals (host.dnsalias != null) host.dnsalias;
+      in
+      map (entry: {
+        domain = entry;
+        answer = host.ipv4;
+      }) alias
+    ) config.homelab.hosts
+  );
 in
-lib.mkIf (roleEnabled)
-{
+lib.mkIf (roleEnabled) {
   networking.firewall.allowedTCPPorts = [
     80
     443
@@ -57,7 +51,7 @@ lib.mkIf (roleEnabled)
       # bind_host = "0.0.0.0";
       # bind_port = 3002;
       # FIXME: temporary fix, MR is in progress https://github.com/NixOS/nixpkgs/issues/278601
-      bind_port = 3002;
+      port = 3002;
       http.address = "0.0.0.0:3002";
       schema_version = 20;
       dns = {
@@ -81,8 +75,7 @@ lib.mkIf (roleEnabled)
   };
 
   # Check if host alias is defined in homelab.json alias section
-  warnings =
-    lib.optional aliasdefined " No `${alias}` alias defined in alias section ${config.networking.hostName}.dnsalias [ ${toString config.homelab.currentHost.dnsalias} ] in `homelab.json` file";
+  warnings = lib.optional aliasdefined " No `${alias}` alias defined in alias section ${config.networking.hostName}.dnsalias [ ${toString config.homelab.currentHost.dnsalias} ] in `homelab.json` file";
 
   services.nginx.enable = true;
   services.nginx.virtualHosts."${alias}.${config.homelab.domain}" = {
@@ -92,7 +85,7 @@ lib.mkIf (roleEnabled)
 
     locations."/" = {
       extraConfig = ''
-          proxy_pass http://127.0.0.1:${toString cfg.settings.bind_port};
+          proxy_pass http://127.0.0.1:${toString cfg.settings.port};
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

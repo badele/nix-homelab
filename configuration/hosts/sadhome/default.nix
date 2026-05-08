@@ -1,11 +1,16 @@
 # #########################################################
 # NIXOS (hosts)
 ##########################################################
-{ inputs, config, pkgs, lib, ... }: {
+{
+  inputs,
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
   imports = [
     ./hardware-configuration.nix
-    ../../nix/modules/nixos/host.nix
-
     # Users
     ../root.nix
     ../badele.nix
@@ -36,7 +41,10 @@
       "acpi_backlight=vendor"
     ];
 
-    blacklistedKernelModules = [ "nouveau" "bbswitch" ];
+    blacklistedKernelModules = [
+      "nouveau"
+      "bbswitch"
+    ];
 
     kernelModules = [ "kvm-intel" ];
     #extraModulePackages = [ pkgs.linuxPackages.nvidia_x11 ];
@@ -86,13 +94,7 @@
   # Hardware
   ####################################
 
-  # Pulseaudio
-  hardware.pulseaudio = {
-    enable = true;
-    support32Bit =
-      true; # # If compatibility with 32-bit applications is desired
-    #extraConfig = "load-module module-combine-sink";
-  };
+  services.pulseaudio.enable = false;
 
   networking.hostName = "sadhome";
   networking.useDHCP = lib.mkDefault true;
@@ -101,8 +103,10 @@
   # Programs
   ####################################
   powerManagement.powertop.enable = true;
-  programs = { dconf.enable = true; };
+  programs = {
+    dconf.enable = true;
+  };
 
   nixpkgs.hostPlatform.system = "x86_64-linux";
-  system.stateVersion = "22.11";
+  system.stateVersion = "26.05";
 }

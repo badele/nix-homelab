@@ -1,12 +1,13 @@
 # #########################################################
 # HOME-MANAGER (user)
 ##########################################################
-{ lib, ... }: {
+{ lib, ... }:
+{
   imports = [ ./commons.nix ];
 
   home = {
     username = lib.mkDefault "root";
     homeDirectory = lib.mkDefault "/root/";
-    stateVersion = lib.mkDefault "22.05";
+    stateVersion = lib.mkDefault "26.05";
   };
 }

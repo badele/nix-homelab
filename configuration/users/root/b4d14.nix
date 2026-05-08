@@ -1,11 +1,12 @@
 ##########################################################
 # HOME-MANAGER (user)
 ##########################################################
-{ config
-, inputs
-, pkgs
-, lib
-, ...
+{
+  config,
+  inputs,
+  pkgs,
+  lib,
+  ...
 }:
 {
   imports = [
@@ -16,6 +17,6 @@
   home = {
     username = lib.mkDefault "root";
     homeDirectory = lib.mkDefault "/root/";
-    stateVersion = lib.mkDefault "22.05";
+    stateVersion = lib.mkDefault "26.05";
   };
 }

@@ -1,7 +1,9 @@
 { lib, config, ... }:
 let
-  hostOptions = with lib;
-    with types; {
+  hostOptions =
+    with lib;
+    with types;
+    {
       icon = mkOption {
         type = str;
         default = null;
@@ -81,7 +83,8 @@ let
       };
 
       autologin = mkOption {
-        type = with types;
+        type =
+          with types;
           nullOr (submodule {
             options = {
               user = mkOption {
@@ -118,36 +121,50 @@ let
         '';
       };
     };
-in {
-  options = with lib;
-    with types; {
+in
+{
+  options =
+    with lib;
+    with types;
+    {
       homelab.networkId = mkOption {
         type = int;
         description = "Network ID";
       };
 
       homelab.hosts = mkOption {
-        type = attrsOf (submodule [{ options = hostOptions; }]);
+        type = attrsOf (submodule [ { options = hostOptions; } ]);
         description = "A host in my homelab";
       };
 
       homelab.currentHost = mkOption {
-        type = submodule [{ options = hostOptions; }];
+        type = submodule [ { options = hostOptions; } ];
         default = config.homelab.hosts.${config.networking.hostName};
         description = "The host that is described by this configuration";
       };
     };
 
-  config = {
-    warnings =
-      lib.optional (!(config.homelab.hosts ? ${config.networking.hostName}))
-      "no network configuration for ${config.networking.hostName} found in ${
-        ./hosts.nix
-      }";
+  config =
+    let
+      hostName = config.networking.hostName;
+      ignoredHosts = [
+        "nixos"
+        "demovm"
+        "b4d14"
+        "badxps"
+        "sadhome"
+        "bootstore"
+        "rpi40"
+        "cab1e"
+      ];
+    in
+    {
+      warnings = lib.optional (
+        !(config.homelab.hosts ? hostName) && !lib.elem hostName ignoredHosts
+      ) "no network configuration for ${hostName} found in ${./hosts.nix}";
 
-    # Read from ../../../../homelab.json
-    # TODO: verify if this file build too many derivations
-    homelab.hosts =
-      (builtins.fromJSON (builtins.readFile ../../../../homelab.json)).hosts;
-  };
+      # Read from ../../../../homelab.json
+      # TODO: verify if this file build too many derivations
+      homelab.hosts = (builtins.fromJSON (builtins.readFile ../../../../homelab.json)).hosts;
+    };
 }

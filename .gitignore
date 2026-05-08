@@ -1,3 +1,6 @@
+# Template documentation file
+.templates
+
 # Unused some file
 *_unused.*
 
@@ -5,6 +8,7 @@
 
 # Project
 docs/nvim/tags
+docs/imgs/logo.ans
 
 # direnv
 .direnv
@@ -33,7 +37,3 @@ result
 # Some secrets
 *.openstackrc
 *.priv
-
-# AI pair programming
-.aider*
-

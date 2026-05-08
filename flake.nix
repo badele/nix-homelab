@@ -13,45 +13,84 @@
     # You can access packages and modules from different nixpkgs revs
     # at the same time. Here's an working example:
 
+    nixpkgs-victoriametrics = {
+      url = "github:nixos/nixpkgs/nixos-unstable";
+    };
+
     flake-parts.url = "github:hercules-ci/flake-parts";
 
-    disko.url = "github:nix-community/disko";
-    disko.inputs.nixpkgs.follows = "nixpkgs";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Home manager
-    home-manager.url = "github:nix-community/home-manager/master";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager = {
+      url = "github:nix-community/home-manager/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    hardware.url = "github:NixOS/nixos-hardware/master";
     # hardware.url = "git+file:///home/badele/ghq/github.com/badele/fork-nixos-hardware";
     # hardware.url = "github:badele/fork-nixos-hardware/xps-15-9530";
+    hardware.url = "github:NixOS/nixos-hardware/master";
 
-    impermanence.url = "github:nix-community/impermanence";
+    impermanence = {
+      url = "github:nix-community/impermanence";
+    };
 
-    nur.url = "github:nix-community/NUR";
-    nur.inputs.nixpkgs.follows = "nixpkgs";
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    sops-nix.url = "github:mic92/sops-nix";
-    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    sops-nix = {
+      url = "github:mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
+    # Color scheme
     stylix.url = "github:danth/stylix";
 
-    nixunits.url = "github:dcasier/nixunits";
-    nixunits.inputs.nixpkgs.follows = "nixpkgs";
-    # url = "github:badele/fork-nixunits/fix-systemd";
-    # url = "path:/home/badele/ghq/github.com/badele/fork-nixunits";
+    crowdsec = {
+      url = "git+https://codeberg.org/kampka/nix-flake-crowdsec.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    clan-core.url = "https://git.clan.lol/clan/clan-core/archive/main.zip";
-    clan-core.inputs.nixpkgs.follows = "nixpkgs";
+    nixunits = {
+      url = "github:dcasier/nixunits";
+      # url = "github:badele/fork-nixunits/fix-systemd";
+      # url = "path:/home/badele/ghq/github.com/badele/fork-nixunits";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    srvos.url = "github:nix-community/srvos";
-    srvos.inputs.nixpkgs.follows = "nixpkgs";
+    clan-core = {
+      url = "https://git.clan.lol/clan/clan-core/archive/main.zip";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    terranix.url = "github:terranix/terranix";
-    terranix.inputs.flake-parts.follows = "flake-parts";
-    terranix.inputs.nixpkgs.follows = "nixpkgs";
+    srvos = {
+      url = "github:nix-community/srvos";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    terranix = {
+      url = "github:terranix/terranix";
+      inputs.flake-parts.follows = "flake-parts";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    authentik-nix = {
+      url = "github:nix-community/authentik-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     godown.url = "github:badele/godown";
+    gosect.url = "github:badele/gosect";
+
+    radio = {
+      url = "github:pinpox/radio";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -61,9 +100,6 @@
         "aarch64-linux"
         "x86_64-linux"
       ];
-
-      # # Hacky way to detect we're in a REPL
-      # debug = builtins ? currentSystem;
 
       imports = [
         inputs.clan-core.flakeModules.default

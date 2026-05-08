@@ -1,7 +1,9 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
-    # Markdown
-    marksman
-    nodePackages.markdownlint-cli
+    grip
+    markdownlint-cli
+    pandoc
+    proselint
   ];
 }

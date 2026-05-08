@@ -1,11 +1,12 @@
-##########################################################
+# #########################################################
 # HOME-MANAGER (user)
 ##########################################################
-{ config
-, inputs
-, pkgs
-, lib
-, ...
+{
+  config,
+  inputs,
+  pkgs,
+  lib,
+  ...
 }:
 let
   feh = "${pkgs.feh}/bin/feh";
@@ -19,8 +20,8 @@ in
 {
   imports = [
     # Modules
-    ../../nix/modules/home-manager/font.nix
-    ../../nix/modules/home-manager/userconf.nix
+    ../../../nix/modules/home-manager/font.nix
+    ../../../nix/modules/home-manager/userconf.nix
 
     # Common tools and packages for all demovm user hosts
     ./commons.nix
@@ -30,24 +31,23 @@ in
     # ../../nix/home-manager/features/term/editor/lazyvim.nix
 
     # Term
-    ../../nix/home-manager/features/term/base.nix
-    ../../nix/home-manager/features/term/security
+    ../../../nix/home-manager/features/term/base.nix
+    ../../../nix/home-manager/features/term/security
 
     # Desktop
-    ../../nix/home-manager/features/desktop/apps/base.nix
-    ../../nix/home-manager/features/desktop/xorg/base.nix
-    ../../nix/home-manager/features/desktop/xorg/wm/i3.nix
+    ../../../nix/home-manager/features/desktop/apps/base.nix
+    ../../../nix/home-manager/features/desktop/xorg/base.nix
+    ../../../nix/home-manager/features/desktop/xorg/wm/i3.nix
 
     #   # Web browser
-    ../../nix/home-manager/features/desktop/apps/google-chrome.nix
+    ../../../nix/home-manager/features/desktop/apps/google-chrome.nix
 
     #   # Multimedia
-    ../../nix/home-manager/features/desktop/apps/spotify.nix
+    ../../../nix/home-manager/features/desktop/apps/spotify.nix
 
     #   # Development term
-    ../../nix/home-manager/features/desktop/apps/development/vscode.nix
+    ../../../nix/home-manager/features/desktop/apps/development/vscode.nix
   ];
-
 
   ###############################################################################
   # Packages
@@ -86,7 +86,7 @@ in
     };
 
     emoji = {
-      package = pkgs.noto-fonts-emoji;
+      package = pkgs.noto-fonts-color-emoji;
       name = "Noto Color Emoji";
     };
   };

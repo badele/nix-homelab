@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+(
+  git for-each-ref --format='%(refname:short)'
+  git stash list --format="%gd"
+) | while read ref; do
+  echo -e "\n === $ref"
+  git grep "$1" "$ref" 2>/dev/null
+done

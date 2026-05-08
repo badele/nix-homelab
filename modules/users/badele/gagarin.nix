@@ -87,6 +87,7 @@ in
 
       # Term Apps
       ../../home-manager/term/apps/neovim.nix
+      ../../home-manager/term/apps/emacs.nix
       ../../home-manager/term/apps/system.nix
 
       # Desktop Apps
@@ -103,13 +104,10 @@ in
       ../../users/badele/modules/firefox.nix
 
     ];
-    nixpkgs.overlays = [ self.inputs.nur.overlay ];
-    _module.args.nur = { inherit (self.inputs) nur; };
-
     home = {
       username = lib.mkDefault username;
       homeDirectory = lib.mkDefault "/home/${username}";
-      stateVersion = lib.mkDefault "25.11";
+      stateVersion = lib.mkDefault "26.05";
 
       userconf = {
         user = {
@@ -125,14 +123,16 @@ in
     programs = {
       git = {
         enable = true;
-        userName = "Bruno Adelé";
-        userEmail = "brunoadele@gmail.com";
         signing = {
           key = "00F421C4C5377BA39820E13F6B95E13DE469CC5D";
           signByDefault = true;
         };
 
-        extraConfig = {
+        settings = {
+          user = {
+            name = "Bruno Adelé";
+            email = "brunoadele@gmail.com";
+          };
           core.pager = "delta";
           interactive.difffilter = "delta --color-only --features=interactive";
           delta.side-by-side = true;
@@ -151,4 +151,5 @@ in
     ];
 
   };
+
 }

@@ -1,25 +1,30 @@
 # #########################################################
 # NIXOS (hosts)
 ##########################################################
-{ inputs, config, pkgs, lib, ... }: {
+{
+  inputs,
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
   imports = [
     ./hardware-configuration.nix
     ./disks.nix
-    ../../nix/modules/nixos/host.nix
-
     # Users
     ../root.nix
     ../badele.nix
 
     # Commons
-    ../../nix/modules/nixos/homelab
-    ../../nix/nixos/features/commons
+    ../../../nix/modules/nixos/homelab
+    ../../../nix/nixos/features/commons
 
     # Roles
-    ../../nix/nixos/roles # Automatically load service from <host.modules> sectionn from `homelab.json` file
-    # ../../nix/nixos/roles/prometheus/exporter/node.nix
-    # ../../nix/nixos/roles/prometheus/exporter/snmp.nix
-    # ../../nix/nixos/roles/prometheus/exporter/smokeping.nix
+    ../../../nix/nixos/roles # Automatically load service from <host.modules> sectionn from `homelab.json` file
+    # ../../../nix/nixos/roles/prometheus/exporter/node.nix
+    # ../../../nix/nixos/roles/prometheus/exporter/snmp.nix
+    # ../../../nix/nixos/roles/prometheus/exporter/smokeping.nix
   ];
 
   ####################################
@@ -50,17 +55,18 @@
   ####################################
   # host profile
   ####################################
-  hostprofile = { nproc = 8; };
+  hostprofile = {
+    nproc = 8;
+  };
 
   ####################################
   # Hardware
   ####################################
 
   # Pulseaudio
-  hardware.pulseaudio = {
+  services.pulseaudio = {
     enable = true;
-    support32Bit =
-      true; # # If compatibility with 32-bit applications is desired
+    support32Bit = true; # # If compatibility with 32-bit applications is desired
     #extraConfig = "load-module module-combine-sink";
   };
 
@@ -74,5 +80,5 @@
   programs = { };
 
   nixpkgs.hostPlatform.system = "x86_64-linux";
-  system.stateVersion = "24.05";
+  system.stateVersion = "26.05";
 }

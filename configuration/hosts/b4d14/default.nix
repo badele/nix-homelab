@@ -1,13 +1,18 @@
 # #########################################################
 # NIXOS (hosts)
 ##########################################################
-{ inputs, config, pkgs, lib, ... }:
+{
+  inputs,
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.homelab.hosts.b4d14;
   hostconfiguration = {
     description = "Dell XPS 9560 Latop";
-    icon =
-      "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png";
+    icon = "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png";
     ipv4 = "192.168.254.124";
     os = "NixOS";
     nproc = 20;
@@ -18,7 +23,10 @@ let
     };
 
     parent = "router-ladbedroom";
-    roles = [ "virtualization" "coredns" ];
+    roles = [
+      "virtualization"
+      "coredns"
+    ];
     zone = "homeoffice";
 
     params = {
@@ -43,19 +51,19 @@ in
     ./hardware-configuration.nix
 
     # Modules
-    ../../nix/modules/nixos/homelab
+    ../../../nix/modules/nixos/homelab
 
     # Users account
     ../root.nix
     ../badele.nix
 
     # Commons
-    ../../nix/nixos/features/commons
-    ../../nix/nixos/features/system/containers.nix
+    ../../../nix/nixos/features/commons
+    ../../../nix/nixos/features/system/containers.nix
 
     # Desktop
-    ../../nix/nixos/features/system/bluetooth.nix
-    ../../nix/nixos/features/desktop/wm/xorg/lightdm.nix
+    ../../../nix/nixos/features/system/bluetooth.nix
+    ../../../nix/nixos/features/desktop/wm/xorg/lightdm.nix
   ];
 
   ####################################
@@ -117,20 +125,23 @@ in
 
   # Pulseaudio
   services.pipewire.enable = false;
-  hardware.pulseaudio = {
+  services.pulseaudio = {
     enable = true;
-    support32Bit =
-      true; # # If compatibility with 32-bit applications is desired
+    support32Bit = true; # # If compatibility with 32-bit applications is desired
     #extraConfig = "load-module module-combine-sink";
   };
 
-  virtualisation.docker = { storageDriver = "zfs"; };
+  virtualisation.docker = {
+    storageDriver = "zfs";
+  };
 
   ####################################
   # Programs
   ####################################
   powerManagement.powertop.enable = true;
-  programs = { dconf.enable = true; };
+  programs = {
+    dconf.enable = true;
+  };
   environment.systemPackages = [ ];
 
   ####################################
@@ -150,5 +161,5 @@ in
   };
 
   nixpkgs.hostPlatform.system = "x86_64-linux";
-  system.stateVersion = "24.05";
+  system.stateVersion = "26.05";
 }

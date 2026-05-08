@@ -5,18 +5,17 @@
 # ╚██████╔╝███████║███████╗██║  ██║    ███████║╚██████╗██║  ██║██║██║        ██║   ███████║
 #  ╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝    ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   ╚══════╝
 
-
 { pkgs, ... }:
 
 let
-  user-scripts = pkgs.stdenv.mkDerivation rec{
+  user-scripts = pkgs.stdenv.mkDerivation rec {
     pname = "user-scripts";
     version = "0.0.2";
     src = ./src;
     phases = "installPhase fixupPhase";
     installPhase = ''
       mkdir -p $out/bin
-      cp ${src}/my-* $out/bin/
+      cp ${src}/@* $out/bin/
       cp ${src}/status-* $out/bin/
       chmod +x $out/bin/*
     '';

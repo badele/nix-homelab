@@ -1,7 +1,7 @@
 # #########################################################
 # NIXOS (hosts)
 ##########################################################
-{ config, ... }:
+{ config, lib, ... }:
 let
   hl = config.homelab;
   nets = hl.networks;
@@ -13,7 +13,8 @@ let
   dmz_addr = hl.lib.computeNetworkHostAddress nets.dmz.net hostcfg.hostIpId;
   # lan_addr = hl.lib.computeNetworkHostAddress nets.lan.net hostcfg.hostIpId;
   lan_addr = "192.168.254.10";
-in {
+in
+{
   imports = [
     ./hardware-configuration.nix
     ./disks.nix
@@ -83,10 +84,9 @@ in {
   ####################################
 
   # Pulseaudio
-  hardware.pulseaudio = {
+  services.pulseaudio = {
     enable = true;
-    support32Bit =
-      true; # # If compatibility with 32-bit applications is desired
+    support32Bit = true; # # If compatibility with 32-bit applications is desired
     #extraConfig = "load-module module-combine-sink";
   };
 
@@ -149,10 +149,12 @@ in {
     interfaces = {
       "${hostcfg.params.net.interface}" = {
         ipv4 = {
-          addresses = [{
-            address = lan_addr;
-            prefixLength = 24;
-          }];
+          addresses = [
+            {
+              address = lan_addr;
+              prefixLength = 24;
+            }
+          ];
           # routes = [{
           #   address = "0.0.0.0";
           #   prefixLength = 0;
@@ -164,10 +166,12 @@ in {
 
       vlan-infra = {
         ipv4 = {
-          addresses = [{
-            address = infra_addr;
-            prefixLength = 24;
-          }];
+          addresses = [
+            {
+              address = infra_addr;
+              prefixLength = 24;
+            }
+          ];
           # routes = [{
           #   address = "0.0.0.0";
           #   prefixLength = 0;
@@ -179,10 +183,12 @@ in {
 
       vlan-adm = {
         ipv4 = {
-          addresses = [{
-            address = adm_addr;
-            prefixLength = 24;
-          }];
+          addresses = [
+            {
+              address = adm_addr;
+              prefixLength = 24;
+            }
+          ];
           # routes = [{
           #   address = "0.0.0.0";
           #   prefixLength = 0;
@@ -194,10 +200,12 @@ in {
 
       vlan-dmz = {
         ipv4 = {
-          addresses = [{
-            address = dmz_addr;
-            prefixLength = 24;
-          }];
+          addresses = [
+            {
+              address = dmz_addr;
+              prefixLength = 24;
+            }
+          ];
           # routes = [{
           #   address = "0.0.0.0";
           #   prefixLength = 0;
@@ -357,6 +365,6 @@ in {
   powerManagement.powertop.enable = true;
   programs = { };
 
-  nixpkgs.hostPlatform.system = "x86_64-linux";
-  system.stateVersion = "25.05";
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  system.stateVersion = "26.05";
 }

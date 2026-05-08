@@ -125,7 +125,7 @@ in
                   ];
                   retry = 3;
                   retryperiod = "4h";
-                  actions = banFor "${toString (ban_scan)}h";
+                  actions = banFor "${toString ban_scan}h";
                 };
                 login_fail = {
                   regex = [
@@ -133,7 +133,7 @@ in
                   ];
                   retry = 3;
                   retryperiod = "4h";
-                  actions = banFor "${toString (ban_scan)}h";
+                  actions = banFor "${toString ban_scan}h";
                 };
                 ddos = {
                   regex = [
@@ -141,7 +141,7 @@ in
                   ];
                   retry = 3;
                   retryperiod = "4h";
-                  actions = banFor "${toString (ban_scan)}h";
+                  actions = banFor "${toString ban_scan}h";
                 };
                 http_exploit = {
                   regex = [
@@ -149,7 +149,7 @@ in
                   ];
                   retry = 2;
                   retryperiod = "4h";
-                  actions = banFor "${toString (ban_scan)}h";
+                  actions = banFor "${toString ban_scan}h";
                 };
                 ai_bot = {
                   regex = [
@@ -157,7 +157,7 @@ in
                   ];
                   retry = 2;
                   retryperiod = "4h";
-                  actions = banFor "${toString (ban_scan)}h";
+                  actions = banFor "${toString ban_scan}h";
                 };
               };
             };

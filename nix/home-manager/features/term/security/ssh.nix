@@ -1,6 +1,7 @@
 { lib, config, ... }: {
   programs.ssh = {
     enable = true;
+    enableDefaultConfig = false;
     includes = [ "/home/badele/.ssh/devpod" ];
   };
 

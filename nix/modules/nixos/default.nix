@@ -5,6 +5,5 @@
   # List your module files here
   # dashy = import ./dashy.nix;
   # statping = import ./statping.nix;
-  # uptime = import ./uptime.nix;
   # qbittorrent-nox = import ./qbittorrent-nox.nix;
 }
