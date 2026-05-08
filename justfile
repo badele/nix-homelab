@@ -232,8 +232,8 @@ nixos-command action hostname="" options="":
 
 # Update NixOS on local host
 [group('nixos')]
-@nixos-update options="":
-    just nixos-command switch "" {{ options }}
+@nixos-update command="switch" options="":
+    just nixos-command {{ command  }} "" {{ options }}
 
 # Update on remote host
 [group('nixos')]

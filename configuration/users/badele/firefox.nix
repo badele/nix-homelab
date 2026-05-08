@@ -6,7 +6,12 @@
 
   programs.firefox = {
     enable = true;
+
+    # Fix
     profiles.badele = {
+      id = 0;
+      name = "badele";
+      isDefault = true;
       bookmarks = { };
       # Get by about:config and format browser.uiCustomization.state with https://jsonformatter.org/
       # Use Dark theme
