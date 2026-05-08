@@ -144,6 +144,7 @@ in
       authelia.appId = 180;
       dokuwiki.appId = 190;
       kanidm.appId = 200;
+      zitadel.appId = 210;
     };
 
     # Export the helper functions so feature modules can use them

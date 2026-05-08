@@ -76,10 +76,6 @@ in
       acme.email = config.homelab.domainEmailAdmin;
       acme.dnsProvider = "hetzner";
 
-      authentik.enable = true;
-      authentik.openFirewall = true;
-      authentik.serviceDomain = "douane.${config.homelab.domain}";
-
       homepage-dashboard.enable = true;
       homepage-dashboard.openFirewall = true;
       homepage-dashboard.serviceDomain = "labrique.${config.homelab.domain}";
@@ -111,6 +107,10 @@ in
       dokuwiki.enable = true;
       dokuwiki.openFirewall = true;
       dokuwiki.serviceDomain = "encyclopedie.${config.homelab.domain}";
+
+      zitadel.enable = true;
+      zitadel.openFirewall = true;
+      zitadel.serviceDomain = "douane.${config.homelab.domain}";
 
       radio.enable = true;
       radio.openFirewall = true;
