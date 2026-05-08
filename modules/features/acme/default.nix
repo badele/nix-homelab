@@ -80,7 +80,7 @@ in
             extraDomainNames = [ config.homelab.domain ];
             dnsProvider = cfg.dnsProvider;
             group = config.services.nginx.group;
-            credentialsFile = config.clan.core.vars.generators.acme-dns-01.files.envfile.path;
+            environmentFile = config.clan.core.vars.generators.acme-dns-01.files.envfile.path;
             dnsPropagationCheck = true;
           };
         };
