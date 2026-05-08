@@ -1,4 +1,9 @@
-{ pkgs, inputs, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
 {
 
   # Configure Stylix for Firefox profile
@@ -6,6 +11,8 @@
 
   programs.firefox = {
     enable = true;
+
+    configPath = "${config.xdg.configHome}/mozilla/firefox";
 
     # Fix
     profiles.badele = {

@@ -58,17 +58,22 @@
 
   # # NOTE: By default all programs enabled for the all shells
   programs = {
-    yazi.enable = true; # Filemanager
     starship.enable = true; # Terminal prompt
     home-manager.enable = true;
     git.enable = true;
     nix-index.enable = true; # command not found and nix-locate
 
+    # Filemanager
+    yazi = {
+      enable = true;
+      shellWrapperName = "y";
+    };
+
     mise = {
       enable = true; # dev tools, env vars, task runner
       enableZshIntegration = true; # mise integration for zsh
 
-      settings = {
+      globalConfig.settings = {
         experimental = false;
         verbose = false;
         auto_install = true;

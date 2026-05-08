@@ -8,6 +8,9 @@
     viAlias = true;
     vimAlias = true;
     vimdiffAlias = true;
+
+    withRuby = false;
+    withPython3 = false;
   };
 
   # All neovim plugins list from the https://github.com/badele/vide project

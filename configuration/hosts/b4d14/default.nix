@@ -82,6 +82,7 @@ in
     zfs = {
       requestEncryptionCredentials = true;
       extraPools = [ "zroot" ];
+      forceImportRoot = false;
     };
 
     # EFI boot loader

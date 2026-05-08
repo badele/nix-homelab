@@ -2,10 +2,15 @@
 {
 
   # Clone the https://github.com/badele/vide to ~/.config/nvim
-  programs.neovim.enable = true;
-  programs.neovim.viAlias = true;
-  programs.neovim.vimAlias = true;
-  programs.neovim.vimdiffAlias = true;
+  programs.neovim = {
+    enable = true;
+    viAlias = true;
+    vimAlias = true;
+    vimdiffAlias = true;
+
+    withRuby = false;
+    withPython3 = false;
+  };
 
   # All neovim plugins list from the https://github.com/badele/vide project
   home.packages = with pkgs; [

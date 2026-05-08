@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   inputs,
   ...
@@ -11,6 +12,9 @@ in
 
   programs.firefox = {
     enable = true;
+
+    configPath = "${config.xdg.configHome}/mozilla/firefox";
+
     profiles."${user}" = {
       bookmarks = { };
       # Get by about:config and format with https://jsonformatter.org/
