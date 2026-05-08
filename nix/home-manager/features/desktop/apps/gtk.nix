@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   ...
@@ -14,6 +15,8 @@ rec {
       package = lib.mkForce pkgs.gnome-themes-extra;
       name = lib.mkForce "Adwaita-dark";
     };
+    gtk4.theme = null;
+
     iconTheme = {
       name = "Papirus";
       package = pkgs.papirus-icon-theme;
