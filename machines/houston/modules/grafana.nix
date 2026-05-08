@@ -69,12 +69,30 @@ in
     ensureDatabases = [
       "grafana"
     ];
+
+    # Grafana connects via unix socket as linux user "grafana" to PG role "grafana"
+    authentication = lib.mkBefore ''
+      # TYPE    DATABASE        USER            ADDRESS                 METHOD
+      # local = unix socket, host = TCP/IP
+      # DATABASE = target database name (or "all")
+      # USER = PostgreSQL role name (or "all")
+      # ADDRESS = IP range (only for host type)
+      # METHOD = auth method (trust=no password, peer=linux user must match PG role)
+
+      # Grafana: peer auth on local socket
+      local   grafana         grafana                                 peer
+    '';
   };
 
   services.grafana = {
     enable = true;
 
     settings = {
+      # log = {
+      #   level = "debug";
+      #   filters = "oauth.generic_oauth:debug";
+      # };
+
       server = {
         http_port = listenPort;
         http_addr = "127.0.0.1";
@@ -82,7 +100,6 @@ in
         root_url = "https://${appDomain}";
         protocol = "http";
       };
-      "auth.anonymous".enable = true;
 
       database = lib.mkDefault {
         type = "postgres";
@@ -103,9 +120,12 @@ in
         }}";
         secret_key = "$__file{${config.clan.core.vars.generators."grafana".files."secret_key".path}}";
       };
+
+      # Create the user in Grafana when they first log in with OIDC, and assign them to the default organization
       users = {
-        allow_signup = false;
+        allow_signup = true;
       };
+
       "auth.anonymous" = {
         enabled = true;
         org_name = "ma cabane";
@@ -117,36 +137,34 @@ in
         enabled = true;
         allow_sign_up = true;
         auto_login = false;
-        name = "Authelia";
+        name = "Zitadel";
         icon = "signin";
-        client_id = "grafana";
-        client_secret = "$__file{${
-          config.clan.core.vars.generators."grafana".files."oauth2-client-secret".path
-        }}";
+        client_id = "371357670822707201";
         scopes = [
           "openid"
           "profile"
           "email"
           "groups"
         ];
-        empty_scopes = false;
-        auth_url = "https://douane.ma-cabane.eu/api/oidc/authorization";
-        token_url = "https://douane.ma-cabane.eu/api/oidc/token";
-        api_url = "https://douane.ma-cabane.eu/api/oidc/userinfo";
+
+        auth_url = "https://douane.ma-cabane.eu/oauth/v2/authorize";
+        token_url = "https://douane.ma-cabane.eu/oauth/v2/token";
+        api_url = "https://douane.ma-cabane.eu/oidc/v1/userinfo";
+
         login_attribute_path = "preferred_username";
-        groups_attribute_path = "groups";
         name_attribute_path = "name";
         email_attribute_path = "email";
-        use_pkce = true;
         allow_assign_grafana_admin = true;
+
+        use_pkce = true;
+        groups_attribute_path = "groups";
+        role_attribute_strict = true;
         role_attribute_path = builtins.concatStringsSep " || " [
           "contains(groups, 'grafana-superadmins') && 'GrafanaAdmin'"
           "contains(groups, 'grafana-admins') && 'Admin'"
           "contains(groups, 'grafana-editors') && 'Editor'"
           "contains(groups, 'grafana-viewers') && 'Viewer'"
         ];
-        role_attribute_strict = true;
-        skip_org_role_sync = false;
       };
     };
   };

@@ -17,7 +17,7 @@ let
   appPlatform = "nixos";
   appDescription = "Simple, secure and fast identity management platform";
   appUrl = "https://kanidm.com/";
-  appPinnedVersion = pkgs.kanidmWithSecretProvisioning_1_6.version;
+  appPinnedVersion = pkgs.kanidmWithSecretProvisioning_1_7.version;
   deprecatedMessage = ''
     While lightweight and performant, Kanidm requires manual configuration for some operations. Migrated to Authentik for better web UI.
   '';
@@ -194,7 +194,7 @@ in
             '';
           };
 
-          extraConfig = ''access_log /var/log/nginx/public.log vcombined;'';
+          extraConfig = "access_log /var/log/nginx/public.log vcombined;";
         };
       };
 

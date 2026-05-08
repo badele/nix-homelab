@@ -21,7 +21,7 @@
       </tr>
       <tr>
         <th>Version</th>
-        <td>4.27.0</td>
+        <td>4.31.0</td>
       </tr>
       <tr>
         <th>Site link</th>

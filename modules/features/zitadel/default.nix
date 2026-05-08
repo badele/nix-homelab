@@ -24,6 +24,8 @@ let
 
   listenZitadelPort = 10000 + config.homelab.portRegistry.${appName}.appId;
 
+  adminAccount = "zitadel-admin";
+
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenZitadelPort}";
 in
@@ -37,31 +39,11 @@ in
 
       settings = mkOption {
         type = lib.types.attrsOf lib.types.anything;
-        default = {
-          Port = listenZitadelPort;
-          ExternalSecure = true;
-          ExternalPort = 443;
-        };
-        # Database.postgres = {
-        #   Host = "localhost";
-        #   Port = 5432;
-        #   Database = "zitadel";
-        #   User.Username = "zitadel";
-        #   Admin.Username = "postgres";
-        # };
-        description = ''
-          ${appDisplayName} runtime configuration. Refer to
-          <https://zitadel.com/docs/self-hosting/manage/configure>
-          for details on supported values.
-        '';
-      };
-
-      steps = mkOption {
-        type = lib.types.attrsOf lib.types.anything;
         default = { };
         description = ''
-          ${appDisplayName} database initialization configuration (FirstInstance setup).
-          See <https://zitadel.com/docs/self-hosting/manage/configure> for details.
+          ${appDisplayName} extra runtime configuration (merged with defaults). Refer to
+          <https://zitadel.com/docs/self-hosting/manage/configure>
+          for details on supported values.
         '';
       };
 
@@ -148,6 +130,14 @@ in
         };
         users.groups.zitadel = { };
 
+        # Gmail application password prompt (one-time)
+        clan.core.vars.generators.gmail-apps-zitadel-password = {
+          prompts."token" = {
+            description = "Please insert your GMail application password";
+            persist = true;
+          };
+        };
+
         clan.core.vars.generators.${appName} = {
           files = {
             adminAccount = {
@@ -158,17 +148,41 @@ in
               owner = "zitadel";
               group = "zitadel";
             };
+
+            # YAML file with secrets (admin password) passed via extraStepsPaths
+            steps-secrets = {
+              owner = "zitadel";
+              group = "zitadel";
+            };
           };
 
+          # dependencies = [
+          #   "gmail-application-password"
+          # ];
+
           runtimeInputs = [
-            pkgs.openssl
+            pkgs.pwgen
           ];
 
           script = ''
             # Generate 32-byte master key for ZITADEL encryption
-            openssl rand 32 | head -c 32 > "$out/masterkey"
+            # TODO: fix the zitadel default password. zitadel define "Password1!", I CANNONT CHANGE IT
+            printf %s "$(pwgen -s 32 1)"  > "$out/masterkey"
 
-            echo "zitadel-admin" > "$out/adminAccount"
+            # Generate admin password
+            # USER: $adminAccount@<INSTANCENAME>.douane.ma-cabane.eu
+            ADMIN_PASSWORD="$(pwgen -s 8 1)-$(pwgen -s 8 1)"
+
+            # Store in clan vars (only for information)
+            echo "${adminAccount}" > "$out/adminAccount"
+
+            # Generate steps secrets YAML (overrides FirstInstance.Org.Human.Password)
+            cat > "$out/steps-secrets" << EOF
+            FirstInstance:
+              Org:
+                Human:
+                  Password: $ADMIN_PASSWORD
+            EOF
           '';
         };
 
@@ -185,32 +199,90 @@ in
           "@service-${appName}-status" = "systemctl status zitadel";
         };
 
+        # PostgreSQL database for ZITADEL
+        services.postgresql = {
+          enable = true;
+          ensureUsers = [
+            {
+              name = "zitadel";
+              ensureDBOwnership = true;
+            }
+          ];
+          ensureDatabases = [
+            "zitadel"
+          ];
+
+          authentication = lib.mkBefore ''
+            # TYPE    DATABASE        USER            ADDRESS                 METHOD
+            # local = unix socket, host = TCP/IP
+            # DATABASE = target database name (or "all")
+            # USER = PostgreSQL role name (or "all")
+            # ADDRESS = IP range (only for host type)
+            # METHOD = auth method (trust=no password, peer=linux user must match PG role)
+
+            # ZITADEL: trust for start-from-init (user zitadel runs as postgres admin)
+            local   zitadel         zitadel                                 trust
+            local   zitadel         postgres                                trust
+            local   postgres        postgres                                trust
+          '';
+        };
+
+        # Ensure ZITADEL starts after PostgreSQL is ready
+        systemd.services.zitadel = {
+          after = [ "postgresql.service" ];
+          requires = [ "postgresql.service" ];
+        };
+
         # Enable ZITADEL service
         services.zitadel = {
           enable = true;
           masterKeyFile = config.clan.core.vars.generators.${appName}.files.masterkey.path;
           tlsMode = cfg.tlsMode;
+
+          extraStepsPaths = [
+            config.clan.core.vars.generators.${appName}.files.steps-secrets.path
+          ];
+
           settings = {
             Port = listenZitadelPort;
             ExternalDomain = cfg.serviceDomain;
             ExternalPort = 443;
             ExternalSecure = true;
+            Database.postgres = {
+              Host = "/run/postgresql";
+              Port = 5432;
+              Database = "zitadel";
+              User = {
+                Username = "zitadel";
+                SSL.Mode = "disable";
+              };
+              Admin = {
+                Username = "postgres";
+                SSL.Mode = "disable";
+              };
+            };
+            Telemetry.Enabled = false;
           }
           // cfg.settings;
           steps = {
             FirstInstance = {
-              InstanceName = "Homelab";
-              Org = {
-                Name = "Homelab";
-                Human = {
-                  UserName = "zitadel-admin";
-                  FirstName = "Admin";
-                  LastName = "Homelab";
+              InstanceName = "ZITADEL";
+              DefaultLanguage = "fr";
+              LoginPolicy.AllowRegister = false;
+
+              Org.Human = {
+                Name = "ZITADEL";
+                UserName = adminAccount;
+                FirstName = "Admin";
+                LastName = "Homelab";
+                PasswordChangeRequired = false;
+                Email = {
+                  Address = "${adminAccount}@${cfg.serviceDomain}";
+                  Verified = true;
                 };
               };
             };
-          }
-          // cfg.steps;
+          };
         };
 
         # Enable ZITADEL in TLS mode with nginx reverse proxy if openFirewall is enabled
@@ -221,43 +293,14 @@ in
             useACMEHost = config.homelab.domain;
             forceSSL = true;
 
+            # HTTP/2 is required for gRPC support
+            http2 = true;
+
             locations."/" = {
-              proxyPass = "http://127.0.0.1:${toString listenZitadelPort}";
-              recommendedProxySettings = true;
-              proxyWebsockets = true;
-
-              # Security headers
+              # Use grpc_pass for ZITADEL (serves both gRPC and HTTP via h2c)
               extraConfig = ''
-                # Required for gRPC and HTTP/2 support
-                proxy_http_version 1.1;
-                proxy_set_header Upgrade $http_upgrade;
-                proxy_set_header Connection "upgrade";
-
-                # Force HTTPS (for 1 year)
-                add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
-
-                # XSS and clickjacking protection
-                add_header X-Frame-Options "SAMEORIGIN" always;
-
-                # No execution of untrusted MIME types
-                add_header X-Content-Type-Options "nosniff" always;
-
-                # Send only domain with URL referer
-                add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-
-                # Disable all unused browser features for better privacy
-                add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
-
-                # Allow only specific sources to load content (CSP)
-                add_header Content-Security-Policy "default-src 'self'; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:; media-src 'self' blob: https:; connect-src 'self' https: wss:;" always;
-
-                # Modern CORS headers
-                add_header Cross-Origin-Opener-Policy "same-origin-allow-popups" always;
-                add_header Cross-Origin-Resource-Policy "cross-origin" always;
-                add_header Cross-Origin-Embedder-Policy "unsafe-none" always;
-
-                # Cross-domain policy
-                add_header X-Permitted-Cross-Domain-Policies "none" always;
+                grpc_pass grpc://127.0.0.1:${toString listenZitadelPort};
+                grpc_set_header Host $host;
               '';
             };
 

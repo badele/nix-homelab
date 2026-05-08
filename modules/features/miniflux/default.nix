@@ -38,7 +38,7 @@ in
 
       authDomain = mkOption {
         type = str;
-        default = "${config.homelab.features.authentik.serviceDomain}";
+        default = "${config.homelab.features.zitadel.serviceDomain}";
         description = "OIDC service domain name";
       };
 
@@ -155,9 +155,9 @@ in
 
           # Authentik OAuth2 configuration
           OAUTH2_PROVIDER = "oidc";
-          OAUTH2_CLIENT_ID = "${appSubDomain}-${appName}";
+          OAUTH2_CLIENT_ID = "371296152227741697";
           OAUTH2_REDIRECT_URL = "${exposedURL}/oauth2/oidc/callback";
-          OAUTH2_OIDC_DISCOVERY_ENDPOINT = "https://${cfg.authDomain}/application/o/${appSubDomain}-${appName}/";
+          OAUTH2_OIDC_DISCOVERY_ENDPOINT = "https://${cfg.authDomain}";
           OAUTH2_USER_CREATION = "1";
         };
 
@@ -209,7 +209,7 @@ in
             '';
           };
 
-          extraConfig = ''access_log /var/log/nginx/public.log vcombined;'';
+          extraConfig = "access_log /var/log/nginx/public.log vcombined;";
         };
       };
 

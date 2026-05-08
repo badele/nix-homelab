@@ -67,13 +67,19 @@ precommit-install:
 ###############################################################################
 # Update documentation
 [group('documentation')]
-@doc-update-command:
-    termshot -f docs/commands.png -- just
+@doc-update:
+    # Generate all templates
+    python scripts/get_app_list.py
 
-# Update documentation
-[group('documentation')]
-@doc-update FILENAME="FAKEFILENAME":
-    ./.pre-commit-scripts/updatedoc.ts
+    # Update markdown docs
+    gosect -file README.md
+    gosect -file docs/all-features.md
+
+    # Update all markdown features
+    find "$PWD/docs/features" -name "*.md" -exec gosect -file {} \;
+
+    # Update screenshots commands
+    # termshot -f docs/commands.png -- just
 
 
 ###############################################################################
