@@ -28,7 +28,7 @@ let
   gaps_bottom = 5;
 
   playerctl = "${pkgs.playerctl}/bin/playerctl";
-  flameshot = "${pkgs.flameshot}/bin/flameshot";
+  ksnip = "${pkgs.ksnip}/bin/ksnip";
   peek = "${pkgs.peek}/bin/peek";
   gpick = "${pkgs.gpick}/bin/gpick";
   # py3status = "${pkgs.python3Packages.py3status}/bin/py3status";
@@ -124,7 +124,7 @@ in
           # # || Print || Take a desktop screenshot | i3
           # # || Shift+Print || Take a selection screenshot | i3
           # # || Super+c || Color picker | i3
-          "Print" = "exec --no-startup-id ${flameshot} gui";
+          "Print" = "exec --no-startup-id ${ksnip} -r";
           "Shift+Print" = "--release exec --no-startup-id ${peek}";
           "${mod}+c" = "--release exec ${gpick}";
 
@@ -322,6 +322,7 @@ in
             # { class = "openshoot"; }
             { class = "openshoot-qt"; }
             { class = "gimp-2.10"; }
+            { class = "ksnip"; }
           ];
         };
 
