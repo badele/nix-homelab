@@ -21,7 +21,7 @@
       </tr>
       <tr>
         <th>Version</th>
-        <td>2.2.14</td>
+        <td>2.2.18</td>
       </tr>
       <tr>
         <th>Site link</th>
@@ -93,18 +93,19 @@ OIDC ID is already linked to another account.
 
 **Steps to fix:**
 
-1. Get the user's UID from Authentik:
+1. Get the user's ID from zitadel:
    - Login with admin account
-   - Go to `https://douane.ma-cabane.eu/api/v3/core/users/?username=<USERNAME>`
-   - Copy the `uid` value
+   - Go to `https://douane.ma-cabane.eu/ui/console/users/me`
+   - Copy the `id` value
 
 2. Update the OpenID Connect ID in Miniflux:
 
 ```bash
-sudo -u miniflux bash
-AUTHENTIK_USERNAME="<USERNAME>"
-AUTHENTIK_UID="<UID>"
-psql miniflux -c "UPDATE users SET openid_connect_id='$AUTHENTIK_UID' WHERE username='$AUTHENTIK_USERNAME'"
+sudo -u postgres bash
+psql miniflux -c "SELECT username,openid_connect_id FROM users"
+ZITADEL_USERNAME="<USERNAME>"
+ZITADEL_ID="<UID>"
+psql miniflux -c "UPDATE users SET openid_connect_id='${ZITADEL_ID}' WHERE username='${ZITADEL_USERNAME}';"
 ```
 
 ## Learn More

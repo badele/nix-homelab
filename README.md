@@ -218,6 +218,19 @@ All Available homelab features :
       </a>
     </td>
   </tr>
+  <tr>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#core-services" title="Identity and access management platform">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/zitadel.png" width="48" height="48" alt="ZITADEL"/>
+        <br/>ZITADEL
+      </a>
+    </td>
+    <td width="16%"></td>
+    <td width="16%"></td>
+    <td width="16%"></td>
+    <td width="16%"></td>
+    <td width="16%"></td>
+  </tr>
 </table>
 
 <!-- END SECTION services_icon -->

@@ -122,15 +122,9 @@ in
         ];
 
         script = ''
-          CLIENTSECRET="$(pwgen -s 48 1)"
           ADMINPASSWORD="$(pwgen -s 16 1)"
-          DIGETSECRET="$(authelia crypto hash generate argon2 --password "$CLIENTSECRET" | grep Digest | awk '{ print $2 }')";
-
-          echo "$CLIENTSECRET" > "$out/oauth2-client-secret"
-          echo "$DIGETSECRET" > "$out/digest-client-secret"
 
           cat > "$out/envfile" << EOF
-          OIDC_RP_CLIENT_SECRET=$CLIENTSECRET
           LD_SUPERUSER_NAME=bookadmin
           LD_SUPERUSER_PASSWORD=$ADMINPASSWORD
           EOF
@@ -173,11 +167,13 @@ in
 
         environment = {
           LD_ENABLE_OIDC = "true";
-          OIDC_OP_AUTHORIZATION_ENDPOINT = "https://${authdomain}/application/o/authorize/";
-          OIDC_OP_TOKEN_ENDPOINT = "https://${authdomain}/application/o/token/";
-          OIDC_OP_USER_ENDPOINT = "https://${authdomain}/application/o/userinfo/";
-          OIDC_OP_JWKS_ENDPOINT = "https://${authdomain}/application/o/${appSubDomain}-${appName}/jwks/";
-          OIDC_RP_CLIENT_ID = "${appSubDomain}-${appName}";
+          OIDC_USE_PKCE = "true";
+          OIDC_RP_CLIENT_ID = "371338396787867649";
+
+          OIDC_OP_AUTHORIZATION_ENDPOINT = "https://${authdomain}/oauth/v2/authorize";
+          OIDC_OP_TOKEN_ENDPOINT = "https://${authdomain}/oauth/v2/token";
+          OIDC_OP_USER_ENDPOINT = "https://${authdomain}/oidc/v1/userinfo";
+          OIDC_OP_JWKS_ENDPOINT = "https://${authdomain}/oauth/v2/keys";
         };
 
         extraOptions = [
@@ -235,7 +231,7 @@ in
             '';
           };
 
-          extraConfig = ''access_log /var/log/nginx/public.log vcombined;'';
+          extraConfig = "access_log /var/log/nginx/public.log vcombined;";
         };
       };
 

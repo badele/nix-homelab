@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>zitadel.html</title>
+<meta http-equiv="Content-Type" content="application/xhtml+xml;charset=utf-8"/>
+<link rel="stylesheet" type="text/css" media="all" href="https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.min.css"  />
+<link rel="stylesheet" type="text/css" media="all" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/github.min.css"  /><meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'><style> body { box-sizing: border-box; max-width: 740px; width: 100%; margin: 40px auto; padding: 0 10px; } </style><script id='MathJax-script' async src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'></script><script src='https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js'></script><script>document.addEventListener('DOMContentLoaded', () => { document.body.classList.add('markdown-body'); document.querySelectorAll('pre[lang] > code').forEach((code) => { code.classList.add(code.parentElement.lang); }); document.querySelectorAll('pre > code').forEach((code) => { hljs.highlightBlock(code); }); });</script>
+</head>
+
+<body>
+
+<!-- BEGIN SECTION feature_informations file=./.templates/feature_zitadel.html -->
+
+<div class="feature-detail">
+  <h1 id="zitadel">
+    <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/zitadel.png" width="64" height="64" alt="ZITADEL" style="vertical-align: middle; margin-right: 10px;"/>
+    ZITADEL
+  </h1>
+  <h2>Basic Information</h2>
+  <p>Identity and access management platform</p>
+  <table>
+    <tbody>
+      <tr>
+        <th>Category</th>
+        <td>
+<a href="/docs/all-features.md#core-services">Core Services</a>
+        </td>
+      </tr>
+      <tr>
+        <th>Platform</th>
+        <td>nixos</td>
+      </tr>
+      <tr>
+        <th>Version</th>
+        <td>2.71.7</td>
+      </tr>
+      <tr>
+        <th>Site link</th>
+        <td><a href="https://github.com/zitadel/zitadel">https://github.com/zitadel/zitadel</a></td>
+      </tr>
+      <tr>
+        <th>Nix Homelab Module</th>
+        <td><a href="../../modules/features/zitadel">modules/features/zitadel</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- END SECTION feature_informations -->
+
+<h2 id="what-is-zitadel">What is ZITADEL?</h2>
+<p><a href="https://zitadel.com/">ZITADEL</a> is an open-source Identity
+Provider (IdP) focused on security, scalability, and modern
+authentication standards. It provides Single Sign-On (SSO), OAuth2/OIDC,
+and SAML authentication for self-hosted applications.</p>
+<p>ZITADEL serves as the central authentication gateway for all homelab
+services, enabling unified user management and secure access
+control.</p>
+<hr />
+<h2 id="why-use-zitadel">Why Use ZITADEL?</h2>
+<blockquote>
+<p>Secure, modern identity management with strong defaults</p>
+</blockquote>
+<p><strong>Key benefits:</strong></p>
+<ul>
+<li><strong>Single Sign-On</strong>: One login for all applications</li>
+<li><strong>Modern Protocols</strong>: OAuth2/OIDC, SAML support</li>
+<li><strong>Security First</strong>: Built-in MFA, WebAuthn,
+passkeys</li>
+<li><strong>Multi-Tenant</strong>: Organizations and projects
+separation</li>
+<li><strong>User Management</strong>: Centralized identity
+management</li>
+<li><strong>API-Driven</strong>: Everything configurable via API</li>
+</ul>
+<hr />
+<h2 id="login">Login</h2>
+<p>Administration account</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> <span class="at">-u</span> postgres psql zitadel <span class="at">-c</span> <span class="st">&quot;SELECT email, password_change_required, password_changed FROM projections.users14_humans;&quot;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">clan</span> vars get MACHINE zitadel/steps-secrets</span></code></pre></div>
+<hr />
+<h2 id="configuration">Configuration</h2>
+<h3 id="default-settings">Default settings</h3>
+<p><strong>Login behavior and security</strong></p>
+<ul>
+<li><code>Force MFA for all users</code></li>
+<li>Disable <code>User Registration allowed</code></li>
+</ul>
+<h4 id="smtp-setting">SMTP setting</h4>
+<p>Create application password =&gt; <a
+href="https://myaccount.google.com/apppasswords">https://myaccount.google.com/apppasswords</a></p>
+<p><strong>SMTP Provider Settings</strong></p>
+<ul>
+<li>host: <code>smtp.gmail.com:587</code></li>
+<li>use_tls: <code>yes</code></li>
+<li>username: <code>config.homelab.stmpAccountUsername</code></li>
+<li>password:
+<code>clan vars get MACHINE gmail-apps-zitadel-password/token</code></li>
+</ul>
+<p><strong>Sender settings</strong></p>
+<ul>
+<li>email address: <code>config.homelab.stmpAccountUsername</code></li>
+<li>sender name: <code>ma-cabane account notification</code></li>
+</ul>
+<p><strong>Don't forget activate SMTP privider</strong></p>
+<h3 id="configuration-organization">Configuration organization</h3>
+<p><strong>Login behavior and security</strong></p>
+<ul>
+<li><code>Force MFA for all users</code></li>
+<li>Disable <code>User Registration allowed</code></li>
+</ul>
+<h3 id="create-project">Create project</h3>
+<p>Afin de pouvoir donner des droits finement à une application
+(authoriser l'authentification par zitadel), il faut créer un projet par
+application. Afin de povoir affecter les roles à l'application.</p>
+<p>Create <code>APPLICATIONNAME</code></p>
+<ul>
+<li>disable <code>Assert Roles on Authentication</code></li>
+<li>enable <code>Check authorization on Authentication</code></li>
+<li>disable <code>Check for Project on Authentication</code></li>
+</ul>
+<p>Pour chaque projet, ajouter les roles</p>
+<ul>
+<li>admin</li>
+<li>user</li>
+</ul>
+<h3 id="add-authorisation">Add authorisation</h3>
+<p>On the project</p>
+<ul>
+<li>select users</li>
+<li>Selects roles</li>
+</ul>
+<h3 id="example-with-miniflux">Example with Miniflux</h3>
+<p><strong>website informations</strong></p>
+<ul>
+<li>appDomain: <code>journaliste.ma-cabane.eu</code></li>
+</ul>
+<h4 id="zitadel-config">ZITADEL config</h4>
+<ol type="1">
+<li>Create application:
+<ul>
+<li>Type <code>WEB</code></li>
+<li>Authentification <code>PKCE</code></li>
+<li>Redirect URIs:
+<ul>
+<li><code>https://journaliste.ma-cabane.eu/oauth2/oidc/callback</code></li>
+<li><code>https://journaliste.ma-cabane.eu/oauth2/oidc/redirect</code></li>
+</ul></li>
+<li>Post Logout URIs:
+<ul>
+<li><code>https://journaliste.ma-cabane.eu</code></li>
+</ul></li>
+</ul></li>
+<li>Copy:
+<ul>
+<li>Client ID</li>
+</ul></li>
+</ol>
+<h4 id="miniflux-config">Miniflux config</h4>
+<pre class="env"><code>OAUTH2_PROVIDER=oidc
+OAUTH2_CLIENT_ID=&lt;client-id&gt;
+OAUTH2_REDIRECT_URL=https://journaliste.ma-cabane.eu/oauth2/oidc/callback
+OAUTH2_OIDC_DISCOVERY_ENDPOINT=https://douane.ma-cabane.eu
+OAUTH2_USER_CREATION=1</code></pre>
+<h3 id="example-with-linkding">Example with linkding</h3>
+<p><strong>website informations</strong></p>
+<ul>
+<li>appDomain: <code>bonnes-addresses.ma-cabane.eu</code></li>
+</ul>
+<h4 id="zitadel-config-1">ZITADEL config</h4>
+<ol type="1">
+<li>Create application:
+<ul>
+<li>Type <code>WEB</code></li>
+<li>Authentification <code>PKCE</code></li>
+<li>Redirect URIs:
+<ul>
+<li><code>https://bonnes-adresses.ma-cabane.eu/oidc/callback</code></li>
+</ul></li>
+<li>Post Logout URIs:
+<ul>
+<li><code>https://bonne-addresses.ma-cabane.eu</code></li>
+</ul></li>
+</ul></li>
+<li>Copy:
+<ul>
+<li>Client ID</li>
+</ul></li>
+</ol>
+<h4 id="linkding-config">Linkding config</h4>
+<pre class="env"><code>LD_ENABLE_OIDC = &quot;true&quot;;
+
+OIDC_RP_CLIENT_ID=&lt;client_id&gt;
+OIDC_RP_CLIENT_SECRET=&lt;client_secret&gt;
+
+OIDC_OP_AUTHORIZATION_ENDPOINT=https://&lt;zitadel&gt;/oidc/v1/authorize
+OIDC_OP_TOKEN_ENDPOINT=https://&lt;zitadel&gt;/oidc/v1/token
+OIDC_OP_USER_ENDPOINT=https://&lt;zitadel&gt;/oidc/v1/userinfo
+
+OIDC_RP_SIGN_ALGO=RS256
+OIDC_RP_SCOPES=openid email profile</code></pre>
+<h3 id="example-with-grafana">Example with grafana</h3>
+<p><strong>website informations</strong></p>
+<ul>
+<li>appDomain: <code>lampiotes.ma-cabane.eu</code></li>
+</ul>
+<h4 id="zitadel-config-2">ZITADEL config</h4>
+<p><strong>SOURCE:</strong> <a
+href="https://schoenwald.aero/posts/2025-02-12_integrating_zitadel_as_an_oidc_provider_in_grafana/">https://schoenwald.aero/posts/2025-02-12_integrating_zitadel_as_an_oidc_provider_in_grafana/</a></p>
+<ol type="1">
+<li><p>Create application:</p>
+<ul>
+<li>Type <code>WEB</code></li>
+<li>Authentification <code>PKCE</code></li>
+<li>Redirect URIs:
+<ul>
+<li><code>https://lampiotes.ma-cabane.eu/login/generic_oauth</code></li>
+</ul></li>
+<li>Post Logout URIs:
+<ul>
+<li><code>https://lampiotes.ma-cabane.eu/login</code></li>
+</ul></li>
+</ul></li>
+<li><p>Copy:</p>
+<ul>
+<li>Client ID</li>
+</ul></li>
+<li><p>Creation action scripts <code>groupsClaim</code></p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">groupsClaim</span>(ctx<span class="op">,</span> api) {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (ctx<span class="op">.</span><span class="at">v1</span><span class="op">.</span><span class="at">user</span><span class="op">.</span><span class="at">grants</span> <span class="op">===</span> <span class="kw">undefined</span> <span class="op">||</span> ctx<span class="op">.</span><span class="at">v1</span><span class="op">.</span><span class="at">user</span><span class="op">.</span><span class="at">grants</span><span class="op">.</span><span class="at">count</span> <span class="op">==</span> <span class="dv">0</span>) {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> grants <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  ctx<span class="op">.</span><span class="at">v1</span><span class="op">.</span><span class="at">user</span><span class="op">.</span><span class="at">grants</span><span class="op">.</span><span class="at">grants</span><span class="op">.</span><span class="fu">forEach</span>((claim) <span class="kw">=&gt;</span> {</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    claim<span class="op">.</span><span class="at">roles</span><span class="op">.</span><span class="fu">forEach</span>((role) <span class="kw">=&gt;</span> {</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>      grants<span class="op">.</span><span class="fu">push</span>(role)<span class="op">;</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  api<span class="op">.</span><span class="at">v1</span><span class="op">.</span><span class="at">claims</span><span class="op">.</span><span class="fu">setClaim</span>(<span class="st">&quot;groups&quot;</span><span class="op">,</span> grants)<span class="op">;</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div></li>
+<li><p>Enable script on <code>Complement token</code> flow</p>
+<ul>
+<li>Enable for <code>Pre access token creation</code></li>
+<li>Enable for <code>Pre Userinfo creation</code></li>
+</ul></li>
+</ol>
+<h4 id="grafana-config">Grafana config</h4>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode nix"><code class="sourceCode nix"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;auth.anonymous&quot;</span> = <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>        <span class="va">enabled</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">org_name</span> <span class="op">=</span> <span class="st">&quot;ma cabane&quot;</span><span class="op">;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">org_role</span> <span class="op">=</span> <span class="st">&quot;Viewer&quot;</span><span class="op">;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">hide_version</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span>;</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;auth.generic_oauth&quot;</span> = <span class="op">{</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">enabled</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">allow_sign_up</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">auto_login</span> <span class="op">=</span> <span class="cn">false</span><span class="op">;</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">name</span> <span class="op">=</span> <span class="st">&quot;Zitadel&quot;</span><span class="op">;</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">icon</span> <span class="op">=</span> <span class="st">&quot;signin&quot;</span><span class="op">;</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        <span class="va">client_id</span> <span class="op">=</span> <span class="st">&quot;371357670822707201&quot;</span><span class="op">;</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        <span class="va">scopes</span> <span class="op">=</span> <span class="op">[</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>          <span class="st">&quot;openid&quot;</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>          <span class="st">&quot;profile&quot;</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>          <span class="st">&quot;email&quot;</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>          <span class="st">&quot;groups&quot;</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        <span class="op">];</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>        <span class="va">auth_url</span> <span class="op">=</span> <span class="st">&quot;https://douane.ma-cabane.eu/oauth/v2/authorize&quot;</span><span class="op">;</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>        <span class="va">token_url</span> <span class="op">=</span> <span class="st">&quot;https://douane.ma-cabane.eu/oauth/v2/token&quot;</span><span class="op">;</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>        <span class="va">api_url</span> <span class="op">=</span> <span class="st">&quot;https://douane.ma-cabane.eu/oidc/v1/userinfo&quot;</span><span class="op">;</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>        <span class="va">login_attribute_path</span> <span class="op">=</span> <span class="st">&quot;preferred_username&quot;</span><span class="op">;</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>        <span class="va">name_attribute_path</span> <span class="op">=</span> <span class="st">&quot;name&quot;</span><span class="op">;</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>        <span class="va">email_attribute_path</span> <span class="op">=</span> <span class="st">&quot;email&quot;</span><span class="op">;</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>        <span class="va">allow_assign_grafana_admin</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        <span class="va">use_pkce</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>        <span class="va">groups_attribute_path</span> <span class="op">=</span> <span class="st">&quot;groups&quot;</span><span class="op">;</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>        <span class="va">role_attribute_strict</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>        <span class="va">role_attribute_path</span> <span class="op">=</span> <span class="bu">builtins</span><span class="op">.</span>concatStringsSep <span class="st">&quot; || &quot;</span> <span class="op">[</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>          <span class="st">&quot;contains(groups, &#39;grafana-superadmins&#39;) &amp;&amp; &#39;GrafanaAdmin&#39;&quot;</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>          <span class="st">&quot;contains(groups, &#39;grafana-admins&#39;) &amp;&amp; &#39;Admin&#39;&quot;</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>          <span class="st">&quot;contains(groups, &#39;grafana-editors&#39;) &amp;&amp; &#39;Editor&#39;&quot;</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>          <span class="st">&quot;contains(groups, &#39;grafana-viewers&#39;) &amp;&amp; &#39;Viewer&#39;&quot;</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>        <span class="op">];</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span>;</span></code></pre></div>
+<h2 id="operations">Operations</h2>
+<h3 id="reset-admin-bootstrap">Reset Admin (bootstrap)</h3>
+<p>ZITADEL does not allow re-running bootstrap.</p>
+<p>To recreate admin:</p>
+<p>On <code>&lt;Machine&gt;</code></p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> systemctl stop zitadel</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> <span class="at">-u</span> postgres dropdb zitadel</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> <span class="at">-u</span> postgres psql  <span class="at">-c</span> <span class="st">&quot;</span><span class="dt">\\</span><span class="st">l&quot;</span></span></code></pre></div>
+<p>On clan admin desktop</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-rf</span> vars/per-machine/MACHINE/zitadel</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">clan</span> machines update MACHINE</span></code></pre></div>
+<hr />
+<h3 id="health-check">Health Check</h3>
+<pre><code>http://127.0.0.1:&lt;port&gt;/debug/healthz</code></pre>
+<hr />
+<h2 id="known-limitations">Known Limitations</h2>
+<ul>
+<li>Bootstrap (<code>FirstInstance</code>) is
+<strong>one-shot</strong></li>
+<li>Config merge (<code>steps</code>) can be tricky</li>
+<li>No full runtime config dump</li>
+</ul>
+<hr />
+<h2 id="learn-more">Learn More</h2>
+<ul>
+<li><a
+href="https://zitadel.com/docs/"><span>https://zitadel.com/docs/</span></a></li>
+<li><a
+href="https://github.com/zitadel/zitadel"><span>https://github.com/zitadel/zitadel</span></a></li>
+<li><a
+href="https://zitadel.com/docs/guides/integrate/login/oidc"><span>https://zitadel.com/docs/guides/integrate/login/oidc</span></a></li>
+</ul>
+
+</body>
+</html>
