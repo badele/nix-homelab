@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     # JavaScript/TypeScript
     nodejs
@@ -10,9 +11,9 @@
     # JSON
     vscode-langservers-extracted
     nodePackages.fixjson
-    nodePackages.jsonlint
+    # nodePackages.jsonlint
 
     # Dockerfile
-    nodePackages.dockerfile-language-server-nodejs
+    dockerfile-language-server
   ];
 }

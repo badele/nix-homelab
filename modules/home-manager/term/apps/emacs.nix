@@ -1,33 +1,17 @@
 { pkgs, ... }:
 {
 
-  # Clone the https://github.com/badele/vide to ~/.config/nvim
-  programs.neovim.enable = true;
-  programs.neovim.viAlias = true;
-  programs.neovim.vimAlias = true;
-  programs.neovim.vimdiffAlias = true;
+  # Install the emacs configuration from this https://github.com/badele/idem#installation repository
+  programs.emacs.enable = true;
 
-  # All neovim plugins list from the https://github.com/badele/vide project
+  services.emacs = {
+    enable = true;
+    client.enable = true;
+    defaultEditor = true;
+  };
+
+  # All neovim plugins list from the https://github.com/badele/idem project
   home.packages = with pkgs; [
-    # vide project requirements
-    pre-commit
-
-    # neovim and plugins build requirements
-    cargo
-    cmake
-    curl
-    ncurses
-    nodejs
-    unzip
-    yarn
-
-    # Need by plugins
-    fd
-    lazygit
-    ripgrep
-    tree-sitter
-    xclip
-
     # Language support packages are now in separate files:
     # - nix/home-manager/features/language/ansible.nix
     # - nix/home-manager/features/language/bash.nix
@@ -47,5 +31,4 @@
     # - nix/home-manager/features/language/terraform.nix
     # - nix/home-manager/features/language/yaml.nix
   ];
-
 }

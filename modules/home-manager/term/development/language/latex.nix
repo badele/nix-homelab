@@ -1,9 +1,24 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     # LaTeX
-    (texlive.combine {
-      inherit (texlive) scheme-medium tabularray ninecolors msg lipsum pgf;
-    })
+    (texliveMedium.withPackages (
+      ps: with ps; [
+        enumitem
+        fontawesome
+        ifmtarg
+        lipsum
+        moresize
+        msg
+        ninecolors
+        paracol
+        pgf
+        raleway
+        tabularray
+        transparent
+        xifthen
+      ]
+    ))
     biber
     pplatex
     pstree
