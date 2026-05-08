@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Fix PostgreSQL collation version mismatch
+# >  WARNING:  database "<DBNAME>" has a collation version mismatch
+# >  DETAIL:  The database was created using collation version 2.40, but the operating system provides version 2.42.
+# >  HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE <DBNAME> REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+
+# PSQL command
+PSQL="sudo -u postgres psql -Atqc"
+
+# Liste des bases (on exclut les templates)
+databases=$($PSQL "SELECT datname FROM pg_database WHERE datistemplate = false;")
+for db in $databases; do
+    echo "----------------------------------------"
+    echo "Fix collation version for  $db database "
+    echo "----------------------------------------"
+
+    # REINDEX DATABASE
+    echo "Reindex $db..."
+    if ! sudo -u postgres psql -d "$db" -c "REINDEX DATABASE \"$db\";"; then
+        echo "REINDEX error for $db" >&2
+        continue
+    fi
+
+    # REFRESH COLLATION VERSION
+    echo "Refresh collation version for $db..."
+    if ! sudo -u postgres psql -d "$db" -c "ALTER DATABASE \"$db\" REFRESH COLLATION VERSION;"; then
+        echo "Error for REFRESH COLLATION VERSION on $db" >&2
+        continue
+    fi
+
+    echo "Finalized for $db"
+done
+
+echo "----------------------------------------"
+echo "All databases are fixed"

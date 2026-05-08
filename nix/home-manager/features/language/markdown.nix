@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
-    grip
+    go-grip
     markdownlint-cli
     pandoc
     proselint
