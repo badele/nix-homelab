@@ -14,6 +14,7 @@
     enable = true;
     libraries = with pkgs; [
       stdenv.cc.cc
+      glib
 
       # Misc
       expat
