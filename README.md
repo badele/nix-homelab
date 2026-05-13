@@ -183,7 +183,7 @@ All Available homelab features :
   <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Internet Radio">
-        <img src="https://radio.0cx.de/static/parrot.gif" width="48" height="48" alt="Radio"/>
+        <img src="https://raw.githubusercontent.com/pinpox/radio/4ebb907732a165dfd80b4147884536add4ee1384/static/icon-192.png" width="48" height="48" alt="Radio"/>
         <br/>Radio
       </a>
     </td>
