@@ -84,7 +84,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    godown.url = "github:badele/godown";
     gosect.url = "github:badele/gosect";
 
     radio = {
