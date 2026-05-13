@@ -82,8 +82,8 @@
           pkgs.step-cli
 
           # markdown web server
-          inputs.godown.packages.${system}.godown
           inputs.gosect.packages.${system}.gosect
+          pkgs.go-grip
           #
         ];
         env.UEFI_FILE = uefi_file;

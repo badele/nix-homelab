@@ -94,7 +94,7 @@ precommit-install:
 # Repl the project
 [group('debug')]
 @serve-markdown:
-   godown 
+   go-grip
 
 ###############################################################################
 # Flake
