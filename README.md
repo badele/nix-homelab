@@ -69,7 +69,7 @@ All Available homelab features :
   <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#core-services" title="Let's Encrypt client and ACME library written in Go">
-        <img src="https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/lets-encrypt.webp" width="48" height="48" alt="ACME"/>
+        <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/lets-encrypt.webp" width="48" height="48" alt="ACME"/>
         <br/>ACME
       </a>
     </td>
@@ -92,19 +92,25 @@ All Available homelab features :
       </a>
     </td>
     <td align="center" width="16%">
+      <a href="/docs/all-features.md#core-services" title="Fast and extensible multi-platform HTTP/1-2-3 web server with automatic HTTPS">
+        <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/caddy.webp" width="48" height="48" alt="Caddy"/>
+        <br/>Caddy
+      </a>
+    </td>
+    <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Simple to use and highly versatile wiki software">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/dokuwiki.png" width="48" height="48" alt="DokuWiki"/>
         <br/>DokuWiki
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#system-health" title="Automated developer-oriented status page">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/gatus.png" width="48" height="48" alt="Gatus"/>
         <br/>Gatus
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#core-services" title="Real-time web log analyzer and interactive viewer that runs in a terminal in *nix systems">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/goaccess.png" width="48" height="48" alt="GoAccess"/>
@@ -135,14 +141,14 @@ All Available homelab features :
         <br/>it-tools
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#deprecated-services" title="Simple, secure and fast identity management platform">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/kanidm.png" width="48" height="48" alt="Kanidm"/>
         <br/>Kanidm
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Bookmark manager designed to be minimal, fast, and easy to set up">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/linkding.png" width="48" height="48" alt="Linkding"/>
@@ -173,14 +179,14 @@ All Available homelab features :
         <br/>Pawtunes
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Internet Radio">
         <img src="https://radio.0cx.de/static/parrot.gif" width="48" height="48" alt="Radio"/>
         <br/>Radio
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Sample podman application with hardening options.">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/podman.png" width="48" height="48" alt="Sample Podman application"/>
@@ -211,21 +217,20 @@ All Available homelab features :
         <br/>Victoriametrics
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Pastebin service">
-        <img src="https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/wastebin.webp" width="48" height="48" alt="Wastebin"/>
+        <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/wastebin.webp" width="48" height="48" alt="Wastebin"/>
         <br/>Wastebin
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#core-services" title="Identity and access management platform">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/zitadel.png" width="48" height="48" alt="ZITADEL"/>
         <br/>ZITADEL
       </a>
     </td>
-    <td width="16%"></td>
     <td width="16%"></td>
     <td width="16%"></td>
     <td width="16%"></td>

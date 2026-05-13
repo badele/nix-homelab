@@ -1,11 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   roleName = "prometheus";
   roleEnabled = builtins.elem roleName config.homelab.currentHost.roles;
   cfg = config.services.prometheus;
 in
-lib.mkIf (roleEnabled)
-{
+lib.mkIf (roleEnabled) {
 
   # TODO: sub level sops section `alertmanager/env`
   sops.secrets.alertmanager = { };
@@ -45,7 +49,9 @@ lib.mkIf (roleEnabled)
       {
         scheme = "http";
         path_prefix = "/";
-        static_configs = [{ targets = [ "127.0.0.1:${toString config.services.prometheus.alertmanager.port}" ]; }];
+        static_configs = [
+          { targets = [ "127.0.0.1:${toString config.services.prometheus.alertmanager.port}" ]; }
+        ];
       }
     ];
 
@@ -84,7 +90,10 @@ lib.mkIf (roleEnabled)
               group_wait = "30s";
               group_interval = "2m";
               repeat_interval = "4h";
-              group_by = [ "alertname" "alias" ];
+              group_by = [
+                "alertname"
+                "alias"
+              ];
               receiver = "pushover";
             }
           ];
@@ -126,19 +135,15 @@ lib.mkIf (roleEnabled)
       ];
   };
 
-  services.nginx.enable = true;
-  services.nginx.virtualHosts."${roleName}.${config.homelab.domain}" = {
-    # Use wildcard domain
-    useACMEHost = config.homelab.domain;
-    forceSSL = true;
-
-    locations."/" = {
-      extraConfig = ''
-        proxy_pass http://127.0.0.1:${toString cfg.port};
-        proxy_set_header Host $host;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection $connection_upgrade;
-      '';
-    };
+  services.caddy.virtualHosts."${roleName}.${config.homelab.domain}" = {
+    logFormat = ''
+      output file /var/log/caddy/public.log {
+        mode 0644
+      }
+      format json
+    '';
+    extraConfig = ''
+      reverse_proxy 127.0.0.1:${toString cfg.port}
+    '';
   };
 }

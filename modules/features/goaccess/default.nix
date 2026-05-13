@@ -23,7 +23,7 @@ let
 
   listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
 
-  # Service URL: use nginx domain if firewall is open, otherwise use direct IP:port
+  # Service URL: use public domain if firewall is open, otherwise use direct IP:port
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenHttpPort}";
 
@@ -129,21 +129,16 @@ in
 
         users.users.goaccess = {
           isSystemUser = true;
-          group = "nginx";
+          group = "caddy";
           createHome = true;
           home = "${pub_goaccess}";
           homeMode = "0774";
         };
 
-        services.nginx.commonHttpConfig = ''
-          log_format vcombined '$host:$server_port $remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referrer" "$http_user_agent"';
-          access_log /var/log/nginx/private.log vcombined;
-        '';
-
         systemd.tmpfiles.rules = [
-          "d ${priv_goaccess} 0755 goaccess nginx -"
-          "d ${priv_goaccess}/db 0755 goaccess nginx -"
-          "d ${pub_goaccess} 0755 goaccess nginx -"
+          "d ${priv_goaccess} 0755 goaccess caddy -"
+          "d ${priv_goaccess}/db 0755 goaccess caddy -"
+          "d ${pub_goaccess} 0755 goaccess caddy -"
         ];
 
         systemd.services.goaccess = {
@@ -153,11 +148,11 @@ in
           '';
           serviceConfig = {
             User = "goaccess";
-            Group = "nginx";
+            Group = "caddy";
             ExecStart = ''
               ${pkgs.goaccess}/bin/goaccess \
-                -f /var/log/nginx/public.log \
-                --log-format=VCOMBINED \
+                -f /var/log/caddy/public.log \
+                --log-format=CADDY \
                 --browsers-file=${user-agent-list} \
                 --real-time-html \
                 --all-static-files \
@@ -199,25 +194,21 @@ in
           wantedBy = [ "multi-user.target" ];
         };
 
-        services.nginx.virtualHosts = mkIf cfg.openFirewall {
+        services.caddy.virtualHosts = mkIf cfg.openFirewall {
           "${cfg.serviceDomain}" = {
-            # Use wildcard domain
-            useACMEHost = config.homelab.domain;
-            addSSL = true;
+            logFormat = ''
+              output file /var/log/caddy/public.log {
+                mode 0644
+              }
+              format json
+            '';
 
-            root = "${pub_goaccess}";
+            extraConfig = ''
+              root * ${pub_goaccess}
+              file_server
 
-            locations."/ws" = {
-              proxyPass = "http://127.0.0.1:${toString listenHttpPort}";
-              extraConfig = ''
-                proxy_http_version 1.1;
-                proxy_set_header Upgrade $http_upgrade;
-                proxy_set_header Connection $connection_upgrade;
-                proxy_buffering off;
-                proxy_read_timeout 7d;
-              '';
-            };
-            extraConfig = ''access_log /var/log/nginx/public.log vcombined;'';
+              reverse_proxy /ws* 127.0.0.1:${toString listenHttpPort}
+            '';
           };
         };
 

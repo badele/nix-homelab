@@ -172,15 +172,17 @@ in
   ############################################################################
   # Reverse Proxy
   ############################################################################
-  services.nginx.virtualHosts."${appDomain}" = {
-    forceSSL = true;
-    enableACME = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString listenPort}";
-      recommendedProxySettings = true;
-      proxyWebsockets = true;
-    };
-    extraConfig = "access_log /var/log/nginx/public.log vcombined;";
+  services.caddy.virtualHosts."${appDomain}" = {
+    logFormat = ''
+      output file /var/log/caddy/public.log {
+        mode 0644
+      }
+      format json
+    '';
+
+    extraConfig = ''
+      reverse_proxy 127.0.0.1:${toString listenPort}
+    '';
   };
 
   networking.firewall.allowedTCPPorts = [

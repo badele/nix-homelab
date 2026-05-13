@@ -152,49 +152,47 @@ in
         ];
       };
 
-      services.nginx.virtualHosts = mkIf cfg.openFirewall {
+      services.caddy.virtualHosts = mkIf cfg.openFirewall {
         "${cfg.serviceDomain}" = {
-          # Use wildcard domain
-          useACMEHost = config.homelab.domain;
-          forceSSL = true;
+          logFormat = ''
+            output file /var/log/caddy/public.log {
+              mode 0644
+            }
+            format json
+          '';
 
-          locations."/" = {
-            proxyPass = "http://127.0.0.1:${toString listenHttpPort}";
-            recommendedProxySettings = true;
-            proxyWebsockets = true;
+          extraConfig = ''
+            reverse_proxy 127.0.0.1:${toString listenHttpPort}
 
-            # Security headers
-            extraConfig = ''
-              # Force HTTPS (for 1 year)
-              add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+            header {
+              # Force HTTPS for one year.
+              Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 
-              # XSS and clickjacking protection
-              add_header X-Frame-Options "SAMEORIGIN" always;
+              # XSS and clickjacking protection.
+              X-Frame-Options "SAMEORIGIN"
 
-              # No execution of untrusted MIME types
-              add_header X-Content-Type-Options "nosniff" always;
+              # Prevent execution of untrusted MIME types.
+              X-Content-Type-Options "nosniff"
 
-              # Send only domain with URL referer
-              add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+              # Send only the origin as referrer for cross-origin requests.
+              Referrer-Policy "strict-origin-when-cross-origin"
 
-              # Disable all unused browser features for better privacy
-              add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+              # Disable unused browser features for better privacy.
+              Permissions-Policy "geolocation=(), microphone=(), camera=()"
 
-              # Allow only specific sources to load content (CSP)
-              # Shaarli needs 'unsafe-inline' for inline scripts/styles
-              add_header Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: https:; media-src 'self' blob: https:; connect-src 'self' https:; frame-ancestors 'self';" always;
+              # Allow only specific sources to load content.
+              # Shaarli needs 'unsafe-inline' for inline scripts/styles.
+              Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: https:; media-src 'self' blob: https:; connect-src 'self' https:; frame-ancestors 'self';"
 
-              # Modern CORS headers
-              add_header Cross-Origin-Opener-Policy "same-origin" always;
-              add_header Cross-Origin-Resource-Policy "same-origin" always;
-              add_header Cross-Origin-Embedder-Policy "require-corp" always;
+              # Modern cross-origin isolation headers.
+              Cross-Origin-Opener-Policy "same-origin"
+              Cross-Origin-Resource-Policy "same-origin"
+              Cross-Origin-Embedder-Policy "require-corp"
 
-              # Cross-domain policy
-              add_header X-Permitted-Cross-Domain-Policies "none" always;
-            '';
-          };
-
-          extraConfig = ''access_log /var/log/nginx/public.log vcombined;'';
+              # Cross-domain policy.
+              X-Permitted-Cross-Domain-Policies "none"
+            }
+          '';
         };
       };
 

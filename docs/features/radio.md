@@ -21,7 +21,7 @@
       </tr>
       <tr>
         <th>Version</th>
-        <td>20250708</td>
+        <td>20260407</td>
       </tr>
       <tr>
         <th>Site link</th>

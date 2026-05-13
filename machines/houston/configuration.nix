@@ -12,7 +12,6 @@ in
     # see ./modules/flake-module.nix
     self.nixosModules.server
     self.nixosModules.hardware-hetzner-cloud
-    self.inputs.srvos.nixosModules.mixins-nginx
 
     # Default shared configuration for the clan machines.
     ../../modules/shared.nix
@@ -75,6 +74,8 @@ in
       acme.enable = true;
       acme.email = config.homelab.domainEmailAdmin;
       acme.dnsProvider = "hetzner";
+
+      caddy.enable = true;
 
       homepage-dashboard.enable = true;
       homepage-dashboard.openFirewall = true;

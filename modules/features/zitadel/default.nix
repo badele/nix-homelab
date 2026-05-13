@@ -285,27 +285,20 @@ in
           };
         };
 
-        # Enable ZITADEL in TLS mode with nginx reverse proxy if openFirewall is enabled
+        # Enable ZITADEL in TLS mode with caddy reverse proxy if openFirewall is enabled
         security.acme.acceptTerms = mkIf cfg.openFirewall true;
-        services.nginx.virtualHosts = mkIf cfg.openFirewall {
+        services.caddy.virtualHosts = mkIf cfg.openFirewall {
           "${cfg.serviceDomain}" = {
-            # Use wildcard domain
-            useACMEHost = config.homelab.domain;
-            forceSSL = true;
-
-            # HTTP/2 is required for gRPC support
-            http2 = true;
-
-            locations."/" = {
-              # Use grpc_pass for ZITADEL (serves both gRPC and HTTP via h2c)
-              extraConfig = ''
-                grpc_pass grpc://127.0.0.1:${toString listenZitadelPort};
-                grpc_set_header Host $host;
-              '';
-            };
+            logFormat = ''
+              output file /var/log/caddy/public.log {
+                mode 0644
+              }
+              format json
+            '';
 
             extraConfig = ''
-              access_log /var/log/nginx/public.log vcombined;
+              # ZITADEL serves gRPC and HTTP over h2c.
+              reverse_proxy h2c://127.0.0.1:${toString listenZitadelPort}
             '';
           };
         };

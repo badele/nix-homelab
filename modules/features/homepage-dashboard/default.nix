@@ -562,21 +562,20 @@ in
         #     "cat $(systemctl cat ${appName} | grep ExecStart= | grep -oP '(?<=--config )\\S+')";
         # };
 
-        # Enable blocky in TLS mode with nginx reverse proxy if openFirewall is enabled
+        # Enable homepage-dashboard in TLS mode with caddy reverse proxy if openFirewall is enabled
 
-        services.nginx.virtualHosts = mkIf cfg.openFirewall {
+        services.caddy.virtualHosts = mkIf cfg.openFirewall {
           "${cfg.serviceDomain}" = {
+            logFormat = ''
+              output file /var/log/caddy/public.log {
+                mode 0644
+              }
+              format json
+            '';
 
-            # Use wildcard domain
-            useACMEHost = config.homelab.domain;
-            forceSSL = true;
-
-            locations."/" = {
-              proxyPass = "http://127.0.0.1:${toString listenHttpPort}";
-              recommendedProxySettings = true;
-              proxyWebsockets = true;
-            };
-            extraConfig = ''access_log /var/log/nginx/public.log vcombined;'';
+            extraConfig = ''
+              reverse_proxy 127.0.0.1:${toString listenHttpPort}
+            '';
           };
         };
       })

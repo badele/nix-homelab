@@ -21,7 +21,7 @@ Voici une liste des applications ou services que nix-homelab propose
   <tbody>
     <tr>
       <td align="center">
-        <img src="https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/lets-encrypt.webp" width="48" height="48" alt="ACME"/>
+        <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/lets-encrypt.webp" width="48" height="48" alt="ACME"/>
       </td>
       <td>
         <a href="/docs/features/acme.md">ACME 📚</a>
@@ -54,13 +54,24 @@ Voici une liste des applications ou services que nix-homelab propose
     </tr>
     <tr>
       <td align="center">
+        <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/caddy.webp" width="48" height="48" alt="Caddy"/>
+      </td>
+      <td>
+        <a href="/docs/features/caddy.md">Caddy 📚</a>
+      </td>
+      <td>nixos</td>
+      <td>2.11.2</td>
+      <td>Fast and extensible multi-platform HTTP/1-2-3 web server with automatic HTTPS</td>
+    </tr>
+    <tr>
+      <td align="center">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/goaccess.png" width="48" height="48" alt="GoAccess"/>
       </td>
       <td>
         <a href="/docs/features/goaccess.md">GoAccess 📚</a>
       </td>
       <td>nixos</td>
-      <td>1.9.4</td>
+      <td>1.10.2</td>
       <td>Real-time web log analyzer and interactive viewer that runs in a terminal in *nix systems</td>
     </tr>
     <tr>
@@ -82,7 +93,7 @@ Voici une liste des applications ou services que nix-homelab propose
         <a href="/docs/features/tailscale.md">Tailscale 📚</a>
       </td>
       <td>nixos</td>
-      <td>1.96.3</td>
+      <td>1.96.5</td>
       <td>Node agent for Tailscale, a mesh VPN built on WireGuard</td>
     </tr>
     <tr>
@@ -163,7 +174,7 @@ Voici une liste des applications ou services que nix-homelab propose
         <a href="/docs/features/miniflux.md">Miniflux 📚</a>
       </td>
       <td>nixos</td>
-      <td>2.2.18</td>
+      <td>2.2.19</td>
       <td>Minimalist and opinionated feed reader</td>
     </tr>
     <tr>
@@ -174,7 +185,7 @@ Voici une liste des applications ou services que nix-homelab propose
         <a href="/docs/features/radio.md">Radio 📚</a>
       </td>
       <td>nixos</td>
-      <td>20250708</td>
+      <td>20260407</td>
       <td>Internet Radio</td>
     </tr>
     <tr>
@@ -201,13 +212,13 @@ Voici une liste des applications ou services que nix-homelab propose
     </tr>
     <tr>
       <td align="center">
-        <img src="https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/wastebin.webp" width="48" height="48" alt="Wastebin"/>
+        <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/wastebin.webp" width="48" height="48" alt="Wastebin"/>
       </td>
       <td>
         <a href="https://github.com/matze/wastebin">Wastebin</a>
       </td>
       <td>nixos</td>
-      <td>3.4.0</td>
+      <td>3.6.1</td>
       <td>Pastebin service</td>
     </tr>
   </tbody>
@@ -244,7 +255,7 @@ Voici une liste des applications ou services que nix-homelab propose
         <a href="https://grafana.com">Grafana</a>
       </td>
       <td>nixos</td>
-      <td>12.4.1</td>
+      <td>13.0.1</td>
       <td>Gorgeous metric viz, dashboards & editors for Graphite, InfluxDB & OpenTSDB</td>
     </tr>
     <tr>
@@ -255,7 +266,7 @@ Voici une liste des applications ou services que nix-homelab propose
         <a href="https://gethomepage.dev">Homepage</a>
       </td>
       <td>nixos</td>
-      <td>1.10.1</td>
+      <td>1.12.3</td>
       <td>Highly customisable dashboard with Docker and service API integrations</td>
     </tr>
     <tr>
@@ -266,7 +277,7 @@ Voici une liste des applications ou services que nix-homelab propose
         <a href="https://victoriametrics.com/">Victoriametrics</a>
       </td>
       <td>nixos</td>
-      <td>1.138.0</td>
+      <td>1.142.0</td>
       <td>Fast, cost-effective and scalable time series database, long-term remote storage for Prometheus</td>
     </tr>
   </tbody>

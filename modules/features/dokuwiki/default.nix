@@ -167,59 +167,63 @@ in
         ];
       };
 
-      # Nginx configuration
-      services.nginx.virtualHosts = mkIf cfg.openFirewall {
+      # Caddy configuration
+      services.caddy.virtualHosts = mkIf cfg.openFirewall {
         "${cfg.serviceDomain}" = {
-          # Use wildcard domain
-          useACMEHost = config.homelab.domain;
-          forceSSL = true;
+          logFormat = ''
+            output file /var/log/caddy/public.log {
+              mode 0644
+            }
+            format json
+          '';
 
-          locations."/" = {
-            proxyPass = internalURL;
-            recommendedProxySettings = true;
-            proxyWebsockets = true;
+          extraConfig = ''
+            # URL rewriting for DokuWiki clean URLs.
+            @media path_regexp media ^/_media/(.*)$
+            rewrite @media /lib/exe/fetch.php?media={re.media.1}
 
-            extraConfig = ''
-              # URL rewriting for DokuWiki
-              # This allows clean URLs like /wiki/page instead of /doku.php?id=wiki:page
-              rewrite ^/_media/(.*)              /lib/exe/fetch.php?media=$1  last;
-              rewrite ^/_detail/(.*)             /lib/exe/detail.php?media=$1 last;
-              rewrite ^/_export/([^/]+)/(.*)     /doku.php?do=export_$1&id=$2 last;
-              rewrite ^/(?!lib/|_media|_detail|_export|doku\.php|feed\.php|install\.php)([^\?]*)(\?(.*))?$ /doku.php?id=$1&$3 last;
+            @detail path_regexp detail ^/_detail/(.*)$
+            rewrite @detail /lib/exe/detail.php?media={re.detail.1}
 
-              ##############################
-              # Service Security Headers
-              ##############################
-              # Force HTTPS (for 1 year)
-              add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+            @export path_regexp export ^/_export/([^/]+)/(.*)$
+            rewrite @export /doku.php?do=export_{re.export.1}&id={re.export.2}
 
-              # XSS and clickjacking protection
-              add_header X-Frame-Options "SAMEORIGIN" always;
+            @clean {
+              not path /lib/* /_media/* /_detail/* /_export/* /doku.php* /feed.php* /install.php*
+              path_regexp clean ^/(.*)$
+            }
+            rewrite @clean /doku.php?id={re.clean.1}
 
-              # No execution of untrusted MIME types
-              add_header X-Content-Type-Options "nosniff" always;
+            reverse_proxy ${internalURL}
 
-              # Send only domain with URL referer
-              add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+            header {
+              # Force HTTPS for one year.
+              Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 
-              # Disable all unused browser features for better privacy
-              add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+              # XSS and clickjacking protection.
+              X-Frame-Options "SAMEORIGIN"
 
-              # Allow only specific sources to load content (CSP)
-              # Note: DokuWiki needs 'unsafe-inline' for inline scripts/styles and CDN access
-              # Relaxed CSP for DokuWiki compatibility with plugins and OAuth
-              add_header Content-Security-Policy "default-src 'self'; font-src 'self' data: https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; img-src 'self' data: https: http:; media-src 'self' blob: https:; connect-src 'self' https: wss:; frame-ancestors 'self';" always;
+              # Prevent execution of untrusted MIME types.
+              X-Content-Type-Options "nosniff"
 
-              # Modern CORS headers (relaxed for OAuth flows)
-              add_header Cross-Origin-Opener-Policy "same-origin-allow-popups" always;
-              add_header Cross-Origin-Resource-Policy "cross-origin" always;
+              # Send only the origin as referrer for cross-origin requests.
+              Referrer-Policy "strict-origin-when-cross-origin"
 
-              # Cross-domain policy
-              add_header X-Permitted-Cross-Domain-Policies "none" always;
-            '';
-          };
+              # Disable unused browser features for better privacy.
+              Permissions-Policy "geolocation=(), microphone=(), camera=()"
 
-          extraConfig = ''access_log /var/log/nginx/public.log vcombined;'';
+              # Allow only specific sources to load content.
+              # DokuWiki needs 'unsafe-inline' and CDN access for plugins and OAuth.
+              Content-Security-Policy "default-src 'self'; font-src 'self' data: https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; img-src 'self' data: https: http:; media-src 'self' blob: https:; connect-src 'self' https: wss:; frame-ancestors 'self';"
+
+              # Modern cross-origin isolation headers relaxed for OAuth flows.
+              Cross-Origin-Opener-Policy "same-origin-allow-popups"
+              Cross-Origin-Resource-Policy "cross-origin"
+
+              # Cross-domain policy.
+              X-Permitted-Cross-Domain-Policies "none"
+            }
+          '';
         };
       };
 

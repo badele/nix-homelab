@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   hass_port = 8123;
   hass_version = "2023.2.4";
@@ -34,8 +39,7 @@ let
   '';
 
 in
-lib.mkIf (roleEnabled)
-{
+lib.mkIf (roleEnabled) {
 
   sops.secrets."home-assistant" = {
     restartUnits = [ "home-assistant.service" ];
@@ -67,35 +71,21 @@ lib.mkIf (roleEnabled)
     };
   };
 
-  # Nginx reverses proxy
-  services.nginx.enable = true;
-  services.nginx.virtualHosts."hass.${config.homelab.domain}" = {
-    # Use wildcard domain
-    useACMEHost = config.homelab.domain;
-    forceSSL = true;
-
-    locations."/" = {
-      extraConfig = ''
-        proxy_pass http://127.0.0.1:${toString hass_port};
-        proxy_set_header   X-Real-IP $remote_addr;
-        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header   Host $host;
-        proxy_http_version 1.1;
-        proxy_set_header   Upgrade $http_upgrade;
-        proxy_set_header   Connection "upgrade";
-        proxy_buffering off;
-      '';
-    };
+  # Caddy reverse proxy
+  services.caddy.virtualHosts."hass.${config.homelab.domain}" = {
+    logFormat = ''
+      output file /var/log/caddy/public.log {
+        mode 0644
+      }
+      format json
+    '';
+    extraConfig = ''
+      reverse_proxy 127.0.0.1:${toString hass_port} {
+        header_up X-Real-IP {remote_host}
+      }
+    '';
   };
 }
-
-
-
-
-
-
-
-
 
 # services.home-assistant = {
 # enable = roleEnabled;
@@ -166,18 +156,6 @@ lib.mkIf (roleEnabled)
 # };
 # };
 
-# services.nginx.enable = true;
-# services.nginx.virtualHosts."hass.${config.homelab.domain}" = {
-# # Use wildcard domain
-# useACMEHost = config.homelab.domain;
-# forceSSL = true;
-
-# locations."/" = {
-# extraConfig = ''
-#         proxy_pass http://127.0.0.1:${toString cfg.config.http.server_port};
-#         proxy_set_header Host $host;
-#         proxy_set_header Upgrade $http_upgrade;
-#         proxy_set_header Connection $connection_upgrade;
-#       '';
-# };
-# };
+# services.caddy.virtualHosts."hass.${config.homelab.domain}".extraConfig = ''
+#   reverse_proxy 127.0.0.1:${toString cfg.config.http.server_port}
+# '';
