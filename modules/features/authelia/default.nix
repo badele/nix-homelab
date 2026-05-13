@@ -19,7 +19,7 @@ let
   appUrl = "https://www.authelia.com/";
   appPinnedVersion = pkgs.${appName}.version;
   deprecatedMessage = ''
-    Migrated from Authelia to Authentik. While Authentik requires some manual configuration, it offers more features and better integration capabilities.
+    Migrated to Authentik. While Authentik requires some manual configuration, it offers more features and better integration capabilities.
     // https://github.com/badele/nix-homelab/docs/features/authentik.md
   '';
 

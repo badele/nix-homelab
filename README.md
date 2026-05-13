@@ -80,7 +80,7 @@ All Available homelab features :
       </a>
     </td>
     <td align="center" width="16%">
-      <a href="/docs/all-features.md#core-services" title="The authentication glue you need. ">
+      <a href="/docs/all-features.md#deprecated-services" title="The authentication glue you need. ">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/authentik.png" width="48" height="48" alt="authentik"/>
         <br/>authentik
       </a>

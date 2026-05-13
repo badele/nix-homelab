@@ -32,17 +32,6 @@ Voici une liste des applications ou services que nix-homelab propose
     </tr>
     <tr>
       <td align="center">
-        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/authentik.png" width="48" height="48" alt="authentik"/>
-      </td>
-      <td>
-        <a href="/docs/features/authentik.md">authentik 📚</a>
-      </td>
-      <td>nixos</td>
-      <td>2025.10.12</td>
-      <td>The authentication glue you need. </td>
-    </tr>
-    <tr>
-      <td align="center">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/blocky.png" width="48" height="48" alt="Blocky"/>
       </td>
       <td>
@@ -309,8 +298,22 @@ Voici une liste des applications ou services que nix-homelab propose
       <td>Core Services</td>
       <td>nixos</td>
       <td>Single Sign-On multi-factor portal for web apps</td>
-      <td><em>Migrated from Authelia to Authentik. While Authentik requires some manual configuration, it offers more features and better integration capabilities.
+      <td><em>Migrated to Authentik. While Authentik requires some manual configuration, it offers more features and better integration capabilities.
 // https://github.com/badele/nix-homelab/docs/features/authentik.md
+</em></td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/authentik.png" width="48" height="48" alt="authentik"/>
+      </td>
+      <td>
+        <a href="/docs/features/authentik.md">authentik 📚</a>
+      </td>
+      <td>Core Services</td>
+      <td>nixos</td>
+      <td>The authentication glue you need. </td>
+      <td><em>Migrated to Zitadel. I migrated from Authentik to Zitadel because I encountered a migration issue from version 2025.10 to 2026.02. I found it unacceptable not to be able to migrate from a version only 4 months old (see the issue → [https://github.com/goauthentik/authentik/issues/20634](https://github.com/goauthentik/authentik/issues/20634)).
+// https://github.com/badele/nix-homelab/docs/features/zitadel.md
 </em></td>
     </tr>
     <tr>

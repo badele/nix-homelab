@@ -2,11 +2,11 @@
 
 <div class="feature-detail">
   <h1 id="caddy">
-    <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/caddy.png" width="64" height="64" alt="Caddy" style="vertical-align: middle; margin-right: 10px;"/>
+    <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/caddy.webp" width="64" height="64" alt="Caddy" style="vertical-align: middle; margin-right: 10px;"/>
     Caddy
   </h1>
   <h2>Basic Information</h2>
-  <p>Fast and extensible web server with automatic HTTPS</p>
+  <p>Fast and extensible multi-platform HTTP/1-2-3 web server with automatic HTTPS</p>
   <table>
     <tbody>
       <tr>
@@ -25,7 +25,7 @@
       </tr>
       <tr>
         <th>Site link</th>
-        <td><a href="https://caddyserver.com/">https://caddyserver.com/</a></td>
+        <td><a href="https://caddyserver.com">https://caddyserver.com</a></td>
       </tr>
       <tr>
         <th>Nix Homelab Module</th>
