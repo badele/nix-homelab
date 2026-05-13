@@ -13,7 +13,7 @@ let
   appName = "radio";
   appDisplayName = "Radio";
   appCategory = "Essentials";
-  appIcon = "https://radio.0cx.de/static/parrot.gif";
+  appIcon = "https://raw.githubusercontent.com/pinpox/radio/4ebb907732a165dfd80b4147884536add4ee1384/static/icon-192.png";
   appPlatform = "nixos";
 
   cfg = config.homelab.features.${appName};
