@@ -9,7 +9,6 @@ in
 {
   imports = [
     self.nixosModules.server
-    self.inputs.srvos.nixosModules.mixins-nginx
 
     # Default configuration for the clan machines.
     ./disko.nix
@@ -44,6 +43,8 @@ in
       acme.enable = true;
       acme.email = config.homelab.domainEmailAdmin;
       acme.dnsProvider = "hetzner";
+
+      caddy.enable = true;
 
       authentik.enable = true;
       authentik.openFirewall = true;

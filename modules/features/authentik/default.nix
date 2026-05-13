@@ -23,7 +23,7 @@ let
   appUrl = "https://github.com/goauthentik/authentik";
   appPinnedVersion = "2025.10.12";
   deprecatedMessage = ''
-    Migrated from Authentik to Zitadel. I migrated from Authentik to Zitadel because I encountered a migration issue from version 2025.10 to 2026.02. I found it unacceptable not to be able to migrate from a version only 4 months old (see the issue → [https://github.com/goauthentik/authentik/issues/20634](https://github.com/goauthentik/authentik/issues/20634)).
+    Migrated to Zitadel. I migrated from Authentik to Zitadel because I encountered a migration issue from version 2025.10 to 2026.02. I found it unacceptable not to be able to migrate from a version only 4 months old (see the issue → [https://github.com/goauthentik/authentik/issues/20634](https://github.com/goauthentik/authentik/issues/20634)).
     // https://github.com/badele/nix-homelab/docs/features/zitadel.md
   '';
 
@@ -94,6 +94,7 @@ in
             url = appUrl;
             pinnedVersion = appPinnedVersion;
             serviceURL = exposedURL;
+            deprecated = deprecatedMessage;
           };
 
         };
@@ -202,52 +203,47 @@ in
           settings = cfg.settings;
         };
 
-        # Enable authentik in TLS mode with nginx reverse proxy if openFirewall is enabled
+        # Enable authentik in TLS mode with caddy reverse proxy if openFirewall is enabled
         security.acme.acceptTerms = mkIf cfg.openFirewall true;
-        services.nginx.virtualHosts = mkIf cfg.openFirewall {
+        services.caddy.virtualHosts = mkIf cfg.openFirewall {
           "${cfg.serviceDomain}" = {
-            # Use wildcard domain
-            useACMEHost = config.homelab.domain;
-            forceSSL = true;
-
-            locations."/" = {
-              proxyPass = "http://127.0.0.1:${toString listenAuthentikPort}";
-              recommendedProxySettings = true;
-              proxyWebsockets = true;
-
-              # Security headers
-              extraConfig = ''
-                # Force HTTPS (for 1 year)
-                add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
-
-                # XSS and clickjacking protection
-                add_header X-Frame-Options "SAMEORIGIN" always;
-
-                # No execution of untrusted MIME types
-                add_header X-Content-Type-Options "nosniff" always;
-
-                # Send only domain with URL referer
-                add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-
-                # Disable all unused browser features for better privacy
-                add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
-
-                # Allow only specific sources to load content (CSP)
-                # add_header Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob: https:; connect-src 'self' https:;" always;
-                add_header Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; img-src 'self' data:; media-src 'self' blob: http: https:; connect-src 'self' http: https: ws: wss:;" always;
-
-                # Modern CORS headers
-                add_header Cross-Origin-Opener-Policy "same-origin-allow-popups" always;
-                add_header Cross-Origin-Resource-Policy "cross-origin" always;
-                add_header Cross-Origin-Embedder-Policy "unsafe-none" always;
-
-                # Cross-domain policy
-                add_header X-Permitted-Cross-Domain-Policies "none" always;
-              '';
-            };
+            logFormat = ''
+              output file /var/log/caddy/public.log {
+                mode 0644
+              }
+              format json
+            '';
 
             extraConfig = ''
-              access_log /var/log/nginx/public.log vcombined;
+              reverse_proxy 127.0.0.1:${toString listenAuthentikPort}
+
+              header {
+                # Force HTTPS for one year.
+                Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+                # XSS and clickjacking protection.
+                X-Frame-Options "SAMEORIGIN"
+
+                # Prevent execution of untrusted MIME types.
+                X-Content-Type-Options "nosniff"
+
+                # Send only the origin as referrer for cross-origin requests.
+                Referrer-Policy "strict-origin-when-cross-origin"
+
+                # Disable unused browser features for better privacy.
+                Permissions-Policy "geolocation=(), microphone=(), camera=()"
+
+                # Allow only specific sources to load content.
+                Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; img-src 'self' data:; media-src 'self' blob: http: https:; connect-src 'self' http: https: ws: wss:;"
+
+                # Modern cross-origin isolation headers.
+                Cross-Origin-Opener-Policy "same-origin-allow-popups"
+                Cross-Origin-Resource-Policy "cross-origin"
+                Cross-Origin-Embedder-Policy "unsafe-none"
+
+                # Cross-domain policy.
+                X-Permitted-Cross-Domain-Policies "none"
+              }
             '';
           };
         };

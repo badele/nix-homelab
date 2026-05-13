@@ -172,47 +172,41 @@ in
           environmentFile = config.clan.core.vars.generators.${appName}.files."envfile".path;
         };
 
-        # Enable lldap in TLS mode with nginx reverse proxy if openFirewall is enabled
+        # Enable lldap in TLS mode with caddy reverse proxy if openFirewall is enabled
 
-        services.nginx.virtualHosts = mkIf cfg.openFirewall {
+        services.caddy.virtualHosts = mkIf cfg.openFirewall {
           "${cfg.serviceDomain}" = {
-            # Use wildcard domain
-            useACMEHost = config.homelab.domain;
-            forceSSL = true;
-
-            locations."/" = {
-              proxyPass = "http://127.0.0.1:${toString listenHttpPort}";
-              recommendedProxySettings = true;
-              proxyWebsockets = true;
-
-              # Security headers
-              extraConfig = ''
-                # Force HTTPS (for 1 year)
-                add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
-
-                # XSS and clickjacking protection
-                add_header X-Frame-Options "SAMEORIGIN" always;
-
-                # No execution of untrusted MIME types
-                add_header X-Content-Type-Options "nosniff" always;
-
-                # Send only domain with URL referer
-
-
-                add_header Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; img-src 'self' data:; media-src 'self' blob: https:; connect-src 'self' https:;" always;
-
-                # Modern CORS headers
-                add_header Cross-Origin-Opener-Policy "same-origin" always;
-                add_header Cross-Origin-Resource-Policy "same-origin" always;
-                add_header Cross-Origin-Embedder-Policy "require-corp" always;
-
-                # Cross-domain policy
-                add_header X-Permitted-Cross-Domain-Policies "none" always;
-              '';
-            };
+            logFormat = ''
+              output file /var/log/caddy/public.log {
+                mode 0644
+              }
+              format json
+            '';
 
             extraConfig = ''
-              access_log /var/log/nginx/public.log vcombined;
+              reverse_proxy 127.0.0.1:${toString listenHttpPort}
+
+              header {
+                # Force HTTPS for one year.
+                Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+                # XSS and clickjacking protection.
+                X-Frame-Options "SAMEORIGIN"
+
+                # Prevent execution of untrusted MIME types.
+                X-Content-Type-Options "nosniff"
+
+                # Allow only specific sources to load content.
+                Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; img-src 'self' data:; media-src 'self' blob: https:; connect-src 'self' https:;"
+
+                # Modern cross-origin isolation headers.
+                Cross-Origin-Opener-Policy "same-origin"
+                Cross-Origin-Resource-Policy "same-origin"
+                Cross-Origin-Embedder-Policy "require-corp"
+
+                # Cross-domain policy.
+                X-Permitted-Cross-Domain-Policies "none"
+              }
             '';
           };
         };

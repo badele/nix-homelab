@@ -140,31 +140,15 @@ lib.mkIf (roleEnabled) {
   # Check if host alias is defined in homelab.json alias section
   warnings = lib.optional aliasdefined " No `${alias}` alias defined in alias section ${config.networking.hostName}.dnsalias [ ${toString config.homelab.currentHost.dnsalias} ] in `homelab.json` file";
 
-  services.nginx.enable = true;
-  services.nginx.virtualHosts."${alias}.${config.homelab.domain}" = {
-    # Use wildcard domain
-    useACMEHost = config.homelab.domain;
-    forceSSL = true;
-
-    locations."/" = {
-      extraConfig = ''
-        proxy_pass http://127.0.0.1:${toString cfg.settings.frontend.port};
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      '';
-    };
-
-    # Websocket
-    locations."/api" = {
-      extraConfig = ''
-        proxy_pass http://127.0.0.1:${toString cfg.settings.frontend.port}/api;
-        proxy_set_header Host $host;
-
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-      '';
-    };
+  services.caddy.virtualHosts."${alias}.${config.homelab.domain}" = {
+    logFormat = ''
+      output file /var/log/caddy/public.log {
+        mode 0644
+      }
+      format json
+    '';
+    extraConfig = ''
+      reverse_proxy 127.0.0.1:${toString cfg.settings.frontend.port}
+    '';
   };
 }

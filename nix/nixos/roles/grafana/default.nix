@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   roleName = "grafana";
   roleEnabled = builtins.elem roleName config.homelab.currentHost.roles;
@@ -13,8 +18,7 @@ let
     '';
   };
 in
-lib.mkIf (roleEnabled)
-{
+lib.mkIf (roleEnabled) {
   networking.firewall.allowedTCPPorts = [
     config.services.grafana.settings.server.http_port
     80
@@ -49,25 +53,23 @@ lib.mkIf (roleEnabled)
       }
     ];
 
-    provision.dashboards.settings.providers = [{
-      name = "default";
-      options.path = grafana-dashboards;
-    }];
+    provision.dashboards.settings.providers = [
+      {
+        name = "default";
+        options.path = grafana-dashboards;
+      }
+    ];
   };
 
-  services.nginx.enable = true;
-  services.nginx.virtualHosts."${roleName}.${config.homelab.domain}" = {
-    # Use wildcard domain
-    useACMEHost = config.homelab.domain;
-    forceSSL = true;
-
-    locations."/" = {
-      extraConfig = ''
-        proxy_pass http://127.0.0.1:${toString config.services.grafana.settings.server.http_port};
-        proxy_set_header Host $host;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection $connection_upgrade;
-      '';
-    };
+  services.caddy.virtualHosts."${roleName}.${config.homelab.domain}" = {
+    logFormat = ''
+      output file /var/log/caddy/public.log {
+        mode 0644
+      }
+      format json
+    '';
+    extraConfig = ''
+      reverse_proxy 127.0.0.1:${toString config.services.grafana.settings.server.http_port}
+    '';
   };
 }

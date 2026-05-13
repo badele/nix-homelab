@@ -21,7 +21,7 @@
       </tr>
       <tr>
         <th>Version</th>
-        <td>4.39.12</td>
+        <td>4.39.19</td>
       </tr>
       <tr>
         <th>Site link</th>
@@ -35,7 +35,7 @@
   </table>
   <h2>⚠️ Deprecation Notice</h2>
   <div class="deprecation-notice">
-    <p><em>Migrated from Authelia to Authentik. While Authentik requires some manual configuration, it offers more features and better integration capabilities.
+    <p><em>Migrated to Authentik. While Authentik requires some manual configuration, it offers more features and better integration capabilities.
 // https://github.com/badele/nix-homelab/docs/features/authentik.md
 </em></p>
   </div>

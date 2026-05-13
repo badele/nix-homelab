@@ -204,32 +204,29 @@ lib.mkIf (roleEnabled) {
   # Check if host alias is defined in homelab.json alias section
   warnings = lib.optional aliasdefined "No `${alias}` alias defined in alias section ${config.networking.hostName}.dnsalias [ ${toString config.homelab.currentHost.dnsalias} ] in `homelab.json` file";
 
-  services.nginx.enable = true;
-  services.nginx.virtualHosts."${alias}.${config.homelab.domain}" = {
-    # Use wildcard domain
-    useACMEHost = config.homelab.domain;
-    forceSSL = true;
-
-    root = "${pkgs.smokeping}/htdocs";
-    extraConfig = ''
-      index smokeping.fcgi;
-      gzip off;
+  services.caddy.virtualHosts."${alias}.${config.homelab.domain}" = {
+    logFormat = ''
+      output file /var/log/caddy/public.log {
+        mode 0644
+      }
+      format json
     '';
+    extraConfig = ''
+      root * ${pkgs.smokeping}/htdocs
+      try_files {path} /smokeping.fcgi
 
-    locations."~ \\.fcgi$" = {
-      extraConfig = ''
-        fastcgi_intercept_errors on;
-        include ${pkgs.nginx}/conf/fastcgi_params;
-        fastcgi_param SCRIPT_FILENAME ${config.users.users.smokeping.home}/smokeping.fcgi;
-        fastcgi_pass unix:/run/fcgiwrap.sock;
-      '';
-    };
+      handle /cache/* {
+        root * /var/lib/smokeping
+        file_server
+      }
 
-    locations."/cache/" = {
-      extraConfig = ''
-        alias /var/lib/smokeping/cache/;
-        gzip off;
-      '';
-    };
+      reverse_proxy *.fcgi unix//run/fcgiwrap.sock {
+        transport fastcgi {
+          env SCRIPT_FILENAME ${config.users.users.smokeping.home}/smokeping.fcgi
+        }
+      }
+
+      file_server
+    '';
   };
 }

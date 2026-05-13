@@ -19,7 +19,7 @@ let
   appUrl = "https://www.authelia.com/";
   appPinnedVersion = pkgs.${appName}.version;
   deprecatedMessage = ''
-    Migrated from Authelia to Authentik. While Authentik requires some manual configuration, it offers more features and better integration capabilities.
+    Migrated to Authentik. While Authentik requires some manual configuration, it offers more features and better integration capabilities.
     // https://github.com/badele/nix-homelab/docs/features/authentik.md
   '';
 
@@ -361,32 +361,24 @@ in
         };
       };
 
-      # Nginx configuration
-      services.nginx.virtualHosts = mkIf cfg.openFirewall {
+      # Caddy configuration
+      services.caddy.virtualHosts = mkIf cfg.openFirewall {
         "${cfg.serviceDomain}" = {
-          # Use wildcard or specific domain certificate
-          useACMEHost = config.homelab.domain;
-          forceSSL = true;
+          logFormat = ''
+            output file /var/log/caddy/public.log {
+              mode 0644
+            }
+            format json
+          '';
 
-          locations."/" = {
-            proxyPass = internalURL;
-            extraConfig = ''
-              proxy_set_header Host $host;
-              proxy_set_header X-Real-IP $remote_addr;
-              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-              proxy_set_header X-Forwarded-Proto $scheme;
-              proxy_set_header X-Forwarded-Host $http_host;
-              proxy_set_header X-Forwarded-Uri $request_uri;
-              proxy_set_header X-Forwarded-Ssl on;
-              proxy_redirect http:// https://;
-              proxy_http_version 1.1;
-              proxy_set_header Connection $connection_upgrade;
-              proxy_set_header Upgrade $http_upgrade;
-              proxy_cache_bypass $http_upgrade;
-            '';
-          };
-
-          extraConfig = "access_log /var/log/nginx/public.log vcombined;";
+          extraConfig = ''
+            reverse_proxy ${internalURL} {
+              header_up X-Real-IP {remote_host}
+              header_up X-Forwarded-Host {host}
+              header_up X-Forwarded-Uri {uri}
+              header_up X-Forwarded-Ssl on
+            }
+          '';
         };
       };
 

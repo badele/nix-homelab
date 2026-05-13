@@ -79,40 +79,10 @@ in
             domain = "*.${config.homelab.domain}";
             extraDomainNames = [ config.homelab.domain ];
             dnsProvider = cfg.dnsProvider;
-            group = config.services.nginx.group;
+            group = config.services.caddy.group;
             environmentFile = config.clan.core.vars.generators.acme-dns-01.files.envfile.path;
             dnsPropagationCheck = true;
           };
-        };
-
-      })
-
-      ########################################################################
-      # Hetzner DNS provider specific configuration
-      ########################################################################
-      (mkIf (cfg.enable && cfg.dnsProvider == "hetzner") {
-
-        # Begin hetzner acme config
-        clan.core.vars.generators.prompt_acme_api_key = {
-          prompts."acme_api_key" = {
-            description = "Please insert ${cfg.dnsProvider} API TOKEN";
-            persist = true;
-          };
-        };
-
-        clan.core.vars.generators.acme-dns-01 = {
-          files.envfile = {
-            owner = config.services.nginx.user;
-            group = config.services.nginx.group;
-          };
-
-          dependencies = [
-            "prompt_acme_api_key"
-          ];
-          script = ''
-            export APITOKEN=$(cat $in/prompt_acme_api_key/acme_api_key)
-            echo "HETZNER_API_TOKEN=$APITOKEN" > $out/envfile
-          '';
         };
 
       })

@@ -2,7 +2,7 @@
 
 <div class="feature-detail">
   <h1 id="acme">
-    <img src="https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/lets-encrypt.webp" width="64" height="64" alt="ACME" style="vertical-align: middle; margin-right: 10px;"/>
+    <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/lets-encrypt.webp" width="64" height="64" alt="ACME" style="vertical-align: middle; margin-right: 10px;"/>
     ACME
   </h1>
   <h2>Basic Information</h2>

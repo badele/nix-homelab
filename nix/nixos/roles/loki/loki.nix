@@ -4,8 +4,7 @@ let
   roleEnabled = builtins.elem roleName config.homelab.currentHost.roles;
   port_loki = 8084;
 in
-lib.mkIf (roleEnabled)
-{
+lib.mkIf (roleEnabled) {
   networking.firewall.allowedTCPPorts = [
     port_loki
   ];
@@ -34,16 +33,18 @@ lib.mkIf (roleEnabled)
       };
 
       schema_config = {
-        configs = [{
-          from = "2022-06-06";
-          store = "boltdb-shipper";
-          object_store = "filesystem";
-          schema = "v11";
-          index = {
-            prefix = "index_";
-            period = "24h";
-          };
-        }];
+        configs = [
+          {
+            from = "2022-06-06";
+            store = "boltdb-shipper";
+            object_store = "filesystem";
+            schema = "v11";
+            index = {
+              prefix = "index_";
+              period = "24h";
+            };
+          }
+        ];
       };
 
       storage_config = {
@@ -85,19 +86,15 @@ lib.mkIf (roleEnabled)
     };
   };
 
-  services.nginx.enable = true;
-  services.nginx.virtualHosts."${roleName}.${config.homelab.domain}" = {
-    # Use wildcard domain
-    useACMEHost = config.homelab.domain;
-    forceSSL = true;
-
-    locations."/" = {
-      extraConfig = ''
-        proxy_pass http://127.0.0.1:${toString port_loki};
-        proxy_set_header Host $host;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection $connection_upgrade;
-      '';
-    };
+  services.caddy.virtualHosts."${roleName}.${config.homelab.domain}" = {
+    logFormat = ''
+      output file /var/log/caddy/public.log {
+        mode 0644
+      }
+      format json
+    '';
+    extraConfig = ''
+      reverse_proxy 127.0.0.1:${toString port_loki}
+    '';
   };
 }

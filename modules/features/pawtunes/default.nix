@@ -166,48 +166,45 @@ in
           ];
         };
 
-        services.nginx.virtualHosts = mkIf cfg.openFirewall {
+        services.caddy.virtualHosts = mkIf cfg.openFirewall {
           "${cfg.serviceDomain}" = {
-            forceSSL = true;
-            enableACME = true;
-
-            locations."/" = {
-              proxyPass = "http://127.0.0.1:${toString listenHttpPort}";
-              recommendedProxySettings = true;
-              proxyWebsockets = true;
-
-              # Security headers
-              extraConfig = ''
-                # Force HTTPS (for 1 year)
-                add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
-
-                # XSS and clickjacking protection
-                add_header X-Frame-Options "SAMEORIGIN" always;
-
-                # No execution of untrusted MIME types
-                add_header X-Content-Type-Options "nosniff" always;
-
-                # Send only domain with URL referer
-                add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-
-                # Disable all unused browser features for better privacy
-                add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
-
-                # Allow only specific sources to load content (CSP)
-                add_header Content-Security-Policy "default-src 'self'; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob: http: https:; connect-src 'self' http: https:;" always;
-
-                # Modern CORS headers
-                add_header Cross-Origin-Opener-Policy "same-origin" always;
-                add_header Cross-Origin-Resource-Policy "same-origin" always;
-                add_header Cross-Origin-Embedder-Policy "require-corp" always;
-
-                # Cross-domain policy
-                add_header X-Permitted-Cross-Domain-Policies "none" always;
-              '';
-            };
+            logFormat = ''
+              output file /var/log/caddy/public.log {
+                mode 0644
+              }
+              format json
+            '';
 
             extraConfig = ''
-              access_log /var/log/nginx/public.log vcombined;
+              reverse_proxy 127.0.0.1:${toString listenHttpPort}
+
+              header {
+                # Force HTTPS for one year.
+                Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+                # XSS and clickjacking protection.
+                X-Frame-Options "SAMEORIGIN"
+
+                # Prevent execution of untrusted MIME types.
+                X-Content-Type-Options "nosniff"
+
+                # Send only the origin as referrer for cross-origin requests.
+                Referrer-Policy "strict-origin-when-cross-origin"
+
+                # Disable unused browser features for better privacy.
+                Permissions-Policy "geolocation=(), microphone=(), camera=()"
+
+                # Allow only specific sources to load content.
+                Content-Security-Policy "default-src 'self'; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob: http: https:; connect-src 'self' http: https:;"
+
+                # Modern cross-origin isolation headers.
+                Cross-Origin-Opener-Policy "same-origin"
+                Cross-Origin-Resource-Policy "same-origin"
+                Cross-Origin-Embedder-Policy "require-corp"
+
+                # Cross-domain policy.
+                X-Permitted-Cross-Domain-Policies "none"
+              }
             '';
           };
         };

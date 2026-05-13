@@ -17,7 +17,7 @@ let
   appPlatform = "nixos";
   appDescription = "Simple, secure and fast identity management platform";
   appUrl = "https://kanidm.com/";
-  appPinnedVersion = pkgs.kanidmWithSecretProvisioning_1_7.version;
+  appPinnedVersion = pkgs.kanidmWithSecretProvisioning_1_8.version;
   deprecatedMessage = ''
     While lightweight and performant, Kanidm requires manual configuration for some operations. Migrated to Authentik for better web UI.
   '';
@@ -173,28 +173,22 @@ in
         };
       };
 
-      # Nginx configuration
-      services.nginx.virtualHosts = mkIf cfg.openFirewall {
+      # Caddy configuration
+      services.caddy.virtualHosts = mkIf cfg.openFirewall {
         "${cfg.serviceDomain}" = {
-          # Use wildcard or specific domain certificate
-          useACMEHost = config.homelab.domain;
-          forceSSL = true;
+          logFormat = ''
+            output file /var/log/caddy/public.log {
+              mode 0644
+            }
+            format json
+          '';
 
-          locations."/" = {
-            proxyPass = internalURL;
-            extraConfig = ''
-              proxy_set_header Host $host;
-              proxy_set_header X-Real-IP $remote_addr;
-              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-              proxy_set_header X-Forwarded-Proto $scheme;
-              proxy_set_header X-Forwarded-Host $http_host;
-              proxy_http_version 1.1;
-              proxy_set_header Upgrade $http_upgrade;
-              proxy_set_header Connection $connection_upgrade;
-            '';
-          };
-
-          extraConfig = "access_log /var/log/nginx/public.log vcombined;";
+          extraConfig = ''
+            reverse_proxy ${internalURL} {
+              header_up X-Real-IP {remote_host}
+              header_up X-Forwarded-Host {host}
+            }
+          '';
         };
       };
 

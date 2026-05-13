@@ -1,17 +1,24 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
 let
   cfg = config.services.dashy;
   aliasdefined = !(builtins.elem cfg.alias config.homelab.currentHost.dnsalias);
-  configFile = pkgs.runCommand "conf.yml"
-    {
-      buildInputs = [ pkgs.yj ];
-      preferLocalBuild = true;
-    } ''
-    yj -jy < ${pkgs.writeText "config.json" (builtins.toJSON cfg.settings)} > $out
-  '';
+  configFile =
+    pkgs.runCommand "conf.yml"
+      {
+        buildInputs = [ pkgs.yj ];
+        preferLocalBuild = true;
+      }
+      ''
+        yj -jy < ${pkgs.writeText "config.json" (builtins.toJSON cfg.settings)} > $out
+      '';
 in
 {
   options.services.dashy = {
@@ -37,8 +44,7 @@ in
   config = mkIf cfg.enable {
 
     # Check if host alias is defined in homelab.json alias section
-    warnings =
-      lib.optional aliasdefined "No `${cfg.alias}` alias defined in alias section ${config.networking.hostName}.dnsalias [ ${toString config.homelab.currentHost.dnsalias} ] in `homelab.json` file";
+    warnings = lib.optional aliasdefined "No `${cfg.alias}` alias defined in alias section ${config.networking.hostName}.dnsalias [ ${toString config.homelab.currentHost.dnsalias} ] in `homelab.json` file";
 
     networking.firewall.allowedTCPPorts = [
       cfg.port
@@ -60,21 +66,17 @@ in
       };
     };
 
-    # Nginx reverses proxy
-    services.nginx.enable = true;
-    services.nginx.virtualHosts."${cfg.alias}.${config.homelab.domain}" = {
-      # Use wildcard domain
-      useACMEHost = config.homelab.domain;
-      forceSSL = true;
-
-      locations."/" = {
-        extraConfig = ''
-          proxy_pass http://127.0.0.1:${toString cfg.port};
-          proxy_set_header Host $host;
-          proxy_set_header X-Real-IP $remote_addr;
-          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        '';
-      };
+    # Caddy reverse proxy
+    services.caddy.virtualHosts."${cfg.alias}.${config.homelab.domain}" = {
+      logFormat = ''
+        output file /var/log/caddy/public.log {
+          mode 0644
+        }
+        format json
+      '';
+      extraConfig = ''
+        reverse_proxy 127.0.0.1:${toString cfg.port}
+      '';
     };
   };
 

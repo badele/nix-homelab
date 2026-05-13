@@ -33,6 +33,12 @@
       </tr>
     </tbody>
   </table>
+  <h2>⚠️ Deprecation Notice</h2>
+  <div class="deprecation-notice">
+    <p><em>Migrated to Zitadel. I migrated from Authentik to Zitadel because I encountered a migration issue from version 2025.10 to 2026.02. I found it unacceptable not to be able to migrate from a version only 4 months old (see the issue → [https://github.com/goauthentik/authentik/issues/20634](https://github.com/goauthentik/authentik/issues/20634)).
+// https://github.com/badele/nix-homelab/docs/features/zitadel.md
+</em></p>
+  </div>
 </div>
 
 <!-- END SECTION feature_informations -->
