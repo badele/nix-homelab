@@ -1,0 +1,117 @@
+local repo
+repo="$HOME/ghq/github.com/badele/nix-homelab"
+
+# Query attribute names at a given flake path and return one item per line.
+# Example input path: ".#nixosConfigurations.my-host.options"
+# This helper is used by compadd callers to build completion candidates.
+_nixos_flake_options_get_attrs() {
+  local path="$1"
+  local target="$path"
+
+  if [[ "$target" == .#* ]]; then
+    target="$repo${target#.}"
+  fi
+
+  @nix@ eval --no-warn-dirty --json "$target" \
+    --apply 'builtins.attrNames' \
+    2>/dev/null | @jq@ -r '.[]'
+}
+
+# Complete dotted option paths incrementally.
+# - base_path is the root options attrset we want to inspect.
+# - current is the current user token being completed.
+#
+# If current contains dots, we only expand the last segment and keep the
+# already typed prefix (e.g. "services.po" -> "services.postgresql", etc.).
+_nixos_flake_options_complete_options() {
+  local base_path="$1"
+  local current="$2"
+
+  local attr_prefix leaf_prefix path attrs
+
+  if [[ "$current" == *.* ]]; then
+    attr_prefix="${current%.*}"
+    leaf_prefix="${current##*.}"
+    path="${base_path}.${attr_prefix}"
+  else
+    attr_prefix=""
+    leaf_prefix="$current"
+    path="$base_path"
+  fi
+
+  attrs=("${(@f)$(_nixos_flake_options_get_attrs "$path")}")
+
+  if [[ -n "$attr_prefix" ]]; then
+    attrs=("${(@)attrs/#/${attr_prefix}.}")
+  fi
+
+  compadd -- "${attrs[@]}"
+}
+
+# Main completion function registered via compdef in zsh.nix.
+#
+# Important Zsh completion variables used here:
+# - words: array of command line tokens for the current completion context.
+#          words[1] is the command name, words[2] the first argument, etc.
+# - CURRENT: 1-based index in `words` of the token currently being completed.
+# - compadd: Zsh builtin used to add completion candidates.
+#
+# Command shape (fixed arity):
+# - @nixos-flake-options host <hostname> <option>
+# - @nixos-flake-options home <hostname> <user> <option>
+_nixos_flake_options() {
+  local mode="${words[2]}"
+  case "$CURRENT" in
+
+    # Argument 2: mode (host|home)
+    2)
+      # Complete mode: "host" or "home".
+      compadd host home
+      return
+      ;;
+
+    # Argument 3: hostname
+    3)
+      case "$mode" in
+        host|home)
+          # Complete hostname from nixosConfigurations keys.
+          compadd -- "${(@f)$(_nixos_flake_options_get_attrs '.#nixosConfigurations')}"
+          return
+          ;;
+      esac
+      ;;
+
+    # Argument 4: host mode (option ) OR home mode (user)
+    4)
+      case "$mode" in
+        host)
+          # For host mode, argument 4 is the option path.
+          _nixos_flake_options_complete_options \
+            ".#nixosConfigurations.${words[3]}.options" \
+            "${words[4]}"
+          return
+          ;;
+
+        home)
+          # For home mode, argument 4 is the Home Manager username.
+          compadd -- "${(@f)$(
+            _nixos_flake_options_get_attrs \
+              ".#nixosConfigurations.${words[3]}.config.home-manager.users"
+          )}"
+          return
+          ;;
+      esac
+      ;;
+
+    # Argument 5:  home mode only (option)
+    5)
+      if [[ "$mode" == "home" ]]; then
+        # For home mode, argument 5 is the option path under the selected user.
+        _nixos_flake_options_complete_options \
+          ".#nixosConfigurations.${words[3]}.options.home-manager.users.${words[4]}" \
+          "${words[5]}"
+        return
+      fi
+      ;;
+  esac
+}
