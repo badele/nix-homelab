@@ -115,6 +115,40 @@ in
 
       initContent = ''
         ##############################################################################
+        # Auto completion
+        ##############################################################################
+
+        # Bind completions for user scripts named with an @ prefix.
+        # We scan PATH entries directly because the commands hash may be incomplete
+        # during shell startup.
+        typeset -A _seen_user_scripts
+
+        for path_dir in $path; do
+          [[ -d "$path_dir" ]] || continue
+
+          for script_path in "$path_dir"/@*(N); do
+            [[ -x "$script_path" && ! -d "$script_path" ]] || continue
+
+            cmd="''${script_path:t}"
+            [[ -z "''${_seen_user_scripts[$cmd]}" ]] || continue
+            _seen_user_scripts[$cmd]=1
+
+            base="''${cmd#@}"
+            completion_file="_''${base}"
+            completion_func="_''${base//-/_}"
+
+            for completion_dir in $fpath; do
+              completion_path="$completion_dir/$completion_file"
+              [[ -r "$completion_path" ]] || continue
+
+              source "$completion_path"
+              compdef "$completion_func" "$cmd"
+              break
+            done
+          done
+        done
+
+        ##############################################################################
         # keys binding
         ##############################################################################
 
