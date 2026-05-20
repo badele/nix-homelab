@@ -72,6 +72,18 @@ in
   #hardware.nvidia.package = boot.kernelPackages.nvidiaPackages.stable;
   #hardware.nvidia.modesetting.enable = true;
 
+  # Use compressed swap in RAM to reduce wear on the SSD and improve performance
+  zramSwap = {
+    enable = true;
+    algorithm = "zstd";
+    memoryPercent = 50;
+  };
+
+  services.netdata = {
+    enable = true;
+    package = pkgs.netdataCloud;
+  };
+
   ####################################
   # Network
   ####################################
