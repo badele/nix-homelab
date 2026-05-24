@@ -35,10 +35,6 @@
       inputs.srvos.nixosModules.mixins-telegraf
     ];
 
-    desktop.imports = [
-      ./desktop/wm/xorg/lightdm.nix
-    ];
-
     # Homelab common modules
     homelab =
       { lib, ... }:

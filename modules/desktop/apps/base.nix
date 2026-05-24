@@ -1,0 +1,6 @@
+{  ... }:
+{
+  imports = [
+    ./office.nix
+  ];
+}

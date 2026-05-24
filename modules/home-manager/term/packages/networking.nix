@@ -1,5 +1,16 @@
-{ self, pkgs, ... }:
 {
+  lib,
+  pkgs,
+  ...
+}:
+{
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (lib.getName pkg) [
+      "charles"
+      "burpsuite"
+    ];
+
   home.packages = with pkgs; [
     # Tools
     ipcalc # IP subnetcalculator

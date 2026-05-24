@@ -143,6 +143,7 @@
         rycee.firefox-addons.simple-translate # Translate
         rycee.firefox-addons.ublock-origin # addblocker
         rycee.firefox-addons.sponsorblock # block youtube sponsor
+        rycee.firefox-addons.auto-tab-discard # Auto discard inactive tabs
 
         # Install manually addons
         # On addon website, get download link of the addon (install/uninstall button)
@@ -179,14 +180,14 @@
         })
 
         # linkding, self-hosted bookmark manager
-        (rycee.firefox-addons.buildFirefoxXpiAddon rec {
-          pname = "linkding-extension-webextension";
-          version = "1.14.0";
-          addonId = "{61a05c39-ad45-4086-946f-32adb0a40a9d}";
-          url = "https://addons.mozilla.org/firefox/downloads/file/4449452/linkding_extension-${version}.xpi";
-          sha256 = "sha256-uORUU9Nmplslvk9Q59szaS9xk1SSV2hfT8K86zenB5w=";
-          meta = { };
-        })
+        # (rycee.firefox-addons.buildFirefoxXpiAddon rec {
+        #   pname = "linkding-extension-webextension";
+        #   version = "1.14.0";
+        #   addonId = "{61a05c39-ad45-4086-946f-32adb0a40a9d}";
+        #   url = "https://addons.mozilla.org/firefox/downloads/file/4449452/linkding_extension-${version}.xpi";
+        #   sha256 = "sha256-uORUU9Nmplslvk9Q59szaS9xk1SSV2hfT8K86zenB5w=";
+        #   meta = { };
+        # })
 
         # popupoff
         (rycee.firefox-addons.buildFirefoxXpiAddon rec {

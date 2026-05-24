@@ -5,6 +5,7 @@
 }:
 let
   houston_ipv4 = "91.99.130.127";
+  adminKey = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDsXvfr+qp9EtSfsNtLfp0mfrr/TMUk48RGjqRFXJEJwkpE2BDhjnBIjz/ijdNRfnwUQFE589y4L+eyG1SpJ5XD1Ia3lRPPK2ofA64h/tueS6HPBxcuQJtbZpZlcYqHFaXVxULIYqgF3VASqsZdUMMn55HfZzb1snUPgBNvsrFiuiVgIQZsrxxwtlBz+yh7cjRoyMC0QT/DPZELT29+QnSIC4CgRj9yiYZSgBxvxrWwLJvIxx87wN8xAo4dZQCIuVy55WcNd3VVW/cOVImpQKQw0NpyshUsBCHrPddNF0IU9kUBeBtVmWypYCOFi2zfaoa3aRjgkkpBmh1BCUN6XJxKb1Mde+wYzGHswTkiiHOv1iEmFjDgOmrr+Ad72Kd3J4+8ecuKqeN7TUopiLhcqwZSKIow5R1+xfxOI0K5JmPVNomurI8F0UOSgTHvz2hRREoBJ4pXFlhqYpv4J80IZpuJLhixWgm3ZUa8+CvAlaMCYOsrpFtB2d0uITOe540T4f9l1ngVVtj3FA8T/TXKY8gdHrxbj0C0whNT+yHKtaWHjXBEBgIfhjTvLGlo3F4RWr+Cko/zY9GSd7ACmT/nbQKSYwN77kqSMoeDVa3KFfCT1XCFBBvb9CrviFx+anb1nEeqAXYqWP0a3nqv1Vlvxn5QSPFCdFxex7K2kFObaniJiQ== cardno:18_150_451";
 
   borgUser = "u444061";
   borgHost = "${borgUser}.your-storagebox.de";
@@ -25,50 +26,161 @@ in
       name = "homelab";
       description = "My personal homelab";
     };
-
     inventory = {
-      machines = { };
+      ########################################################################
+      # Machines
+      ########################################################################
+
+      machines = {
+        airlock.tags = [
+          "desktop"
+          "wifi"
+        ];
+      };
 
       instances = {
-        # home-manager
-        # https://docs.clan.lol/guides/getting-started/add-user/#using-home-manager
-        badele-user = {
+
+        ########################################################################
+        # Users
+        ########################################################################
+        users-root = {
           module.name = "users";
 
-          roles.default.machines."gagarin" = { };
+          roles.default.tags = [ "nixos" ];
+          roles.default.settings = {
+            user = "root";
+            prompt = false; # Set to true if you want to be prompted
+            groups = [ ];
+          };
+        };
 
+        user-badele = {
+          module.name = "users";
+
+          roles.default.tags = {
+            "desktop" = { };
+          };
+
+          roles.default.tags."all" = { };
           roles.default.settings = {
             user = "badele";
-            groups = [
-              "audio"
-              "input"
-              "networkmanager"
-              "video"
-              "wheel"
+            share = true;
+            prompt = true;
+            openssh.authorizedKeys.keys = [
+              adminKey
             ];
           };
 
+        };
+
+        user-sadele = {
+          module.name = "users";
+
+          roles.default.machines = {
+            "airlock" = { };
+          };
+
+          roles.default.settings = {
+            user = "sadele";
+            share = true;
+            prompt = true;
+          };
+        };
+
+        user-loadele = {
+          module.name = "users";
+
+          roles.default.machines = {
+            "airlock" = { };
+          };
+
+          roles.default.settings = {
+            user = "loadele";
+            share = true;
+            prompt = true;
+          };
+        };
+
+        user-luadele = {
+          module.name = "users";
+
+          roles.default.machines = {
+            "airlock" = { };
+          };
+
+          roles.default.settings = {
+            user = "luadele";
+            share = true;
+            prompt = true;
+          };
+        };
+
+        ########################################################################
+        # Role & machines installation
+        ########################################################################
+        sshd-basic = {
+          module.name = "sshd";
+
+          roles.server.tags.all = { };
+          roles.server.settings = {
+            authorizedKeys = {
+              "admin-key" = adminKey;
+            };
+          };
+        };
+
+        base = {
+          module.name = "importer";
+          roles.default.tags = [ "all" ];
           roles.default.extraModules = [
-            ./../modules/users/badele/gagarin.nix
+            ../modules/base.nix
           ];
         };
+
+        desktop = {
+          module.name = "importer";
+          roles.default.tags = [ "desktop" ];
+          roles.default.extraModules = [
+            ../modules/desktop/apps/base.nix
+          ];
+        };
+
+        wm-kde = {
+          module.name = "importer";
+
+          roles.default.machines = {
+            "airlock" = { };
+          };
+
+          roles.default.extraModules = [
+            ../modules/desktop/wm/xorg/kde.nix
+          ];
+        };
+
+        # home-manager
+        # https://docs.clan.lol/guides/getting-started/add-user/#using-home-manager
+        # user-badele = {
+        #   module.name = "users";
+
+        #   roles.default.tags = [ "all" ];
+        #   roles.default.settings = {
+        #     user = "badele";
+        #     share = true;
+        #     openssh.authorizedKeys.keys = [
+        #       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ..."
+        #     ];
+        #   };
+        # };
+
+        # badele-user = {
+        #   module.name = "users";
+
+        #   roles.default.machines."gagarin" = { };
 
         # Docs: https://docs.clan.lol/reference/clanServices/emergency-access/
         # Set recovery password for emergency access to machine
         emergency-access = {
           roles.default.tags."all" = { };
-        };
-
-        # Docs: https://docs.clan.lol/reference/clanServices/users/
-        # Automatically generates and configures a password for the specified user account.
-        user-badele = {
-          module.name = "users";
-
-          roles.default.tags."all" = { };
-          roles.default.settings = {
-            user = "badele";
-            prompt = true;
-          };
         };
 
         # TODO: add postbackup to write to /var/logs/telegraf/borgbackup metric

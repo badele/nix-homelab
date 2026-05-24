@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
 
-  # Install the emacs configuration from this https://github.com/badele/idem#installation repository
+  # Install the emacs configuration from this https://github.com/badele/idem#quick-install repository
   programs.emacs.enable = true;
 
   services.emacs = {

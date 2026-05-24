@@ -49,7 +49,10 @@
     };
 
     # Color scheme
-    stylix.url = "github:danth/stylix";
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     crowdsec = {
       url = "git+https://codeberg.org/kampka/nix-flake-crowdsec.git";
@@ -90,6 +93,7 @@
       url = "github:pinpox/radio";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
   };
 
   outputs =
@@ -107,6 +111,7 @@
         ./machines/flake-module.nix
         ./modules/flake-module.nix
         ./packages/flake-module.nix
+        ./templates/flake-module.nix
 
         ./flake-parts/nixos-configurations.nix
         ./flake-parts/home-configurations.nix
