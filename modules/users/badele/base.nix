@@ -1,12 +1,22 @@
 {
 
   config,
-  lib,
   pkgs,
-  inputs,
   ...
 }:
 {
+  imports = [
+    # Security (GPG, SSH)
+    ../../home-manager/term/security/gpg.nix
+
+    # Shell
+    ../../home-manager/term/tools/zsh.nix
+
+    # # Misc
+    ../../home-manager/term/tools/top
+    ../../home-manager/term/tools/user-scripts
+  ];
+
   home.userconf = {
     user = {
       contact = {
@@ -32,31 +42,6 @@
     sha256 = "sha256-xrLfcRkr6TjTW464GYf9XNFHRe5HlLtjpB0LQAh/l6M=";
   };
 
-  systemd.user.startServices = "sd-switch";
-
-  # nixpkgs = {
-  #   config = {
-  #     allowUnfree = true;
-  #     allowUnfreePredicate = (_: true);
-  #   };
-  # };
-
-  nix = {
-    # Add all flake inputs to registry / CMD: nix registry list
-    registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
-
-    #Add all flake inputs to legacy / CMD: echo $NIX_PATH | tr ":" "\n"
-    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
-
-    package = lib.mkForce pkgs.nix;
-    settings = {
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
-      warn-dirty = false;
-    };
-  };
   programs.kitty.enable = true;
 
   # # NOTE: By default all programs enabled for the all shells
@@ -143,6 +128,9 @@
   home.packages = with pkgs; [
     act # Run your GitHub Actions locally
     delta # A syntax-highlighting pager for git
+
+    ripgrep # A grep alternative
+    fd # find alternative
 
     bat # cat alternative
     curl # HTTP client

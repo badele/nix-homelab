@@ -8,6 +8,8 @@ let
   targetIP = "192.168.254.141";
 in
 {
+  programs.zsh.enable = true;
+
   imports = [
     # ../../modules/shared.nix
     # ../../modules/desktop/wm/xorg/kde.nix
@@ -52,6 +54,10 @@ in
   ##############################################################################
   # badele User configuration
   ##############################################################################
+
+  # Enable ZSH NixosConfiguration
+  users.users.badele.shell = pkgs.zsh;
+
   home-manager.users.badele = {
 
     home.stateVersion = "26.05";
