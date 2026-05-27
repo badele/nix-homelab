@@ -4,16 +4,18 @@
   self,
   ...
 }:
+
+# The Host configuration use the tag
+# See the machines/flake-module.nix for the tag definition and usage
+# in the clan-core module
+#
+# This host use KDE desktop environment
+
 let
   targetIP = "192.168.254.141";
 in
 {
   programs.zsh.enable = true;
-
-  imports = [
-    # ../../modules/shared.nix
-    # ../../modules/desktop/wm/xorg/kde.nix
-  ];
 
   # Make userconf options available to all Home Manager users on this host.
   home-manager.sharedModules = [
