@@ -34,6 +34,17 @@ SSHPASS := "nixosusb"
 @machine-get-disk-id HOST PORT="22":
     ssh root@{{HOST}} -p {{PORT}} -o StrictHostKeychecking=no lsblk --output NAME,ID-LINK,FSTYPE,SIZE,MOUNTPOINT
 
+# Update machines (multiple hosts can be updated by space separated list)
+[group('clan')]
+@machine-update +HOST:
+    clan machines update {{HOST}}
+
+# Update current machine (local machine)
+[group('clan')]
+@local-update :
+    just nixos-update $(hostname)
+
+
 # Get clan vars
 [group('admin')]
 @clan-vars-get HOST VARNAME:
