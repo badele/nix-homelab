@@ -12,7 +12,7 @@
 # This host use KDE desktop environment
 
 let
-  targetIP = "192.168.254.141";
+  targetIP = "192.168.254.200";
 in
 {
   programs.zsh.enable = true;

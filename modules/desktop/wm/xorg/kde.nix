@@ -34,6 +34,8 @@
     # Hardware/System Utilities (Optional)
     kdePackages.isoimagewriter # Write hybrid ISOs to USB
     kdePackages.partitionmanager # Disk and partition management
+    kdePackages.plasma-nm # Network manager applet for Plasma
+    kdePackages.print-manager # Print management for KDE
   ];
 
   # Clan can evaluate machine graphs where Home Manager is not loaded yet.
