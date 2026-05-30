@@ -126,6 +126,20 @@ in
         ########################################################################
         # Role & machines installation
         ########################################################################
+
+        # Direct SSH with fallback support
+        internet = {
+          roles.default.machines.airlock = {
+            settings.host = "192.168.254.99";
+          };
+        };
+
+        # Fallback: Secure connections via Tor
+        tor = {
+          roles.server.tags.nixos = {
+          };
+        };
+
         sshd-basic = {
           module.name = "sshd";
 

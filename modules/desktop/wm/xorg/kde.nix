@@ -17,6 +17,27 @@
     xserver.xkb.layout = "fr";
   };
 
+  networking.networkmanager.dispatcherScripts = [
+    {
+      type = "basic";
+      source = pkgs.writeShellScript "restart-tor-on-network-change" ''
+        IFACE="$1"
+        ACTION="$2"
+
+        case "$ACTION" in
+          up|down|connectivity-change)
+            if [ "$IFACE" = "wlp2s0" ] || [ "$IFACE" = "eno1" ]; then
+              ${pkgs.systemd}/bin/systemd-cat -t nm-restart-tor \
+                echo "Restarting Tor after $IFACE $ACTION"
+
+              ${pkgs.systemd}/bin/systemctl restart tor.service
+            fi
+            ;;
+        esac
+      '';
+    }
+  ];
+
   environment.systemPackages = with pkgs; [
     # KDE Utilities
     kdePackages.qtstyleplugin-kvantum # Qt style plugin for Kvantum themes

@@ -24,50 +24,54 @@
     in
     {
       devShells.default = pkgs.mkShellNoCC {
-        packages = [
+        packages = with pkgs; [
           inputs'.clan-core.packages.clan-cli
 
+          # Required by clan or used for debugging
+          tor
+          torsocks
+
           # Required by nix-homelab project
-          pkgs.borgbackup
-          pkgs.deno
-          pkgs.git
-          pkgs.home-manager
-          pkgs.just
-          pkgs.nix
-          pkgs.plantuml
-          pkgs.pre-commit
-          pkgs.termshot
+          borgbackup
+          deno
+          git
+          home-manager
+          just
+          nix
+          plantuml
+          pre-commit
+          termshot
 
           # Testing nix-homelab
-          pkgs.qemu
-          pkgs.qemu_kvm
-          pkgs.OVMF
+          qemu
+          qemu_kvm
+          OVMF
 
           # Nix unentended installation
-          pkgs.nixos-anywhere
+          nixos-anywhere
 
           # Credentials
-          pkgs.age
-          pkgs.gnupg
-          pkgs.pass
-          pkgs.pwgen
-          pkgs.sops
-          pkgs.ssh-to-age
-          pkgs.git-crypt
+          age
+          gnupg
+          pass
+          pwgen
+          sops
+          ssh-to-age
+          git-crypt
 
           # diagrams
-          pkgs.graphviz
-          pkgs.d2
+          graphviz
+          d2
 
           # Wireguard
-          pkgs.wireguard-tools
-          pkgs.openssl_3.bin
+          wireguard-tools
+          openssl_3.bin
 
           # Openstack
-          pkgs.openstackclient
+          openstackclient
 
           # Terraform
-          (pkgs.opentofu.withPlugins (
+          (opentofu.withPlugins (
             p:
             builtins.map convert2Tofu [
               p.hashicorp_external
@@ -79,11 +83,11 @@
           ))
 
           # Certificate
-          pkgs.step-cli
+          step-cli
 
           # markdown web server
           inputs.gosect.packages.${system}.gosect
-          pkgs.go-grip
+          go-grip
           #
         ];
         env.UEFI_FILE = uefi_file;

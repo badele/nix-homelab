@@ -42,7 +42,7 @@ SSHPASS := "nixosusb"
 # Update current machine (local machine)
 [group('clan')]
 @local-update :
-    just nixos-update $(hostname)
+    just machine-update "$(hostname)"
 
 
 # Get clan vars

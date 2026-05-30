@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   self,
   ...
@@ -12,7 +11,7 @@
 # This host use KDE desktop environment
 
 let
-  targetIP = "192.168.254.200";
+  targetIP = self.clan.inventory.instances.internet.roles.default.machines.airlock.settings.host;
 in
 {
   programs.zsh.enable = true;
@@ -167,13 +166,5 @@ in
     ];
   };
 
-  # home-manager.users = {
-  #   badele.home.stateVersion = "25.11";
-  #   sadele.home.stateVersion = "25.11";
-  #   loadele.home.stateVersion = "25.11";
-  #   luadele.home.stateVersion = "25.11";
-  # };
-
-  clan.core.networking.targetHost = "root@${targetIP}";
-
+  # clan.core.networking.targetHost = "root@${targetIP}";
 }

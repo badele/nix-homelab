@@ -19,7 +19,7 @@ Create the bootable USB installer:
 #clan flash list keymaps
 #clan flash list languages
 
-export USBDISK="/dev/sda"
+export USBDISK="/dev/sdx"
 
 ssh-add -L | head -n 1 > /tmp/ssh_key.pub
 clan flash write --flake git+https://git.clan.lol/clan/clan-core \
@@ -52,63 +52,83 @@ You can add your public key to your user keyring:
 clan secrets users add badele --age-key <your_public_key>
 ```
 
+Store your age key on your admin desktop to
+
+```bash
+mkdir -p ~/.config/sops/age
+pass show nix-homelab/age/$USERNAME > ~/.config/sops/age/keys.txt
+```
+
 ## Adding a New Machine
 
 First, prepare the directory structure for the new machine:
 
 ```
-machines
-└─ <MACHINE-NAME>
-   ├─ configuration.nix
-   └─ disko.nix
+just machine add MACHINE-NAME
 ```
 
 ### Deploy New Machine
 
 Insert the USB key created previously.
 
+#### Wifi configuration
+
+```shell
+iwctl
+```
+
+```text
+# Identify your network device.
+device list
+
+# Replace 'wlan0' with your wireless device name
+# Find your Wi-Fi SSID.
+station wlan0 scan
+station wlan0 get-networks
+
+# Replace your_ssid with the Wi-Fi SSID
+# Connect to your network.
+station wlan0 connect your_ssid
+
+# Verify you are connected
+station wlan0 show
+```
+
+Press **CTRL+d**
+
+### Generating a Hardware Report
+
+```shell
+clan machines install "<MACHINE-NAME>" \
+    --update-hardware-config nixos-facter \
+    --phases kexec \
+    --target-host "root@<IP-ADDRESS>"
+```
+
+### Disk configuration
+
+List disko template
+
+```shell
+clan templates list
+```
+
+Configure partition
+
+```shell
+just nixos-apply-disko airlock luks-btrfs-single-disk-subvolumes
+just nixos-apply-disko airlock luks-btrfs-single-disk-subvolumes /dev/disk/by-id/wwn-0x5002538d428f282d
+```
+
 #### Host
 
-In the `machines/<machine-name>/configuration.nix` file, specify the IP address
+Create or copy the `configuration.nix file on the `machines/<machine-name>/configuration.nix`,and specify the IP address
 in `targetHost`.
-
-#### Disk Device ID
-
-Connect as `root` to the previously obtained IP address and retrieve the disk ID
-with the following command:
-
-```bash
-ssh "root@<HOST-IP>" 'lsblk --output NAME,ID-LINK,FSTYPE,SIZE,MOUNTPOINT'
-```
-
-Example output:
-
-```
-NAME   ID-LINK                             FSTYPE   SIZE MOUNTPOINT
-sda    wwn-0x5000000123456789                     476.9G
-├─sda1 wwn-0x5000000123456789-part1        vfat     100M
-├─sda2 wwn-0x5000000123456789-part2                  16M
-├─sda3 wwn-0x5000000123456789-part3        ntfs   475.7G
-└─sda4 wwn-0x5000000123456789-part4        ntfs     1.2G
-sdb    usb-_PHILIPS_USB_48333095-0:0               29.3G
-├─sdb1 usb-_PHILIPS_USB_48333095-0:0-part1            1M
-├─sdb2 usb-_PHILIPS_USB_48333095-0:0-part2 vfat     512M /boot
-└─sdb3 usb-_PHILIPS_USB_48333095-0:0-part3 f2fs    28.8G /
-```
-
-Update the `machines/<machine-name>/disko.nix` file to set the `diskId`
-variable:
-
-```nix
-diskId = "wwn-0x5000000123456789";
-```
 
 #### Get Hardware Report
 
 ```bash
-git add machines/<machine-name>/configuration.nix
-git add machines/<machine-name>/disko.nix
-clan machines update-hardware-config "<MACHINE-NAME>"
+git add machines/<machine-name>
 ```
 
 ### Install
