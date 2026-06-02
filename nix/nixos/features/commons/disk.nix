@@ -7,4 +7,6 @@
   environment.systemPackages = with pkgs; [
     cryptsetup
   ];
+
+  services.locate.enable = true;
 }

@@ -14,7 +14,7 @@ in
     self.nixosModules.hardware-hetzner-cloud
 
     # Default shared configuration for the clan machines.
-    ../../modules/shared.nix
+    ../../modules/base.nix
 
     ../../modules/server.nix
     ../../modules/system/borgbackup.nix

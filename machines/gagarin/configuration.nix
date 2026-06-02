@@ -10,11 +10,11 @@ let
 in
 {
   imports = [
-    self.nixosModules.desktop
-
     # Default configuration for the clan machines.
     ./disko.nix
-    ../../modules/shared.nix
+    ../../modules/base.nix
+    ../../modules/desktop/wm/xorg/lightdm.nix
+
   ];
   homelab = {
     nameServer = "192.168.254.154";

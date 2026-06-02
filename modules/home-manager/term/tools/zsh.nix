@@ -293,6 +293,14 @@ in
         WORK = "${config.home.homeDirectory}/work/projects";
         PRIVATE = "${config.home.homeDirectory}/private/projects";
 
+        # Locales
+        # LANG = "fr_FR.UTF-8";
+
+        # LC_TIME = "fr_FR.UTF-8";
+        # LC_MONETARY = "fr_FR.UTF-8";
+        # LC_MEASUREMENT = "fr_FR.UTF-8";
+        # LC_PAPER = "fr_FR.UTF-8";
+
         # Colors
         GREP_COLORS = "ms=01;31:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36";
 

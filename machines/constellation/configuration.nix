@@ -12,7 +12,7 @@ in
 
     # Default configuration for the clan machines.
     ./disko.nix
-    ../../modules/shared.nix
+    ../../modules/base.nix
   ];
 
   # Fix nixos build limits

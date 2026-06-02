@@ -1,5 +1,7 @@
 #!/usr/bin/env just -f
 
+# NOTE: If you would like test your recipe, you can sur just --dry-run xxx
+
 set export
 
 SSHPASS := "nixosusb"
@@ -31,6 +33,17 @@ SSHPASS := "nixosusb"
 [group('clan')]
 @machine-get-disk-id HOST PORT="22":
     ssh root@{{HOST}} -p {{PORT}} -o StrictHostKeychecking=no lsblk --output NAME,ID-LINK,FSTYPE,SIZE,MOUNTPOINT
+
+# Update machines (multiple hosts can be updated by space separated list)
+[group('clan')]
+@machine-update +HOST:
+    clan machines update {{HOST}}
+
+# Update current machine (local machine)
+[group('clan')]
+@local-update :
+    just machine-update "$(hostname)"
+
 
 # Get clan vars
 [group('admin')]
@@ -202,19 +215,14 @@ nixos-init-host host: (nixos-init-root-pass host) (nixos-init-ssh-host host)
 
 # Install new <hostname> to <target>:<port> system wide
 [group('installer')]
-nixos-install hostname targetip port="22":
-    #!/usr/bin/env bash
-    mkdir -p /tmp/nix-homelab
-    cleanup() {
-    rm -rf "/tmp/nix-homelab"
-    }
-    trap cleanup EXIT
+nixos-install hostname targetip:
+    clan machines install {{hostname}} --target-host {{targetip}}
 
-    # Decrypt ssh keys
-    install -d -m755 "/tmp/nix-homelab/etc/ssh"
-    pass nix-homelab/hosts/{{hostname}}/ssh_host_ed25519_key > "/tmp/nix-homelab/etc/ssh/ssh_host_ed25519_key"
-    chmod 600 "/tmp/nix-homelab/etc/ssh/ssh_host_ed25519_key"
-    nixos-anywhere --extra-files /tmp/nix-homelab -p {{port}} --flake .#{{hostname}} root@{{targetip}}
+# Update NixOS on local host
+[group('nixos')]
+@nixos-update +hostnames:
+    clan machines update {{hostnames}}
+
 
 [private]
 nixos-command action hostname="" options="":
@@ -230,15 +238,38 @@ nixos-command action hostname="" options="":
 @nixos-build hostname="" options="":
     just nixos-command build {{ hostname }} {{ options }}
 
-# Update NixOS on local host
-[group('nixos')]
-@nixos-update command="switch" options="":
-    just nixos-command {{ command  }} "" {{ options }}
 
 # Update on remote host
 [group('nixos')]
 @nixos-remote-update hostname targetip options="":
     just nixos-command switch {{hostname}} "--target-host root@{{ targetip }}" {{ options }}
+
+# Apply local disko template to a machine folder
+[group('clan')]
+nixos-apply-disko MACHINE TEMPLATE DISKID="":
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    template="templates/disko/{{TEMPLATE}}/default.nix"
+    target="machines/{{MACHINE}}/disko.nix"
+    placeholder_main_disk="@DISKID@"
+
+    test -f "${template}" || { echo "Template not found: ${template}" >&2; exit 1; }
+
+    if [ -n "{{DISKID}}" ]; then
+        sed "s|${placeholder_main_disk}|{{DISKID}}|g" "${template}" > "${target}"
+        echo "Generated ${target} from ${template}"
+    else
+        test -f "machines/{{MACHINE}}/facter.json" || { echo "{{MACHINE}}/facter.json Hardware configuration not found:" >&2; exit 1; }
+
+        echo "Please define DISKID Disk ID parameter from below list"
+        jq -r '.hardware.disk[]
+        | (.unix_device_names | map(select(test("disk/by-id"))) + .)[0]
+        | split("/")[-1]
+        ' machines/{{MACHINE}}/facter.json
+    fi
+
+
 
 [private]
 home-command action:
@@ -399,4 +430,3 @@ demo-nixos-install hostname targetip port="22":
 [group('misc')]
 @generate_nixos_gif:
     cd docs/imgs && magick -delay 300 -loop 0  neofetch_top.png grafana_attacks_dashboard.png homeassistant.png nixos.gif
-
