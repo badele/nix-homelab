@@ -8,6 +8,11 @@ let
   };
 in
 {
+
+  imports = [
+    ./fastfetch
+  ];
+
   home.packages = with pkgs; [
     myinxi # System information tool
 
@@ -29,7 +34,6 @@ in
     ltrace # Trace library calls
     strace # Trace system calls and signals
 
-    fastfetch # neofetch like
     cpufetch # get CPU information
   ];
 
