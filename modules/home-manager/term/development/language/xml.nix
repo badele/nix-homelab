@@ -1,7 +1,6 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
-    ansible
-    ansible-lint
+    libxml2 # xmllint
   ];
 }

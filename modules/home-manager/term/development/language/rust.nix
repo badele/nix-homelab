@@ -1,7 +1,9 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
-    ansible
-    ansible-lint
+    rust
+    rust-analyzer
+    rustc
+    rustfmt
   ];
 }

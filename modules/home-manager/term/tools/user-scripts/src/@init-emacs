@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+IDEM_REPO_URL="https://github.com/badele/idem"
+IDEM_REPO_PATH="$HOME/ghq/github.com/badele/idem"
+
+   if [ ! -d "$IDEM_REPO_PATH/.git" ]; then
+  mkdir -p "$(dirname "$IDEM_REPO_PATH")"
+  ${pkgs.git}/bin/git clone "$IDEM_REPO_URL" "$IDEM_REPO_PATH"
+fi
+   if [ ! -d "$IDEM_REPO_PATH/.git" ]; then
+  echo "ERROR: idem repository is missing at $IDEM_REPO_PATH" >&2
+  exit 1
+fi
+   if [ ! -L "$HOME/.config/doom" ] || [ "$(readlink "$HOME/.config/doom" || true)" != "$IDEM_REPO_PATH/doom.d" ]; then
+  if [ -d "$HOME/.config/doom" ] && [ ! -L "$HOME/.config/doom" ]; then
+    mv "$HOME/.config/doom" "$HOME/.config/doom-$(date +%Y%m%d-%H%M%S).bak"
+  else
+    rm -f "$HOME/.config/doom"
+  fi
+      mkdir -p "$HOME/.config"
+  ln -s "$IDEM_REPO_PATH/doom.d" "$HOME/.config/doom"
+fi
+
+    if [ -x "$IDEM_REPO_PATH/bootstrap/doom-install.sh" ] && [ ! -d "$HOME/.config/emacs" ]; then
+      cd "$IDEM_REPO_PATH"
+      PAGER=cat DOOMPAGER=cat ./bootstrap/doom-install.sh
+    fi

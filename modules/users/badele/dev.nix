@@ -9,7 +9,7 @@
 
     ../../home-manager/term/development/base.nix
     ../../home-manager/term/development/aws.nix
-    # ../../home-manager/term/development/language/all.nix
+    ../../home-manager/term/development/language/all.nix
   ];
 
   stylix.targets.neovim.enable = false; # Disable neovim, it managed by https://github.com/badele/vide

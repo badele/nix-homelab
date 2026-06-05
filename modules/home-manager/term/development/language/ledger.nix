@@ -1,1 +1,7 @@
-{ pkgs, ... }: { home.packages = with pkgs; [ ledger hledger ]; }
+{ pkgs, ... }:
+{
+  home.packages = with pkgs; [
+    ledger
+    hledger
+  ];
+}

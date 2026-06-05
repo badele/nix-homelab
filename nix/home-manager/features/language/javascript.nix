@@ -1,15 +1,16 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     # JavaScript/TypeScript
     nodejs
     yarn
     deno
-    nodePackages.eslint
-    nodePackages.prettier
+    eslint
+    prettier
 
     # JSON
     vscode-langservers-extracted
-    nodePackages.fixjson
+    fixjson
 
     # Dockerfile
     dockerfile-language-server

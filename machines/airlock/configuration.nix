@@ -83,6 +83,9 @@ in
       # Customize on this computer
       ##########################################################################
 
+      # Base
+      ../../modules/home-manager/base.nix
+
       # Bluetooth
       ../../modules/home-manager/term/bluetooth.nix
 
@@ -106,12 +109,6 @@ in
       # Web browser
       # ../../home-manager/desktop/apps/google-chrome.nix
       # ../../users/badele/modules/firefox.nix
-
-      # Xorg and Window Manager
-      # ../../home-manager/desktop/xorg/base.nix
-      # ../../home-manager/desktop/xorg/wm/i3.nix
-      # ../../home-manager/desktop/apps/base.nix
-
     ];
   };
 
@@ -133,7 +130,7 @@ in
   };
 
   ##############################################################################
-  # badele User configuration
+  # loadele User configuration
   ##############################################################################
   home-manager.users.loadele = {
 
@@ -150,7 +147,7 @@ in
   };
 
   ##############################################################################
-  # badele User configuration
+  # luadele User configuration
   ##############################################################################
   home-manager.users.luadele = {
 

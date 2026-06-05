@@ -31,6 +31,11 @@ in
       ########################################################################
 
       machines = {
+        badxps.tags = [
+          "desktop"
+          "wifi-home"
+        ];
+
         airlock.tags = [
           "desktop"
           "printer"
@@ -130,7 +135,10 @@ in
         # Direct SSH with fallback support
         internet = {
           roles.default.machines.airlock = {
-            settings.host = "192.168.254.99";
+            settings.host = "192.168.254.200";
+          };
+          roles.default.machines.badxps = {
+            settings.host = "192.168.254.179";
           };
         };
 
@@ -155,6 +163,7 @@ in
           module.name = "importer";
           roles.default.tags = [ "all" ];
           roles.default.extraModules = [
+            inputs.home-manager.nixosModules.home-manager
             ../modules/base.nix
           ];
         };
@@ -164,6 +173,18 @@ in
           roles.default.tags = [ "desktop" ];
           roles.default.extraModules = [
             ../modules/desktop/apps/base.nix
+          ];
+        };
+
+        wm-i3 = {
+          module.name = "importer";
+
+          roles.default.machines = {
+            "badxps" = { };
+          };
+
+          roles.default.extraModules = [
+            ../modules/desktop/wm/xorg/lightdm.nix
           ];
         };
 
@@ -179,7 +200,7 @@ in
           ];
         };
 
-        printer-homee = {
+        printer-home = {
           module.name = "importer";
 
           roles.default.tags = {

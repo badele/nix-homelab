@@ -79,6 +79,10 @@ in
     # deno # javascript engine
     # nodejs
 
+    # Midi play
+    # neothesia
+    # zenity # fallback for neothesia
+
     # Go
     # go
 

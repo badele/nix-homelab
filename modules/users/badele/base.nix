@@ -27,7 +27,7 @@
       gpg = {
         id = "00F421C4C5377BA39820E13F6B95E13DE469CC5D";
         url = "https://keys.openpgp.org/vks/v1/by-fingerprint/${config.home.userconf.user.gpg.id}";
-        sha256 = "sha256:1n5ik324jv9qj7ikpp20fcczd9piijr93j5zrg1qkvw4a7xks7ad";
+        sha256 = "sha256:0slk1ak28h7nscjsrk0djn74davwx6av7gprihwqxwjwl34bvk70";
       };
     };
   };

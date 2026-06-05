@@ -8,6 +8,5 @@
     gocode-gomod
     godef
     gopls
-    gotools
   ];
 }

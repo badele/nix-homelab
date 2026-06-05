@@ -1,1 +1,8 @@
-{ pkgs, ... }: { home.packages = with pkgs; [ sbt metals ]; }
+{ pkgs, ... }:
+{
+  home.packages = with pkgs; [
+    sbt
+    metals
+    scalafmt
+  ];
+}

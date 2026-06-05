@@ -85,43 +85,43 @@
       ];
     };
 
-    badxps = inputs.nixpkgs.lib.nixosSystem {
-      specialArgs = {
-        inherit inputs;
-        outputs = self;
-      };
+    # badxps = inputs.nixpkgs.lib.nixosSystem {
+    #   specialArgs = {
+    #     inherit inputs;
+    #     outputs = self;
+    #   };
 
-      modules = [
-        inputs.sops-nix.nixosModules.sops
-        inputs.nixunits.nixosModules.default
+    #   modules = [
+    #     inputs.sops-nix.nixosModules.sops
+    #     inputs.nixunits.nixosModules.default
 
-        ../nix/modules/nixos/default.nix
-        ../configuration/hosts/badxps
+    #     ../nix/modules/nixos/default.nix
+    #     ../configuration/hosts/badxps
 
-        inputs.home-manager.nixosModules.home-manager
-        {
-          home-manager = {
-            backupFileExtension = "hm-backup";
-            useGlobalPkgs = false;
-            useUserPackages = true;
-            verbose = true;
-            extraSpecialArgs = {
-              inputs = self.inputs;
-            };
-            users = {
-              root = import ../configuration/users/root/badxps.nix;
-              badele = {
-                imports = [
-                  inputs.stylix.homeModules.stylix
-                  ../configuration/users/badele/badxps.nix
-                ];
-              };
-            };
-          };
+    #     inputs.home-manager.nixosModules.home-manager
+    #     {
+    #       home-manager = {
+    #         backupFileExtension = "hm-backup";
+    #         useGlobalPkgs = false;
+    #         useUserPackages = true;
+    #         verbose = true;
+    #         extraSpecialArgs = {
+    #           inputs = self.inputs;
+    #         };
+    #         users = {
+    #           root = import ../configuration/users/root/badxps.nix;
+    #           badele = {
+    #             imports = [
+    #               inputs.stylix.homeModules.stylix
+    #               ../configuration/users/badele/badxps.nix
+    #             ];
+    #           };
+    #         };
+    #       };
 
-        }
-      ];
-    };
+    #     }
+    #   ];
+    # };
 
     sadhome = inputs.nixpkgs.lib.nixosSystem {
       specialArgs = {

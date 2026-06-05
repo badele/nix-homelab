@@ -1,7 +1,8 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     # Bash
-    nodePackages.bash-language-server
+    bash-language-server
     shellcheck
     shfmt
 

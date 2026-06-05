@@ -1,15 +1,10 @@
 {
   lib,
   pkgs,
-  inputs,
   options,
   ...
 }:
 {
-  imports = [
-    inputs.home-manager.nixosModules.home-manager
-  ];
-
   services = {
     desktopManager.plasma6.enable = true;
     displayManager.sddm.enable = true;

@@ -8,6 +8,9 @@
     gocode-gomod
     godef
     gopls
-    gotools
+
+    gomodifytags
+    gotests
+    gore
   ];
 }

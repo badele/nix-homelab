@@ -27,7 +27,8 @@ SSHPASS := "nixosusb"
 # Add new machine
 [group('clan')]
 @machine-add MACHINE:
-    clan machines create {{MACHINE}} 
+    clan machines create {{MACHINE}}
+    git add machines/{{MACHINE}}
 
 # Get disk ID
 [group('clan')]

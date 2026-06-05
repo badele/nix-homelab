@@ -1,1 +1,7 @@
-{ pkgs, ... }: { home.packages = with pkgs; [ openscad openscad-lsp ]; }
+{ pkgs, ... }:
+{
+  home.packages = with pkgs; [
+    openscad
+    openscad-lsp
+  ];
+}
