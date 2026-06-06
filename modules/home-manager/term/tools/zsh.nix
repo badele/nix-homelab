@@ -146,8 +146,10 @@ in
         # My tools
         calc_latency = "_calc_latency"; # Compute approximatively internet latency
 
+        "@tui-info-for-public" = "fastfetch | egrep -v 'BT Radio|DNS|WiFi|Public IP|Local IP|Connectivity'";
+
         # Clipboard
-        toclipboardV = "${xclip} -selection clipboard";
+        toclipboard = "${xclip} -selection clipboard";
 
         get_i3_window_name = "${xprop} | grep CLASS | cut -d\",\" -f2 | sed 's/\"//g'";
 
