@@ -37,6 +37,7 @@ in
         ];
 
         airlock.tags = [
+          "audio"
           "desktop"
           "printer"
           "wifi-home"
@@ -209,6 +210,18 @@ in
 
           roles.default.extraModules = [
             ../modules/nixos/system/printer.nix
+          ];
+        };
+
+        audio = {
+          module.name = "importer";
+
+          roles.default.tags = {
+            "audio" = { };
+          };
+
+          roles.default.extraModules = [
+            ../modules/nixos/system/audio.nix
           ];
         };
 

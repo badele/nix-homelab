@@ -77,6 +77,7 @@ in
       ../../users/badele/term.nix
       ../../users/badele/dev.nix
       ../../users/badele/desktop.nix
+      ../../users/badele/system.nix
 
       ##########################################################################
       # Customize on this computer

@@ -4,6 +4,11 @@
   pkgs,
   ...
 }:
+let
+  inxi_recommenced = pkgs.inxi.override {
+    withRecommendedSystemPrograms = true;
+  };
+in
 {
   imports = [
     # Security (GPG, SSH)
@@ -126,6 +131,8 @@
   };
 
   home.packages = with pkgs; [
+    inxi_recommenced # Terminal System information
+
     act # Run your GitHub Actions locally
     delta # A syntax-highlighting pager for git
 
@@ -139,9 +146,7 @@
     eva # Calculator
     httpie # Curl alternative
 
-    tmux # Terminal multiplexer
     up # UI interactively pipe
     wget # HTTP client
   ];
-
 }

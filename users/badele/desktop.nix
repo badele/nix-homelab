@@ -2,11 +2,6 @@
   pkgs,
   ...
 }:
-let
-  inxi_recommenced = pkgs.inxi.override {
-    withRecommendedSystemPrograms = true;
-  };
-in
 {
   imports = [
     ../../modules/home-manager/desktop/apps/base.nix
@@ -14,7 +9,9 @@ in
     # Desktop Apps
     # ../../home-manager/desktop/apps/cad.nix
     # ../../home-manager/desktop/apps/chess.nix
-    # ../../home-manager/desktop/apps/graphics.nix
+    ../../modules/home-manager/desktop/apps/graphics.nix
+    ../../modules/home-manager/desktop/apps/offices.nix
+    ../../modules/home-manager/desktop/apps/musics.nix
     # ../../home-manager/desktop/apps/vscode.nix
 
     # Web browser
@@ -51,13 +48,6 @@ in
   xdg.configFile."gtk-4.0/settings.ini".force = true;
 
   home.packages = with pkgs; [
-    # mesa-demos # glxinfo, glxgears
-
-    inxi_recommenced
-    gimp
-    inkscape
-    libreoffice
-
     hl-log-viewer # JSON and logfmt viewer
   ];
 }

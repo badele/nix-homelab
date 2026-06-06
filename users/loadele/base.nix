@@ -5,7 +5,7 @@
   ...
 }:
 let
-  user = "sadele";
+  user = "loadele";
 in
 {
   imports = [
@@ -13,6 +13,7 @@ in
 
     ../../modules/home-manager/desktop/apps/graphics.nix
     ../../modules/home-manager/desktop/apps/offices.nix
+    # ../../modules/home-manager/desktop/apps/musics.nix
   ];
 
   programs.firefox = {

@@ -11,7 +11,9 @@
 # This host use KDE desktop environment
 
 let
-  targetIP = self.clan.inventory.instances.internet.roles.default.machines.airlock.settings.host;
+  # first time ssh
+  buildHost = "192.168.254.179";
+  targetHost = self.clan.inventory.instances.internet.roles.default.machines.airlock.settings.host;
 in
 {
   programs.zsh.enable = true;
@@ -27,7 +29,7 @@ in
       hostname = "airlock";
       description = "Space laptop";
       interface = "enp1s0";
-      address = targetIP;
+      address = targetHost;
       gateway = "192.168.254.254";
 
       nproc = 4;
@@ -152,6 +154,16 @@ in
     # home-manager imports
     imports = [
       # self.inputs.stylix.homeModules.stylix
+      ##########################################################################
+      # Commons User configuration
+      ##########################################################################
+      ../../users/loadele/base.nix
+
+      ##########################################################################
+      # Customize on this computer
+      ##########################################################################
+
+      # Base
       ../../modules/home-manager/base.nix
     ];
   };
@@ -173,5 +185,6 @@ in
     ];
   };
 
-  # clan.core.networking.targetHost = "root@${targetIP}";
+  # clan.core.networking.targetHost = "root@${targetHost}";
+  clan.core.networking.buildHost = "badele@${buildHost}";
 }
