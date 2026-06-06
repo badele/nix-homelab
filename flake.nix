@@ -107,10 +107,10 @@
       imports = [
         inputs.clan-core.flakeModules.default
 
-        ./shells/flake-module.nix
+        ./flake/shells/flake-module.nix
         ./machines/flake-module.nix
         ./modules/flake-module.nix
-        ./packages/flake-module.nix
+        ./flake/packages/flake-module.nix
         ./templates/flake-module.nix
       ];
     };
