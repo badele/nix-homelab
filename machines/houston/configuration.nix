@@ -14,10 +14,10 @@ in
     self.nixosModules.hardware-hetzner-cloud
 
     # Default shared configuration for the clan machines.
-    ../../modules/base.nix
+    ../../modules/nixos/base.nix
 
-    ../../modules/server.nix
-    ../../modules/system/borgbackup.nix
+    ../../modules/nixos/server.nix
+    ../../modules/nixos/system/borgbackup.nix
 
     # houston infra
     ./disko.nix

@@ -1,8 +1,13 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
+    pipenv
+    poetry
     ruff
-    (python313.withPackages (ps:
-      with ps; [
+    uv
+
+    (python313.withPackages (
+      ps: with ps; [
         pip
         requests
 
@@ -13,6 +18,12 @@
         mypy
         vulture
         mdformat
-      ]))
+
+        # Used by IDEM project (https://github.com/badele/idem)
+        black
+        pyflakes
+        pytest
+      ]
+    ))
   ];
 }

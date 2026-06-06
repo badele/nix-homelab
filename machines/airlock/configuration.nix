@@ -11,7 +11,9 @@
 # This host use KDE desktop environment
 
 let
-  targetIP = self.clan.inventory.instances.internet.roles.default.machines.airlock.settings.host;
+  # first time ssh
+  buildHost = "192.168.254.179";
+  targetHost = self.clan.inventory.instances.internet.roles.default.machines.airlock.settings.host;
 in
 {
   programs.zsh.enable = true;
@@ -27,7 +29,7 @@ in
       hostname = "airlock";
       description = "Space laptop";
       interface = "enp1s0";
-      address = targetIP;
+      address = targetHost;
       gateway = "192.168.254.254";
 
       nproc = 4;
@@ -73,15 +75,18 @@ in
       ##########################################################################
       # Commons User configuration
       ##########################################################################
-      ../../modules/users/badele/base.nix
-      ../../modules/users/badele/term.nix
-      ../../modules/users/badele/dev.nix
-      ../../modules/users/badele/desktop.nix
-      ../../modules/users/badele/fix/kde.nix
+      ../../users/badele/base.nix
+      ../../users/badele/term.nix
+      ../../users/badele/dev.nix
+      ../../users/badele/desktop.nix
+      ../../users/badele/fix/kde.nix
 
       ##########################################################################
       # Customize on this computer
       ##########################################################################
+
+      # Base
+      ../../modules/home-manager/base.nix
 
       # Bluetooth
       ../../modules/home-manager/term/bluetooth.nix
@@ -106,12 +111,6 @@ in
       # Web browser
       # ../../home-manager/desktop/apps/google-chrome.nix
       # ../../users/badele/modules/firefox.nix
-
-      # Xorg and Window Manager
-      # ../../home-manager/desktop/xorg/base.nix
-      # ../../home-manager/desktop/xorg/wm/i3.nix
-      # ../../home-manager/desktop/apps/base.nix
-
     ];
   };
 
@@ -128,12 +127,22 @@ in
     # home-manager imports
     imports = [
       # self.inputs.stylix.homeModules.stylix
+      ##########################################################################
+      # Commons User configuration
+      ##########################################################################
+      ../../users/sadele/base.nix
+
+      ##########################################################################
+      # Customize on this computer
+      ##########################################################################
+
+      # Base
       ../../modules/home-manager/base.nix
     ];
   };
 
   ##############################################################################
-  # badele User configuration
+  # loadele User configuration
   ##############################################################################
   home-manager.users.loadele = {
 
@@ -145,12 +154,22 @@ in
     # home-manager imports
     imports = [
       # self.inputs.stylix.homeModules.stylix
+      ##########################################################################
+      # Commons User configuration
+      ##########################################################################
+      ../../users/loadele/base.nix
+
+      ##########################################################################
+      # Customize on this computer
+      ##########################################################################
+
+      # Base
       ../../modules/home-manager/base.nix
     ];
   };
 
   ##############################################################################
-  # badele User configuration
+  # luadele User configuration
   ##############################################################################
   home-manager.users.luadele = {
 
@@ -166,5 +185,6 @@ in
     ];
   };
 
-  # clan.core.networking.targetHost = "root@${targetIP}";
+  # clan.core.networking.targetHost = "root@${targetHost}";
+  clan.core.networking.buildHost = "badele@${buildHost}";
 }

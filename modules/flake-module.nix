@@ -17,7 +17,7 @@
       }:
       {
         imports = [
-          (import ./hardware-hetzner-cloud.nix {
+          (import ./nixos/hardware-hetzner-cloud.nix {
             inherit
               config
               lib
@@ -44,10 +44,10 @@
           inputs.authentik-nix.nixosModules.default
 
           # Import common homeab definition
-          ./homelab
+          ./nixos/homelab
 
           # Import all features definition
-          (import ./features { inherit lib inputs; })
+          (import ./nixos/features { inherit lib inputs; })
         ];
       };
 
@@ -56,12 +56,12 @@
   #############################################################################
   # Terraform recipes
   #############################################################################
-  flake.lib.terranixModules.base = ./terranix/base.nix;
+  flake.lib.terranixModules.base = ./nixos/terranix/base.nix;
 
   flake.lib.terranixModules.with-dns = moduleWithSystem (
-    { config }: flake-parts-lib.importApply ./terranix/with-dns.nix { config' = config; }
+    { config }: flake-parts-lib.importApply ./nixos/terranix/with-dns.nix { config' = config; }
   );
-  flake.lib.terranixModules.dns = ./terranix/dns.nix;
+  flake.lib.terranixModules.dns = ./nixos/terranix/dns.nix;
 
-  flake.lib.terranixModules.hcloud = ./terranix/hcloud.nix;
+  flake.lib.terranixModules.hcloud = ./nixos/terranix/hcloud.nix;
 }

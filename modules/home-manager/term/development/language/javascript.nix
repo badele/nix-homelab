@@ -5,13 +5,13 @@
     nodejs
     yarn
     deno
-    nodePackages.eslint
-    nodePackages.prettier
+    eslint
+    prettier
 
     # JSON
     vscode-langservers-extracted
-    nodePackages.fixjson
-    # nodePackages.jsonlint
+    fixjson
+    # jsonlint
 
     # Dockerfile
     dockerfile-language-server

@@ -25,16 +25,6 @@ in
     unzip # Unzip utility
     file # File type identification
 
-    # Performance
-    atop # Top alternative
-    btop # Top alternative
-    htop # Top alternative
-    procs # Top alternative
-    lurk # strace alternative with better UI and more features
-    ltrace # Trace library calls
-    strace # Trace system calls and signals
-
-    cpufetch # get CPU information
   ];
 
   xdg.configFile."htop/htoprc".text = ''

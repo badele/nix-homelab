@@ -1,1 +1,7 @@
-{ pkgs, ... }: { home.packages = with pkgs; [ terraform terraform-ls ]; }
+{ pkgs, ... }:
+{
+  home.packages = with pkgs; [
+    terraform
+    terraform-ls
+  ];
+}

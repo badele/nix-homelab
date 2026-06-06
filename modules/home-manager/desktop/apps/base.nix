@@ -8,7 +8,7 @@
 
     # Multimedia
     ./playerctl.nix
-    ./pulseaudio.nix
+    ./audio/pipewire.nix
 
     # Misc
     ./wpa-gui.nix

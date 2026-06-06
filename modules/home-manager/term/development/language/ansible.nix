@@ -1,1 +1,7 @@
-{ pkgs, ... }: { home.packages = with pkgs; [ ansible-lint ]; }
+{ pkgs, ... }:
+{
+  home.packages = with pkgs; [
+    ansible
+    ansible-lint
+  ];
+}

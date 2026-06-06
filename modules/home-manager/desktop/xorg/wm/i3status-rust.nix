@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   # hexPalette = with inputs.nix-rice.lib; palette.toRGBHex pkgs.rice.colorPalette;
 
@@ -148,18 +153,17 @@ in
             click = [
               {
                 button = "left";
-                cmd = ''~/${config.xdg.dataFile."bin/i3status-toggle-pulseaudio-output".target}'';
+                cmd = "~/${config.xdg.dataFile."bin/i3status-toggle-pulseaudio-output".target}";
               }
             ];
 
             #pactl list short sinks
-            mappings =
-              {
-                "alsa_output.usb-MUSIC-BOOST_Nor-Tec_streaming_mic_ES329-00.analog-stereo" = "USB";
-                "alsa_output.pci-0000_00_1f.3.analog-stereo" = "INT"; # XPS 15 9570
-                "alsa_output.pci-0000_00_1f.3-platform-skl_hda_dsp_generic.HiFi__hw_sofhdadsp__sink" = "INT"; # XPS 15 9530
-                "bluez_sink.68_59_32_AA_E5_92.a2dp_sink" = "JBL 660";
-              };
+            mappings = {
+              "alsa_output.usb-MUSIC-BOOST_Nor-Tec_streaming_mic_ES329-00.analog-stereo" = "USB";
+              "alsa_output.pci-0000_00_1f.3.analog-stereo" = "INT"; # XPS 15 9570
+              "alsa_output.pci-0000_00_1f.3-platform-skl_hda_dsp_generic.HiFi__hw_sofhdadsp__sink" = "INT"; # XPS 15 9530
+              "bluez_sink.68_59_32_AA_E5_92.a2dp_sink" = "JBL 660";
+            };
           }
           # Weather
           {
