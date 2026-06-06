@@ -8,5 +8,6 @@
     easyeffects # A powerful audio effects processor for PipeWire and JACK, with a user-friendly interface
 
     alsa-utils # A collection of utilities for configuring and using the ALSA sound system
+    pulsemixer # A terminal-based PulseAudio mixer
   ];
 }

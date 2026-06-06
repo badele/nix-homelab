@@ -22,9 +22,10 @@
     reaper-reapack-extension # Package manager for REAPER that allows you to easily install and manage scripts, extensions and themes
     reaper-sws-extension # Collection of actions, scripts and utilities to enhance the functionality of REAPER
 
-    qpwgraph # A Qt5-based pipewire patchbay
+    # carla # A fully-featured modular audio plugin host, with support for many audio plugin formats
+    # easyeffects # A powerful audio effects processor for PipeWire and JACK, with a user-friendly interface
     pwvucontrol # A Qt5-based PipeWire volume control and session manager
-    easyeffects # A powerful audio effects processor for PipeWire and JACK, with a user-friendly interface
+    qpwgraph # A Qt5-based pipewire patchbay
 
     alsa-utils # A collection of utilities for configuring and using the ALSA sound system
 
