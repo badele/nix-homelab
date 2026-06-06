@@ -1,5 +1,6 @@
 # Graphics
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     geeqie # graphics file viewer
     gifsicle # create, edit, and inspect GIFs

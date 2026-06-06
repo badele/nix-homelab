@@ -1,4 +1,9 @@
-{ lib, config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 let
   host = "links";
   domain = config.homelab.domain;
@@ -7,7 +12,8 @@ let
   version = "1.41.0-plus";
 
   borgbackup = config.homelab.borgBackup;
-in lib.mkIf (roleEnabled) {
+in
+lib.mkIf (roleEnabled) {
   sops.secrets = {
     "services/linkding/superuser-password" = { };
     "borgbackup/passphrase/linkding" = {
@@ -16,9 +22,7 @@ in lib.mkIf (roleEnabled) {
   };
 
   sops.templates."linkding-env".content = ''
-    LD_SUPERUSER_PASSWORD=${
-      config.sops.placeholder."services/linkding/superuser-password"
-    }
+    LD_SUPERUSER_PASSWORD=${config.sops.placeholder."services/linkding/superuser-password"}
   '';
 
   ############################################################################
@@ -54,7 +58,9 @@ in lib.mkIf (roleEnabled) {
 
       services = {
         linkding = {
-          loadBalancer = { servers = [{ url = "http://localhost:9090"; }]; };
+          loadBalancer = {
+            servers = [ { url = "http://localhost:9090"; } ];
+          };
         };
       };
     };
@@ -70,8 +76,7 @@ in lib.mkIf (roleEnabled) {
 
     encryption = {
       mode = "repokey-blake2";
-      passCommand =
-        "cat ${config.sops.secrets."borgbackup/passphrase/linkding".path}";
+      passCommand = "cat ${config.sops.secrets."borgbackup/passphrase/linkding".path}";
     };
     environment = {
       BORG_RSH = "ssh -i /etc/ssh/ssh_host_ed25519_key";

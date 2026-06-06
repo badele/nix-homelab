@@ -1,5 +1,6 @@
 # Graphics
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     atop # Top alternative
     btop # Top alternative

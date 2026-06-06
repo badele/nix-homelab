@@ -11,7 +11,6 @@
     67
   ];
 
-
   environment.systemPackages = with pkgs; [
     distrobuilder
   ];

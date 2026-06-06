@@ -192,7 +192,7 @@ in
               not path /lib/* /_media/* /_detail/* /_export/* /doku.php* /feed.php* /install.php*
               path_regexp clean ^/(.*)$
             }
-            rewrite @clean /doku.php?id={re.clean.1}
+            rewrite @clean /doku.php?id={re.clean.1}&{query}
 
             reverse_proxy ${internalURL}
 

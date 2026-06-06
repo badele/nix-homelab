@@ -1,11 +1,17 @@
-{ lib, config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 let
   domain = config.homelab.domain;
   roleName = "netbox";
   roleEnabled = lib.elem roleName config.homelab.currentHost.roles;
 
   borgbackup = config.homelab.borgBackup;
-in lib.mkIf (roleEnabled) {
+in
+lib.mkIf (roleEnabled) {
   sops.secrets = {
     "services/netbox/secret" = {
       mode = "0400";
@@ -26,10 +32,10 @@ in lib.mkIf (roleEnabled) {
     port = 8001;
     secretKeyFile = config.sops.secrets."services/netbox/secret".path;
 
-    plugins = python313Packages:
-      with python313Packages;
-      [ netbox-topology-views ];
-    settings = { PLUGINS = [ "netbox_topology_views" ]; };
+    plugins = python313Packages: with python313Packages; [ netbox-topology-views ];
+    settings = {
+      PLUGINS = [ "netbox_topology_views" ];
+    };
 
   };
 
@@ -37,11 +43,15 @@ in lib.mkIf (roleEnabled) {
     enable = true;
     group = "netbox";
     virtualHosts."netbox-static" = {
-      listen = [{
-        addr = "127.0.0.1";
-        port = 9001;
-      }];
-      locations."/" = { root = "${config.services.netbox.dataDir}"; };
+      listen = [
+        {
+          addr = "127.0.0.1";
+          port = 9001;
+        }
+      ];
+      locations."/" = {
+        root = "${config.services.netbox.dataDir}";
+      };
     };
   };
 
@@ -49,8 +59,7 @@ in lib.mkIf (roleEnabled) {
     dynamicConfigOptions.http = {
       routers = {
         netbox = {
-          rule =
-            lib.mkDefault "Host(`netbox.${domain}`) && !PathPrefix(`/static`)";
+          rule = lib.mkDefault "Host(`netbox.${domain}`) && !PathPrefix(`/static`)";
           service = "netbox";
           entryPoints = [ "local" ];
         };
@@ -63,10 +72,12 @@ in lib.mkIf (roleEnabled) {
 
       services = {
         netbox = {
-          loadBalancer = { servers = [{ url = "http://localhost:8001"; }]; };
+          loadBalancer = {
+            servers = [ { url = "http://localhost:8001"; } ];
+          };
         };
         "netbox-static" = {
-          loadBalancer.servers = [{ url = "http://127.0.0.1:9001"; }];
+          loadBalancer.servers = [ { url = "http://127.0.0.1:9001"; } ];
         };
       };
     };
@@ -82,8 +93,7 @@ in lib.mkIf (roleEnabled) {
 
     encryption = {
       mode = "repokey-blake2";
-      passCommand =
-        "cat ${config.sops.secrets."borgbackup/passphrase/netbox".path}";
+      passCommand = "cat ${config.sops.secrets."borgbackup/passphrase/netbox".path}";
     };
     environment = {
       BORG_RSH = "ssh -i /etc/ssh/ssh_host_ed25519_key";
@@ -91,9 +101,7 @@ in lib.mkIf (roleEnabled) {
     };
     preHook = ''
       rm -rf /data/borgbackup/postgresql/netbox
-      ${
-        lib.getExe pkgs.sudo
-      } -u postgres ${pkgs.postgresql}/bin/pg_dump -F directory -f /data/borgbackup/postgresql/netbox netbox
+      ${lib.getExe pkgs.sudo} -u postgres ${pkgs.postgresql}/bin/pg_dump -F directory -f /data/borgbackup/postgresql/netbox netbox
     '';
     postCreate = ''
       rm -rf /data/borgbackup/postgresql/netbox

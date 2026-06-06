@@ -2,7 +2,8 @@
 let
   nets = config.homelab.networks;
   hl = config.homelab;
-in {
+in
+{
   imports = [
     ../../nix/modules/nixos/homelab
     ../hosts/badxps/host-information.nix
@@ -55,4 +56,3 @@ in {
     };
   };
 }
-

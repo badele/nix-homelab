@@ -1,5 +1,6 @@
 # Graphics
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     curl # HTTP client
     httpie # Curl alternative

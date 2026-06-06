@@ -35,6 +35,5 @@ in
   home.packages = with pkgs; [ ];
   programs = { };
 
-  
   wallpaper = pkgs.wallpapers.forest-deer-landscape;
 }

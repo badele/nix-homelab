@@ -1,14 +1,21 @@
 { lib, config, ... }:
 let
   domain = config.homelab.domain;
-  aliasIps = lib.flatten (lib.mapAttrsToList (name: host:
-    let alias = lib.optionals (host.dnsalias != null) host.dnsalias;
-    in map (entry: {
-      name = entry;
-      ip = host.ipv4;
-    }) alias) config.homelab.hosts);
+  aliasIps = lib.flatten (
+    lib.mapAttrsToList (
+      name: host:
+      let
+        alias = lib.optionals (host.dnsalias != null) host.dnsalias;
+      in
+      map (entry: {
+        name = entry;
+        ip = host.ipv4;
+      }) alias
+    ) config.homelab.hosts
+  );
 
-in {
+in
+{
   # networking.firewall.enable = true;
   # networking.firewall.logRefusedPackets = true;
   # networking.firewall.logReversePathDrops = true;
@@ -30,13 +37,14 @@ in {
       192.168.240.16 traefik.adele.lan home.adele.lan adguard.adele.lan
 
       # Hosts
-      ${lib.concatStringsSep "\n" (lib.mapAttrsToList (hostname: hostinfo:
-        "${hostinfo.ipv4} ${hostname}.${domain} ${hostname}")
-        config.homelab.hosts)}
+      ${lib.concatStringsSep "\n" (
+        lib.mapAttrsToList (
+          hostname: hostinfo: "${hostinfo.ipv4} ${hostname}.${domain} ${hostname}"
+        ) config.homelab.hosts
+      )}
 
       # Alias
-      ${lib.concatMapStringsSep "\n"
-      (host: "${host.ip} ${host.name}.${domain} ${host.name}") aliasIps}
+      ${lib.concatMapStringsSep "\n" (host: "${host.ip} ${host.name}.${domain} ${host.name}") aliasIps}
     '';
 
     # For ZFS

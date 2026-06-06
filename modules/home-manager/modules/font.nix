@@ -25,9 +25,12 @@ in
     regular = mkFontOption "regular";
   };
 
-
   config = lib.mkIf cfg.enable {
     fonts.fontconfig.enable = true;
-    home.packages = [ cfg.fontawesome.package cfg.monospace.package cfg.regular.package ];
+    home.packages = [
+      cfg.fontawesome.package
+      cfg.monospace.package
+      cfg.regular.package
+    ];
   };
 }

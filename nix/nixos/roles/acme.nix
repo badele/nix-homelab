@@ -1,10 +1,14 @@
-{ lib, config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 let
   roleName = "acme";
   roleEnabled = builtins.elem roleName config.homelab.currentHost.roles;
 in
-lib.mkIf (roleEnabled)
-{
+lib.mkIf (roleEnabled) {
   # Configure sops secret
   sops.secrets.gandi-apikey = { };
 

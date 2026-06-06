@@ -1,4 +1,5 @@
-{ inputs, lib, ... }: {
+{ inputs, lib, ... }:
+{
 
   imports = [ inputs.disko.nixosModules.disko ];
 
@@ -6,8 +7,7 @@
     disk = {
       disk1 = {
         type = "disk";
-        device = lib.mkDefault
-          "/dev/disk/by-id/ata-CYX-SSD-S1000_230324000201S5121504";
+        device = lib.mkDefault "/dev/disk/by-id/ata-CYX-SSD-S1000_230324000201S5121504";
         content = {
           type = "gpt";
           partitions = {
@@ -32,7 +32,9 @@
                 # unless their parent is mounted
                 subvolumes = {
                   # Subvolume name is different from mountpoint
-                  "/rootfs" = { mountpoint = "/"; };
+                  "/rootfs" = {
+                    mountpoint = "/";
+                  };
                   # Subvolume name is the same as the mountpoint
                   "/home" = {
                     mountOptions = [ "compress=zstd" ];
@@ -42,7 +44,10 @@
                   "/home/user" = { };
                   # Parent is not mounted so the mountpoint must be set
                   "/nix" = {
-                    mountOptions = [ "compress=zstd" "noatime" ];
+                    mountOptions = [
+                      "compress=zstd"
+                      "noatime"
+                    ];
                     mountpoint = "/nix";
                   };
                   # This subvolume will be created but not mounted
@@ -60,8 +65,12 @@
 
                 mountpoint = "/partition-root";
                 swap = {
-                  swapfile = { size = "20M"; };
-                  swapfile1 = { size = "20M"; };
+                  swapfile = {
+                    size = "20M";
+                  };
+                  swapfile1 = {
+                    size = "20M";
+                  };
                 };
               };
             };

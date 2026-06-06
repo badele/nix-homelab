@@ -11,12 +11,13 @@ let
   directories = lib.filterAttrs (name: type: type == "directory") allEntries;
 
   # Check if each directory has a default.nix and import it
-  featureModules = lib.mapAttrsToList
-    (name: _:
-      let modulePath = featuresDir + "/${name}/default.nix";
-      in if builtins.pathExists modulePath then modulePath else null
-    )
-    directories;
+  featureModules = lib.mapAttrsToList (
+    name: _:
+    let
+      modulePath = featuresDir + "/${name}/default.nix";
+    in
+    if builtins.pathExists modulePath then modulePath else null
+  ) directories;
 
   # Remove null entries (directories without default.nix)
   validModules = lib.filter (x: x != null) featureModules;

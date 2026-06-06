@@ -18,7 +18,7 @@
     ./openscad.nix
     ./org.nix
     ./python.nix
-    # ./rust.nix
+    ./rust.nix
     ./scala.nix
     ./terraform.nix
     ./xml.nix

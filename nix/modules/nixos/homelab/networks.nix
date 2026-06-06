@@ -1,7 +1,9 @@
 { lib, config, ... }:
 let
-  netOptions = with lib;
-    with types; {
+  netOptions =
+    with lib;
+    with types;
+    {
       vlanId = mkOption {
         type = nullOr int;
         default = null;
@@ -20,10 +22,11 @@ let
         description = "mask";
       };
     };
-in {
+in
+{
   options = with lib; {
     homelab.networks = mkOption {
-      type = with types; attrsOf (submodule [{ options = netOptions; }]);
+      type = with types; attrsOf (submodule [ { options = netOptions; } ]);
       description = "Networks";
     };
   };

@@ -1,5 +1,6 @@
 # Graphics
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     git # Distributed version control system
     jq # JSON pretty printer and manipulator

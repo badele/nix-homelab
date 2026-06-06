@@ -1,4 +1,5 @@
-{ ... }: {
+{ ... }:
+{
   # Create /data/docker folder
   systemd.tmpfiles.rules = [ "d /data/docker 0755 root root -" ];
 
@@ -12,6 +13,8 @@
       # setSocketVariable = true;
     };
 
-    daemon.settings = { experimental = true; };
+    daemon.settings = {
+      experimental = true;
+    };
   };
 }

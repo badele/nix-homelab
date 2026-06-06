@@ -74,7 +74,9 @@ in
   };
 
   # Indexers
-  services.prowlarr = { enable = true; };
+  services.prowlarr = {
+    enable = true;
+  };
 
   # Movies
   services.radarr = {

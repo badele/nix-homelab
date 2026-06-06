@@ -24,6 +24,5 @@ in
   ]
   ++ (builtins.attrValues outputs.homeManagerModules);
 
-  
   wallpaper = pkgs.wallpapers.forest-deer-landscape;
 }

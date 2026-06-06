@@ -1,4 +1,9 @@
-{ lib, config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 let
   roleName = "coredns";
   roleEnabled = builtins.elem roleName config.homelab.currentHost.roles;
@@ -6,27 +11,26 @@ let
 
   # Function
   # Get Hosts IP
-  hostsIps = lib.mapAttrsToList
-    (name: host: {
-      name = name;
-      ip = host.ipv4;
-    })
-    config.homelab.hosts;
+  hostsIps = lib.mapAttrsToList (name: host: {
+    name = name;
+    ip = host.ipv4;
+  }) config.homelab.hosts;
 
   # Function
   # Get Alias IP
   aliasIps = lib.flatten (
 
-    lib.mapAttrsToList
-      (name: host:
-        let alias = lib.optionals (host.dnsalias != null) host.dnsalias;
-        in map
-          (entry: {
-            name = entry;
-            ip = host.ipv4;
-          })
-          alias)
-      config.homelab.hosts);
+    lib.mapAttrsToList (
+      name: host:
+      let
+        alias = lib.optionals (host.dnsalias != null) host.dnsalias;
+      in
+      map (entry: {
+        name = entry;
+        ip = host.ipv4;
+      }) alias
+    ) config.homelab.hosts
+  );
 
   fileZone = pkgs.writeText "h.zone" ''
     $ORIGIN ${config.homelab.domain}.
@@ -42,18 +46,19 @@ let
     ns ${toString ttl} IN A ${config.homelab.currentHost.ipv4}
 
     ; hosts
-    ${lib.concatMapStringsSep "\n"
-    (host: "${host.name} ${toString ttl} IN A ${host.ip}") hostsIps}
+    ${lib.concatMapStringsSep "\n" (host: "${host.name} ${toString ttl} IN A ${host.ip}") hostsIps}
 
     ; alias
-    ${lib.concatMapStringsSep "\n"
-    (host: "${host.name} ${toString ttl} IN A ${host.ip}") aliasIps}
+    ${lib.concatMapStringsSep "\n" (host: "${host.name} ${toString ttl} IN A ${host.ip}") aliasIps}
   '';
 in
 lib.mkIf (roleEnabled) {
   services.coredns.enable = true;
 
-  networking.firewall.allowedTCPPorts = [ 53 9153 ];
+  networking.firewall.allowedTCPPorts = [
+    53
+    9153
+  ];
   networking.firewall.allowedUDPPorts = [ 53 ];
 
   services.coredns.config = ''

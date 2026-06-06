@@ -18,9 +18,15 @@ in
         filePath = "/var/lib/traefik/traefik.log";
       };
 
-      accessLog = { filePath = "/var/lib/traefik/access.log"; };
+      accessLog = {
+        filePath = "/var/lib/traefik/access.log";
+      };
 
-      entryPoints = { local = { address = "${localIp}:80"; }; };
+      entryPoints = {
+        local = {
+          address = "${localIp}:80";
+        };
+      };
     };
 
     # Dashboard
@@ -56,16 +62,24 @@ in
 
       services = {
         jellyfin = {
-          loadBalancer = { servers = [{ url = "http://localhost:8096"; }]; };
+          loadBalancer = {
+            servers = [ { url = "http://localhost:8096"; } ];
+          };
         };
         prowlarr = {
-          loadBalancer = { servers = [{ url = "http://localhost:9696"; }]; };
+          loadBalancer = {
+            servers = [ { url = "http://localhost:9696"; } ];
+          };
         };
         radarr = {
-          loadBalancer = { servers = [{ url = "http://localhost:7878"; }]; };
+          loadBalancer = {
+            servers = [ { url = "http://localhost:7878"; } ];
+          };
         };
         sonarr = {
-          loadBalancer = { servers = [{ url = "http://localhost:8989"; }]; };
+          loadBalancer = {
+            servers = [ { url = "http://localhost:8989"; } ];
+          };
         };
       };
     };

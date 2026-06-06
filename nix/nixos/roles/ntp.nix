@@ -1,10 +1,14 @@
-{ outputs, lib, config, ... }:
+{
+  outputs,
+  lib,
+  config,
+  ...
+}:
 let
   roleName = "ntp";
   roleEnabled = lib.elem roleName config.homelab.currentHost.roles;
 in
-lib.mkIf (roleEnabled)
-{
+lib.mkIf (roleEnabled) {
   services.ntp = {
     enable = true;
     servers = [

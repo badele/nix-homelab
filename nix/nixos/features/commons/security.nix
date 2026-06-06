@@ -1,4 +1,11 @@
-{ lib, pkgs, inputs, outputs, ... }: {
+{
+  lib,
+  pkgs,
+  inputs,
+  outputs,
+  ...
+}:
+{
   imports = [
   ];
 
@@ -9,9 +16,10 @@
   services.pcscd.enable = true;
 
   security.sudo.wheelNeedsPassword = false;
-  security.pam.services = { swaylock = { }; };
+  security.pam.services = {
+    swaylock = { };
+  };
   programs.fuse.userAllowOther = true;
-
 
   environment.systemPackages = with pkgs; [
     cryptsetup

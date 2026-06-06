@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (pkgs.lib) optionals optional;
@@ -16,17 +21,27 @@ let
   playerctld = "${pkgs.playerctl}/bin/playerctld";
 
   # Function to simplify making waybar outputs
-  jsonOutput = name: { pre ? "", text ? "", tooltip ? "", alt ? "", class ? "", percentage ? "" }: "${pkgs.writeShellScriptBin "waybar-${name}" ''
-    set -euo pipefail
-    ${pre}
-    ${jq} -cn \
-      --arg text "${text}" \
-      --arg tooltip "${tooltip}" \
-      --arg alt "${alt}" \
-      --arg class "${class}" \
-      --arg percentage "${percentage}" \
-      '{text:$text,tooltip:$tooltip,alt:$alt,class:$class,percentage:$percentage}'
-  ''}/bin/waybar-${name}";
+  jsonOutput =
+    name:
+    {
+      pre ? "",
+      text ? "",
+      tooltip ? "",
+      alt ? "",
+      class ? "",
+      percentage ? "",
+    }:
+    "${pkgs.writeShellScriptBin "waybar-${name}" ''
+      set -euo pipefail
+      ${pre}
+      ${jq} -cn \
+        --arg text "${text}" \
+        --arg tooltip "${tooltip}" \
+        --arg alt "${alt}" \
+        --arg class "${class}" \
+        --arg percentage "${percentage}" \
+        '{text:$text,tooltip:$tooltip,alt:$alt,class:$class,percentage:$percentage}'
+    ''}/bin/waybar-${name}";
 in
 {
   programs.waybar = {
@@ -92,23 +107,37 @@ in
             phone = "";
             portable = "";
             car = "";
-            default = [ "奄" "奔" "墳" ];
+            default = [
+              "奄"
+              "奔"
+              "墳"
+            ];
           };
           on-click = "pavucontrol";
           min-length = 13;
         };
 
-        backlight =
-          {
-            device = "intel_backlight";
-            format = "{icon} {percent}%";
-            format-icons = [ "" ];
-          };
+        backlight = {
+          device = "intel_backlight";
+          format = "{icon} {percent}%";
+          format-icons = [ "" ];
+        };
 
         battery = {
           bat = "BAT0";
           interval = 10;
-          format-icons = [ "" "" "" "" "" "" "" "" "" "" ];
+          format-icons = [
+            ""
+            ""
+            ""
+            ""
+            ""
+            ""
+            ""
+            ""
+            ""
+            ""
+          ];
           format = "{icon} {capacity}%";
           format-charging = " {capacity}%";
           states = {
@@ -144,18 +173,35 @@ in
           exec =
             let
               targets = {
-                electra = { host = "electra"; icon = " "; };
-                merope = { host = "merope"; icon = " "; };
-                atlas = { host = "atlas"; icon = " "; };
-                maia = { host = "maia"; icon = " "; };
-                pleione = { host = "pleione"; icon = " "; };
+                electra = {
+                  host = "electra";
+                  icon = " ";
+                };
+                merope = {
+                  host = "merope";
+                  icon = " ";
+                };
+                atlas = {
+                  host = "atlas";
+                  icon = " ";
+                };
+                maia = {
+                  host = "maia";
+                  icon = " ";
+                };
+                pleione = {
+                  host = "pleione";
+                  icon = " ";
+                };
               };
 
               showPingCompact = { host, icon }: "${icon} $ping_${host}";
               showPingLarge = { host, icon }: "${icon} ${host}: $ping_${host}";
-              setPing = { host, ... }: ''
-                ping_${host}="$(timeout 2 ping -c 1 -q ${host} 2>/dev/null | tail -1 | cut -d '/' -f5 | cut -d '.' -f1)ms" || ping_${host}="Disconnected"
-              '';
+              setPing =
+                { host, ... }:
+                ''
+                  ping_${host}="$(timeout 2 ping -c 1 -q ${host} 2>/dev/null | tail -1 | cut -d '/' -f5 | cut -d '.' -f1)ms" || ping_${host}="Disconnected"
+                '';
             in
             jsonOutput "tailscale-ping" {
               pre = ''
@@ -183,7 +229,8 @@ in
           interval = 2;
           return-type = "json";
           exec =
-            let keyring = import ../../keyring.nix { inherit pkgs; };
+            let
+              keyring = import ../../keyring.nix { inherit pkgs; };
             in
             jsonOutput "gpg-agent" {
               pre = ''status=$(${keyring.isUnlocked} && echo "unlocked" || echo "locked")'';
@@ -243,7 +290,7 @@ in
         };
 
         "custom/cava" = {
-          exec = ''${statuscava}'';
+          exec = "${statuscava}";
           restart-interval = 5;
           return-type = "newline";
           max-length = 30;
@@ -258,12 +305,14 @@ in
         #        width = 100;
         margin = "4";
         position = "bottom";
-        modules-left = (optionals config.wayland.windowManager.sway.enable [
-          "sway/workspaces"
-          "sway/mode"
-        ]) ++ (optionals config.wayland.windowManager.hyprland.enable [
-          "wlr/workspaces"
-        ]);
+        modules-left =
+          (optionals config.wayland.windowManager.sway.enable [
+            "sway/workspaces"
+            "sway/mode"
+          ])
+          ++ (optionals config.wayland.windowManager.hyprland.enable [
+            "wlr/workspaces"
+          ]);
 
         modules-right = [
           "temperature"
@@ -297,7 +346,6 @@ in
           sort-by-number = true;
         };
 
-
         # cpu = {
         #   interval = 1;
         #   format = " {usage}%";
@@ -306,12 +354,23 @@ in
         cpu =
           let
             # show nproc CPU bars
-            icons = lib.concatMapStrings (x: "{icon" + toString x + "} ") (lib.range 0 (config.hostprofile.nproc - 1));
+            icons = lib.concatMapStrings (x: "{icon" + toString x + "} ") (
+              lib.range 0 (config.hostprofile.nproc - 1)
+            );
           in
           {
             interval = 1;
             format = "${icons} {usage:>2}%";
-            format-icons = [ "▁" "▂" "▃" "▄" "▅" "▆" "▇" "█" ];
+            format-icons = [
+              "▁"
+              "▂"
+              "▃"
+              "▄"
+              "▅"
+              "▆"
+              "▇"
+              "█"
+            ];
             states = {
               warning = 70;
               critical = 90;
@@ -336,14 +395,15 @@ in
 
       };
 
-
     };
     # DEBUGING STYLE
     # env GTK_DEBUG=interactive waybar
     # waybar -l debug
 
     style =
-      let inherit (config.colorscheme) colors; in
+      let
+        inherit (config.colorscheme) colors;
+      in
       ''
 
 

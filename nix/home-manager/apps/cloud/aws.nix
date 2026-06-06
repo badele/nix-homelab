@@ -1,4 +1,11 @@
-{ config, inputs, pkgs, lib, ... }: {
+{
+  config,
+  inputs,
+  pkgs,
+  lib,
+  ...
+}:
+{
   home.packages = with pkgs; [
     ###################################"
     # AWS and other tools used with AWS

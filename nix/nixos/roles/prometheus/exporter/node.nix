@@ -4,7 +4,6 @@
     config.services.prometheus.exporters.node.port
   ];
 
-
   services.prometheus = {
     exporters = {
       node = {

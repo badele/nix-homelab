@@ -1,7 +1,14 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 with lib;
-let cfg = config.services.qbittorrent-nox;
-in {
+let
+  cfg = config.services.qbittorrent-nox;
+in
+{
   options.services.qbittorrent-nox = {
     enable = lib.mkEnableOption "qbittorrent-nox";
 
@@ -64,16 +71,19 @@ in {
     ];
 
     networking.firewall.allowedTCPPorts =
-      lib.optional (cfg.torrent.enableFirewall && cfg.torrent.port != null)
-        cfg.torrent.port ++ lib.optional cfg.ui.enableFirewall cfg.ui.port;
-    networking.firewall.allowedUDPPorts =
-      lib.optional (cfg.torrent.enableFirewall && cfg.torrent.port != null)
-        cfg.torrent.port;
+      lib.optional (cfg.torrent.enableFirewall && cfg.torrent.port != null) cfg.torrent.port
+      ++ lib.optional cfg.ui.enableFirewall cfg.ui.port;
+    networking.firewall.allowedUDPPorts = lib.optional (
+      cfg.torrent.enableFirewall && cfg.torrent.port != null
+    ) cfg.torrent.port;
 
     systemd.services.qbittorrent-nox = {
       description = "qBittorrent-nox service";
       documentation = [ "man:qbittorrent-nox(1)" ];
-      after = [ "network.target" "systemd-tmpfiles-setup.service" ];
+      after = [
+        "network.target"
+        "systemd-tmpfiles-setup.service"
+      ];
       wantedBy = [ "multi-user.target" ];
 
       serviceConfig = {
@@ -84,11 +94,8 @@ in {
 
         ExecStart = ''
           ${cfg.package}/bin/qbittorrent-nox --confirm-legal-notice ${
-            lib.optionalString (cfg.torrent.port != null)
-            "--torrenting-port=${toString cfg.torrent.port}"
-          } --webui-port=${
-            toString cfg.ui.port
-          } --profile=/var/lib/qbittorrent-nox
+            lib.optionalString (cfg.torrent.port != null) "--torrenting-port=${toString cfg.torrent.port}"
+          } --webui-port=${toString cfg.ui.port} --profile=/var/lib/qbittorrent-nox
         '';
 
         UMask = "0002";

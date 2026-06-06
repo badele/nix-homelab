@@ -1,6 +1,8 @@
 { config, ... }:
-let inherit (config.colorscheme) colors kind;
-in {
+let
+  inherit (config.colorscheme) colors kind;
+in
+{
   programs.mako = {
     enable = true;
     iconPath =

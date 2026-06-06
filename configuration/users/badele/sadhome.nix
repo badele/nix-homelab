@@ -89,6 +89,5 @@ in
     };
   };
 
-  
   wallpaper = pkgs.wallpapers.forest-deer-landscape;
 }

@@ -35,7 +35,7 @@
     # Multimedia
     mpv # Video player
     celluloid # mpv frontend
-    cava #vumeter
+    cava # vumeter
   ];
 
   home.sessionVariables = {

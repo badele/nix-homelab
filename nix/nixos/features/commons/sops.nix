@@ -1,7 +1,12 @@
-{ inputs, lib, config, ... }:
+{
+  inputs,
+  lib,
+  config,
+  ...
+}:
 let
-  defaultHostSopsFile = ./../../../..
-    + "/configuration/hosts/${config.networking.hostName}/secrets.yml";
+  defaultHostSopsFile =
+    ./../../../.. + "/configuration/hosts/${config.networking.hostName}/secrets.yml";
 in
 {
   imports = [ ];

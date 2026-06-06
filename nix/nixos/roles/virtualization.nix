@@ -1,10 +1,15 @@
-{ pkgs, outputs, lib, config, ... }:
+{
+  pkgs,
+  outputs,
+  lib,
+  config,
+  ...
+}:
 let
   roleName = "virtualization";
   roleEnabled = lib.elem roleName config.homelab.currentHost.roles;
 in
-lib.mkIf (roleEnabled)
-{
+lib.mkIf (roleEnabled) {
   virtualisation.libvirtd = {
     enable = true;
     qemu = {

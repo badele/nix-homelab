@@ -1,9 +1,20 @@
-{ inputs, config, pkgs, lib, ... }:
+{
+  inputs,
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.homelab.hosts.badxps;
   hostconfiguration = {
     description = "Dell XPS 9570 Latop";
-    roles = [ "coredns" "linkding" "netbox" "virtualization" ];
+    roles = [
+      "coredns"
+      "linkding"
+      "netbox"
+      "virtualization"
+    ];
     dnsalias = [
       "flood"
       "home"
@@ -16,8 +27,7 @@ let
       "sonarr"
     ];
 
-    icon =
-      "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png";
+    icon = "https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png";
     ipv4 = "192.168.254.114";
     os = "NixOS";
     nproc = 12;
@@ -44,7 +54,8 @@ let
       };
     };
   };
-in {
+in
+{
   imports = [ ];
 
   homelab.hosts.badxps = hostconfiguration;

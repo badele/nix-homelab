@@ -7,16 +7,18 @@ let
   };
 
   mikrotikMib =
-    builtins.replaceStrings [
-      "mikrotik:"
-    ] [
-      ''
-        mikrotik:
-          version: 2
-          auth:
-            community: public
-      ''
-    ]
+    builtins.replaceStrings
+      [
+        "mikrotik:"
+      ]
+      [
+        ''
+          mikrotik:
+            version: 2
+            auth:
+              community: public
+        ''
+      ]
       (builtins.readFile snmpFile);
 
   snmpConf = pkgs.writeText "snmp.yaml" ''

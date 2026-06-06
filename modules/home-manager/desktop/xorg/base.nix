@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
 
   imports = [
@@ -6,7 +11,6 @@
     ./rofi.nix
   ];
 
-  home.packages = with pkgs;
-    [
-    ];
+  home.packages = with pkgs; [
+  ];
 }

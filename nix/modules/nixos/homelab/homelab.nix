@@ -2,9 +2,12 @@
 let
   homelabJson = builtins.fromJSON (builtins.readFile ../../../../homelab.json);
 
-in {
-  options = with lib;
-    with types; {
+in
+{
+  options =
+    with lib;
+    with types;
+    {
       homelab.domain = mkOption {
         type = str;
         default = null;
