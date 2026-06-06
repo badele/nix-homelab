@@ -73,10 +73,10 @@ in
       ##########################################################################
       # Commons User configuration
       ##########################################################################
-      ../../modules/users/badele/base.nix
-      ../../modules/users/badele/term.nix
-      ../../modules/users/badele/dev.nix
-      ../../modules/users/badele/desktop.nix
+      ../../users/badele/base.nix
+      ../../users/badele/term.nix
+      ../../users/badele/dev.nix
+      ../../users/badele/desktop.nix
 
       ##########################################################################
       # Customize on this computer

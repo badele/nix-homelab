@@ -12,8 +12,8 @@ in
   imports = [
     # Default configuration for the clan machines.
     ./disko.nix
-    ../../modules/base.nix
-    ../../modules/desktop/wm/xorg/lightdm.nix
+    ../../modules/nixos/base.nix
+    ../../modules/nixos/desktop/wm/xorg/lightdm.nix
 
   ];
   homelab = {

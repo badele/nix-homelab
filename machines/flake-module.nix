@@ -164,7 +164,7 @@ in
           roles.default.tags = [ "all" ];
           roles.default.extraModules = [
             inputs.home-manager.nixosModules.home-manager
-            ../modules/base.nix
+            ../modules/nixos/base.nix
           ];
         };
 
@@ -172,7 +172,7 @@ in
           module.name = "importer";
           roles.default.tags = [ "desktop" ];
           roles.default.extraModules = [
-            ../modules/desktop/apps/base.nix
+            ../modules/nixos/desktop/apps/base.nix
           ];
         };
 
@@ -184,7 +184,7 @@ in
           };
 
           roles.default.extraModules = [
-            ../modules/desktop/wm/xorg/lightdm.nix
+            ../modules/nixos/desktop/wm/xorg/lightdm.nix
           ];
         };
 
@@ -196,7 +196,7 @@ in
           };
 
           roles.default.extraModules = [
-            ../modules/desktop/wm/xorg/kde.nix
+            ../modules/nixos/desktop/wm/xorg/kde.nix
           ];
         };
 
@@ -208,7 +208,7 @@ in
           };
 
           roles.default.extraModules = [
-            ../modules/system/printer.nix
+            ../modules/nixos/system/printer.nix
           ];
         };
 

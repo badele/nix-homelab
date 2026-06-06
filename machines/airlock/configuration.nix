@@ -73,11 +73,11 @@ in
       ##########################################################################
       # Commons User configuration
       ##########################################################################
-      ../../modules/users/badele/base.nix
-      ../../modules/users/badele/term.nix
-      ../../modules/users/badele/dev.nix
-      ../../modules/users/badele/desktop.nix
-      ../../modules/users/badele/fix/kde.nix
+      ../../users/badele/base.nix
+      ../../users/badele/term.nix
+      ../../users/badele/dev.nix
+      ../../users/badele/desktop.nix
+      ../../users/badele/fix/kde.nix
 
       ##########################################################################
       # Customize on this computer
@@ -125,6 +125,16 @@ in
     # home-manager imports
     imports = [
       # self.inputs.stylix.homeModules.stylix
+      ##########################################################################
+      # Commons User configuration
+      ##########################################################################
+      ../../users/sadele/base.nix
+
+      ##########################################################################
+      # Customize on this computer
+      ##########################################################################
+
+      # Base
       ../../modules/home-manager/base.nix
     ];
   };

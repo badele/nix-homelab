@@ -112,20 +112,6 @@
         ./modules/flake-module.nix
         ./packages/flake-module.nix
         ./templates/flake-module.nix
-
-        ./flake-parts/nixos-configurations.nix
-        ./flake-parts/home-configurations.nix
       ];
-
-      flake = {
-        # Your custom packages and modifications, exported as overlays
-        overlays = import ./nix/overlays { inherit inputs; };
-        # Reusable nixos modules you might want to export
-        # These are usually stuff you would upstream into nixpkgs
-        nixosModules = import ./nix/modules/nixos;
-        # Reusable home-manager modules you might want to export
-        # These are usually stuff you would upstream into home-manager
-        # homeManagerModules = import ./nix/modules/home-manager;
-      };
     };
 }
