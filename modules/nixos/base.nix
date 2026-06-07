@@ -44,7 +44,7 @@
     overlays = [
       self.inputs.nur.overlays.default
     ]
-    ++ (import ../../overlays/default.nix { inherit (self) inputs; });
+    ++ (import ../../flakes/overlays/default.nix { inherit (self) inputs; });
   };
 
   nix = {
