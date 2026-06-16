@@ -14,7 +14,12 @@
     ./wpa-gui.nix
   ];
 
-  xdg.mimeApps.enable = true;
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "application/pdf" = [ "org.kde.okular.desktop" ];
+    };
+  };
 
   home.packages = with pkgs; [
     arandr
