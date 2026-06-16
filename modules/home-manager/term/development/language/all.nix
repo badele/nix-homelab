@@ -21,6 +21,7 @@
     ./rust.nix
     ./scala.nix
     ./terraform.nix
+    ./typst.nix
     ./xml.nix
     ./yaml.nix
   ];
