@@ -2,7 +2,7 @@
   ...
 }:
 let
-  diskId = "@DISKID@";
+  diskId = "nvme-PC801_NVMe_SK_hynix_1TB__SMC5N006110905O2M";
 in
 
 {

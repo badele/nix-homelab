@@ -42,6 +42,9 @@ in
           "printer"
           "wifi-home"
         ];
+
+        hangar16.tags = [
+        ];
       };
 
       instances = {
@@ -139,7 +142,10 @@ in
             settings.host = "192.168.254.200";
           };
           roles.default.machines.badxps = {
-            settings.host = "192.168.254.179";
+            settings.host = "192.168.240.224";
+          };
+          roles.default.machines.hangar16 = {
+            settings.host = "192.168.240.16";
           };
         };
 

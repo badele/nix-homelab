@@ -4,7 +4,6 @@
 let
   diskId = "@DISKID@";
 in
-
 {
   boot.loader.grub = {
     efiInstallAsRemovable = true;
@@ -42,33 +41,29 @@ in
             #    discardPolicy = "both";
             #  };
             #};
-            "luks" = {
+            root = {
               size = "100%";
               content = {
-                type = "luks";
-                name = "cryptroot";
-                content = {
-                  type = "btrfs";
-                  extraArgs = [
-                    "--force"
-                    "--label root"
-                  ];
-                  subvolumes = {
-                    "@root" = {
-                      mountpoint = "/";
-                      mountOptions = [ ];
-                    };
-                    "@nix" = {
-                      mountpoint = "/nix";
-                      mountOptions = [
-                        "compress=zstd"
-                        "noatime"
-                      ];
-                    };
-                    "@home" = {
-                      mountpoint = "/home";
-                      mountOptions = [ "compress=zstd" ];
-                    };
+                type = "btrfs";
+                extraArgs = [
+                  "--force"
+                  "--label root"
+                ];
+                subvolumes = {
+                  "@root" = {
+                    mountpoint = "/";
+                    mountOptions = [ ];
+                  };
+                  "@nix" = {
+                    mountpoint = "/nix";
+                    mountOptions = [
+                      "compress=zstd"
+                      "noatime"
+                    ];
+                  };
+                  "@home" = {
+                    mountpoint = "/home";
+                    mountOptions = [ "compress=zstd" ];
                   };
                 };
               };

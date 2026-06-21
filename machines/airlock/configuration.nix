@@ -13,7 +13,13 @@
 let
   # first time ssh
   buildHost = "192.168.254.179";
-  targetHost = self.clan.inventory.instances.internet.roles.default.machines.airlock.settings.host;
+  internetMachine = self.clan.inventory.instances.internet.roles.default.machines.airlock;
+  # Clan inventory may expose machine settings directly or through imported fragments.
+  targetHost =
+    if internetMachine.settings ? host then
+      internetMachine.settings.host
+    else
+      (builtins.head (builtins.head internetMachine.settings.imports).imports).host;
 in
 {
   programs.zsh.enable = true;
@@ -27,7 +33,7 @@ in
     nameServer = "192.168.254.154";
     host = {
       hostname = "airlock";
-      description = "Space laptop";
+      description = "Family shared laptop";
       interface = "enp1s0";
       address = targetHost;
       gateway = "192.168.254.254";

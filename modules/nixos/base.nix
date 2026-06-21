@@ -11,7 +11,7 @@
     self.nixosModules.homelab
     self.inputs.srvos.nixosModules.mixins-terminfo
 
-    ./system/locale.nix
+    ./system/network.nix
     ./system/sshd.nix
     ./system/yubikey.nix
     ./virtualisation/podman.nix

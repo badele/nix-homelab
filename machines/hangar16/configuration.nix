@@ -8,13 +8,13 @@
 # The Host configuration use the tag
 # See the machines/flake-module.nix for the tag definition and usage
 # in the clan-core module
-#
-# This host use I3
 
 let
-  internetMachine = self.clan.inventory.instances.internet.roles.default.machines.badxps;
+  # first time ssh
+  admSuffixIPv4 = "16";
+  internetMachine = self.clan.inventory.instances.internet.roles.default.machines.hangar16;
   # Clan inventory may expose machine settings directly or through imported fragments.
-  targetIP =
+  targetHost =
     if internetMachine.settings ? host then
       internetMachine.settings.host
     else
@@ -29,15 +29,15 @@ in
   ];
 
   homelab = {
-    nameServer = targetIP;
+    nameServer = "192.168.254.154";
     host = {
-      hostname = "badxps";
-      description = "main badele laptop";
+      hostname = "hangar16";
+      description = "Virtualization server for the homelab";
       interface = config.homelab.vlans.lan.name;
-      address = "192.168.254.179"; # TODO: use targetIP
+      address = "192.168.254.${admSuffixIPv4}";
       gateway = "192.168.254.254";
 
-      nproc = 4;
+      nproc = 20;
     };
 
     features = {
@@ -45,14 +45,14 @@ in
       tailscale.enable = false;
     };
   };
-
   # rename network devices
   # udevadm info -q property -p /sys/class/net/<INTERFACE-NAME> | grep '^ID_PATH='
+  # udevadm info -q property -p /sys/class/net/<INTERFACE-NAME> | grep 'DRIVER='
   # udevadm control --reload
   # udevadm trigger --subsystem-match=net
   systemd.network.links."10-usb-ethernet" = {
     matchConfig = {
-      Path = "pci-0000:3a:00.0-usb-0:1.2:1.0";
+      Path = "pci-0000:00:0d.0-usb-0:1:1.0";
       Driver = "r8152";
     };
 
@@ -63,8 +63,8 @@ in
 
   systemd.network.links."10-wifi" = {
     matchConfig = {
-      Path = "pci-0000:3b:00.0";
-      Driver = "ath10k_pci";
+      Path = "pci-0000:00:14.3";
+      Driver = "iwlwifi";
     };
 
     linkConfig = {
@@ -108,39 +108,26 @@ in
 
       "vlan-${config.homelab.vlans.adm.name}".ipv4.addresses = [
         {
-          address = "192.168.240.224";
+          address = "192.168.240.${admSuffixIPv4}";
           prefixLength = 24;
         }
       ];
 
       "vlan-${config.homelab.vlans.dmz.name}".ipv4.addresses = [
         {
-          address = "192.168.32.224";
+          address = "192.168.32.${admSuffixIPv4}";
           prefixLength = 24;
         }
       ];
 
       "vlan-${config.homelab.vlans.iot.name}".ipv4.addresses = [
         {
-          address = "192.168.40.224";
+          address = "192.168.40.${admSuffixIPv4}";
           prefixLength = 24;
         }
       ];
     };
   };
-
-  # Backup existing files with a timestamp to avoid backup name collisions.
-  home-manager.backupCommand = pkgs.writeShellScript "hm-backup-command" ''
-    target="$1"
-    timestamp="$(date +%Y%m%d-%H%M%S)"
-    backup_path="''${target}.hm-backup-''${timestamp}"
-
-    if [ -e "''${backup_path}" ]; then
-      backup_path="''${backup_path}-$$"
-    fi
-
-    mv -- "''${target}" "''${backup_path}"
-  '';
 
   ##############################################################################
   # badele User configuration
@@ -165,9 +152,6 @@ in
       ##########################################################################
       ../../users/badele/base.nix
       ../../users/badele/term.nix
-      ../../users/badele/dev.nix
-      ../../users/badele/desktop.nix
-      ../../users/badele/system.nix
 
       ##########################################################################
       # Customize on this computer
@@ -175,9 +159,6 @@ in
 
       # Base
       ../../modules/home-manager/base.nix
-
-      # Bluetooth
-      ../../modules/home-manager/term/bluetooth.nix
 
       # Security (GPG, SSH)
       ../../modules/home-manager/term/security/gpg.nix
@@ -199,13 +180,9 @@ in
       # Web browser
       # ../../home-manager/desktop/apps/google-chrome.nix
       # ../../users/badele/modules/firefox.nix
-
-      # Xorg and Window Manager
-      ../../modules/home-manager/desktop/xorg/base.nix
-      ../../modules/home-manager/desktop/xorg/wm/i3.nix
-      ../../modules/home-manager/desktop/apps/base.nix
     ];
   };
 
-  clan.core.networking.targetHost = "root@${targetIP}";
+  clan.core.networking.targetHost = "root@${targetHost}";
+  # clan.core.networking.buildHost = "badele@${buildHost}";
 }

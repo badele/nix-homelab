@@ -307,20 +307,20 @@ in
         # Colors
         GREP_COLORS = "ms=01;31:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36";
 
-        # less & Man color
-        LESS_TERMCAP_mb = "$(tput bold; tput setaf 2)"; # green
-        LESS_TERMCAP_md = "$(tput bold; tput setaf 6)"; # cyan
-        LESS_TERMCAP_me = "$(tput sgr0)";
-        LESS_TERMCAP_so = "$(tput bold; tput setaf 3; tput setab 4)"; # yellow on blue
-        LESS_TERMCAP_se = "$(tput rmso; tput sgr0)";
-        LESS_TERMCAP_us = "$(tput smul; tput bold; tput setaf 4)"; # purple
-        LESS_TERMCAP_ue = "$(tput rmul; tput sgr0)";
-        LESS_TERMCAP_mr = "$(tput rev)";
-        LESS_TERMCAP_mh = "$(tput dim)";
-        LESS_TERMCAP_ZN = "$(tput ssubm)";
-        LESS_TERMCAP_ZV = "$(tput rsubm)";
-        LESS_TERMCAP_ZO = "$(tput ssupm)";
-        LESS_TERMCAP_ZW = "$(tput rsupm)";
+        # Guard terminal capability lookups for non-interactive shells without TERM.
+        LESS_TERMCAP_mb = "$([ -n \"$TERM\" ] && tput bold && tput setaf 2)"; # green
+        LESS_TERMCAP_md = "$([ -n \"$TERM\" ] && tput bold && tput setaf 6)"; # cyan
+        LESS_TERMCAP_me = "$([ -n \"$TERM\" ] && tput sgr0)";
+        LESS_TERMCAP_so = "$([ -n \"$TERM\" ] && tput bold && tput setaf 3 && tput setab 4)"; # yellow on blue
+        LESS_TERMCAP_se = "$([ -n \"$TERM\" ] && tput rmso && tput sgr0)";
+        LESS_TERMCAP_us = "$([ -n \"$TERM\" ] && tput smul && tput bold && tput setaf 4)"; # purple
+        LESS_TERMCAP_ue = "$([ -n \"$TERM\" ] && tput rmul && tput sgr0)";
+        LESS_TERMCAP_mr = "$([ -n \"$TERM\" ] && tput rev)";
+        LESS_TERMCAP_mh = "$([ -n \"$TERM\" ] && tput dim)";
+        LESS_TERMCAP_ZN = "$([ -n \"$TERM\" ] && tput ssubm)";
+        LESS_TERMCAP_ZV = "$([ -n \"$TERM\" ] && tput rsubm)";
+        LESS_TERMCAP_ZO = "$([ -n \"$TERM\" ] && tput ssupm)";
+        LESS_TERMCAP_ZW = "$([ -n \"$TERM\" ] && tput rsupm)";
 
         PRJ_DEVTOOLS = "${prj_devtools}";
         PRJ_DEVTOOLS_DEFAULT_ROLE = "admin";
