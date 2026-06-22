@@ -43,6 +43,69 @@ in
     features = {
       homelab-summary.enable = true;
       tailscale.enable = false;
+
+      proxmox = {
+        enable = true;
+
+        bridges = {
+          vmbr-lan = {
+            interfaces = [ config.homelab.vlans.lan.name ];
+            ipv4.addresses = [
+              {
+                address = config.homelab.host.address;
+                prefixLength = 24;
+              }
+            ];
+          };
+
+          vmbr-adm = {
+            interfaces = [ "vlan-${config.homelab.vlans.adm.name}" ];
+            ipv4.addresses = [
+              {
+                address = "192.168.240.${admSuffixIPv4}";
+                prefixLength = 24;
+              }
+            ];
+          };
+
+          vmbr-dmz = {
+            interfaces = [ "vlan-${config.homelab.vlans.dmz.name}" ];
+            ipv4.addresses = [
+              {
+                address = "192.168.32.${admSuffixIPv4}";
+                prefixLength = 24;
+              }
+            ];
+          };
+
+          vmbr-iot = {
+            interfaces = [ "vlan-${config.homelab.vlans.iot.name}" ];
+            ipv4.addresses = [
+              {
+                address = "192.168.40.${admSuffixIPv4}";
+                prefixLength = 24;
+              }
+            ];
+          };
+        };
+
+        vms.hello-adm = {
+          vmid = 100;
+          memory = 1024;
+          cores = 1;
+          sockets = 1;
+          onboot = false;
+          # This smoke-test VM validates Proxmox networking and VM provisioning.
+          net = [
+            {
+              model = "virtio";
+              bridge = "vmbr-adm";
+              firewall = true;
+            }
+          ];
+          scsi = [ { file = "local:8"; } ];
+        };
+      };
     };
   };
   # rename network devices
@@ -76,7 +139,18 @@ in
     networkmanager.unmanaged = [
       "interface-name:${config.homelab.vlans.lan.name}"
       "interface-name:vlan-${config.homelab.vlans.adm.name}"
+      "interface-name:vlan-${config.homelab.vlans.dmz.name}"
+      "interface-name:vlan-${config.homelab.vlans.iot.name}"
+      "interface-name:vmbr-lan"
+      "interface-name:vmbr-adm"
+      "interface-name:vmbr-dmz"
+      "interface-name:vmbr-iot"
     ];
+
+    defaultGateway = {
+      address = config.homelab.host.gateway;
+      interface = "lan";
+    };
 
     vlans = {
       # IPv6 hexa speak => bootable == fdca:5a00:b007:ab1e/64
@@ -99,33 +173,10 @@ in
     };
 
     interfaces = {
-      "${config.homelab.vlans.lan.name}".ipv4.addresses = [
-        {
-          address = config.homelab.host.address;
-          prefixLength = 24;
-        }
-      ];
-
-      "vlan-${config.homelab.vlans.adm.name}".ipv4.addresses = [
-        {
-          address = "192.168.240.${admSuffixIPv4}";
-          prefixLength = 24;
-        }
-      ];
-
-      "vlan-${config.homelab.vlans.dmz.name}".ipv4.addresses = [
-        {
-          address = "192.168.32.${admSuffixIPv4}";
-          prefixLength = 24;
-        }
-      ];
-
-      "vlan-${config.homelab.vlans.iot.name}".ipv4.addresses = [
-        {
-          address = "192.168.40.${admSuffixIPv4}";
-          prefixLength = 24;
-        }
-      ];
+      "${config.homelab.vlans.lan.name}" = { };
+      "vlan-${config.homelab.vlans.adm.name}" = { };
+      "vlan-${config.homelab.vlans.dmz.name}" = { };
+      "vlan-${config.homelab.vlans.iot.name}" = { };
     };
   };
 
