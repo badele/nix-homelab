@@ -13,7 +13,7 @@
 
   home.packages = with pkgs; [
     # Tools
-    ipcalc # IP subnetcalculator
+    sipcalc # IP subnetcalculator
 
     # Networking
     # [conflit] pietrasanta-traceroute # Traceroute utility

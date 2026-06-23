@@ -6,6 +6,25 @@ let
   helpers = import ./helpers.nix { inherit lib; };
   inherit (helpers) mkFeatureOptions mkPodmanAliases mkServiceAliases;
 
+  vlanOptions =
+    with lib;
+    with types;
+    {
+      name = mkOption {
+        type = str;
+        description = ''
+          VLAN interface name
+        '';
+      };
+
+      id = mkOption {
+        type = int;
+        description = ''
+          VLAN identifier
+        '';
+      };
+    };
+
   hostOptions =
     with lib;
     with types;
@@ -114,6 +133,14 @@ in
       '';
     };
 
+    homelab.vlans = mkOption {
+      type = attrsOf (submodule [ { options = vlanOptions; } ]);
+      default = { };
+      description = ''
+        Global VLAN catalog shared across machines.
+      '';
+    };
+
     # homelab.features is an open attribute set
     # Individual feature modules define their own options under homelab.features.<name>
     # They should use the mkFeatureOptions helper to ensure common options are defined
@@ -145,6 +172,25 @@ in
       dokuwiki.appId = 190;
       kanidm.appId = 200;
       zitadel.appId = 210;
+    };
+
+    homelab.vlans = {
+      adm = {
+        name = "adm";
+        id = 240;
+      };
+      lan = {
+        name = "lan";
+        id = 254;
+      };
+      dmz = {
+        name = "dmz";
+        id = 32;
+      };
+      iot = {
+        name = "iot";
+        id = 40;
+      };
     };
 
     # Export the helper functions so feature modules can use them

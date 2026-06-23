@@ -36,6 +36,8 @@ clan templates list
 Configure partition
 
 ```shell
+just nixos-apply-disko <MACHINE-NAME> btrfs-single-disk-subvolumes
+just nixos-apply-disko <MACHINE-NAME> btrfs-single-disk-subvolumes wwn-0x5002538d428f282d
 just nixos-apply-disko <MACHINE-NAME> luks-btrfs-single-disk-subvolumes
 just nixos-apply-disko <MACHINE-NAME> luks-btrfs-single-disk-subvolumes wwn-0x5002538d428f282d
 ```
@@ -55,4 +57,16 @@ git add machines/<machine-name>
 
 ```bash
 clan machines install "<MACHINE-NAME>" --target-host "<IP>"
+```
+
+### Update
+
+```bash
+just nixos-update "<MACHINE-NAME>"
+
+# machine without internet
+just nixos-update "<MACHINE-NAME>" --upload-inputs --host-key-check accept-new
+
+# build on other host
+just nixos-update "<MACHINE-NAME>" --build-host "<USERNAME@MACHINE-NAME>"
 ```

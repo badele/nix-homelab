@@ -27,7 +27,7 @@ Voici une liste des applications ou services que nix-homelab propose
         <a href="/docs/features/acme.md">ACME 📚</a>
       </td>
       <td>nixos</td>
-      <td>4.31.0</td>
+      <td>4.35.2</td>
       <td>Let's Encrypt client and ACME library written in Go</td>
     </tr>
     <tr>
@@ -38,7 +38,7 @@ Voici une liste des applications ou services que nix-homelab propose
         <a href="/docs/features/blocky.md">Blocky 📚</a>
       </td>
       <td>nixos</td>
-      <td>0.29.0</td>
+      <td>0.31.0</td>
       <td>Fast and lightweight DNS proxy as ad-blocker for local network with many features</td>
     </tr>
     <tr>
@@ -49,7 +49,7 @@ Voici une liste des applications ou services que nix-homelab propose
         <a href="/docs/features/caddy.md">Caddy 📚</a>
       </td>
       <td>nixos</td>
-      <td>2.11.2</td>
+      <td>2.11.4</td>
       <td>Fast and extensible multi-platform HTTP/1-2-3 web server with automatic HTTPS</td>
     </tr>
     <tr>
@@ -76,13 +76,24 @@ Voici une liste des applications ou services que nix-homelab propose
     </tr>
     <tr>
       <td align="center">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/proxmox.png" width="48" height="48" alt="Proxmox VE"/>
+      </td>
+      <td>
+        <a href="https://github.com/SaumonNet/proxmox-nixos">Proxmox VE</a>
+      </td>
+      <td>nixos</td>
+      <td>9.1.6</td>
+      <td>Virtualization host with Proxmox VE on NixOS</td>
+    </tr>
+    <tr>
+      <td align="center">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/tailscale.png" width="48" height="48" alt="Tailscale"/>
       </td>
       <td>
         <a href="/docs/features/tailscale.md">Tailscale 📚</a>
       </td>
       <td>nixos</td>
-      <td>1.96.5</td>
+      <td>1.98.5</td>
       <td>Node agent for Tailscale, a mesh VPN built on WireGuard</td>
     </tr>
     <tr>
@@ -163,7 +174,7 @@ Voici une liste des applications ou services que nix-homelab propose
         <a href="/docs/features/miniflux.md">Miniflux 📚</a>
       </td>
       <td>nixos</td>
-      <td>2.2.19</td>
+      <td>2.3.1</td>
       <td>Minimalist and opinionated feed reader</td>
     </tr>
     <tr>
@@ -207,7 +218,7 @@ Voici une liste des applications ou services que nix-homelab propose
         <a href="https://github.com/matze/wastebin">Wastebin</a>
       </td>
       <td>nixos</td>
-      <td>3.6.1</td>
+      <td>3.6.2</td>
       <td>Pastebin service</td>
     </tr>
   </tbody>
@@ -233,7 +244,7 @@ Voici une liste des applications ou services que nix-homelab propose
         <a href="https://gatus.io">Gatus</a>
       </td>
       <td>nixos</td>
-      <td>5.35.0</td>
+      <td>5.36.0</td>
       <td>Automated developer-oriented status page</td>
     </tr>
     <tr>
@@ -244,7 +255,7 @@ Voici une liste des applications ou services que nix-homelab propose
         <a href="https://grafana.com">Grafana</a>
       </td>
       <td>nixos</td>
-      <td>13.0.1</td>
+      <td>13.0.2</td>
       <td>Gorgeous metric viz, dashboards & editors for Graphite, InfluxDB & OpenTSDB</td>
     </tr>
     <tr>
@@ -255,7 +266,7 @@ Voici une liste des applications ou services que nix-homelab propose
         <a href="https://gethomepage.dev">Homepage</a>
       </td>
       <td>nixos</td>
-      <td>1.12.3</td>
+      <td>1.13.1</td>
       <td>Highly customisable dashboard with Docker and service API integrations</td>
     </tr>
     <tr>
@@ -266,7 +277,7 @@ Voici une liste des applications ou services que nix-homelab propose
         <a href="https://victoriametrics.com/">Victoriametrics</a>
       </td>
       <td>nixos</td>
-      <td>1.142.0</td>
+      <td>1.145.0</td>
       <td>Fast, cost-effective and scalable time series database, long-term remote storage for Prometheus</td>
     </tr>
   </tbody>

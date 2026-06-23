@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   self,
   ...
@@ -11,7 +12,13 @@
 # This host use I3
 
 let
-  targetIP = self.clan.inventory.instances.internet.roles.default.machines.badxps.settings.host;
+  internetMachine = self.clan.inventory.instances.internet.roles.default.machines.badxps;
+  # Clan inventory may expose machine settings directly or through imported fragments.
+  targetIP =
+    if internetMachine.settings ? host then
+      internetMachine.settings.host
+    else
+      (builtins.head (builtins.head internetMachine.settings.imports).imports).host;
 in
 {
   programs.zsh.enable = true;
@@ -26,8 +33,8 @@ in
     host = {
       hostname = "badxps";
       description = "main badele laptop";
-      interface = "enp1s0";
-      address = targetIP;
+      interface = config.homelab.vlans.lan.name;
+      address = "192.168.254.179"; # TODO: use targetIP
       gateway = "192.168.254.254";
 
       nproc = 4;
@@ -36,6 +43,89 @@ in
     features = {
       homelab-summary.enable = true;
       tailscale.enable = false;
+    };
+  };
+
+  # rename network devices
+  # udevadm info -q property -p /sys/class/net/<INTERFACE-NAME> | grep '^ID_PATH='
+  # udevadm control --reload
+  # udevadm trigger --subsystem-match=net
+  systemd.network.links."10-usb-ethernet" = {
+    matchConfig = {
+      Path = "pci-0000:3a:00.0-usb-0:1.2:1.0";
+      Driver = "r8152";
+    };
+
+    linkConfig = {
+      Name = config.homelab.host.interface;
+    };
+  };
+
+  systemd.network.links."10-wifi" = {
+    matchConfig = {
+      Path = "pci-0000:3b:00.0";
+      Driver = "ath10k_pci";
+    };
+
+    linkConfig = {
+      Name = "wifi";
+    };
+  };
+
+  networking = {
+    networkmanager.unmanaged = [
+      "interface-name:${config.homelab.vlans.lan.name}"
+      "interface-name:vlan-${config.homelab.vlans.adm.name}"
+    ];
+
+    vlans = {
+      # IPv6 hexa speak => bootable == fdca:5a00:b007:ab1e/64
+      "vlan-${config.homelab.vlans.adm.name}" = {
+        id = config.homelab.vlans.adm.id;
+        interface = config.homelab.host.interface;
+      };
+
+      # IPv6 hexa speak => dead face == fdca:5a00:dead:face/64
+      "vlan-${config.homelab.vlans.dmz.name}" = {
+        id = config.homelab.vlans.dmz.id;
+        interface = config.homelab.host.interface;
+      };
+
+      # IPv6 hexa speak => data feed == fdca:5a00:da7a:feed/64
+      "vlan-${config.homelab.vlans.iot.name}" = {
+        id = config.homelab.vlans.iot.id;
+        interface = config.homelab.host.interface;
+      };
+    };
+
+    interfaces = {
+      "${config.homelab.vlans.lan.name}".ipv4.addresses = [
+        {
+          address = config.homelab.host.address;
+          prefixLength = 24;
+        }
+      ];
+
+      "vlan-${config.homelab.vlans.adm.name}".ipv4.addresses = [
+        {
+          address = "192.168.240.224";
+          prefixLength = 24;
+        }
+      ];
+
+      "vlan-${config.homelab.vlans.dmz.name}".ipv4.addresses = [
+        {
+          address = "192.168.32.224";
+          prefixLength = 24;
+        }
+      ];
+
+      "vlan-${config.homelab.vlans.iot.name}".ipv4.addresses = [
+        {
+          address = "192.168.40.224";
+          prefixLength = 24;
+        }
+      ];
     };
   };
 
