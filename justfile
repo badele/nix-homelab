@@ -95,6 +95,11 @@ precommit-install:
     # Update screenshots commands
     # termshot -f docs/commands.png -- just
 
+# Serve markdown documentation
+[group('doc')]
+@doc-serve:
+   go-grip
+
 
 ###############################################################################
 # Debug
@@ -104,11 +109,6 @@ precommit-install:
 [group('debug')]
 @debug-repl:
     nix repl --extra-experimental-features repl-flake .#
-
-# Repl the project
-[group('debug')]
-@serve-markdown:
-   go-grip
 
 ###############################################################################
 # Flake

@@ -182,6 +182,12 @@ All Available homelab features :
   </tr>
   <tr>
     <td align="center" width="16%">
+      <a href="/docs/all-features.md#core-services" title="Virtualization host with Proxmox VE on NixOS">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/proxmox.png" width="48" height="48" alt="Proxmox VE"/>
+        <br/>Proxmox VE
+      </a>
+    </td>
+    <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Internet Radio">
         <img src="https://raw.githubusercontent.com/pinpox/radio/4ebb907732a165dfd80b4147884536add4ee1384/static/icon-192.png" width="48" height="48" alt="Radio"/>
         <br/>Radio
@@ -211,14 +217,14 @@ All Available homelab features :
         <br/>Tailscale
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#system-health" title="Fast, cost-effective and scalable time series database, long-term remote storage for Prometheus">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/victoriametrics.png" width="48" height="48" alt="Victoriametrics"/>
         <br/>Victoriametrics
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Pastebin service">
         <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/wastebin.webp" width="48" height="48" alt="Wastebin"/>
@@ -231,7 +237,6 @@ All Available homelab features :
         <br/>ZITADEL
       </a>
     </td>
-    <td width="16%"></td>
     <td width="16%"></td>
     <td width="16%"></td>
     <td width="16%"></td>

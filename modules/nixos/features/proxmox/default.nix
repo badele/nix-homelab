@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   inputs,
   mkFeatureOptions,
   ...
@@ -16,10 +17,10 @@ let
   appPlatform = "nixos";
   appDescription = "Virtualization host with Proxmox VE on NixOS";
   appUrl = "https://github.com/SaumonNet/proxmox-nixos";
-  appPinnedVersion = inputs.proxmox-nixos.rev or null;
-
   cfg = config.homelab.features.${appName};
   system = config.nixpkgs.hostPlatform.system;
+  # Read the package version from the flake input directly so documentation
+  appPinnedVersion = lib.getVersion inputs.proxmox-nixos.packages.${system}.proxmox-ve;
   exposedURL = "https://${cfg.ipAddress}:8006";
 
   ipAddressModule = {
@@ -153,14 +154,18 @@ in
           ;
       }) cfg.bridges;
 
-      networking.interfaces = mapAttrs (_: bridge: {
-        useDHCP = bridge.useDHCP;
-        inherit (bridge) mtu;
-        ipv4.addresses = bridge.ipv4.addresses;
-        ipv6.addresses = bridge.ipv6.addresses;
-      } // optionalAttrs (bridge.macAddress != null) {
-        macAddress = bridge.macAddress;
-      }) cfg.bridges;
+      networking.interfaces = mapAttrs (
+        _: bridge:
+        {
+          useDHCP = bridge.useDHCP;
+          inherit (bridge) mtu;
+          ipv4.addresses = bridge.ipv4.addresses;
+          ipv6.addresses = bridge.ipv6.addresses;
+        }
+        // optionalAttrs (bridge.macAddress != null) {
+          macAddress = bridge.macAddress;
+        }
+      ) cfg.bridges;
     })
   ];
 }
