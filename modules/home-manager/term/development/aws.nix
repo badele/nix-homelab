@@ -14,7 +14,7 @@
     kubectl # Kubernetes CLI
     kubectx # Kubernetes CLI
     k9s # Kubernetes CLI
-    kdash # k9s alternative (Read only)
+    # kdash # k9s alternative (Read only) / package broken in nixpkgs (upstream issue: re-tagger release)
     kubernetes-helm # Helm
     argocd # ArgoCD CLI
   ];
