@@ -11,6 +11,12 @@
     defaultEditor = true;
   };
 
+  systemd.user.services.emacs.Service = {
+    Environment = [
+      "SSH_AUTH_SOCK=%t/gnupg/S.gpg-agent.ssh"
+    ];
+  };
+
   nixpkgs.config = {
     allowUnfree = true;
     allowUnfreePredicate =
