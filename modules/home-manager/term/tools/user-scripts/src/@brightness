@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=./homelab_library.sh
+. "$script_dir/homelab_library.sh"
+
+# Vars
+step=5
+timeout=3000
+notify_id=990001
+
+get_brightness() {
+    brightnessctl -m 2>/dev/null | grep -P -o "([0-9]+)%" | sed 's/%//'
+}
+
+notify() {
+    local brightness="$1"
+    local icon="󰃞"
+
+    if [ "$brightness" -lt 50 ]; then
+        icon="󰃝"
+    fi
+
+    dunstify -u low -r "$notify_id" -t "$timeout" -h "int:value:$brightness" "$icon  $brightness%"
+}
+
+change_brightness() {
+    local current_brightness
+    local rounded_brightness
+    local target_brightness
+
+    current_brightness=$(get_brightness)
+
+    case "$1" in
+    up)
+        rounded_brightness=$(round_to_nearest_step "$current_brightness" "$step")
+        target_brightness=$(clamp $((rounded_brightness + step)) 0 100)
+        brightnessctl set "${target_brightness}%" >/dev/null 2>&1
+        ;;
+    down)
+        rounded_brightness=$(round_to_nearest_step "$current_brightness" "$step")
+        target_brightness=$(clamp $((rounded_brightness - step)) 0 100)
+        brightnessctl set "${target_brightness}%" >/dev/null 2>&1
+        ;;
+    *)
+        exit 1
+        ;;
+    esac
+
+    notify "$(get_brightness)"
+}
+
+change_brightness "$1"

@@ -1,16 +1,49 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=./homelab_library.sh
+. "$script_dir/homelab_library.sh"
+
 # Vars
 volvalue=5
 timeout=3000
-pulseid=$(pgrep pulseaudio)
-activesink=$(pactl list short sinks | grep RUNNING | awk '{ print $1}')
+notify_id=990000
+max_volume=150
+
+usage() {
+    echo "Usage: @mixer {output|mic} {up|down|mute}" >&2
+    exit 1
+}
+
+get_target() {
+    case "$1" in
+    output)
+        printf '%s\n' "@DEFAULT_AUDIO_SINK@"
+        ;;
+    mic)
+        printf '%s\n' "@DEFAULT_AUDIO_SOURCE@"
+        ;;
+    *)
+        usage
+        ;;
+    esac
+}
+
+get_state() {
+    wpctl get-volume "$1" 2>/dev/null | awk '
+        {
+            volume = int(($2 * 100) + 0.5)
+            muted = ($3 == "[MUTED]") ? 1 : 0
+            printf "%s %s\n", volume, muted
+        }
+    '
+}
 
 # Send notification
 function notify {
-    muted=$(pulsemixer --id "$1" --get-mute)
-    volume=$(pulsemixer --id "$1" --get-volume | awk '{print $1}')
-    bar=$(seq -s "─" $(($volume / 5)) | sed 's/[0-9]//g')
+    read -r volume muted <<<"$(get_state "$1")"
 
     # Search font symbol => https://www.nerdfonts.com/cheat-sheet
     if [ "$muted" -ne 1 ]; then
@@ -23,29 +56,36 @@ function notify {
         else
             icon="󱄡"
         fi
-        dunstify -u low -r "$pulseid" -t "$timeout" "$icon $bar"
+        dunstify -u low -r "$notify_id" -t "$timeout" -h "int:value:$volume" "$icon  $volume%"
     else
-        # icon="status/audio-volume-muted-symbolic.svg"
-        dunstify -u low -r "$pulseid" -t "$timeout" "󰝟 muted"
+        dunstify -u low -r "$notify_id" -t "$timeout" "󰝟 muted"
     fi
 }
 
 # Update volume
 mix() {
-    unmute=""
-    if [[ "$(pulsemixer --get-mute)" == "1" ]]; then
-        unmute="--toggle-mute"
-    fi
+    read -r current_volume current_muted <<<"$(get_state "$2")"
+    local rounded_volume
+    local target_volume
 
     case $1 in
     up)
-        pulsemixer $unmute --change-volume +"$volvalue" --id "$2"
+        rounded_volume=$(round_to_nearest_step "$current_volume" "$volvalue")
+        target_volume=$(clamp $((rounded_volume + volvalue)) 0 "$max_volume")
+        wpctl set-mute "$2" 0 2>/dev/null
+        wpctl set-volume "$2" "${target_volume}%" 2>/dev/null
         ;;
     down)
-        pulsemixer $unmute --change-volume -"$volvalue" --id "$2"
+        rounded_volume=$(round_to_nearest_step "$current_volume" "$volvalue")
+        target_volume=$(clamp $((rounded_volume - volvalue)) 0 "$max_volume")
+        wpctl set-mute "$2" 0 2>/dev/null
+        wpctl set-volume "$2" "${target_volume}%" 2>/dev/null
         ;;
     mute)
-        pulsemixer --toggle-mute --id "$2"
+        wpctl set-mute "$2" toggle 2>/dev/null
+        ;;
+    *)
+        usage
         ;;
     esac
 
@@ -53,11 +93,14 @@ mix() {
 }
 
 # Select source
-case $1 in
+case "${1:-}" in
 output)
-    mix "$2" "$activesink"
+    mix "${2:-}" "$(get_target "$1")"
     ;;
 mic)
-    mix "$2" "source-1"
+    mix "${2:-}" "$(get_target "$1")"
+    ;;
+*)
+    usage
     ;;
 esac

@@ -15,6 +15,7 @@ let
     phases = "installPhase fixupPhase";
     installPhase = ''
       mkdir -p $out/bin
+      cp ${src}/homelab_library.sh $out/bin/
       cp ${src}/@* $out/bin/
       cp ${src}/status-* $out/bin/
       chmod +x $out/bin/*

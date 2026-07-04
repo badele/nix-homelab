@@ -22,6 +22,7 @@ in
         height = 300;
         offset = "30x50";
         origin = "top-right";
+        follow = "mouse";
         transparency = 10;
         # frame_color = hexPalette.bright.magenta;
         # font = "${config.fontProfiles.monospace.family} 12";
