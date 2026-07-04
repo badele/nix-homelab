@@ -5,7 +5,6 @@ let
   # hexPalette = with inputs.nix-rice.lib;
   # palette.toRGBHex pkgs.rice.colorPalette;
   lockTime = 4 * 60; # TODO: configurable desktop (10 min)/laptop (4 min)
-  execAndNotify = cmd: mess: ''exec "${cmd}; notify-send '${mess}'"'';
 
   # i3 workspaces
   mod = "Mod4";
@@ -36,6 +35,7 @@ let
   feh = "${pkgs.feh}/bin/feh";
   i3lock = "${pkgs.i3lock-color}/bin/i3lock-color";
   xidlehook = "${pkgs.xidlehook}/bin/xidlehook";
+
   lockCmd = "${i3lock} --blur 5";
   # terminal = "${pkgs.wezterm}/bin/wezterm";
   terminal = "${pkgs.kitty}/bin/kitty";
@@ -133,10 +133,13 @@ in
           # # || Super+p || Pause media player | i3
           # # || Super+m || Show TUI pulseaudio mixer | i3
           # # || Super+d || Show TUI mount disk | i3
-          "XF86AudioMute" = "exec --no-startup-id ~/.local/bin/mixer output mute";
-          "XF86AudioMicMute" = "exec --no-startup-id ~/.local/bin/mixer mic mute";
+          "XF86AudioMute" = "exec --no-startup-id @mixer output mute";
+          "XF86AudioMicMute" = "exec --no-startup-id @mixer mic mute";
           "XF86AudioLowerVolume" = "exec --no-startup-id @mixer output down";
           "XF86AudioRaiseVolume" = "exec --no-startup-id @mixer output up";
+          "XF86MonBrightnessUp" = "exec --no-startup-id @brightness up";
+          "XF86MonBrightnessDown" = "exec --no-startup-id @brightness down";
+
           "${mod}+p" = "exec --no-startup-id ${playerctl} play-pause";
           "${mod}+s" = "exec --no-startup-id ${playerctl} next";
           "${mod}+a" = "exec --no-startup-id autorandr -c";
@@ -145,10 +148,6 @@ in
           "${mod}+m" = "exec --no-startup-id ${cfg.terminal} --class winfloat -- pulsemixer";
           "${mod}+n" = "exec --no-startup-id ${cfg.terminal} --class winfloat -- nmtui";
           "${mod}+t" = "exec --no-startup-id ${cfg.terminal} --class winfloat -- btop";
-
-          # # Screen brightness controls
-          "XF86MonBrightnessUp" = execAndNotify "brightnessctl set 5%+" "brightness up";
-          "XF86MonBrightnessDown" = execAndNotify "brightnessctl set 5%-" "brightness down";
 
           # # Video
           "${mod}+ctrl+r" = "exec --no-startup-id ~/.local/bin/video_toggle_record_desktop";
