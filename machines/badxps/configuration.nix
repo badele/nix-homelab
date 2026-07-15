@@ -76,6 +76,12 @@ in
     networkmanager.unmanaged = [
       "interface-name:${config.homelab.vlans.lan.name}"
       "interface-name:vlan-${config.homelab.vlans.adm.name}"
+      "interface-name:vlan-${config.homelab.vlans.dmz.name}"
+      "interface-name:vlan-${config.homelab.vlans.iot.name}"
+      "interface-name:br-lan"
+      "interface-name:br-adm"
+      "interface-name:br-dmz"
+      "interface-name:br-iot"
     ];
 
     vlans = {
@@ -98,35 +104,69 @@ in
       };
     };
 
+    defaultGateway = {
+      address = config.homelab.host.gateway;
+      interface = "br-lan";
+    };
+
+    bridges = {
+      br-lan.interfaces = [ config.homelab.vlans.lan.name ];
+      br-adm.interfaces = [ "vlan-${config.homelab.vlans.adm.name}" ];
+      br-dmz.interfaces = [ "vlan-${config.homelab.vlans.dmz.name}" ];
+      br-iot.interfaces = [ "vlan-${config.homelab.vlans.iot.name}" ];
+    };
+
     interfaces = {
-      "${config.homelab.vlans.lan.name}".ipv4.addresses = [
+      "${config.homelab.vlans.lan.name}" = { };
+      "vlan-${config.homelab.vlans.adm.name}" = { };
+      "vlan-${config.homelab.vlans.dmz.name}" = { };
+      "vlan-${config.homelab.vlans.iot.name}" = { };
+
+      br-lan.ipv4.addresses = [
         {
           address = config.homelab.host.address;
           prefixLength = 24;
         }
       ];
 
-      "vlan-${config.homelab.vlans.adm.name}".ipv4.addresses = [
+      br-adm.ipv4.addresses = [
         {
           address = "192.168.240.224";
           prefixLength = 24;
         }
       ];
 
-      "vlan-${config.homelab.vlans.dmz.name}".ipv4.addresses = [
+      br-dmz.ipv4.addresses = [
         {
           address = "192.168.32.224";
           prefixLength = 24;
         }
       ];
 
-      "vlan-${config.homelab.vlans.iot.name}".ipv4.addresses = [
+      br-iot.ipv4.addresses = [
         {
           address = "192.168.40.224";
           prefixLength = 24;
         }
       ];
     };
+  };
+
+  boot.kernelModules = [ "tun" ];
+
+  # This is required for qemu to be able to use the bridge networking on user-defined bridges.
+  environment.etc."qemu/bridge.conf".text = ''
+    allow br-lan
+    allow br-adm
+    allow br-dmz
+    allow br-iot
+  '';
+
+  security.wrappers.qemu-bridge-helper = {
+    setuid = true;
+    owner = "root";
+    group = "root";
+    source = "${pkgs.qemu}/libexec/qemu-bridge-helper";
   };
 
   # Backup existing files with a timestamp to avoid backup name collisions.
