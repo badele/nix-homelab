@@ -4,6 +4,7 @@
   pkgs,
   mkFeatureOptions,
   mkServiceAliases,
+  resolveListenInterfaceAddresses,
   ...
 }:
 with lib;
@@ -137,6 +138,7 @@ in
 
         services.caddy.virtualHosts = mkIf cfg.openFirewall {
           "${cfg.serviceDomain}" = {
+            listenAddresses = resolveListenInterfaceAddresses appName cfg.listenInterfaces;
             logFormat = ''
               output file /var/log/caddy/public.log {
                 mode 0644

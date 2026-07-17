@@ -43,55 +43,66 @@ in
       acme.enable = true;
       acme.email = config.homelab.domainEmailAdmin;
       acme.dnsProvider = "hetzner";
+      acme.tokenScope = "private";
 
       caddy.enable = true;
-
-      authentik.enable = true;
-      authentik.openFirewall = true;
-      authentik.serviceDomain = "douane.${config.homelab.domain}";
+      caddy.tokenScope = "private";
 
       blocky.enable = true;
       blocky.openFirewall = true;
-      blocky.enableMonitoring = true;
+      blocky.enableMetrics = true;
       blocky.serviceDomain = "stop-pub.${config.homelab.domain}";
+      blocky.registerScope = [ "private" ];
+      blocky.dnsRegistrationScopes = [ "private" ];
 
       gatus.enable = true;
       gatus.openFirewall = true;
+      gatus.registerScope = [ "private" ];
 
       goaccess.enable = true;
       goaccess.openFirewall = true;
       goaccess.serviceDomain = "portique.${config.homelab.domain}";
+      goaccess.registerScope = [ "private" ];
 
       grafana.enable = true;
       grafana.openFirewall = true;
       grafana.serviceDomain = "lampiotes.${config.homelab.domain}";
+      grafana.registerScope = [ "private" ];
 
       homepage-dashboard.enable = true;
       homepage-dashboard.openFirewall = true;
       homepage-dashboard.serviceDomain = "labrique.${config.homelab.domain}";
+      homepage-dashboard.registerScope = [ "private" ];
 
       it-tools.enable = true;
       it-tools.openFirewall = true;
+      it-tools.registerScope = [ "private" ];
 
       linkding.enable = true;
       linkding.openFirewall = true;
+      linkding.registerScope = [ "private" ];
 
       lldap.enable = true;
       lldap.ldapDomain = "dc=ma-cabane,dc=lan";
       lldap.openFirewall = true;
+      lldap.registerScope = [ "private" ];
 
       shaarli.enable = true;
       shaarli.openFirewall = true;
+      shaarli.registerScope = [ "private" ];
 
       victoriametrics.enable = true;
       victoriametrics.openFirewall = true;
       victoriametrics.serviceDomain = "sondes.${config.homelab.domain}";
+      victoriametrics.registerScope = [ "private" ];
 
       wastebin.enable = true;
       wastebin.openFirewall = true;
+      wastebin.registerScope = [ "private" ];
 
       grist.enable = true;
       grist.openFirewall = true;
+      grist.registerScope = [ "private" ];
 
       radio.enable = true;
       radio.openFirewall = true;
@@ -145,6 +156,7 @@ in
           url = "http://direct.franceinfo.fr/live/franceinfo-midfi.mp3";
         }
       ];
+      radio.registerScope = [ "private" ];
 
     };
   };

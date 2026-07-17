@@ -5,6 +5,7 @@
   pkgs,
   mkFeatureOptions,
   mkPodmanAliases,
+  resolveListenInterfaceAddresses,
   ...
 }:
 with lib;
@@ -24,7 +25,7 @@ let
   cfg = config.homelab.features.${appName};
 
   prometheusConfig = {
-    scrape_configs = cfg.scrapeConfigs;
+    scrape_configs = cfg.scrapeConfigs ++ integrationScrapeConfigs;
   };
 
   # Get port from central registry
@@ -32,6 +33,18 @@ let
 
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenHttpPort}";
+
+  integrationServicesWithScrapes = lib.filterAttrs (
+    _: service: service.victoriametrics != null
+  ) config.homelab.integrations.services;
+
+  integrationScrapeConfigs = lib.mapAttrsToList (
+    serviceName: service:
+    {
+      job_name = serviceName;
+    }
+    // service.victoriametrics
+  ) integrationServicesWithScrapes;
 
 in
 {
@@ -188,6 +201,7 @@ in
 
       services.caddy.virtualHosts = lib.mkIf cfg.openFirewall {
         "${cfg.serviceDomain}" = {
+          listenAddresses = resolveListenInterfaceAddresses appName cfg.listenInterfaces;
           logFormat = ''
             output file /var/log/caddy/public.log {
               mode 0644

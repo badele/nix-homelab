@@ -140,6 +140,31 @@ let
         '';
       };
 
+      listenInterfaces = mkOption {
+        type = listOf str;
+        default = [ ];
+        description = ''
+          Network interfaces used to expose this feature.
+          Interface names are resolved to IPv4 addresses from networking.interfaces.
+        '';
+      };
+
+      registerScope = mkOption {
+        type = listOf str;
+        default = [ ];
+        description = ''
+          DNS registration scopes used when publishing this feature domain.
+        '';
+      };
+
+      dnsTargetAddress = mkOption {
+        type = nullOr str;
+        default = null;
+        description = ''
+          Explicit IPv4 address published for this feature domain.
+        '';
+      };
+
       remoteAccess = mkEnableOption "Allow remote access to this application (create new listening port 20000 + appId";
 
     }

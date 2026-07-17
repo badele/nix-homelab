@@ -22,66 +22,6 @@ let
   # Read the package version from the flake input directly so documentation
   appPinnedVersion = lib.getVersion inputs.proxmox-nixos.packages.${system}.proxmox-ve;
   exposedURL = "https://${cfg.ipAddress}:8006";
-
-  ipAddressModule = {
-    options = {
-      address = mkOption {
-        type = str;
-        description = "IP address.";
-      };
-
-      prefixLength = mkOption {
-        type = int;
-        description = "Subnet prefix length.";
-      };
-    };
-  };
-
-  bridgeModule = {
-    options = {
-      interfaces = mkOption {
-        type = listOf str;
-        default = [ ];
-        description = "Bridge member interfaces.";
-      };
-
-      rstp = mkOption {
-        type = bool;
-        default = false;
-        description = "Enable RSTP on the bridge.";
-      };
-
-      useDHCP = mkOption {
-        type = bool;
-        default = false;
-        description = "Enable DHCP on the bridge interface.";
-      };
-
-      ipv4.addresses = mkOption {
-        type = listOf (submodule ipAddressModule);
-        default = [ ];
-        description = "Static IPv4 addresses assigned to the bridge.";
-      };
-
-      ipv6.addresses = mkOption {
-        type = listOf (submodule ipAddressModule);
-        default = [ ];
-        description = "Static IPv6 addresses assigned to the bridge.";
-      };
-
-      mtu = mkOption {
-        type = nullOr int;
-        default = null;
-        description = "Bridge MTU.";
-      };
-
-      macAddress = mkOption {
-        type = nullOr str;
-        default = null;
-        description = "Bridge MAC address.";
-      };
-    };
-  };
 in
 {
   imports = [
@@ -102,12 +42,6 @@ in
         type = bool;
         default = true;
         description = "Open Proxmox VE firewall ports.";
-      };
-
-      bridges = mkOption {
-        type = attrsOf (submodule bridgeModule);
-        default = { };
-        description = "Host bridge configuration managed by the feature.";
       };
 
       vms = mkOption {
@@ -143,29 +77,9 @@ in
         enable = true;
         ipAddress = cfg.ipAddress;
         openFirewall = cfg.openFirewall;
-        bridges = attrNames cfg.bridges;
+        bridges = attrNames config.networking.bridges;
         vms = cfg.vms;
       };
-
-      networking.bridges = mapAttrs (_: bridge: {
-        inherit (bridge)
-          interfaces
-          rstp
-          ;
-      }) cfg.bridges;
-
-      networking.interfaces = mapAttrs (
-        _: bridge:
-        {
-          useDHCP = bridge.useDHCP;
-          inherit (bridge) mtu;
-          ipv4.addresses = bridge.ipv4.addresses;
-          ipv6.addresses = bridge.ipv6.addresses;
-        }
-        // optionalAttrs (bridge.macAddress != null) {
-          macAddress = bridge.macAddress;
-        }
-      ) cfg.bridges;
     })
   ];
 }

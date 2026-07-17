@@ -1,6 +1,8 @@
 {
   self,
   inputs,
+  config,
+  lib,
   ...
 }:
 let
@@ -10,6 +12,23 @@ let
   borgHost = "${borgUser}.your-storagebox.de";
   borgPort = "23";
 
+  nixosMachineInventory = lib.filterAttrs (
+    _: machine: machine.machineClass == "nixos"
+  ) config.flake.clan.inventory.machines;
+
+  sharedDomainsCatalog = lib.mapAttrs (
+    machineName: _:
+    (inputs.nixpkgs.lib.nixosSystem {
+      modules = [ config.flake.clan.outputs.moduleForMachine.${machineName} ];
+      specialArgs = {
+        inherit self inputs;
+        inherit (inputs) clan-core;
+        isSharedDomainsCatalogEval = true;
+        sharedDomainsCatalog = { };
+      };
+    }).config.homelab.domains.localEntries
+  ) nixosMachineInventory;
+
 in
 {
   imports = [
@@ -18,7 +37,9 @@ in
 
   flake.clan = {
     # Make flake available in modules
-    specialArgs = { inherit self inputs; };
+    specialArgs = {
+      inherit self inputs sharedDomainsCatalog;
+    };
     inherit self;
 
     meta = {
@@ -45,6 +66,10 @@ in
 
         hangar16.tags = [
         ];
+
+        hangar16-vm.tags = [
+        ];
+
       };
 
       instances = {
@@ -146,6 +171,9 @@ in
           };
           roles.default.machines.hangar16 = {
             settings.host = "192.168.240.16";
+          };
+          roles.default.machines.hangar16-vm = {
+            settings.host = "192.168.240.116";
           };
         };
 

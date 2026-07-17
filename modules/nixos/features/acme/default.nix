@@ -19,6 +19,7 @@ let
   appPinnedVersion = pkgs.lego.version;
 
   cfg = config.homelab.features.${appName};
+  envGeneratorName = "acme-dns-01-${cfg.tokenScope}";
 in
 {
   # Hetzner
@@ -43,6 +44,15 @@ in
         type = str;
         default = "hetzner";
         description = "DNS provider for ACME DNS-01 challenges";
+      };
+
+      tokenScope = mkOption {
+        type = enum [
+          "private"
+          "public"
+        ];
+        default = "private";
+        description = "Shared ACME credential scope used to select DNS API tokens.";
       };
     };
   };
@@ -80,7 +90,7 @@ in
             extraDomainNames = [ config.homelab.domain ];
             dnsProvider = cfg.dnsProvider;
             group = config.services.caddy.group;
-            environmentFile = config.clan.core.vars.generators.acme-dns-01.files.envfile.path;
+            environmentFile = config.clan.core.vars.generators.${envGeneratorName}.files.envfile.path;
             dnsPropagationCheck = true;
           };
         };

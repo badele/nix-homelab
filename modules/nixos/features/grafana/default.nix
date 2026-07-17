@@ -4,6 +4,7 @@
   pkgs,
   mkFeatureOptions,
   mkServiceAliases,
+  resolveListenInterfaceAddresses,
   ...
 }:
 with lib;
@@ -25,6 +26,15 @@ let
 
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenHttpPort}";
+  integrationServicesWithGrafana = lib.filterAttrs (
+    _: service: service.grafana != null
+  ) config.homelab.integrations.services;
+  integrationGrafanaDashboards = lib.flatten (
+    lib.mapAttrsToList (_: service: service.grafana.dashboards or [ ]) integrationServicesWithGrafana
+  );
+  integrationGrafanaDatasources = lib.flatten (
+    lib.mapAttrsToList (_: service: service.grafana.datasources or [ ]) integrationServicesWithGrafana
+  );
 
 in
 {
@@ -171,8 +181,12 @@ in
         };
       };
 
+      services.grafana.provision.dashboards.settings.providers = lib.mkIf (integrationGrafanaDashboards != [ ]) integrationGrafanaDashboards;
+      services.grafana.provision.datasources.settings.datasources = lib.mkIf (integrationGrafanaDatasources != [ ]) integrationGrafanaDatasources;
+
       services.caddy.virtualHosts = lib.mkIf cfg.openFirewall {
         "${cfg.serviceDomain}" = {
+          listenAddresses = resolveListenInterfaceAddresses appName cfg.listenInterfaces;
           logFormat = ''
             output file /var/log/caddy/public.log {
               mode 0644

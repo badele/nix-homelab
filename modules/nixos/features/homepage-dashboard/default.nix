@@ -4,6 +4,7 @@
   pkgs,
   mkFeatureOptions,
   mkServiceAliases,
+  resolveListenInterfaceAddresses,
   ...
 }:
 with lib;
@@ -38,8 +39,12 @@ let
     name: feature: feature.enable or false && feature.homepage != null
   ) config.homelab.features;
 
+  integrationServicesWithHomepage = lib.filterAttrs (
+    _: service: service.homepage != null
+  ) config.homelab.integrations.services;
+
   # Group services by category
-  servicesByCategory = lib.foldl' (
+  featureServicesByCategory = lib.foldl' (
     acc: featureName:
     let
       feature = config.homelab.features.${featureName};
@@ -53,6 +58,38 @@ let
       ${category} = (acc.${category} or [ ]) ++ [ serviceEntry ];
     }
   ) { } (builtins.attrNames featuresWithHomepage);
+
+  integrationServicesByCategory = lib.foldl' (
+    acc: serviceName:
+    let
+      service = config.homelab.integrations.services.${serviceName};
+      category = service.category;
+      serviceEntry = {
+        ${service.displayName} =
+          {
+            icon = service.icon;
+            description = service.description;
+          }
+          // service.homepage;
+      };
+    in
+    acc
+    // {
+      ${category} = (acc.${category} or [ ]) ++ [ serviceEntry ];
+    }
+  ) { } (builtins.attrNames integrationServicesWithHomepage);
+
+  allCategories = lib.unique (
+    (builtins.attrNames featureServicesByCategory)
+    ++ (builtins.attrNames integrationServicesByCategory)
+  );
+
+  servicesByCategory = builtins.listToAttrs (
+    map (category: {
+      name = category;
+      value = (featureServicesByCategory.${category} or [ ]) ++ (integrationServicesByCategory.${category} or [ ]);
+    }) allCategories
+  );
 
   # Convert to homepage-dashboard format: [ { "Category" = [ ... ]; } ]
   # Respect categoryOrder for categories that exist
@@ -566,6 +603,7 @@ in
 
         services.caddy.virtualHosts = mkIf cfg.openFirewall {
           "${cfg.serviceDomain}" = {
+            listenAddresses = resolveListenInterfaceAddresses appName cfg.listenInterfaces;
             logFormat = ''
               output file /var/log/caddy/public.log {
                 mode 0644

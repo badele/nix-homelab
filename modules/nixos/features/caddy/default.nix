@@ -3,6 +3,7 @@
   lib,
   pkgs,
   mkFeatureOptions,
+  mkServiceAliases,
   ...
 }:
 with lib;
@@ -20,6 +21,9 @@ let
 
   cfg = config.homelab.features.${appName};
   acmeCfg = config.homelab.features.acme;
+  tokenScope = cfg.tokenScope;
+  promptGeneratorName = "${tokenScope}_dns_api_key";
+  envGeneratorName = "acme-dns-01-${tokenScope}";
 
   useHetznerDns = (cfg.enable || acmeCfg.enable) && cfg.dnsProvider == "hetzner";
 in
@@ -41,6 +45,15 @@ in
         type = str;
         default = acmeCfg.dnsProvider;
         description = "DNS provider for Caddy ACME DNS-01 challenges.";
+      };
+
+      tokenScope = mkOption {
+        type = enum [
+          "private"
+          "public"
+        ];
+        default = acmeCfg.tokenScope;
+        description = "Shared ACME credential scope used to select DNS API tokens.";
       };
 
       propagationDelay = mkOption {
@@ -89,24 +102,26 @@ in
       }
 
       (mkIf useHetznerDns {
-        clan.core.vars.generators.prompt_acme_api_key = {
+        clan.core.vars.generators.${promptGeneratorName} = {
+          share = true;
           prompts."acme_api_key" = {
-            description = "Please insert ${cfg.dnsProvider} API TOKEN";
+            description = "Please insert ${cfg.dnsProvider} API TOKEN (${tokenScope})";
             persist = true;
           };
         };
 
-        clan.core.vars.generators.acme-dns-01 = {
+        clan.core.vars.generators.${envGeneratorName} = {
+          share = true;
           files.envfile = {
             owner = config.services.caddy.user;
             group = config.services.caddy.group;
           };
 
           dependencies = [
-            "prompt_acme_api_key"
+            promptGeneratorName
           ];
           script = ''
-            APITOKEN=$(cat $in/prompt_acme_api_key/acme_api_key)
+            APITOKEN=$(cat $in/${promptGeneratorName}/acme_api_key)
             echo "HETZNER_API_TOKEN=$APITOKEN" > $out/envfile
           '';
         };
@@ -118,10 +133,10 @@ in
           email = cfg.email;
         }
         // optionalAttrs (cfg.dnsProvider == "hetzner") {
-          environmentFile = config.clan.core.vars.generators.acme-dns-01.files.envfile.path;
+          environmentFile = config.clan.core.vars.generators.${envGeneratorName}.files.envfile.path;
           package = pkgs.caddy.withPlugins {
             plugins = [ "github.com/caddy-dns/hetzner/v2@v2.0.0" ];
-            hash = "sha256-pQJ4X7o8Z2Ra2OteMrzP7guWcxBe4zfn8jFwIAdQ+Ow=";
+            hash = "sha256-awdrDYpwyAW+OR+U4bOlulHZ0gc12zNRYUg2UtxOPGc=";
           };
           globalConfig = ''
             cert_issuer acme {
@@ -133,6 +148,11 @@ in
             auto_https disable_redirects
           '';
         };
+
+        programs.bash.shellAliases = (mkServiceAliases appName) // {
+          "@service-${appName}-config" = "cat /etc/caddy/caddy_config";
+        };
+
       })
     ];
 }
