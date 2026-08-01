@@ -59,6 +59,18 @@ I follow a hybrid approach:
 This gives me the best of both worlds: NixOS reproducibility with container
 flexibility.
 
+### 🔐 Disk Encryption
+
+Disk encryption is enabled whenever possible across the homelab. It is
+especially important on laptops because they are mobile devices and therefore
+more exposed to loss or theft. The same principle also applies to servers,
+since a stolen machine may still contain sensitive data.
+
+`constellation` is the main exception to this rule. It is a critical private
+server and provides core services such as DNS ad blocking for the local
+network. After a power outage, it must be able to boot automatically without
+requiring a manual passphrase entry.
+
 ### 📦 Services & Applications
 
 All Available homelab features :
@@ -162,6 +174,12 @@ All Available homelab features :
       </a>
     </td>
     <td align="center" width="16%">
+      <a href="/docs/all-features.md#core-services" title="MikroTik RouterOS management helpers">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/mikrotik.png" width="48" height="48" alt="MikroTik"/>
+        <br/>MikroTik
+      </a>
+    </td>
+    <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Minimalist and opinionated feed reader">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/miniflux.png" width="48" height="48" alt="Miniflux"/>
         <br/>Miniflux
@@ -173,14 +191,20 @@ All Available homelab features :
         <br/>Nix homelab summary
       </a>
     </td>
+  </tr>
+  <tr>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#core-services" title="Implementation of the SSH protocol">
+        <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/openssh.webp" width="48" height="48" alt="OpenSSH"/>
+        <br/>OpenSSH
+      </a>
+    </td>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#deprecated-services" title="The Ultimate HTML5 Internet Radio Player">
         <img src="https://prahec.com/projects/pawtunes/demo/assets/img/apple-touch-icon.png" width="48" height="48" alt="Pawtunes"/>
         <br/>Pawtunes
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#core-services" title="Virtualization host with Proxmox VE on NixOS">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/proxmox.png" width="48" height="48" alt="Proxmox VE"/>
@@ -205,6 +229,8 @@ All Available homelab features :
         <br/>Shaarli
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#deprecated-services" title="Private certificate authority (X.509 & SSH) & ACME server for secure automated certificate management, so you can use TLS everywhere & SSO for SSH">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/step-ca.png" width="48" height="48" alt="Step CA"/>
@@ -217,8 +243,6 @@ All Available homelab features :
         <br/>Tailscale
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#system-health" title="Fast, cost-effective and scalable time series database, long-term remote storage for Prometheus">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/victoriametrics.png" width="48" height="48" alt="Victoriametrics"/>
@@ -237,8 +261,6 @@ All Available homelab features :
         <br/>ZITADEL
       </a>
     </td>
-    <td width="16%"></td>
-    <td width="16%"></td>
     <td width="16%"></td>
   </tr>
 </table>

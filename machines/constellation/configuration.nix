@@ -130,6 +130,21 @@ in
       grist.listenInterfaces = lib.mkForce [
         "br-infra"
       ];
+
+      mikrotik = {
+        enable = true;
+        backup = true;
+        routers = [
+          {
+            name = "mkt254";
+            host = "192.168.240.254";
+          }
+          {
+            name = "mkt253";
+            host = "192.168.240.253";
+          }
+        ];
+      };
     };
   };
 

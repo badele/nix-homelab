@@ -65,6 +65,17 @@ Voici une liste des applications ou services que nix-homelab propose
     </tr>
     <tr>
       <td align="center">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/mikrotik.png" width="48" height="48" alt="MikroTik"/>
+      </td>
+      <td>
+        <a href="/docs/features/mikrotik.md">MikroTik 📚</a>
+      </td>
+      <td>nixos</td>
+      <td></td>
+      <td>MikroTik RouterOS management helpers</td>
+    </tr>
+    <tr>
+      <td align="center">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homebox.png" width="48" height="48" alt="Nix homelab summary"/>
       </td>
       <td>
@@ -73,6 +84,17 @@ Voici une liste des applications ou services que nix-homelab propose
       <td>nixos</td>
       <td></td>
       <td>Generate a static HTML summary of your Nix homelab instance</td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/openssh.webp" width="48" height="48" alt="OpenSSH"/>
+      </td>
+      <td>
+        <a href="https://www.openssh.com/">OpenSSH</a>
+      </td>
+      <td>nixos</td>
+      <td>10.3p1</td>
+      <td>Implementation of the SSH protocol</td>
     </tr>
     <tr>
       <td align="center">
