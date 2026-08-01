@@ -21,7 +21,6 @@ let
   appPinnedVersion = pkgs.${appName}.version;
 
   cfg = config.homelab.features.${appName};
-  availableInterfaces = attrNames config.networking.interfaces;
   listenDnsAddresses = resolveListenInterfaceAddresses appName cfg.listenInterfaces;
   listenDnsPorts = map (address: "${address}:53") listenDnsAddresses;
 
@@ -102,21 +101,6 @@ in
 
     # Only apply when enabled
     (mkIf cfg.enable {
-      assertions = [
-        {
-          assertion = cfg.listenInterfaces != [ ];
-          message =
-            "homelab.features.blocky.listenInterfaces must be set to expose Blocky DNS listeners explicitly. "
-            + "Available interfaces: "
-            + (
-              if availableInterfaces == [ ] then
-                "<none>"
-              else
-                concatStringsSep ", " availableInterfaces
-            );
-        }
-      ];
-
       homelab.features.${appName}.settings = mkMerge [
         (import ./settings.nix)
 
@@ -144,11 +128,15 @@ in
         }
       ];
 
-      networking.firewall.allowedUDPPorts = mkIf cfg.openFirewall [ 53 ];
-      networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [
-        53
-        443
-      ];
+      networking.firewall.interfaces = mkIf cfg.openFirewall (
+        lib.genAttrs cfg.listenInterfaces (_: {
+          allowedUDPPorts = [ 53 ];
+          allowedTCPPorts = [
+            53
+            443
+          ];
+        })
+      );
 
       homelab.alias = [ cfg.serviceDomain ];
 

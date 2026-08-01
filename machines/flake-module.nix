@@ -57,6 +57,9 @@ in
           "wifi-home"
         ];
 
+        constellation.tags = [
+        ];
+
         airlock.tags = [
           "audio"
           "desktop"
@@ -163,6 +166,9 @@ in
 
         # Direct SSH with fallback support
         internet = {
+          roles.default.machines.constellation = {
+            settings.host = "192.168.240.1";
+          };
           roles.default.machines.airlock = {
             settings.host = "192.168.254.200";
           };

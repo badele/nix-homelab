@@ -13,11 +13,13 @@ let
   inherit (helpers) mkFeatureOptions mkPodmanAliases mkServiceAliases;
 
   vlanOptions =
+    vlanName:
     with lib;
     with types;
     {
       name = mkOption {
         type = str;
+        default = vlanName;
         description = ''
           VLAN interface name
         '';
@@ -27,6 +29,15 @@ let
         type = int;
         description = ''
           VLAN identifier
+        '';
+      };
+
+      prefixDomain = mkOption {
+        type = str;
+        default = vlanName;
+        description = ''
+          DNS prefix attached to this VLAN.
+          Ex: "mgmt"
         '';
       };
     };
@@ -172,63 +183,97 @@ let
 
   resolveInterfaceIPv4Addresses =
     interfaceName:
-    map (address: address.address) (attrByPath [ interfaceName "ipv4" "addresses" ] [ ] config.networking.interfaces);
+    map (address: address.address) (
+      attrByPath [ interfaceName "ipv4" "addresses" ] [ ] config.networking.interfaces
+    );
 
   resolveFeatureListenAddresses =
     featureName: listenInterfaces:
     lib.unique (concatMap resolveInterfaceIPv4Addresses listenInterfaces);
 
-  enabledFeatureAttrs = filterAttrs (_: featureCfg: featureCfg.enable or false) (config.homelab.features or { });
+  enabledFeatureAttrs = filterAttrs (_: featureCfg: featureCfg.enable or false) (
+    config.homelab.features or { }
+  );
 
-  featureDomainEntries =
-    mapAttrs'
-      (
-        featureName: featureCfg:
-        nameValuePair featureName {
-          domain = featureCfg.serviceDomain;
-          service = featureName;
-          host = config.networking.hostName;
-          registerScope = featureCfg.registerScope or [ ];
-          enabled = true;
-          targetAddress =
-            if featureCfg.dnsTargetAddress or null != null then
-              featureCfg.dnsTargetAddress
-            else
-              let
-                resolvedAddresses = resolveFeatureListenAddresses featureName (featureCfg.listenInterfaces or [ ]);
-              in
-              if length resolvedAddresses == 1 then head resolvedAddresses else config.homelab.host.address;
-        }
-      )
-      (filterAttrs (_: featureCfg: featureCfg ? serviceDomain) enabledFeatureAttrs);
+  featureDomainEntries = mapAttrs' (
+    featureName: featureCfg:
+    nameValuePair featureName {
+      domain = featureCfg.serviceDomain;
+      service = featureName;
+      host = config.networking.hostName;
+      registerScope = featureCfg.registerScope or [ ];
+      enabled = true;
+      targetAddress =
+        if (featureCfg.registerScope or [ ]) == [ ] then
+          null
+        else if (featureCfg.dnsTargetAddress or null) != null then
+          featureCfg.dnsTargetAddress
+        else
+          let
+            resolvedAddresses = resolveFeatureListenAddresses featureName (featureCfg.listenInterfaces or [ ]);
+          in
+          if length resolvedAddresses == 1 then head resolvedAddresses else config.homelab.host.address;
+    }
+  ) (filterAttrs (_: featureCfg: featureCfg ? serviceDomain) enabledFeatureAttrs);
 
-  featureListenAssertions =
+  hostVlanDomainEntries = listToAttrs (
     flatten (
       mapAttrsToList (
-        featureName: featureCfg:
+        vlanName: vlanCfg:
         let
-          listenInterfaces = featureCfg.listenInterfaces or [ ];
-          resolvedAddresses = resolveFeatureListenAddresses featureName listenInterfaces;
-          requiresExplicitDnsTarget =
-            listenInterfaces != [ ]
-            && (featureCfg.registerScope or [ ]) != [ ]
-            && (featureCfg.dnsTargetAddress or null == null)
-            && length resolvedAddresses != 1;
+          bridgeName = "br-${vlanCfg.name}";
+          bridgeAddresses = resolveInterfaceIPv4Addresses bridgeName;
+          vlanDomain =
+            if vlanCfg.prefixDomain == "" then
+              config.homelab.domain
+            else
+              "${vlanCfg.prefixDomain}.${config.homelab.domain}";
         in
-        (map (interfaceName: {
-          assertion = hasAttr interfaceName config.networking.interfaces;
-          message = "homelab.features.${featureName}.listenInterfaces references unknown interface '${interfaceName}'";
-        }) listenInterfaces)
-        ++ (map (interfaceName: {
-          assertion = resolveInterfaceIPv4Addresses interfaceName != [ ];
-          message = "homelab.features.${featureName}.listenInterfaces interface '${interfaceName}' has no IPv4 address configured";
-        }) listenInterfaces)
-        ++ optional requiresExplicitDnsTarget {
-          assertion = false;
-          message = "homelab.features.${featureName}.dnsTargetAddress must be set when listenInterfaces resolves to multiple IPv4 addresses";
-        }
-      ) enabledFeatureAttrs
-    );
+        optional (hasAttr bridgeName config.networking.bridges && length bridgeAddresses == 1) (
+          nameValuePair "host-${vlanName}" {
+            domain = "${config.networking.hostName}.${vlanDomain}";
+            service = "host";
+            host = config.networking.hostName;
+            registerScope = [ "private" ];
+            enabled = true;
+            targetAddress = head bridgeAddresses;
+          }
+        )
+      ) config.homelab.vlans
+    )
+  );
+
+  featureListenAssertions = flatten (
+    mapAttrsToList (
+      featureName: featureCfg:
+      let
+        listenInterfaces = featureCfg.listenInterfaces or [ ];
+        resolvedAddresses = resolveFeatureListenAddresses featureName listenInterfaces;
+        requiresExplicitDnsTarget =
+          listenInterfaces != [ ]
+          && (featureCfg.registerScope or [ ]) != [ ]
+          && (featureCfg.dnsTargetAddress or null == null)
+          && length resolvedAddresses != 1;
+        requiresExplicitListenInterfaces = (featureCfg.openFirewall or false) && listenInterfaces == [ ];
+      in
+      (map (interfaceName: {
+        assertion = hasAttr interfaceName config.networking.interfaces;
+        message = "homelab.features.${featureName}.listenInterfaces references unknown interface '${interfaceName}'";
+      }) listenInterfaces)
+      ++ (map (interfaceName: {
+        assertion = resolveInterfaceIPv4Addresses interfaceName != [ ];
+        message = "homelab.features.${featureName}.listenInterfaces interface '${interfaceName}' has no IPv4 address configured";
+      }) listenInterfaces)
+      ++ optional requiresExplicitDnsTarget {
+        assertion = false;
+        message = "homelab.features.${featureName}.dnsTargetAddress must be set when listenInterfaces resolves to multiple IPv4 addresses";
+      }
+      ++ optional requiresExplicitListenInterfaces {
+        assertion = false;
+        message = "homelab.features.${featureName}.listenInterfaces must be set when openFirewall is enabled";
+      }
+    ) enabledFeatureAttrs
+  );
 in
 {
 
@@ -288,7 +333,7 @@ in
     };
 
     homelab.vlans = mkOption {
-      type = attrsOf (submodule [ { options = vlanOptions; } ]);
+      type = attrsOf (submodule [ ({ name, ... }: { options = vlanOptions name; }) ]);
       default = { };
       description = ''
         Global VLAN catalog shared across machines.
@@ -356,25 +401,25 @@ in
     };
 
     homelab.vlans = {
-      adm = {
-        name = "adm";
+      mgmt = {
         id = 240;
       };
       lan = {
-        name = "lan";
         id = 254;
+        prefixDomain = "";
       };
       dmz = {
-        name = "dmz";
         id = 32;
       };
+      infra = {
+        id = 244;
+      };
       iot = {
-        name = "iot";
         id = 40;
       };
     };
 
-    homelab.domains.localEntries = featureDomainEntries;
+    homelab.domains.localEntries = featureDomainEntries // hostVlanDomainEntries;
     homelab.domains.sharedEntries = if isSharedDomainsCatalogEval then { } else sharedDomainsCatalog;
 
     # Export the helper functions so feature modules can use them

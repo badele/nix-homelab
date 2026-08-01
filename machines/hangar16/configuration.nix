@@ -12,7 +12,7 @@
 
 let
   # first time ssh
-  admSuffixIPv4 = "16";
+  serverSuffixIPv4 = "16";
   internetMachine = self.clan.inventory.instances.internet.roles.default.machines.hangar16;
   # Clan inventory may expose machine settings directly or through imported fragments.
   targetHost =
@@ -35,7 +35,7 @@ in
       hostname = "hangar16";
       description = "Virtualization server for the homelab";
       interface = config.homelab.vlans.lan.name;
-      address = "192.168.254.${admSuffixIPv4}";
+      address = "192.168.254.${serverSuffixIPv4}";
       gateway = "192.168.254.254";
 
       nproc = 20;
@@ -147,11 +147,11 @@ in
   networking = {
     networkmanager.unmanaged = [
       "interface-name:${config.homelab.vlans.lan.name}"
-      "interface-name:vlan-${config.homelab.vlans.adm.name}"
+      "interface-name:vlan-${config.homelab.vlans.mgmt.name}"
       "interface-name:vlan-${config.homelab.vlans.dmz.name}"
       "interface-name:vlan-${config.homelab.vlans.iot.name}"
       "interface-name:br-lan"
-      "interface-name:br-adm"
+      "interface-name:br-mgmt"
       "interface-name:br-dmz"
       "interface-name:br-iot"
     ];
@@ -163,8 +163,8 @@ in
 
     vlans = {
       # IPv6 hexa speak => bootable == fdca:5a00:b007:ab1e/64
-      "vlan-${config.homelab.vlans.adm.name}" = {
-        id = config.homelab.vlans.adm.id;
+      "vlan-${config.homelab.vlans.mgmt.name}" = {
+        id = config.homelab.vlans.mgmt.id;
         interface = config.homelab.host.interface;
       };
 
@@ -183,14 +183,14 @@ in
 
     bridges = {
       br-lan.interfaces = [ config.homelab.vlans.lan.name ];
-      br-adm.interfaces = [ "vlan-${config.homelab.vlans.adm.name}" ];
+      br-mgmt.interfaces = [ "vlan-${config.homelab.vlans.mgmt.name}" ];
       br-dmz.interfaces = [ "vlan-${config.homelab.vlans.dmz.name}" ];
       br-iot.interfaces = [ "vlan-${config.homelab.vlans.iot.name}" ];
     };
 
     interfaces = {
       "${config.homelab.vlans.lan.name}" = { };
-      "vlan-${config.homelab.vlans.adm.name}" = { };
+      "vlan-${config.homelab.vlans.mgmt.name}" = { };
       "vlan-${config.homelab.vlans.dmz.name}" = { };
       "vlan-${config.homelab.vlans.iot.name}" = { };
       br-lan.ipv4.addresses = [
@@ -199,21 +199,21 @@ in
           prefixLength = 24;
         }
       ];
-      br-adm.ipv4.addresses = [
+      br-mgmt.ipv4.addresses = [
         {
-          address = "192.168.240.${admSuffixIPv4}";
+          address = "192.168.240.${serverSuffixIPv4}";
           prefixLength = 24;
         }
       ];
       br-dmz.ipv4.addresses = [
         {
-          address = "192.168.32.${admSuffixIPv4}";
+          address = "192.168.32.${serverSuffixIPv4}";
           prefixLength = 24;
         }
       ];
       br-iot.ipv4.addresses = [
         {
-          address = "192.168.40.${admSuffixIPv4}";
+          address = "192.168.40.${serverSuffixIPv4}";
           prefixLength = 24;
         }
       ];
