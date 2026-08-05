@@ -35,6 +35,15 @@ let
   integrationGrafanaDatasources = lib.flatten (
     lib.mapAttrsToList (_: service: service.grafana.datasources or [ ]) integrationServicesWithGrafana
   );
+  defaultGrafanaPlugins = [
+    pkgs.grafanaPlugins.grafana-metricsdrilldown-app
+  ];
+  integrationGrafanaPlugins = lib.unique (
+    defaultGrafanaPlugins
+    ++ lib.flatten (
+      lib.mapAttrsToList (_: service: service.grafana.plugins or [ ]) integrationServicesWithGrafana
+    )
+  );
 
 in
 {
@@ -181,6 +190,7 @@ in
         };
       };
 
+      services.grafana.declarativePlugins = lib.mkIf (integrationGrafanaPlugins != [ ]) integrationGrafanaPlugins;
       services.grafana.provision.dashboards.settings.providers = lib.mkIf (integrationGrafanaDashboards != [ ]) integrationGrafanaDashboards;
       services.grafana.provision.datasources.settings.datasources = lib.mkIf (integrationGrafanaDatasources != [ ]) integrationGrafanaDatasources;
 
@@ -214,7 +224,7 @@ in
               Permissions-Policy "geolocation=(), microphone=(), camera=()"
 
               # Allow only specific sources to load content.
-              Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob: https:; connect-src 'self' https:;"
+              Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:; media-src 'self' blob: https:; connect-src 'self' https:;"
 
               # Modern cross-origin isolation headers.
               Cross-Origin-Opener-Policy "same-origin"

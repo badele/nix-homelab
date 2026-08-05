@@ -398,6 +398,8 @@ in
       dokuwiki.appId = 190;
       kanidm.appId = 200;
       zitadel.appId = 210;
+      mikrotik.appId = 220;
+      victorialogs.appId = 230;
     };
 
     homelab.vlans = {

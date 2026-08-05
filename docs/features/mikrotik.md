@@ -42,6 +42,8 @@ adds NixOS-managed helpers for backing up RouterOS configurations.
 The backup helper creates both a binary RouterOS backup and a text export, then
 encrypts both files locally with age.
 
+![Grafana mikrotik interface](../imgs/mikrotik.png)
+
 ## Why Use MikroTik?
 
 > Encrypted RouterOS configuration backups managed from NixOS
@@ -67,18 +69,29 @@ homelab.features.mikrotik = {
   enable = true;
   backup = true;
 
+  prometheus = {
+    enable = true;
+    openFirewall = true;
+    verbose = true;
+    serviceDomain = "mikrotik_exporter.infra.${config.homelab.domain}";
+    registerScope = [ "private" ];
+    listenInterfaces = lib.mkForce [
+      "br-infra"
+    ];
+  };
+
   routers = [
     {
       name = "mkt254";
-      host = "192.168.240.254";
+      host = "192.168.244.254";
     }
     {
       name = "mkt253";
-      host = "192.168.240.253";
+      host = "192.168.244.253";
     }
     {
       name = "mkt252";
-      host = "192.168.240.252";
+      host = "192.168.244.252";
     }
   ];
 };
@@ -93,14 +106,64 @@ Get the SSH public key that must be installed on each router:
 just clan-vars-get <MACHINE> mikrotik/ssh.id_ed25519.pub
 ```
 
+Get the RouterOS password used by the Prometheus exporter:
+
+```bash
+just clan-vars-get <MACHINE> mikrotik/prometheus_credentials | sed -n 's/^password: //p'
+```
+
 ### RouterOS User Setup
 
-Create the dedicated RouterOS user and group:
+Create the dedicated RouterOS backup user and group:
 
 ```routeros
-/user group add name=backup policy=ssh,ftp,read,write,policy,test,password,sensitive
+/user group add name=backup policy=ssh,ftp,read,write,policy,test,password,sensitive,!local,!telnet,!reboot,!winbox,!web,!sniff,!api,!romon,!rest-api
 /user add name=backup group=backup comment="nix-homelab backup account"
 ```
+
+Create the dedicated RouterOS Prometheus user and group:
+
+```routeros
+/user group add name=prometheus policy=read,api,!local,!telnet,!ssh,!ftp,!reboot,!write,!policy,!test,!password,!web,!sniff,!sensitive,!romon,!rest-api
+/user add name=prometheus group=prometheus password="<mikrotik/prometheus_credentials password>"
+```
+
+The Prometheus exporter uses the RouterOS API, not SSH. Enable the plain API
+service on each router and restrict it to the NixOS collector address:
+
+```routeros
+/ip service set api disabled=no port=8728 address=<collector-ip>/32
+```
+
+If the router has an input firewall drop rule, allow the collector before that
+drop rule:
+
+```routeros
+/ip firewall filter add chain=input action=accept protocol=tcp src-address=<collector-ip> dst-port=8728 comment="ADM IPV4 MKTXP API"
+```
+
+Replace `<collector-ip>` with the source address used by the NixOS host to
+reach the router. Find it on the collector with:
+
+```bash
+ip route get 192.168.244.254
+```
+
+### RouterOS Syslog Setup
+
+Send RouterOS logs to the central Vector syslog collector. The collector
+normalizes the events and forwards them to VictoriaLogs:
+
+```routeros
+/system logging action add name=victorialogs target=remote remote=<collector-ip> remote-port=5514 bsd-syslog=yes syslog-facility=local0
+/system logging add topics=info action=victorialogs
+/system logging add topics=warning action=victorialogs
+/system logging add topics=error action=victorialogs
+/system logging add topics=critical action=victorialogs
+```
+
+Replace `<collector-ip>` with the `constellation` address reachable from the
+router, for example the `br-infra` address.
 
 ### SSH Key Registration
 
@@ -109,7 +172,7 @@ From a sysops workstation, fetch the public key for the NixOS host that runs
 
 ```bash
 HOSTNAME=constellation
-ROUTER=192.168.240.254
+ROUTER=192.168.244.254
 KEY_FILE=nixos_${HOSTNAME}_mikrotik.pub
 
 just clan-vars-get "$HOSTNAME" mikrotik/ssh.id_ed25519.pub > "/tmp/$KEY_FILE"
@@ -122,7 +185,7 @@ To test the private key from a sysops workstation:
 
 ```bash
 HOSTNAME=constellation
-ROUTER=192.168.240.254
+ROUTER=192.168.244.254
 KEY_FILE=/tmp/nixos_${HOSTNAME}_mikrotik_ed25519
 
 just clan-vars-get "$HOSTNAME" mikrotik/ssh.id_ed25519 > "$KEY_FILE"
@@ -172,6 +235,70 @@ The feature also exposes service aliases:
 The timer runs daily at 03:30 by default and keeps the 30 newest encrypted
 backup/export files per router.
 
+### Prometheus Operations
+
+When `prometheus.enable = true`, the feature runs
+[`mktxp`](https://github.com/akpw/mktxp) as a local systemd service.
+
+`mktxp` connects to each router with the RouterOS API on TCP `8728` by default.
+If a router uses a different API port, set `apiPort` on that router:
+
+```nix
+routers = [
+  {
+    name = "mkt254";
+    host = "192.168.244.254";
+    apiPort = 8728;
+  }
+];
+```
+
+The exporter always listens on localhost for local scraping:
+
+```text
+127.0.0.1:10220
+```
+
+When `prometheus.openFirewall = true`, Caddy exposes it over HTTPS on
+`prometheus.serviceDomain`, using the IPv4 addresses of
+`prometheus.listenInterfaces`. The raw metrics port is not opened directly.
+
+Inspect the exporter:
+
+```bash
+systemctl status mikrotik-mktxp
+journalctl -u mikrotik-mktxp -f
+curl http://127.0.0.1:10220/metrics
+curl https://mikrotik_exporter.infra.example.net/metrics
+```
+
+If `/metrics` only shows `python_gc_*` metrics, the HTTP exporter is running
+but MKTXP did not emit RouterOS metrics. Enable `prometheus.verbose = true` and
+check the journal for API connection or authentication errors.
+
+The feature also exposes exporter service aliases:
+
+```bash
+@service-mikrotik-exporter-start
+@service-mikrotik-exporter-status
+@service-mikrotik-exporter-journal
+@service-mikrotik-exporter-config-default
+@service-mikrotik-exporter-config-routers
+```
+
+Check API reachability from the NixOS host:
+
+```bash
+nc -vz 192.168.244.254 8728
+nc -vz 192.168.244.253 8728
+```
+
+VictoriaMetrics scrapes this endpoint automatically when the VictoriaMetrics
+feature is enabled.
+
+When Grafana is enabled, the feature provisions the "Mikrotik MKTXP Exporter"
+dashboard from Grafana Labs dashboard `13679` revision `28`.
+
 ### Restore Operations
 
 Run the restore helpers from the NixOS host that runs `mikrotik-backup`. The
@@ -201,7 +328,7 @@ encrypted pair:
 ```bash
 @mikrotik-restore-backup-file-for-router \
   /data/backup/mikrotik/mkt254/20260801T142235Z.backup.age \
-  192.168.240.254
+  192.168.244.254
 ```
 
 The helper uses:
@@ -234,7 +361,78 @@ The text export can be inspected or imported separately:
 /import file-name=restored-nix-homelab-20260801T142235Z.rsc
 ```
 
+### Router upgrade
+
+Upgrade one router at a time. Start with the downstream routers, then upgrade
+the gateway router last. Keep a local console or another access path available
+when possible.
+
+Before upgrading, create a fresh encrypted backup and make sure the restore
+path is available. See [Backup Operations](#backup-operations) and
+[Restore Operations](#restore-operations).
+
+Check the installed RouterOS packages and whether a new stable release is
+available:
+
+```routeros
+/system package update set channel=stable
+/system package update check-for-updates
+```
+
+Example output:
+
+```text
+channel: stable
+installed-version: 7.14.1
+   latest-version: 7.15.2
+           status: New version is available
+```
+
+Install the RouterOS package update:
+
+```routeros
+/system package update install
+```
+
+The router downloads the packages, installs them, and reboots.
+
+After RouterOS has rebooted, check the RouterBOARD firmware versions:
+
+```routeros
+/system routerboard print
+```
+
+Example output:
+
+```text
+routerboard: yes
+           model: RB4011iGS+5HacQ2HnD
+        revision: r2
+   firmware-type: al2
+factory-firmware: 6.45.9
+current-firmware: 6.45.9
+upgrade-firmware: 7.16.2
+```
+
+If `upgrade-firmware` is newer than `current-firmware`, upgrade the firmware and
+reboot again:
+
+```routeros
+/system routerboard upgrade
+/system reboot
+```
+
+After the final reboot, verify the installed versions and check the recent
+system logs:
+
+```routeros
+/system package update print
+/system routerboard print
+/log print where topics~"system"
+```
+
 ## Learn More
 
 - [MikroTik Official Website](https://mikrotik.com/)
 - [RouterOS Configuration Management](https://help.mikrotik.com/docs/spaces/ROS/pages/328155/Configuration+Management)
+- [Changelog](https://mikrotik.com/download/changelogs?channelFilter=)

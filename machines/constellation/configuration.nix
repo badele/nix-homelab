@@ -41,8 +41,6 @@ in
     features = {
       homelab-summary.enable = true;
 
-      tailscale.enable = true;
-
       openssh.enable = true;
       openssh.openFirewall = true;
       openssh.registerScope = [ ];
@@ -124,6 +122,23 @@ in
         "br-infra"
       ];
 
+      victorialogs.enable = true;
+      victorialogs.openFirewall = true;
+      victorialogs.serviceDomain = "journaux.${config.homelab.domain}";
+      victorialogs.registerScope = [ "private" ];
+      victorialogs.listenInterfaces = lib.mkForce [
+        "br-infra"
+      ];
+
+      vector.enable = true;
+      vector.cef.enable = true;
+      vector.cef.mikrotikFirewall.enable = true;
+      vector.cef.mikrotikLogin.enable = true;
+      vector.cef.listenInterfaces = lib.mkForce [
+        "br-infra"
+      ];
+      vector.victorialogs.enable = true;
+
       grist.enable = true;
       grist.openFirewall = true;
       grist.registerScope = [ "private" ];
@@ -134,15 +149,31 @@ in
       mikrotik = {
         enable = true;
         backup = true;
+
+        prometheus = {
+          enable = true;
+          openFirewall = true;
+          verbose = true;
+          serviceDomain = "mikrotik_exporter.infra.${config.homelab.domain}";
+          registerScope = [ "private" ];
+          listenInterfaces = lib.mkForce [
+            "br-infra"
+          ];
+        };
+
         routers = [
           {
             name = "mkt254";
-            host = "192.168.240.254";
+            host = "192.168.244.254";
           }
           {
             name = "mkt253";
-            host = "192.168.240.253";
+            host = "192.168.244.253";
           }
+          # {
+          #   name = "mkt252";
+          #   host = "192.168.244.252";
+          # }
         ];
       };
     };
