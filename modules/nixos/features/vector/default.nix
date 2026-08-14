@@ -23,6 +23,7 @@ let
 
   cfg = config.homelab.features.${appName};
 
+  listenMetricsPort = 10000 + config.homelab.portRegistry.${appName}.appId;
   victorialogsPort = 10000 + config.homelab.portRegistry.victorialogs.appId;
   cefListenAddresses = resolveListenInterfaceAddresses appName cfg.cef.listenInterfaces;
 
@@ -42,8 +43,15 @@ let
     inputName = cefMikrotikFirewallOutput;
   };
 
-  cefOutput =
+  cefMikrotikLoginOutput =
     if cfg.cef.mikrotikLogin.enable then "cef_mikrotik_login_enriched" else cefMikrotikFirewallOutput;
+
+  cefMikrotikDhcpRules = import ./rules/cef_mikrotik_dhcp.nix {
+    inputName = cefMikrotikLoginOutput;
+  };
+
+  cefOutput =
+    if cfg.cef.mikrotikDhcp.enable then "cef_mikrotik_dhcp_enriched" else cefMikrotikLoginOutput;
 
   victorialogsSinkInputs = optionals cfg.cef.enable [ cefOutput ];
 
@@ -56,6 +64,7 @@ let
     optionals cfg.cef.enable [ cefRules ]
     ++ optionals (cfg.cef.enable && cfg.cef.mikrotikFirewall.enable) [ cefMikrotikFirewallRules ]
     ++ optionals (cfg.cef.enable && cfg.cef.mikrotikLogin.enable) [ cefMikrotikLoginRules ]
+    ++ optionals (cfg.cef.enable && cfg.cef.mikrotikDhcp.enable) [ cefMikrotikDhcpRules ]
     ++ optionals cfg.victorialogs.enable [ victorialogsRules ];
 
   mergeRuleAttr =
@@ -106,6 +115,8 @@ in
         mikrotikFirewall.enable = mkEnableOption "MikroTik firewall CEF enrichment";
 
         mikrotikLogin.enable = mkEnableOption "MikroTik login CEF enrichment";
+
+        mikrotikDhcp.enable = mkEnableOption "MikroTik DHCP CEF enrichment";
       };
 
       victorialogs = {
@@ -153,6 +164,38 @@ in
 
       networking.firewall.interfaces = optionalAttrs cfg.cef.enable cefFirewallInterfaces;
 
+      homelab.integrations.services.${appName} = mkDefault {
+        displayName = appDisplayName;
+        category = appCategory;
+        icon = appIcon;
+        description = appDescription;
+
+        victoriametrics = {
+          metrics_path = "/metrics";
+          static_configs = [
+            {
+              targets = [ "127.0.0.1:${toString listenMetricsPort}" ];
+              labels = {
+                instance = config.networking.hostName;
+                service = appName;
+              };
+            }
+          ];
+        };
+
+        grafana = {
+          dashboards = [
+            {
+              name = appName;
+              orgId = 1;
+              type = "file";
+              disableDeletion = true;
+              options.path = "${pkgs.writeTextDir "${appName}-dashboard.json" (builtins.readFile ./grafana_dashboard.json)}/${appName}-dashboard.json";
+            }
+          ];
+        };
+      };
+
       programs.bash.shellAliases = (mkServiceAliases appName) // {
         "@service-${appName}-config" =
           "vector validate --config-yaml $(systemctl cat ${appName} | grep -oP '(?<=--config-yaml )\\S+')";
@@ -164,9 +207,19 @@ in
 
         settings = {
           data_dir = cfg.dataDir;
-          sources = mergeRuleAttr "sources";
+          sources = (mergeRuleAttr "sources") // {
+            vector_internal_metrics = {
+              type = "internal_metrics";
+            };
+          };
           transforms = mergeRuleAttr "transforms";
-          sinks = mergeRuleAttr "sinks";
+          sinks = (mergeRuleAttr "sinks") // {
+            vector_prometheus_exporter = {
+              type = "prometheus_exporter";
+              inputs = [ "vector_internal_metrics" ];
+              address = "127.0.0.1:${toString listenMetricsPort}";
+            };
+          };
         };
       };
     })

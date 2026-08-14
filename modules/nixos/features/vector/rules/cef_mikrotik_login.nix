@@ -23,27 +23,27 @@
 
         if downcase(vendor) == "mikrotik" && match(message, r'(?i)^login ') {
           .risk_type = "mikrotik login"
-          .login_message = message
+          .mikrotik_login_message = message
 
           user_match = parse_regex(message, r'(?i)for user (?P<value>\S+)') ?? null
           if user_match != null {
-            .login_user = user_match.value
+            .mikrotik_login_user = user_match.value
           } else if exists(.duser) {
-            .login_user = to_string(.duser) ?? "unknown"
+            .mikrotik_login_user = to_string(.duser) ?? "unknown"
           }
 
           source_match = parse_regex(message, r'(?i) from (?P<value>\d{1,3}(?:\.\d{1,3}){3})') ?? null
           if source_match != null {
-            .login_source_ip = source_match.value
+            .mikrotik_login_source_ip = source_match.value
           } else if exists(.src) {
-            .login_source_ip = to_string(.src) ?? "unknown"
+            .mikrotik_login_source_ip = to_string(.src) ?? "unknown"
           }
 
           method_match = parse_regex(message, r'(?i) via (?P<value>\S+)') ?? null
           if method_match != null {
-            .login_method = method_match.value
+            .mikrotik_login_method = method_match.value
           } else if exists(.app) {
-            .login_method = to_string(.app) ?? "unknown"
+            .mikrotik_login_method = to_string(.app) ?? "unknown"
           }
 
           outcome = to_string(.outcome) ?? ""

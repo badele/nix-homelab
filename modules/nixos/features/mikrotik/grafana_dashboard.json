@@ -5,8 +5,8 @@
     "name": "gxf3edrffkw",
     "namespace": "default",
     "uid": "2d4825a8-5dc9-437e-ae72-8f0c845e6030",
-    "resourceVersion": "1785653977384981",
-    "generation": 2,
+    "resourceVersion": "1786718767865990",
+    "generation": 22,
     "creationTimestamp": "2026-08-02T06:49:03Z",
     "labels": {
       "grafana.app/deprecatedInternalID": "3144242414489600"
@@ -15,11 +15,11 @@
       "grafana.app/createdBy": "access-policy:service",
       "grafana.app/managedBy": "classic-file-provisioning",
       "grafana.app/managerId": "mikrotik",
-      "grafana.app/sourceChecksum": "00004bfcf8699a46b8732576ee40dde1",
-      "grafana.app/sourcePath": "/nix/store/x6jrdqn9i73ji3czyb6514l61yhpdmad-mikrotik-dashboard.json/mikrotik-dashboard.json",
+      "grafana.app/sourceChecksum": "3504914eb5957675f7743c7df90239a3",
+      "grafana.app/sourcePath": "/nix/store/4yqv8wfblb1w8a7s3p7immdnmi3xix0y-mikrotik-dashboard.json/mikrotik-dashboard.json",
       "grafana.app/sourceTimestamp": "1000",
       "grafana.app/updatedBy": "access-policy:service",
-      "grafana.app/updatedTimestamp": "2026-08-02T06:59:37Z",
+      "grafana.app/updatedTimestamp": "2026-08-14T14:46:07Z",
       "grafana.app/folder": ""
     }
   },
@@ -3570,6 +3570,7 @@
                 "color": {
                   "exponent": 0.5,
                   "fill": "dark-orange",
+                  "min": 0,
                   "mode": "scheme",
                   "reverse": true,
                   "scale": "exponential",
@@ -3596,6 +3597,223 @@
                 "yAxis": {
                   "axisPlacement": "left",
                   "reverse": false
+                }
+              }
+            },
+            "version": "13.0.2"
+          }
+        }
+      },
+      "panel-139": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "application": {
+                          "filter": "Network"
+                        },
+                        "editorMode": "code",
+                        "expr": "rate(mktxp_interface_rx_byte_total{routerboard_name=\"$node\",name=\"$interface\"}[4m])*8",
+                        "format": "time_series",
+                        "functions": [],
+                        "group": {
+                          "filter": "Network"
+                        },
+                        "host": {
+                          "filter": "MikroTik Router"
+                        },
+                        "instant": false,
+                        "interval": "",
+                        "intervalFactor": 1,
+                        "item": {
+                          "filter": "Incoming traffic on interface ether1-gateway"
+                        },
+                        "legendFormat": "In | {{ name }}",
+                        "mode": 0,
+                        "options": {
+                          "showDisabledItems": false
+                        }
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "PBFA97CFB590B2093"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "application": {
+                          "filter": "Network"
+                        },
+                        "editorMode": "code",
+                        "expr": "rate(mktxp_interface_tx_byte_total{routerboard_name=\"$node\",name=\"$interface\"}[4m])*8",
+                        "format": "time_series",
+                        "functions": [],
+                        "group": {
+                          "filter": "Network"
+                        },
+                        "host": {
+                          "filter": "MikroTik Router"
+                        },
+                        "interval": "",
+                        "intervalFactor": 1,
+                        "item": {
+                          "filter": "Outgoing traffic on interface ether1-gateway"
+                        },
+                        "legendFormat": "Out | {{ name }}",
+                        "mode": 0,
+                        "options": {
+                          "showDisabledItems": false
+                        },
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 139,
+          "links": [],
+          "title": "$interface Interface ",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 30,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": true,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  },
+                  "unit": "bps"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byRegexp",
+                      "options": "/Out/"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.transform",
+                        "value": "negative-Y"
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "continuous-BlYlRd",
+                          "seriesBy": "last"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byRegexp",
+                      "options": "/In/"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "continuous-GrYlRd"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": ["max", "p95", "min"],
+                  "displayMode": "list",
+                  "enableFacetedFilter": false,
+                  "overflow": "ellipsis",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "maxHeight": 600,
+                  "mode": "multi",
+                  "sort": "desc"
                 }
               }
             },
@@ -3770,6 +3988,162 @@
                 "sizing": "auto",
                 "text": {},
                 "valueMode": "color"
+              }
+            },
+            "version": "13.0.2"
+          }
+        }
+      },
+      "panel-140": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "P4169E866C3094E38"
+                      },
+                      "group": "victoriametrics-metrics-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "rate(mktxp_wlan_clients_tx_bytes_total{routerboard_name=\"$node\",dhcp_name=\"$wireless_client\"}[4m])",
+                        "format": "time_series",
+                        "legendFormat": "In - {{ dhcp_name }}",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "P4169E866C3094E38"
+                      },
+                      "group": "victoriametrics-metrics-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "rate(mktxp_wlan_clients_rx_bytes_total{routerboard_name=\"$node\",dhcp_name=\"$wireless_client\"}[4m])",
+                        "format": "time_series",
+                        "legendFormat": "Out - {{ dhcp_name }}",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 140,
+          "links": [],
+          "title": "$wireless_client Client traffic",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 0,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  },
+                  "unit": "bps"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byRegexp",
+                      "options": "/Out/",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.transform",
+                        "value": "negative-Y"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
               }
             },
             "version": "13.0.2"
@@ -4789,6 +5163,7 @@
                     "axisLabel": "",
                     "axisPlacement": "auto",
                     "barAlignment": 0,
+                    "barWidthFactor": 0.6,
                     "drawStyle": "line",
                     "fillOpacity": 10,
                     "gradientMode": "none",
@@ -4805,6 +5180,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -4819,7 +5195,8 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "green"
+                        "color": "green",
+                        "value": 0
                       },
                       {
                         "color": "red",
@@ -4873,6 +5250,10 @@
                 ]
               },
               "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
                 "legend": {
                   "calcs": ["mean", "lastNotNull", "max", "min"],
                   "displayMode": "table",
@@ -4880,13 +5261,14 @@
                   "showLegend": true
                 },
                 "tooltip": {
+                  "hideZeros": false,
                   "maxHeight": 600,
                   "mode": "multi",
                   "sort": "none"
                 }
               }
             },
-            "version": "10.4.1"
+            "version": "13.0.2"
           }
         }
       },
@@ -5097,6 +5479,7 @@
                     "axisLabel": "",
                     "axisPlacement": "auto",
                     "barAlignment": 0,
+                    "barWidthFactor": 0.6,
                     "drawStyle": "line",
                     "fillOpacity": 10,
                     "gradientMode": "none",
@@ -5113,6 +5496,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -5127,7 +5511,8 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "green"
+                        "color": "green",
+                        "value": 0
                       },
                       {
                         "color": "red",
@@ -5181,6 +5566,10 @@
                 ]
               },
               "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
                 "legend": {
                   "calcs": ["mean", "lastNotNull", "max", "min"],
                   "displayMode": "table",
@@ -5188,13 +5577,14 @@
                   "showLegend": true
                 },
                 "tooltip": {
+                  "hideZeros": false,
                   "maxHeight": 600,
                   "mode": "multi",
                   "sort": "none"
                 }
               }
             },
-            "version": "10.4.1"
+            "version": "13.0.2"
           }
         }
       },
@@ -6925,6 +7315,7 @@
                     "axisLabel": "",
                     "axisPlacement": "auto",
                     "barAlignment": 0,
+                    "barWidthFactor": 0.6,
                     "drawStyle": "line",
                     "fillOpacity": 10,
                     "gradientMode": "none",
@@ -6941,6 +7332,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -6955,7 +7347,8 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "green"
+                        "color": "green",
+                        "value": 0
                       },
                       {
                         "color": "red",
@@ -6989,6 +7382,10 @@
                 ]
               },
               "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
                 "legend": {
                   "calcs": ["mean"],
                   "displayMode": "table",
@@ -6996,13 +7393,14 @@
                   "showLegend": true
                 },
                 "tooltip": {
+                  "hideZeros": false,
                   "maxHeight": 600,
                   "mode": "multi",
                   "sort": "none"
                 }
               }
             },
-            "version": "10.4.1"
+            "version": "13.0.2"
           }
         }
       },
@@ -7120,6 +7518,7 @@
                     "axisLabel": "",
                     "axisPlacement": "auto",
                     "barAlignment": 0,
+                    "barWidthFactor": 0.6,
                     "drawStyle": "line",
                     "fillOpacity": 30,
                     "gradientMode": "none",
@@ -7136,6 +7535,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": true,
                     "stacking": {
                       "group": "A",
@@ -7149,7 +7549,8 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "green"
+                        "color": "green",
+                        "value": 0
                       },
                       {
                         "color": "red",
@@ -7232,6 +7633,10 @@
                 ]
               },
               "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
                 "legend": {
                   "calcs": [],
                   "displayMode": "table",
@@ -7239,13 +7644,14 @@
                   "showLegend": true
                 },
                 "tooltip": {
+                  "hideZeros": false,
                   "maxHeight": 600,
                   "mode": "multi",
                   "sort": "desc"
                 }
               }
             },
-            "version": "10.4.1"
+            "version": "13.0.2"
           }
         }
       },
@@ -7322,6 +7728,7 @@
                     "axisLabel": "",
                     "axisPlacement": "auto",
                     "barAlignment": 0,
+                    "barWidthFactor": 0.6,
                     "drawStyle": "line",
                     "fillOpacity": 0,
                     "gradientMode": "none",
@@ -7338,6 +7745,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -7351,7 +7759,8 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "green"
+                        "color": "green",
+                        "value": 0
                       },
                       {
                         "color": "red",
@@ -7364,6 +7773,10 @@
                 "overrides": []
               },
               "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
                 "legend": {
                   "calcs": ["mean"],
                   "displayMode": "list",
@@ -7371,13 +7784,14 @@
                   "showLegend": true
                 },
                 "tooltip": {
+                  "hideZeros": false,
                   "maxHeight": 600,
                   "mode": "multi",
                   "sort": "desc"
                 }
               }
             },
-            "version": "10.4.1"
+            "version": "13.0.2"
           }
         }
       },
@@ -7454,6 +7868,7 @@
                     "axisLabel": "",
                     "axisPlacement": "auto",
                     "barAlignment": 0,
+                    "barWidthFactor": 0.6,
                     "drawStyle": "line",
                     "fillOpacity": 0,
                     "gradientMode": "none",
@@ -7470,6 +7885,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -7483,7 +7899,8 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "green"
+                        "color": "green",
+                        "value": 0
                       },
                       {
                         "color": "red",
@@ -7496,6 +7913,10 @@
                 "overrides": []
               },
               "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
                 "legend": {
                   "calcs": ["mean"],
                   "displayMode": "table",
@@ -7503,13 +7924,14 @@
                   "showLegend": true
                 },
                 "tooltip": {
+                  "hideZeros": false,
                   "maxHeight": 600,
                   "mode": "multi",
                   "sort": "desc"
                 }
               }
             },
-            "version": "10.4.1"
+            "version": "13.0.2"
           }
         }
       },
@@ -7602,13 +8024,17 @@
                       "type": "auto"
                     },
                     "filterable": false,
+                    "footer": {
+                      "reducers": []
+                    },
                     "inspect": false
                   },
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "green"
+                        "color": "green",
+                        "value": 0
                       },
                       {
                         "color": "red",
@@ -7681,12 +8107,6 @@
               },
               "options": {
                 "cellHeight": "sm",
-                "footer": {
-                  "countRows": false,
-                  "fields": "",
-                  "reducer": ["sum"],
-                  "show": false
-                },
                 "showHeader": true,
                 "sortBy": [
                   {
@@ -7696,7 +8116,7 @@
                 ]
               }
             },
-            "version": "11.0.0"
+            "version": "13.0.2"
           }
         }
       },
@@ -8176,6 +8596,7 @@
                     "axisLabel": "",
                     "axisPlacement": "auto",
                     "barAlignment": 0,
+                    "barWidthFactor": 0.6,
                     "drawStyle": "line",
                     "fillOpacity": 10,
                     "gradientMode": "none",
@@ -8192,6 +8613,7 @@
                       "type": "linear"
                     },
                     "showPoints": "never",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -8207,7 +8629,8 @@
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "green"
+                        "color": "green",
+                        "value": 0
                       },
                       {
                         "color": "red",
@@ -8261,6 +8684,10 @@
                 ]
               },
               "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
                 "legend": {
                   "calcs": ["mean", "lastNotNull", "max", "min"],
                   "displayMode": "table",
@@ -8268,13 +8695,14 @@
                   "showLegend": true
                 },
                 "tooltip": {
+                  "hideZeros": false,
                   "maxHeight": 600,
                   "mode": "multi",
                   "sort": "none"
                 }
               }
             },
-            "version": "10.4.1"
+            "version": "13.0.2"
           }
         }
       },
@@ -8423,7 +8851,7 @@
                           "filter": "Network"
                         },
                         "editorMode": "code",
-                        "expr": "rate(mktxp_interface_rx_byte_total{routerboard_name=\"$node\"}[4m])*8",
+                        "expr": "rate(mktxp_interface_rx_byte_total{routerboard_name=\"$node\",name=\"$main_interface\"}[4m])*8",
                         "format": "time_series",
                         "functions": [],
                         "group": {
@@ -8464,7 +8892,7 @@
                           "filter": "Network"
                         },
                         "editorMode": "code",
-                        "expr": "rate(mktxp_interface_tx_byte_total{routerboard_name=\"$node\"}[4m])*8",
+                        "expr": "rate(mktxp_interface_tx_byte_total{routerboard_name=\"$node\",name=\"$main_interface\"}[4m])*8",
                         "format": "time_series",
                         "functions": [],
                         "group": {
@@ -8498,7 +8926,7 @@
           "description": "",
           "id": 75,
           "links": [],
-          "title": "Interface traffic ",
+          "title": "$main_interface  interface (main)",
           "vizConfig": {
             "group": "timeseries",
             "kind": "VizConfig",
@@ -8571,7 +8999,7 @@
                       {
                         "id": "color",
                         "value": {
-                          "mode": "continuous-GrYlRd"
+                          "mode": "continuous-BlYlRd"
                         }
                       }
                     ]
@@ -8585,7 +9013,7 @@
                       {
                         "id": "color",
                         "value": {
-                          "mode": "continuous-BlPu"
+                          "mode": "continuous-GrYlRd"
                         }
                       }
                     ]
@@ -9530,310 +9958,6 @@
                     "displayName": "active_address"
                   }
                 ]
-              }
-            },
-            "version": "13.0.2"
-          }
-        }
-      },
-      "panel-87": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "PBFA97CFB590B2093"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "application": {
-                          "filter": "Network"
-                        },
-                        "editorMode": "code",
-                        "expr": "max_over_time(mktxp_netwatch_status{routerboard_name=\"$node\"}[1m])",
-                        "format": "time_series",
-                        "functions": [],
-                        "group": {
-                          "filter": "Network"
-                        },
-                        "host": {
-                          "filter": "MikroTik Router"
-                        },
-                        "instant": false,
-                        "interval": "",
-                        "intervalFactor": 1,
-                        "item": {
-                          "filter": "Incoming traffic on interface ether1-gateway"
-                        },
-                        "legendFormat": "{{ name }}",
-                        "mode": 0,
-                        "options": {
-                          "showDisabledItems": false
-                        }
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "",
-          "id": 87,
-          "links": [],
-          "title": "Status over time",
-          "vizConfig": {
-            "group": "state-timeline",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "continuous-GrYlRd"
-                  },
-                  "custom": {
-                    "axisPlacement": "auto",
-                    "fillOpacity": 70,
-                    "hideFrom": {
-                      "legend": false,
-                      "tooltip": false,
-                      "viz": false
-                    },
-                    "insertNulls": false,
-                    "lineWidth": 0,
-                    "spanNulls": false
-                  },
-                  "mappings": [
-                    {
-                      "options": {
-                        "0": {
-                          "color": "red",
-                          "index": 0,
-                          "text": "Down"
-                        },
-                        "1": {
-                          "color": "green",
-                          "index": 1,
-                          "text": "Up"
-                        }
-                      },
-                      "type": "value"
-                    }
-                  ],
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": 0
-                      }
-                    ]
-                  }
-                },
-                "overrides": []
-              },
-              "options": {
-                "alignValue": "left",
-                "annotations": {
-                  "clustering": -1,
-                  "multiLane": false
-                },
-                "legend": {
-                  "displayMode": "list",
-                  "overflow": "ellipsis",
-                  "placement": "bottom",
-                  "showLegend": true
-                },
-                "mergeValues": true,
-                "rowHeight": 0.9,
-                "showValue": "never",
-                "tooltip": {
-                  "hideZeros": false,
-                  "maxHeight": 600,
-                  "mode": "single",
-                  "sort": "none"
-                }
-              }
-            },
-            "version": "13.0.2"
-          }
-        }
-      },
-      "panel-88": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "PBFA97CFB590B2093"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "mktxp_netwatch_info{routerboard_name=\"$node\"}",
-                        "format": "table",
-                        "instant": true,
-                        "interval": "",
-                        "legendFormat": ""
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": [
-                {
-                  "group": "organize",
-                  "kind": "Transformation",
-                  "spec": {
-                    "options": {
-                      "excludeByName": {
-                        "Time": true,
-                        "Value": true,
-                        "__name__": true,
-                        "disabled": true,
-                        "instance": true,
-                        "job": true,
-                        "name": true,
-                        "routerboard_address": true,
-                        "routerboard_name": true,
-                        "timeout": true
-                      },
-                      "indexByName": {
-                        "Time": 5,
-                        "Value": 9,
-                        "__name__": 4,
-                        "comment": 1,
-                        "host": 0,
-                        "instance": 3,
-                        "interval": 11,
-                        "job": 6,
-                        "name": 12,
-                        "routerboard_address": 7,
-                        "routerboard_name": 8,
-                        "since": 10,
-                        "status": 2,
-                        "timeout": 13
-                      },
-                      "renameByName": {
-                        "comment": "Comment",
-                        "host": "Host",
-                        "host_name": "Host Name",
-                        "interval": "Interval",
-                        "server": "DHCP Server",
-                        "since": "Since",
-                        "status": "Status"
-                      }
-                    }
-                  }
-                }
-              ]
-            }
-          },
-          "description": "",
-          "id": 88,
-          "links": [],
-          "title": "Netwatch Info",
-          "vizConfig": {
-            "group": "table",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "thresholds"
-                  },
-                  "custom": {
-                    "align": "center",
-                    "cellOptions": {
-                      "type": "color-text"
-                    },
-                    "filterable": false,
-                    "footer": {
-                      "reducers": []
-                    },
-                    "inspect": false
-                  },
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": 0
-                      },
-                      {
-                        "color": "red",
-                        "value": 0
-                      },
-                      {
-                        "color": "green",
-                        "value": 1
-                      }
-                    ]
-                  }
-                },
-                "overrides": [
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "options": "status"
-                    },
-                    "properties": [
-                      {
-                        "id": "mappings",
-                        "value": [
-                          {
-                            "options": {
-                              "0": {
-                                "color": "red",
-                                "index": 0,
-                                "text": "Down"
-                              },
-                              "1": {
-                                "color": "green",
-                                "index": 1,
-                                "text": "Up"
-                              }
-                            },
-                            "type": "value"
-                          }
-                        ]
-                      },
-                      {
-                        "id": "color",
-                        "value": {
-                          "mode": "thresholds"
-                        }
-                      }
-                    ]
-                  }
-                ]
-              },
-              "options": {
-                "cellHeight": "sm",
-                "showHeader": true,
-                "sortBy": []
               }
             },
             "version": "13.0.2"
@@ -10817,6 +10941,39 @@
           {
             "kind": "RowsLayoutRow",
             "spec": {
+              "collapse": true,
+              "layout": {
+                "kind": "GridLayout",
+                "spec": {
+                  "items": [
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-139"
+                        },
+                        "height": 8,
+                        "repeat": {
+                          "direction": "h",
+                          "maxPerRow": 6,
+                          "mode": "variable",
+                          "value": "interface"
+                        },
+                        "width": 24,
+                        "x": 0,
+                        "y": 0
+                      }
+                    }
+                  ]
+                }
+              },
+              "title": "Interfaces traffic"
+            }
+          },
+          {
+            "kind": "RowsLayoutRow",
+            "spec": {
               "collapse": false,
               "layout": {
                 "kind": "GridLayout",
@@ -10948,38 +11105,14 @@
           {
             "kind": "RowsLayoutRow",
             "spec": {
-              "collapse": false,
+              "collapse": true,
               "layout": {
-                "kind": "GridLayout",
+                "kind": "AutoGridLayout",
                 "spec": {
-                  "items": [
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-87"
-                        },
-                        "height": 8,
-                        "width": 12,
-                        "x": 0,
-                        "y": 0
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-88"
-                        },
-                        "height": 8,
-                        "width": 12,
-                        "x": 12,
-                        "y": 0
-                      }
-                    }
-                  ]
+                  "columnWidthMode": "standard",
+                  "items": [],
+                  "maxColumnCount": 3,
+                  "rowHeightMode": "standard"
                 }
               },
               "title": "Netwatch"
@@ -10988,113 +11121,155 @@
           {
             "kind": "RowsLayoutRow",
             "spec": {
-              "collapse": true,
+              "collapse": false,
               "layout": {
-                "kind": "GridLayout",
+                "kind": "TabsLayout",
                 "spec": {
-                  "items": [
+                  "tabs": [
                     {
-                      "kind": "GridLayoutItem",
+                      "kind": "TabsLayoutTab",
                       "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-31"
+                        "layout": {
+                          "kind": "GridLayout",
+                          "spec": {
+                            "items": [
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-31"
+                                  },
+                                  "height": 8,
+                                  "width": 12,
+                                  "x": 0,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-73"
+                                  },
+                                  "height": 8,
+                                  "width": 12,
+                                  "x": 12,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-68"
+                                  },
+                                  "height": 8,
+                                  "width": 12,
+                                  "x": 0,
+                                  "y": 8
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-37"
+                                  },
+                                  "height": 8,
+                                  "width": 12,
+                                  "x": 12,
+                                  "y": 8
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-61"
+                                  },
+                                  "height": 8,
+                                  "width": 12,
+                                  "x": 0,
+                                  "y": 16
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-63"
+                                  },
+                                  "height": 8,
+                                  "width": 12,
+                                  "x": 12,
+                                  "y": 16
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-65"
+                                  },
+                                  "height": 7,
+                                  "width": 12,
+                                  "x": 0,
+                                  "y": 24
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-66"
+                                  },
+                                  "height": 7,
+                                  "width": 12,
+                                  "x": 12,
+                                  "y": 24
+                                }
+                              }
+                            ]
+                          }
                         },
-                        "height": 8,
-                        "width": 12,
-                        "x": 0,
-                        "y": 0
+                        "title": "Wireless information"
                       }
                     },
                     {
-                      "kind": "GridLayoutItem",
+                      "kind": "TabsLayoutTab",
                       "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-73"
+                        "layout": {
+                          "kind": "AutoGridLayout",
+                          "spec": {
+                            "columnWidthMode": "standard",
+                            "items": [
+                              {
+                                "kind": "AutoGridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-140"
+                                  },
+                                  "repeat": {
+                                    "mode": "variable",
+                                    "value": "wireless_client"
+                                  }
+                                }
+                              }
+                            ],
+                            "maxColumnCount": 3,
+                            "rowHeightMode": "standard"
+                          }
                         },
-                        "height": 8,
-                        "width": 12,
-                        "x": 12,
-                        "y": 0
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-68"
-                        },
-                        "height": 8,
-                        "width": 12,
-                        "x": 0,
-                        "y": 8
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-37"
-                        },
-                        "height": 8,
-                        "width": 12,
-                        "x": 12,
-                        "y": 8
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-61"
-                        },
-                        "height": 8,
-                        "width": 12,
-                        "x": 0,
-                        "y": 16
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-63"
-                        },
-                        "height": 8,
-                        "width": 12,
-                        "x": 12,
-                        "y": 16
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-65"
-                        },
-                        "height": 7,
-                        "width": 12,
-                        "x": 0,
-                        "y": 24
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-66"
-                        },
-                        "height": 7,
-                        "width": 12,
-                        "x": 12,
-                        "y": 24
+                        "title": "Clients"
                       }
                     }
                   ]
@@ -11562,6 +11737,110 @@
           "hide": "dontHide",
           "name": "Filters",
           "skipUrlSync": false
+        }
+      },
+      {
+        "kind": "QueryVariable",
+        "spec": {
+          "allowCustomValue": true,
+          "current": {
+            "text": ["box"],
+            "value": ["box"]
+          },
+          "definition": "label_values(mktxp_interface_rx_byte_total{routerboard_name=\"$node\"},name)",
+          "hide": "dontHide",
+          "includeAll": true,
+          "label": "Main interface",
+          "multi": true,
+          "name": "main_interface",
+          "options": [],
+          "query": {
+            "datasource": {
+              "name": "P4169E866C3094E38"
+            },
+            "group": "victoriametrics-metrics-datasource",
+            "kind": "DataQuery",
+            "spec": {
+              "qryType": 1,
+              "query": "label_values(mktxp_interface_rx_byte_total{routerboard_name=\"$node\"},name)",
+              "refId": "VariableQueryEditor-VariableQuery"
+            },
+            "version": "v0"
+          },
+          "refresh": "onDashboardLoad",
+          "regex": "",
+          "regexApplyTo": "value",
+          "skipUrlSync": false,
+          "sort": "alphabeticalAsc"
+        }
+      },
+      {
+        "kind": "QueryVariable",
+        "spec": {
+          "allowCustomValue": true,
+          "current": {
+            "text": "mkt254",
+            "value": "mkt254"
+          },
+          "definition": "label_values(mktxp_interface_rx_byte_total{routerboard_name=\"$node\"},name)",
+          "hide": "dontHide",
+          "includeAll": true,
+          "label": "interface",
+          "multi": true,
+          "name": "interface",
+          "options": [],
+          "query": {
+            "datasource": {
+              "name": "P4169E866C3094E38"
+            },
+            "group": "victoriametrics-metrics-datasource",
+            "kind": "DataQuery",
+            "spec": {
+              "qryType": 1,
+              "query": "label_values(mktxp_interface_rx_byte_total{routerboard_name=\"$node\"},name)",
+              "refId": "VariableQueryEditor-VariableQuery"
+            },
+            "version": "v0"
+          },
+          "refresh": "onDashboardLoad",
+          "regex": "",
+          "regexApplyTo": "value",
+          "skipUrlSync": false,
+          "sort": "alphabeticalAsc"
+        }
+      },
+      {
+        "kind": "QueryVariable",
+        "spec": {
+          "allowCustomValue": false,
+          "current": {
+            "text": ["8A:AD:DC:D5:A9:8A"],
+            "value": ["8A:AD:DC:D5:A9:8A"]
+          },
+          "definition": "label_values(mktxp_wlan_clients_tx_bytes_total{routerboard_name=\"$node\"},dhcp_name)",
+          "hide": "dontHide",
+          "includeAll": true,
+          "multi": true,
+          "name": "wireless_client",
+          "options": [],
+          "query": {
+            "datasource": {
+              "name": "P4169E866C3094E38"
+            },
+            "group": "victoriametrics-metrics-datasource",
+            "kind": "DataQuery",
+            "spec": {
+              "qryType": 1,
+              "query": "label_values(mktxp_wlan_clients_tx_bytes_total{routerboard_name=\"$node\"},dhcp_name)",
+              "refId": "VariableQueryEditor-VariableQuery"
+            },
+            "version": "v0"
+          },
+          "refresh": "onDashboardLoad",
+          "regex": "",
+          "regexApplyTo": "value",
+          "skipUrlSync": false,
+          "sort": "disabled"
         }
       }
     ]

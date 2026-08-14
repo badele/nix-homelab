@@ -20,6 +20,10 @@
         <td>nixos</td>
       </tr>
       <tr>
+        <th>Version</th>
+        <td>1.2.17</td>
+      </tr>
+      <tr>
         <th>Site link</th>
         <td><a href="https://mikrotik.com/">https://mikrotik.com/</a></td>
       </tr>
@@ -73,7 +77,7 @@ homelab.features.mikrotik = {
     enable = true;
     openFirewall = true;
     verbose = true;
-    serviceDomain = "mikrotik_exporter.infra.${config.homelab.domain}";
+    serviceDomain = "mikrotik-exporter.infra.${config.homelab.domain}";
     registerScope = [ "private" ];
     listenInterfaces = lib.mkForce [
       "br-infra"
@@ -269,7 +273,7 @@ Inspect the exporter:
 systemctl status mikrotik-mktxp
 journalctl -u mikrotik-mktxp -f
 curl http://127.0.0.1:10220/metrics
-curl https://mikrotik_exporter.infra.example.net/metrics
+curl https://mikrotik-exporter.infra.example.net/metrics
 ```
 
 If `/metrics` only shows `python_gc_*` metrics, the HTTP exporter is running

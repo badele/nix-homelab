@@ -22,7 +22,7 @@ let
   # TODO: get dynamically from pkgs
   appDescription = "The authentication glue you need. ";
   appUrl = "https://github.com/goauthentik/authentik";
-  appPinnedVersion = "2025.10.12";
+  appPinnedVersion = pkgs.${appName}.version;
   deprecatedMessage = ''
     Migrated to Zitadel. I migrated from Authentik to Zitadel because I encountered a migration issue from version 2025.10 to 2026.02. I found it unacceptable not to be able to migrate from a version only 4 months old (see the issue → [https://github.com/goauthentik/authentik/issues/20634](https://github.com/goauthentik/authentik/issues/20634)).
     // https://github.com/badele/nix-homelab/docs/features/zitadel.md

@@ -134,6 +134,7 @@ in
       vector.cef.enable = true;
       vector.cef.mikrotikFirewall.enable = true;
       vector.cef.mikrotikLogin.enable = true;
+      vector.cef.mikrotikDhcp.enable = true;
       vector.cef.listenInterfaces = lib.mkForce [
         "br-infra"
       ];
@@ -154,7 +155,7 @@ in
           enable = true;
           openFirewall = true;
           verbose = true;
-          serviceDomain = "mikrotik_exporter.infra.${config.homelab.domain}";
+          serviceDomain = "mikrotik-exporter.infra.${config.homelab.domain}";
           registerScope = [ "private" ];
           listenInterfaces = lib.mkForce [
             "br-infra"

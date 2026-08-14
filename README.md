@@ -10,7 +10,7 @@ My personal homelab infrastructure, fully managed with
 all configurations for my servers, desktops, and network devices.
 </p>
 <p align="center">
-<a target="_blank" href="https://github.com/badele/nix-homelab">Home</a> | <a target="_blank" href="https://labrique.ma-cabane.eu/">Public Server</a> | <a target="_blank" href="https://lampiotes.ma-cabane.eu/d/2cd7b23e-e05f-4c13-99aa-bbc1e323337c/attack?var-interval=1h&orgId=1&from=now-24h&to=now&timezone=browser&refresh=1m">Grafana Dashboard</a> | <a target="_blank" href="https://bonnes-adresses.ma-cabane.eu/bookmarks/shared">My bookmarks</a>
+<a target="_blank" href="https://github.com/badele/nix-homelab">Home</a> | <a target="_blank" href="docs/all-features.md">All homelab features</a> | <a target="_blank" href="https://labrique.ma-cabane.eu/">Public Server</a> | <a target="_blank" href="https://lampiotes.ma-cabane.eu/d/2cd7b23e-e05f-4c13-99aa-bbc1e323337c/attack?var-interval=1h&orgId=1&from=now-24h&to=now&timezone=browser&refresh=1m">Grafana Dashboard</a>
 </p>
 </div>
 ---
@@ -242,6 +242,18 @@ All Available homelab features :
       </a>
     </td>
     <td align="center" width="16%">
+      <a href="/docs/all-features.md#system-health" title="High-performance observability data pipeline">
+        <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/vector.webp" width="48" height="48" alt="Vector"/>
+        <br/>Vector
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#system-health" title="User friendly log database from VictoriaMetrics">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/victoriametrics.png" width="48" height="48" alt="VictoriaLogs"/>
+        <br/>VictoriaLogs
+      </a>
+    </td>
+    <td align="center" width="16%">
       <a href="/docs/all-features.md#system-health" title="Fast, cost-effective and scalable time series database, long-term remote storage for Prometheus">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/victoriametrics.png" width="48" height="48" alt="Victoriametrics"/>
         <br/>Victoriametrics
@@ -253,12 +265,18 @@ All Available homelab features :
         <br/>Wastebin
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#core-services" title="Identity and access management platform">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/zitadel.png" width="48" height="48" alt="ZITADEL"/>
         <br/>ZITADEL
       </a>
     </td>
+    <td width="16%"></td>
+    <td width="16%"></td>
+    <td width="16%"></td>
+    <td width="16%"></td>
     <td width="16%"></td>
   </tr>
 </table>

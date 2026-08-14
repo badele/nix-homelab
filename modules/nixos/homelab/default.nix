@@ -400,6 +400,7 @@ in
       zitadel.appId = 210;
       mikrotik.appId = 220;
       victorialogs.appId = 230;
+      vector.appId = 240;
     };
 
     homelab.vlans = {
