@@ -1,11 +1,11 @@
-{
-  config,
-  lib,
-  pkgs,
-  mkFeatureOptions,
-  mkServiceAliases,
-  resolveListenInterfaceAddresses,
-  ...
+{ config
+, lib
+, pkgs
+, mkFeatureOptions
+, mkGrafanaDashboardProvider
+, mkServiceAliases
+, resolveListenInterfaceAddresses
+, ...
 }:
 with lib;
 with types;
@@ -25,20 +25,25 @@ let
   listenDnsPorts = map (address: "${address}:53") listenDnsAddresses;
 
   sharedDomainEntries = flatten (map attrValues (attrValues config.homelab.domains.sharedEntries));
-  matchingDomainEntries = filter (
-    entry:
-    entry.enabled
-    && entry.targetAddress != null
-    && any (scope: elem scope cfg.dnsRegistrationScopes) entry.registerScope
-  ) sharedDomainEntries;
+  matchingDomainEntries = filter
+    (
+      entry:
+      entry.enabled
+      && entry.targetAddress != null
+      && any (scope: elem scope cfg.dnsRegistrationScopes) entry.registerScope
+    )
+    sharedDomainEntries;
 
-  matchingDomainAddresses = foldl' (
-    acc: entry:
-    acc
-    // {
-      ${entry.domain} = lib.unique ((acc.${entry.domain} or [ ]) ++ [ entry.targetAddress ]);
-    }
-  ) { } matchingDomainEntries;
+  matchingDomainAddresses = foldl'
+    (
+      acc: entry:
+        acc
+        // {
+          ${entry.domain} = lib.unique ((acc.${entry.domain} or [ ]) ++ [ entry.targetAddress ]);
+        }
+    )
+    { }
+    matchingDomainEntries;
 
   listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
   exposedURL = "https://${cfg.serviceDomain}";
@@ -237,20 +242,15 @@ in
 
         grafana = mkIf cfg.enableMetrics {
           dashboards = [
-            {
-              name = appName;
-              orgId = 1;
-              type = "file";
-              disableDeletion = true;
-              options.path =
-                let
-                  dashboardContent = builtins.readFile ./grafana_dashboard.json;
-                  customizedDashboard =
-                    builtins.replaceStrings [ "BLOCKY_URL_CONTENT" ] [ cfg.serviceDomain ]
-                      dashboardContent;
-                in
-                "${pkgs.writeTextDir "${appName}-dashboard.json" customizedDashboard}/${appName}-dashboard.json";
-            }
+            (mkGrafanaDashboardProvider appName (
+              let
+                dashboardContent = builtins.readFile ./grafana/dashboards/blocky.json;
+                customizedDashboard =
+                  builtins.replaceStrings [ "BLOCKY_URL_CONTENT" ] [ cfg.serviceDomain ]
+                    dashboardContent;
+              in
+              "${pkgs.writeTextDir "${appName}-dashboard.json" customizedDashboard}/${appName}-dashboard.json"
+            ))
           ];
         };
       };

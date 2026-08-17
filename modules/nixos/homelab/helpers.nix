@@ -104,8 +104,8 @@ let
   # Helper function to create common feature options
   # Usage in feature modules: mkFeatureOptions { extraOptions = { ... }; }
   mkFeatureOptions =
-    {
-      extraOptions ? { },
+    { extraOptions ? { }
+    ,
     }:
     {
       enable = mkEnableOption "Enable this feature";
@@ -191,7 +191,20 @@ let
     "@service-${appName}-status" = "systemctl status ${appName}";
   };
 
+  mkGrafanaDashboardProvider = appName: path: {
+    name = appName;
+    orgId = 1;
+    type = "file";
+    disableDeletion = true;
+    options.path = path;
+  };
+
 in
 {
-  inherit mkFeatureOptions mkPodmanAliases mkServiceAliases;
+  inherit
+    mkFeatureOptions
+    mkPodmanAliases
+    mkServiceAliases
+    mkGrafanaDashboardProvider
+    ;
 }

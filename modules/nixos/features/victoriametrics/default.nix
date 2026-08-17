@@ -1,12 +1,12 @@
-{
-  config,
-  inputs,
-  lib,
-  pkgs,
-  mkFeatureOptions,
-  mkServiceAliases,
-  resolveListenInterfaceAddresses,
-  ...
+{ config
+, inputs
+, lib
+, pkgs
+, mkFeatureOptions
+, mkGrafanaDashboardProvider
+, mkServiceAliases
+, resolveListenInterfaceAddresses
+, ...
 }:
 with lib;
 with types;
@@ -35,17 +35,21 @@ let
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenHttpPort}";
 
-  integrationServicesWithScrapes = lib.filterAttrs (
-    _: service: service.victoriametrics != null
-  ) config.homelab.integrations.services;
+  integrationServicesWithScrapes = lib.filterAttrs
+    (
+      _: service: service.victoriametrics != null
+    )
+    config.homelab.integrations.services;
 
-  integrationScrapeConfigs = lib.mapAttrsToList (
-    serviceName: service:
-    {
-      job_name = serviceName;
-    }
-    // service.victoriametrics
-  ) integrationServicesWithScrapes;
+  integrationScrapeConfigs = lib.mapAttrsToList
+    (
+      serviceName: service:
+        {
+          job_name = serviceName;
+        }
+        // service.victoriametrics
+    )
+    integrationServicesWithScrapes;
 
 in
 {
@@ -176,13 +180,7 @@ in
             }
           ];
           dashboards = [
-            {
-              name = appName;
-              orgId = 1;
-              type = "file";
-              disableDeletion = true;
-              options.path = "${pkgs.writeTextDir "${appName}-dashboard.json" (builtins.readFile ./grafana_dashboard.json)}/${appName}-dashboard.json";
-            }
+            (mkGrafanaDashboardProvider appName ./grafana/dashboards)
           ];
         };
       };

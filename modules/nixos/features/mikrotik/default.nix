@@ -1,11 +1,11 @@
-{
-  config,
-  lib,
-  pkgs,
-  mkFeatureOptions,
-  mkServiceAliases,
-  resolveListenInterfaceAddresses,
-  ...
+{ config
+, lib
+, pkgs
+, mkFeatureOptions
+, mkGrafanaDashboardProvider
+, mkServiceAliases
+, resolveListenInterfaceAddresses
+, ...
 }:
 with lib;
 with types;
@@ -88,12 +88,14 @@ let
         config.networking.interfaces
     );
 
-  mktxpRouterEntries = concatMapStringsSep "\n\n" (router: ''
-    [${router.name}]
-        hostname = ${router.host}
-        port = ${toString router.apiPort}
-        custom_labels = router:${router.name}
-  '') cfg.routers;
+  mktxpRouterEntries = concatMapStringsSep "\n\n"
+    (router: ''
+      [${router.name}]
+          hostname = ${router.host}
+          port = ${toString router.apiPort}
+          custom_labels = router:${router.name}
+    '')
+    cfg.routers;
 
   mktxpRoutersConfigFile = pkgs.writeText "mktxp.conf" ''
     ${mktxpRouterEntries}
@@ -336,14 +338,18 @@ in
           message = "homelab.features.mikrotik.prometheus.listenInterfaces must be set when prometheus.openFirewall is enabled.";
         }
       ]
-      ++ (map (interfaceName: {
-        assertion = hasAttr interfaceName config.networking.interfaces;
-        message = "homelab.features.mikrotik.prometheus.listenInterfaces references unknown interface '${interfaceName}'.";
-      }) prometheusCfg.listenInterfaces)
-      ++ (map (interfaceName: {
-        assertion = resolveInterfaceIPv4Addresses interfaceName != [ ];
-        message = "homelab.features.mikrotik.prometheus.listenInterfaces interface '${interfaceName}' has no IPv4 address configured.";
-      }) prometheusCfg.listenInterfaces);
+      ++ (map
+        (interfaceName: {
+          assertion = hasAttr interfaceName config.networking.interfaces;
+          message = "homelab.features.mikrotik.prometheus.listenInterfaces references unknown interface '${interfaceName}'.";
+        })
+        prometheusCfg.listenInterfaces)
+      ++ (map
+        (interfaceName: {
+          assertion = resolveInterfaceIPv4Addresses interfaceName != [ ];
+          message = "homelab.features.mikrotik.prometheus.listenInterfaces interface '${interfaceName}' has no IPv4 address configured.";
+        })
+        prometheusCfg.listenInterfaces);
 
       users.groups.${appName} = { };
 
@@ -511,13 +517,7 @@ in
 
         grafana = {
           dashboards = [
-            {
-              name = appName;
-              orgId = 1;
-              type = "file";
-              disableDeletion = true;
-              options.path = "${pkgs.writeTextDir "${appName}-dashboard.json" (builtins.readFile ./grafana_dashboard.json)}/${appName}-dashboard.json";
-            }
+            (mkGrafanaDashboardProvider appName ./grafana/dashboards)
           ];
         };
       };

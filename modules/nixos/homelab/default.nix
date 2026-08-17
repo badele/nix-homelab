@@ -1,7 +1,6 @@
-args@{
-  lib,
-  config,
-  ...
+args@{ lib
+, config
+, ...
 }:
 with lib;
 with types;
@@ -10,37 +9,42 @@ let
   sharedDomainsCatalog = args.sharedDomainsCatalog or { };
   isSharedDomainsCatalogEval = args.isSharedDomainsCatalogEval or false;
   helpers = import ./helpers.nix { inherit lib; };
-  inherit (helpers) mkFeatureOptions mkPodmanAliases mkServiceAliases;
+  inherit (helpers)
+    mkFeatureOptions
+    mkPodmanAliases
+    mkServiceAliases
+    mkGrafanaDashboardProvider
+    ;
 
   vlanOptions =
     vlanName:
-    with lib;
-    with types;
-    {
-      name = mkOption {
-        type = str;
-        default = vlanName;
-        description = ''
-          VLAN interface name
-        '';
-      };
+      with lib;
+      with types;
+      {
+        name = mkOption {
+          type = str;
+          default = vlanName;
+          description = ''
+            VLAN interface name
+          '';
+        };
 
-      id = mkOption {
-        type = int;
-        description = ''
-          VLAN identifier
-        '';
-      };
+        id = mkOption {
+          type = int;
+          description = ''
+            VLAN identifier
+          '';
+        };
 
-      prefixDomain = mkOption {
-        type = str;
-        default = vlanName;
-        description = ''
-          DNS prefix attached to this VLAN.
-          Ex: "mgmt"
-        '';
+        prefixDomain = mkOption {
+          type = str;
+          default = vlanName;
+          description = ''
+            DNS prefix attached to this VLAN.
+            Ex: "mgmt"
+          '';
+        };
       };
-    };
 
   hostOptions =
     with lib;
@@ -195,84 +199,94 @@ let
     config.homelab.features or { }
   );
 
-  featureDomainEntries = mapAttrs' (
-    featureName: featureCfg:
-    nameValuePair featureName {
-      domain = featureCfg.serviceDomain;
-      service = featureName;
-      host = config.networking.hostName;
-      registerScope = featureCfg.registerScope or [ ];
-      enabled = true;
-      targetAddress =
-        if (featureCfg.registerScope or [ ]) == [ ] then
-          null
-        else if (featureCfg.dnsTargetAddress or null) != null then
-          featureCfg.dnsTargetAddress
-        else
-          let
-            resolvedAddresses = resolveFeatureListenAddresses featureName (featureCfg.listenInterfaces or [ ]);
-          in
-          if length resolvedAddresses == 1 then head resolvedAddresses else config.homelab.host.address;
-    }
-  ) (filterAttrs (_: featureCfg: featureCfg ? serviceDomain) enabledFeatureAttrs);
+  featureDomainEntries = mapAttrs'
+    (
+      featureName: featureCfg:
+        nameValuePair featureName {
+          domain = featureCfg.serviceDomain;
+          service = featureName;
+          host = config.networking.hostName;
+          registerScope = featureCfg.registerScope or [ ];
+          enabled = true;
+          targetAddress =
+            if (featureCfg.registerScope or [ ]) == [ ] then
+              null
+            else if (featureCfg.dnsTargetAddress or null) != null then
+              featureCfg.dnsTargetAddress
+            else
+              let
+                resolvedAddresses = resolveFeatureListenAddresses featureName (featureCfg.listenInterfaces or [ ]);
+              in
+              if length resolvedAddresses == 1 then head resolvedAddresses else config.homelab.host.address;
+        }
+    )
+    (filterAttrs (_: featureCfg: featureCfg ? serviceDomain) enabledFeatureAttrs);
 
   hostVlanDomainEntries = listToAttrs (
     flatten (
-      mapAttrsToList (
-        vlanName: vlanCfg:
-        let
-          bridgeName = "br-${vlanCfg.name}";
-          bridgeAddresses = resolveInterfaceIPv4Addresses bridgeName;
-          vlanDomain =
-            if vlanCfg.prefixDomain == "" then
-              config.homelab.domain
-            else
-              "${vlanCfg.prefixDomain}.${config.homelab.domain}";
-        in
-        optional (hasAttr bridgeName config.networking.bridges && length bridgeAddresses == 1) (
-          nameValuePair "host-${vlanName}" {
-            domain = "${config.networking.hostName}.${vlanDomain}";
-            service = "host";
-            host = config.networking.hostName;
-            registerScope = [ "private" ];
-            enabled = true;
-            targetAddress = head bridgeAddresses;
-          }
+      mapAttrsToList
+        (
+          vlanName: vlanCfg:
+            let
+              bridgeName = "br-${vlanCfg.name}";
+              bridgeAddresses = resolveInterfaceIPv4Addresses bridgeName;
+              vlanDomain =
+                if vlanCfg.prefixDomain == "" then
+                  config.homelab.domain
+                else
+                  "${vlanCfg.prefixDomain}.${config.homelab.domain}";
+            in
+            optional (hasAttr bridgeName config.networking.bridges && length bridgeAddresses == 1) (
+              nameValuePair "host-${vlanName}" {
+                domain = "${config.networking.hostName}.${vlanDomain}";
+                service = "host";
+                host = config.networking.hostName;
+                registerScope = [ "private" ];
+                enabled = true;
+                targetAddress = head bridgeAddresses;
+              }
+            )
         )
-      ) config.homelab.vlans
+        config.homelab.vlans
     )
   );
 
   featureListenAssertions = flatten (
-    mapAttrsToList (
-      featureName: featureCfg:
-      let
-        listenInterfaces = featureCfg.listenInterfaces or [ ];
-        resolvedAddresses = resolveFeatureListenAddresses featureName listenInterfaces;
-        requiresExplicitDnsTarget =
-          listenInterfaces != [ ]
-          && (featureCfg.registerScope or [ ]) != [ ]
-          && (featureCfg.dnsTargetAddress or null == null)
-          && length resolvedAddresses != 1;
-        requiresExplicitListenInterfaces = (featureCfg.openFirewall or false) && listenInterfaces == [ ];
-      in
-      (map (interfaceName: {
-        assertion = hasAttr interfaceName config.networking.interfaces;
-        message = "homelab.features.${featureName}.listenInterfaces references unknown interface '${interfaceName}'";
-      }) listenInterfaces)
-      ++ (map (interfaceName: {
-        assertion = resolveInterfaceIPv4Addresses interfaceName != [ ];
-        message = "homelab.features.${featureName}.listenInterfaces interface '${interfaceName}' has no IPv4 address configured";
-      }) listenInterfaces)
-      ++ optional requiresExplicitDnsTarget {
-        assertion = false;
-        message = "homelab.features.${featureName}.dnsTargetAddress must be set when listenInterfaces resolves to multiple IPv4 addresses";
-      }
-      ++ optional requiresExplicitListenInterfaces {
-        assertion = false;
-        message = "homelab.features.${featureName}.listenInterfaces must be set when openFirewall is enabled";
-      }
-    ) enabledFeatureAttrs
+    mapAttrsToList
+      (
+        featureName: featureCfg:
+          let
+            listenInterfaces = featureCfg.listenInterfaces or [ ];
+            resolvedAddresses = resolveFeatureListenAddresses featureName listenInterfaces;
+            requiresExplicitDnsTarget =
+              listenInterfaces != [ ]
+              && (featureCfg.registerScope or [ ]) != [ ]
+              && (featureCfg.dnsTargetAddress or null == null)
+              && length resolvedAddresses != 1;
+            requiresExplicitListenInterfaces = (featureCfg.openFirewall or false) && listenInterfaces == [ ];
+          in
+          (map
+            (interfaceName: {
+              assertion = hasAttr interfaceName config.networking.interfaces;
+              message = "homelab.features.${featureName}.listenInterfaces references unknown interface '${interfaceName}'";
+            })
+            listenInterfaces)
+          ++ (map
+            (interfaceName: {
+              assertion = resolveInterfaceIPv4Addresses interfaceName != [ ];
+              message = "homelab.features.${featureName}.listenInterfaces interface '${interfaceName}' has no IPv4 address configured";
+            })
+            listenInterfaces)
+          ++ optional requiresExplicitDnsTarget {
+            assertion = false;
+            message = "homelab.features.${featureName}.dnsTargetAddress must be set when listenInterfaces resolves to multiple IPv4 addresses";
+          }
+          ++ optional requiresExplicitListenInterfaces {
+            assertion = false;
+            message = "homelab.features.${featureName}.listenInterfaces must be set when openFirewall is enabled";
+          }
+      )
+      enabledFeatureAttrs
   );
 in
 {
@@ -303,7 +317,7 @@ in
     };
 
     homelab.host = mkOption {
-      type = submodule [ { options = hostOptions; } ];
+      type = submodule [{ options = hostOptions; }];
       description = "Host configuration";
     };
 
@@ -341,7 +355,7 @@ in
     };
 
     homelab.integrations.services = mkOption {
-      type = attrsOf (submodule [ { options = integrationOptions; } ]);
+      type = attrsOf (submodule [{ options = integrationOptions; }]);
       default = { };
       description = ''
         Cross-host service integrations consumed by dashboarding, health checks,
@@ -350,7 +364,7 @@ in
     };
 
     homelab.domains.localEntries = mkOption {
-      type = attrsOf (submodule [ { options = domainEntryOptions; } ]);
+      type = attrsOf (submodule [{ options = domainEntryOptions; }]);
       default = { };
       description = ''
         Structured registry of domains published by the current machine.
@@ -358,7 +372,7 @@ in
     };
 
     homelab.domains.sharedEntries = mkOption {
-      type = attrsOf (attrsOf (submodule [ { options = domainEntryOptions; } ]));
+      type = attrsOf (attrsOf (submodule [{ options = domainEntryOptions; }]));
       default = { };
       description = ''
         Structured registry of domains shared across machines, keyed by machine.
@@ -429,6 +443,7 @@ in
     _module.args.mkFeatureOptions = mkFeatureOptions;
     _module.args.mkPodmanAliases = mkPodmanAliases;
     _module.args.mkServiceAliases = mkServiceAliases;
+    _module.args.mkGrafanaDashboardProvider = mkGrafanaDashboardProvider;
     _module.args.resolveListenInterfaceAddresses = resolveFeatureListenAddresses;
   };
 }

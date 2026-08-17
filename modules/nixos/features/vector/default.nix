@@ -1,11 +1,11 @@
-{
-  config,
-  lib,
-  pkgs,
-  mkFeatureOptions,
-  mkServiceAliases,
-  resolveListenInterfaceAddresses,
-  ...
+{ config
+, lib
+, pkgs
+, mkFeatureOptions
+, mkGrafanaDashboardProvider
+, mkServiceAliases
+, resolveListenInterfaceAddresses
+, ...
 }:
 with lib;
 with types;
@@ -71,12 +71,14 @@ let
     attrName: foldl' recursiveUpdate { } (map (ruleSet: ruleSet.${attrName} or { }) enabledRuleSets);
 
   cefFirewallInterfaces = listToAttrs (
-    map (interfaceName: {
-      name = interfaceName;
-      value = {
-        allowedUDPPorts = [ cfg.cef.port ];
-      };
-    }) cfg.cef.listenInterfaces
+    map
+      (interfaceName: {
+        name = interfaceName;
+        value = {
+          allowedUDPPorts = [ cfg.cef.port ];
+        };
+      })
+      cfg.cef.listenInterfaces
   );
 in
 {
@@ -185,13 +187,7 @@ in
 
         grafana = {
           dashboards = [
-            {
-              name = appName;
-              orgId = 1;
-              type = "file";
-              disableDeletion = true;
-              options.path = "${pkgs.writeTextDir "${appName}-dashboard.json" (builtins.readFile ./grafana_dashboard.json)}/${appName}-dashboard.json";
-            }
+            (mkGrafanaDashboardProvider appName ./grafana/dashboards)
           ];
         };
       };

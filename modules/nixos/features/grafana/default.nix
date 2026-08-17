@@ -164,6 +164,11 @@ in
             protocol = "http";
           };
 
+          # PREVIEW FEATURES
+          feature_toggles = {
+            dashboardSectionVariables = true;
+          };
+
           users = {
             allow_signup = false;
           };
@@ -190,9 +195,15 @@ in
         };
       };
 
-      services.grafana.declarativePlugins = lib.mkIf (integrationGrafanaPlugins != [ ]) integrationGrafanaPlugins;
-      services.grafana.provision.dashboards.settings.providers = lib.mkIf (integrationGrafanaDashboards != [ ]) integrationGrafanaDashboards;
-      services.grafana.provision.datasources.settings.datasources = lib.mkIf (integrationGrafanaDatasources != [ ]) integrationGrafanaDatasources;
+      services.grafana.declarativePlugins = lib.mkIf (
+        integrationGrafanaPlugins != [ ]
+      ) integrationGrafanaPlugins;
+      services.grafana.provision.dashboards.settings.providers = lib.mkIf (
+        integrationGrafanaDashboards != [ ]
+      ) integrationGrafanaDashboards;
+      services.grafana.provision.datasources.settings.datasources = lib.mkIf (
+        integrationGrafanaDatasources != [ ]
+      ) integrationGrafanaDatasources;
 
       services.caddy.virtualHosts = lib.mkIf cfg.openFirewall {
         "${cfg.serviceDomain}" = {
