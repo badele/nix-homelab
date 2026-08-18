@@ -1,9 +1,16 @@
 # Features
 
-nix-homelab fourni des modules qui interagisse entre eux (générallement
-localement) sans devoir configurer chaque servvice.
+nix-homelab provides modules that interact with each other, usually locally,
+without requiring each service to be configured individually.
 
-Voici une liste des applications ou services que nix-homelab propose
+Below is the list of applications and services provided by nix-homelab.
+
+This documentation is documentation as code. It is generated with the following
+command:
+
+```shell
+just doc-update
+```
 
 <!-- BEGIN SECTION all_features file=./.templates/generate_all_available_features_table.html -->
 
@@ -65,6 +72,17 @@ Voici une liste des applications ou services que nix-homelab propose
     </tr>
     <tr>
       <td align="center">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/mikrotik.png" width="48" height="48" alt="MikroTik"/>
+      </td>
+      <td>
+        <a href="/docs/features/mikrotik.md">MikroTik 📚</a>
+      </td>
+      <td>nixos</td>
+      <td>1.2.17</td>
+      <td>MikroTik RouterOS management helpers</td>
+    </tr>
+    <tr>
+      <td align="center">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homebox.png" width="48" height="48" alt="Nix homelab summary"/>
       </td>
       <td>
@@ -73,6 +91,17 @@ Voici une liste des applications ou services que nix-homelab propose
       <td>nixos</td>
       <td></td>
       <td>Generate a static HTML summary of your Nix homelab instance</td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/openssh.webp" width="48" height="48" alt="OpenSSH"/>
+      </td>
+      <td>
+        <a href="https://www.openssh.com/">OpenSSH</a>
+      </td>
+      <td>nixos</td>
+      <td>10.3p1</td>
+      <td>Implementation of the SSH protocol</td>
     </tr>
     <tr>
       <td align="center">
@@ -271,10 +300,32 @@ Voici une liste des applications ou services que nix-homelab propose
     </tr>
     <tr>
       <td align="center">
+        <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/vector.webp" width="48" height="48" alt="Vector"/>
+      </td>
+      <td>
+        <a href="/docs/features/vector.md">Vector 📚</a>
+      </td>
+      <td>nixos</td>
+      <td>0.55.0</td>
+      <td>High-performance observability data pipeline</td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/victoriametrics.png" width="48" height="48" alt="VictoriaLogs"/>
+      </td>
+      <td>
+        <a href="/docs/features/victorialogs.md">VictoriaLogs 📚</a>
+      </td>
+      <td>nixos</td>
+      <td>1.50.0</td>
+      <td>User friendly log database from VictoriaMetrics</td>
+    </tr>
+    <tr>
+      <td align="center">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/victoriametrics.png" width="48" height="48" alt="Victoriametrics"/>
       </td>
       <td>
-        <a href="https://victoriametrics.com/">Victoriametrics</a>
+        <a href="/docs/features/victoriametrics.md">Victoriametrics 📚</a>
       </td>
       <td>nixos</td>
       <td>1.145.0</td>
@@ -294,6 +345,7 @@ Voici une liste des applications ou services que nix-homelab propose
       <th>Service Name</th>
       <th>Category</th>
       <th>Platform</th>
+      <th>Version</th>
       <th>Description</th>
       <th>Deprecation Notice</th>
     </tr>
@@ -308,6 +360,7 @@ Voici une liste des applications ou services que nix-homelab propose
       </td>
       <td>Core Services</td>
       <td>nixos</td>
+      <td>4.39.20</td>
       <td>Single Sign-On multi-factor portal for web apps</td>
       <td><em>Migrated to Authentik. While Authentik requires some manual configuration, it offers more features and better integration capabilities.
 // https://github.com/badele/nix-homelab/docs/features/authentik.md
@@ -322,6 +375,7 @@ Voici une liste des applications ou services que nix-homelab propose
       </td>
       <td>Core Services</td>
       <td>nixos</td>
+      <td>2025.12.5</td>
       <td>The authentication glue you need. </td>
       <td><em>Migrated to Zitadel. I migrated from Authentik to Zitadel because I encountered a migration issue from version 2025.10 to 2026.02. I found it unacceptable not to be able to migrate from a version only 4 months old (see the issue → [https://github.com/goauthentik/authentik/issues/20634](https://github.com/goauthentik/authentik/issues/20634)).
 // https://github.com/badele/nix-homelab/docs/features/zitadel.md
@@ -336,6 +390,7 @@ Voici une liste des applications ou services que nix-homelab propose
       </td>
       <td>Core Services</td>
       <td>nixos</td>
+      <td>1.8.6</td>
       <td>Simple, secure and fast identity management platform</td>
       <td><em>While lightweight and performant, Kanidm requires manual configuration for some operations. Migrated to Authentik for better web UI.
 </em></td>
@@ -349,6 +404,7 @@ Voici une liste des applications ou services que nix-homelab propose
       </td>
       <td>Core Services</td>
       <td>nixos</td>
+      <td>0.6.2</td>
       <td>Lightweight authentication server that provides an opinionated, simplified LDAP interface for authentication</td>
       <td><em>Previously used LLDAP with Authelia, now migrated to Authentik. Authentik provides built-in user management and more integrated features, eliminating the need for a separate LDAP server.
 </em></td>
@@ -362,6 +418,7 @@ Voici une liste des applications ou services que nix-homelab propose
       </td>
       <td>Essentials</td>
       <td>podman</td>
+      <td>1.0.6</td>
       <td>The Ultimate HTML5 Internet Radio Player</td>
       <td><em>This feature is deprecated due to Docker image initialization complexity.
 
@@ -380,6 +437,7 @@ a lightweight internet radio player without the Docker initialization overhead
       </td>
       <td>Core Services</td>
       <td>nixos</td>
+      <td>0.29.0</td>
       <td>Private certificate authority (X.509 & SSH) & ACME server for secure automated certificate management, so you can use TLS everywhere & SSO for SSH</td>
       <td><em>This feature is deprecated. While it works fine, it has significant limitations:
 it's difficult to add the self-signed CA to all devices. For example, Firefox

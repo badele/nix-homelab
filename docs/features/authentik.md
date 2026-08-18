@@ -21,7 +21,7 @@
       </tr>
       <tr>
         <th>Version</th>
-        <td>2025.10.12</td>
+        <td>2025.12.5</td>
       </tr>
       <tr>
         <th>Site link</th>

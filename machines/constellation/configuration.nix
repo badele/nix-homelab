@@ -1,10 +1,13 @@
 {
   self,
+  lib,
   config,
   ...
 }:
 let
-  targetIP = "192.168.254.154";
+  privateSuffixIPv4 = "1";
+  targetIP = "192.168.254.${privateSuffixIPv4}";
+  mainInterface = "lan";
 in
 {
   imports = [
@@ -24,11 +27,11 @@ in
     domainEmailAdmin = "brunoadele+admin@gmail.com";
     stmpAccountUsername = "brunoadele@gmail.com";
 
-    nameServer = "192.168.254.154";
+    nameServer = targetIP;
     host = {
       hostname = config.homelab.host.hostname;
       description = "Constellation private server";
-      interface = "enp3s0";
+      interface = mainInterface;
       address = targetIP;
       gateway = "192.168.254.254";
 
@@ -38,114 +41,142 @@ in
     features = {
       homelab-summary.enable = true;
 
-      tailscale.enable = true;
+      openssh.enable = true;
+      openssh.openFirewall = true;
+      openssh.registerScope = [ ];
+      openssh.listenInterfaces = lib.mkForce [
+        "br-mgmt"
+      ];
 
-      acme.enable = true;
-      acme.email = config.homelab.domainEmailAdmin;
-      acme.dnsProvider = "hetzner";
+      # acme.enable = true;
+      # acme.email = config.homelab.domainEmailAdmin;
+      # acme.dnsProvider = "hetzner";
+      # acme.tokenScope = "private";
 
       caddy.enable = true;
+      caddy.tokenScope = "private";
 
-      authentik.enable = true;
-      authentik.openFirewall = true;
-      authentik.serviceDomain = "douane.${config.homelab.domain}";
-
+      ##########################################################################
+      # Private homelab DNS server
+      ##########################################################################
       blocky.enable = true;
       blocky.openFirewall = true;
-      blocky.enableMonitoring = true;
+      blocky.enableMetrics = true;
+      blocky.listenInterfaces = lib.mkForce [
+        "br-dmz"
+        "br-infra"
+        "br-iot"
+        "br-lan"
+        "br-mgmt"
+      ];
+
+      blocky.dnsTargetAddress = lib.mkForce config.homelab.host.address; # blocky DNS server address
       blocky.serviceDomain = "stop-pub.${config.homelab.domain}";
-
-      gatus.enable = true;
-      gatus.openFirewall = true;
-
-      goaccess.enable = true;
-      goaccess.openFirewall = true;
-      goaccess.serviceDomain = "portique.${config.homelab.domain}";
-
-      grafana.enable = true;
-      grafana.openFirewall = true;
-      grafana.serviceDomain = "lampiotes.${config.homelab.domain}";
+      blocky.registerScope = [ "private" ]; # Register this service in the private DNS zone of the homelab
+      blocky.dnsRegistrationScopes = [ "private" ]; # Add all private service on this blocky instance service
 
       homepage-dashboard.enable = true;
       homepage-dashboard.openFirewall = true;
       homepage-dashboard.serviceDomain = "labrique.${config.homelab.domain}";
+      homepage-dashboard.registerScope = [ "private" ];
+      homepage-dashboard.listenInterfaces = lib.mkForce [
+        "br-infra"
+      ];
+
+      gatus.enable = true;
+      gatus.openFirewall = true;
+      gatus.registerScope = [ "private" ];
+      gatus.serviceDomain = "signalisations.${config.homelab.domain}";
+      gatus.listenInterfaces = lib.mkForce [
+        "br-infra"
+      ];
+
+      goaccess.enable = true;
+      goaccess.openFirewall = true;
+      goaccess.serviceDomain = "portique.${config.homelab.domain}";
+      goaccess.registerScope = [ "private" ];
+      goaccess.listenInterfaces = lib.mkForce [
+        "br-infra"
+      ];
+
+      grafana.enable = true;
+      grafana.openFirewall = true;
+      grafana.serviceDomain = "lampiotes.${config.homelab.domain}";
+      grafana.registerScope = [ "private" ];
+      grafana.listenInterfaces = lib.mkForce [
+        "br-infra"
+      ];
 
       it-tools.enable = true;
       it-tools.openFirewall = true;
-
-      linkding.enable = true;
-      linkding.openFirewall = true;
-
-      lldap.enable = true;
-      lldap.ldapDomain = "dc=ma-cabane,dc=lan";
-      lldap.openFirewall = true;
-
-      shaarli.enable = true;
-      shaarli.openFirewall = true;
+      it-tools.registerScope = [ "private" ];
+      it-tools.listenInterfaces = lib.mkForce [
+        "br-infra"
+      ];
 
       victoriametrics.enable = true;
       victoriametrics.openFirewall = true;
       victoriametrics.serviceDomain = "sondes.${config.homelab.domain}";
+      victoriametrics.registerScope = [ "private" ];
+      victoriametrics.listenInterfaces = lib.mkForce [
+        "br-infra"
+      ];
 
-      wastebin.enable = true;
-      wastebin.openFirewall = true;
+      victorialogs.enable = true;
+      victorialogs.openFirewall = true;
+      victorialogs.serviceDomain = "journaux.${config.homelab.domain}";
+      victorialogs.registerScope = [ "private" ];
+      victorialogs.listenInterfaces = lib.mkForce [
+        "br-infra"
+      ];
+
+      vector.enable = true;
+      vector.cef.enable = true;
+      vector.cef.mikrotikFirewall.enable = true;
+      vector.cef.mikrotikLogin.enable = true;
+      vector.cef.mikrotikDhcp.enable = true;
+      vector.cef.listenInterfaces = lib.mkForce [
+        "br-infra"
+      ];
+      vector.victorialogs.enable = true;
 
       grist.enable = true;
       grist.openFirewall = true;
-
-      radio.enable = true;
-      radio.openFirewall = true;
-      radio.stations = [
-        {
-          name = "Dance Wave! // Dance";
-          url = "https://dancewave.online/dance.mp3";
-        }
-        {
-          name = "Hirschmilch // Chillout";
-          url = "http://hirschmilch.de:7000/chillout.mp3";
-        }
-        {
-          name = "1 FM Reggae // Reggae";
-          url = "http://strm112.1.fm/reggae_mobile_mp3";
-        }
-        {
-          name = "SUNSET JAZZ RADIO // Jazz";
-          url = "https://radio2.vip-radios.fm:18077/stream-mp3-SunsetJazz";
-        }
-        {
-          name = "Hirschmilch Organic House // Electro";
-          url = "https://hirschmilch.de:7000/organic-house.aac";
-        }
-        {
-          name = "Hirschmilch Electronic // Electro";
-          url = "https://hirschmilch.de:7000/electronic.aac";
-        }
-        {
-          name = "Hirschmilch Prog-House // Electro";
-          url = "http://hirschmilch.de:7000/prog-house.aac";
-        }
-        {
-          name = "Hirschmilch Progressive // Electro";
-          url = "http://hirschmilch.de:7000/progressive.aac";
-        }
-        {
-          name = "Hirschmilch Psytrance // Electro";
-          url = "http://hirschmilch.de:7000/psytrance.aac";
-        }
-        {
-          name = "Hirschmilch Techno // Electro";
-          url = "https://hirschmilch.de:7000/techno.aac";
-        }
-        {
-          name = "Radio Nova // Generalist";
-          url = "http://novazz.ice.infomaniak.ch/novazz-128.mp3";
-        }
-        {
-          name = "France Info // Info";
-          url = "http://direct.franceinfo.fr/live/franceinfo-midfi.mp3";
-        }
+      grist.registerScope = [ "private" ];
+      grist.listenInterfaces = lib.mkForce [
+        "br-infra"
       ];
 
+      mikrotik = {
+        enable = true;
+        backup = true;
+
+        prometheus = {
+          enable = true;
+          openFirewall = true;
+          verbose = true;
+          serviceDomain = "mikrotik-exporter.infra.${config.homelab.domain}";
+          registerScope = [ "private" ];
+          listenInterfaces = lib.mkForce [
+            "br-infra"
+          ];
+        };
+
+        routers = [
+          {
+            name = "mkt254";
+            host = "192.168.244.254";
+          }
+          {
+            name = "mkt253";
+            host = "192.168.244.253";
+          }
+          # {
+          #   name = "mkt252";
+          #   host = "192.168.244.252";
+          # }
+        ];
+      };
     };
   };
 
@@ -158,15 +189,91 @@ in
     };
   };
 
+  # Rename the main network interface to the configured name for consistency across machines.
+  systemd.network.links."10-lan" = {
+    matchConfig = {
+      Path = "pci-0000:03:00.0";
+      Driver = "igc";
+    };
+
+    linkConfig = {
+      Name = config.homelab.host.interface;
+    };
+  };
+
   networking = {
     enableIPv6 = false;
 
     useDHCP = false;
-    interfaces."${config.homelab.host.interface}" = {
-      useDHCP = false;
-      ipv4.addresses = [
+
+    vlans = {
+      "vlan-${config.homelab.vlans.mgmt.name}" = {
+        id = config.homelab.vlans.mgmt.id;
+        interface = config.homelab.host.interface;
+      };
+
+      "vlan-${config.homelab.vlans.dmz.name}" = {
+        id = config.homelab.vlans.dmz.id;
+        interface = config.homelab.host.interface;
+      };
+
+      "vlan-${config.homelab.vlans.infra.name}" = {
+        id = config.homelab.vlans.infra.id;
+        interface = config.homelab.host.interface;
+      };
+
+      "vlan-${config.homelab.vlans.iot.name}" = {
+        id = config.homelab.vlans.iot.id;
+        interface = config.homelab.host.interface;
+      };
+    };
+
+    bridges = {
+      br-lan.interfaces = [ config.homelab.vlans.lan.name ];
+      br-mgmt.interfaces = [ "vlan-${config.homelab.vlans.mgmt.name}" ];
+      br-dmz.interfaces = [ "vlan-${config.homelab.vlans.dmz.name}" ];
+      br-infra.interfaces = [ "vlan-${config.homelab.vlans.infra.name}" ];
+      br-iot.interfaces = [ "vlan-${config.homelab.vlans.iot.name}" ];
+    };
+
+    interfaces = {
+      "${config.homelab.vlans.lan.name}" = { };
+      "vlan-${config.homelab.vlans.mgmt.name}" = { };
+      "vlan-${config.homelab.vlans.dmz.name}" = { };
+      "vlan-${config.homelab.vlans.infra.name}" = { };
+      "vlan-${config.homelab.vlans.iot.name}" = { };
+
+      br-lan.ipv4.addresses = [
         {
           address = config.homelab.host.address;
+          prefixLength = 24;
+        }
+      ];
+
+      br-mgmt.ipv4.addresses = [
+        {
+          address = "192.168.240.${privateSuffixIPv4}";
+          prefixLength = 24;
+        }
+      ];
+
+      br-dmz.ipv4.addresses = [
+        {
+          address = "192.168.32.${privateSuffixIPv4}";
+          prefixLength = 24;
+        }
+      ];
+
+      br-infra.ipv4.addresses = [
+        {
+          address = "192.168.244.${privateSuffixIPv4}";
+          prefixLength = 24;
+        }
+      ];
+
+      br-iot.ipv4.addresses = [
+        {
+          address = "192.168.40.${privateSuffixIPv4}";
           prefixLength = 24;
         }
       ];
@@ -174,13 +281,15 @@ in
 
     defaultGateway = {
       address = config.homelab.host.gateway;
-      interface = config.homelab.host.interface;
+      interface = "br-lan";
     };
 
     nameservers = [
       config.homelab.nameServer
     ];
   };
+
+  security.sudo.execWheelOnly = lib.mkForce false;
 
   # For user namespace remapping for docker/podman rootfull containers
   users = {

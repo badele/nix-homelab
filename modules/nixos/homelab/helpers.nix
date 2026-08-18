@@ -104,8 +104,8 @@ let
   # Helper function to create common feature options
   # Usage in feature modules: mkFeatureOptions { extraOptions = { ... }; }
   mkFeatureOptions =
-    {
-      extraOptions ? { },
+    { extraOptions ? { }
+    ,
     }:
     {
       enable = mkEnableOption "Enable this feature";
@@ -140,6 +140,31 @@ let
         '';
       };
 
+      listenInterfaces = mkOption {
+        type = listOf str;
+        default = [ ];
+        description = ''
+          Network interfaces used to expose this feature.
+          Interface names are resolved to IPv4 addresses from networking.interfaces.
+        '';
+      };
+
+      registerScope = mkOption {
+        type = listOf str;
+        default = [ ];
+        description = ''
+          DNS registration scopes used when publishing this feature domain.
+        '';
+      };
+
+      dnsTargetAddress = mkOption {
+        type = nullOr str;
+        default = null;
+        description = ''
+          Explicit IPv4 address published for this feature domain.
+        '';
+      };
+
       remoteAccess = mkEnableOption "Allow remote access to this application (create new listening port 20000 + appId";
 
     }
@@ -166,7 +191,20 @@ let
     "@service-${appName}-status" = "systemctl status ${appName}";
   };
 
+  mkGrafanaDashboardProvider = appName: path: {
+    name = appName;
+    orgId = 1;
+    type = "file";
+    disableDeletion = true;
+    options.path = path;
+  };
+
 in
 {
-  inherit mkFeatureOptions mkPodmanAliases mkServiceAliases;
+  inherit
+    mkFeatureOptions
+    mkPodmanAliases
+    mkServiceAliases
+    mkGrafanaDashboardProvider
+    ;
 }

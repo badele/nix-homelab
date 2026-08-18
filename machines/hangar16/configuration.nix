@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   self,
   ...
@@ -11,7 +12,7 @@
 
 let
   # first time ssh
-  admSuffixIPv4 = "16";
+  serverSuffixIPv4 = "16";
   internetMachine = self.clan.inventory.instances.internet.roles.default.machines.hangar16;
   # Clan inventory may expose machine settings directly or through imported fragments.
   targetHost =
@@ -34,80 +35,88 @@ in
       hostname = "hangar16";
       description = "Virtualization server for the homelab";
       interface = config.homelab.vlans.lan.name;
-      address = "192.168.254.${admSuffixIPv4}";
+      address = "192.168.254.${serverSuffixIPv4}";
       gateway = "192.168.254.254";
 
       nproc = 20;
     };
 
     features = {
+
       homelab-summary.enable = true;
       tailscale.enable = false;
+      caddy.enable = true;
 
-      proxmox = {
-        enable = true;
+      ##########################################################################
+      # Private homelab DNS server
+      ##########################################################################
+      blocky.enable = true;
+      blocky.openFirewall = true;
+      blocky.enableMetrics = true;
+      blocky.listenInterfaces = lib.mkForce [
+        "br-lan"
+        "br-dmz"
+      ];
 
-        bridges = {
-          vmbr-lan = {
-            interfaces = [ config.homelab.vlans.lan.name ];
-            ipv4.addresses = [
-              {
-                address = config.homelab.host.address;
-                prefixLength = 24;
-              }
-            ];
-          };
+      blocky.serviceDomain = "blocky.${config.homelab.domain}"; # blocky domain name
+      blocky.dnsTargetAddress = lib.mkForce config.homelab.host.address; # blocky DNS server address
+      blocky.registerScope = [ "private" ]; # Register this service in the private DNS zone of the homelab
+      blocky.dnsRegistrationScopes = [ "private" ]; # Add all private service on this blocky instance service
 
-          vmbr-adm = {
-            interfaces = [ "vlan-${config.homelab.vlans.adm.name}" ];
-            ipv4.addresses = [
-              {
-                address = "192.168.240.${admSuffixIPv4}";
-                prefixLength = 24;
-              }
-            ];
-          };
+      homepage-dashboard.enable = true;
+      homepage-dashboard.openFirewall = true;
+      homepage-dashboard.serviceDomain = "labrique-v2.${config.homelab.domain}";
+      homepage-dashboard.registerScope = [ "private" ];
 
-          vmbr-dmz = {
-            interfaces = [ "vlan-${config.homelab.vlans.dmz.name}" ];
-            ipv4.addresses = [
-              {
-                address = "192.168.32.${admSuffixIPv4}";
-                prefixLength = 24;
-              }
-            ];
-          };
+      gatus.enable = true;
+      gatus.openFirewall = true;
+      gatus.serviceDomain = "signalisations-v2.${config.homelab.domain}";
+      gatus.registerScope = [ "private" ];
 
-          vmbr-iot = {
-            interfaces = [ "vlan-${config.homelab.vlans.iot.name}" ];
-            ipv4.addresses = [
-              {
-                address = "192.168.40.${admSuffixIPv4}";
-                prefixLength = 24;
-              }
-            ];
-          };
-        };
+      grafana.enable = true;
+      grafana.openFirewall = true;
+      grafana.serviceDomain = "lampiotes-v2.${config.homelab.domain}";
+      grafana.registerScope = [ "private" ];
 
-        vms.hello-adm = {
-          vmid = 100;
-          memory = 1024;
-          cores = 1;
-          sockets = 1;
-          onboot = false;
-          # This smoke-test VM validates Proxmox networking and VM provisioning.
-          net = [
-            {
-              model = "virtio";
-              bridge = "vmbr-adm";
-              firewall = true;
-            }
-          ];
-          scsi = [ { file = "local:8"; } ];
-        };
-      };
+      victoriametrics.enable = true;
+      victoriametrics.openFirewall = true;
+      victoriametrics.serviceDomain = "sondes-v2.${config.homelab.domain}";
+      victoriametrics.registerScope = [ "private" ];
+
+      # proxmox = {
+      #   enable = true;
+      #
+      #   vms.hello-adm = {
+      #     vmid = 100;
+      #     memory = 1024;
+      #     cores = 1;
+      #     sockets = 1;
+      #     onboot = false;
+      #     # This smoke-test VM validates Proxmox networking and VM provisioning.
+      #     net = [
+      #       {
+      #         model = "virtio";
+      #         bridge = "br-adm";
+      #         firewall = true;
+      #       }
+      #     ];
+      #     scsi = [ { file = "local:8"; } ];
+      #   };
+      # };
+    };
+
+  };
+
+  # Use blocky local DNS server for resolving local homelab services and domains.
+  services.resolved = {
+    enable = true;
+    settings.Resolve = {
+      DNS = [ config.homelab.nameServer ];
+      Domains = [ config.homelab.domain ];
+      LLMNR = "no";
     };
   };
+
   # rename network devices
   # udevadm info -q property -p /sys/class/net/<INTERFACE-NAME> | grep '^ID_PATH='
   # udevadm info -q property -p /sys/class/net/<INTERFACE-NAME> | grep 'DRIVER='
@@ -138,24 +147,24 @@ in
   networking = {
     networkmanager.unmanaged = [
       "interface-name:${config.homelab.vlans.lan.name}"
-      "interface-name:vlan-${config.homelab.vlans.adm.name}"
+      "interface-name:vlan-${config.homelab.vlans.mgmt.name}"
       "interface-name:vlan-${config.homelab.vlans.dmz.name}"
       "interface-name:vlan-${config.homelab.vlans.iot.name}"
-      "interface-name:vmbr-lan"
-      "interface-name:vmbr-adm"
-      "interface-name:vmbr-dmz"
-      "interface-name:vmbr-iot"
+      "interface-name:br-lan"
+      "interface-name:br-mgmt"
+      "interface-name:br-dmz"
+      "interface-name:br-iot"
     ];
 
     defaultGateway = {
       address = config.homelab.host.gateway;
-      interface = "lan";
+      interface = "br-lan";
     };
 
     vlans = {
       # IPv6 hexa speak => bootable == fdca:5a00:b007:ab1e/64
-      "vlan-${config.homelab.vlans.adm.name}" = {
-        id = config.homelab.vlans.adm.id;
+      "vlan-${config.homelab.vlans.mgmt.name}" = {
+        id = config.homelab.vlans.mgmt.id;
         interface = config.homelab.host.interface;
       };
 
@@ -172,11 +181,42 @@ in
       };
     };
 
+    bridges = {
+      br-lan.interfaces = [ config.homelab.vlans.lan.name ];
+      br-mgmt.interfaces = [ "vlan-${config.homelab.vlans.mgmt.name}" ];
+      br-dmz.interfaces = [ "vlan-${config.homelab.vlans.dmz.name}" ];
+      br-iot.interfaces = [ "vlan-${config.homelab.vlans.iot.name}" ];
+    };
+
     interfaces = {
       "${config.homelab.vlans.lan.name}" = { };
-      "vlan-${config.homelab.vlans.adm.name}" = { };
+      "vlan-${config.homelab.vlans.mgmt.name}" = { };
       "vlan-${config.homelab.vlans.dmz.name}" = { };
       "vlan-${config.homelab.vlans.iot.name}" = { };
+      br-lan.ipv4.addresses = [
+        {
+          address = config.homelab.host.address;
+          prefixLength = 24;
+        }
+      ];
+      br-mgmt.ipv4.addresses = [
+        {
+          address = "192.168.240.${serverSuffixIPv4}";
+          prefixLength = 24;
+        }
+      ];
+      br-dmz.ipv4.addresses = [
+        {
+          address = "192.168.32.${serverSuffixIPv4}";
+          prefixLength = 24;
+        }
+      ];
+      br-iot.ipv4.addresses = [
+        {
+          address = "192.168.40.${serverSuffixIPv4}";
+          prefixLength = 24;
+        }
+      ];
     };
   };
 

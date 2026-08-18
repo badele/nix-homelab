@@ -1,11 +1,12 @@
-{
-  config,
-  inputs,
-  lib,
-  pkgs,
-  mkFeatureOptions,
-  mkPodmanAliases,
-  ...
+{ config
+, inputs
+, lib
+, pkgs
+, mkFeatureOptions
+, mkGrafanaDashboardProvider
+, mkServiceAliases
+, resolveListenInterfaceAddresses
+, ...
 }:
 with lib;
 with types;
@@ -18,13 +19,14 @@ let
   appIcon = "victoriametrics";
   appDescription = "${pkgs.${appName}.meta.description}";
   appUrl = pkgs.${appName}.meta.homepage;
-  appPinnedVersion = inputs.nixpkgs-victoriametrics.legacyPackages.${pkgs.system}.${appName}.version;
+  appPinnedVersion =
+    inputs.nixpkgs-victoriametrics.legacyPackages.${pkgs.stdenv.hostPlatform.system}.${appName}.version;
   appNixpkgsVersion = pkgs.${appName}.version;
 
   cfg = config.homelab.features.${appName};
 
   prometheusConfig = {
-    scrape_configs = cfg.scrapeConfigs;
+    scrape_configs = cfg.scrapeConfigs ++ integrationScrapeConfigs;
   };
 
   # Get port from central registry
@@ -32,6 +34,22 @@ let
 
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenHttpPort}";
+
+  integrationServicesWithScrapes = lib.filterAttrs
+    (
+      _: service: service.victoriametrics != null
+    )
+    config.homelab.integrations.services;
+
+  integrationScrapeConfigs = lib.mapAttrsToList
+    (
+      serviceName: service:
+        {
+          job_name = serviceName;
+        }
+        // service.victoriametrics
+    )
+    integrationServicesWithScrapes;
 
 in
 {
@@ -126,39 +144,50 @@ in
           ];
           ui.hide-hostname = true;
         };
+      };
 
+      homelab.integrations.services.${appName} = mkDefault {
+        displayName = appDisplayName;
+        category = appCategory;
+        icon = appIcon;
+        description = appDescription;
+        grafana = {
+          plugins = [
+            pkgs.grafanaPlugins.victoriametrics-metrics-datasource
+          ];
+          datasources = [
+            {
+              name = "VictoriaMetrics";
+              type = "victoriametrics-metrics-datasource";
+              access = "proxy";
+              url = "https://${config.homelab.features.victoriametrics.serviceDomain}";
+              version = 1;
+              editable = true;
+              isDefault = true;
+              jsonData = {
+                httpMethod = "POST";
+                timeInterval = "30s";
+              };
+            }
+            {
+              name = "Prometheus";
+              type = "prometheus";
+              access = "proxy";
+              url = "https://${config.homelab.features.victoriametrics.serviceDomain}";
+              version = 1;
+              editable = true;
+              isDefault = false;
+            }
+          ];
+          dashboards = [
+            (mkGrafanaDashboardProvider appName ./grafana/dashboards)
+          ];
+        };
       };
 
       networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [
         443
       ];
-
-      services.grafana.provision.datasources.settings = {
-        datasources = [
-          {
-            name = "VictoriaMetrics";
-            type = "victoriametrics-metrics-datasource";
-            access = "proxy";
-            url = "https://${config.homelab.features.victoriametrics.serviceDomain}";
-            version = 1;
-            editable = true;
-            isDefault = true;
-            jsonData = {
-              httpMethod = "POST";
-              timeInterval = "30s";
-            };
-          }
-          {
-            name = "Prometheus";
-            type = "prometheus";
-            access = "proxy";
-            url = "https://${config.homelab.features.victoriametrics.serviceDomain}";
-            version = 1;
-            editable = true;
-            isDefault = false;
-          }
-        ];
-      };
 
       services.victoriametrics = {
         enable = true;
@@ -186,8 +215,19 @@ in
 
       homelab.alias = [ "${cfg.serviceDomain}" ];
 
+      programs.bash.shellAliases = (mkServiceAliases appName) // {
+        "@service-${appName}-config" = "systemctl cat ${appName}";
+        "@service-${appName}-agent-journal" = "journalctl -u vmagent";
+        "@service-${appName}-agent-start" = "systemctl start vmagent";
+        "@service-${appName}-agent-stop" = "systemctl stop vmagent";
+        "@service-${appName}-agent-restart" = "systemctl restart vmagent";
+        "@service-${appName}-agent-status" = "systemctl status vmagent";
+        "@service-${appName}-agent-config" = "systemctl cat vmagent";
+      };
+
       services.caddy.virtualHosts = lib.mkIf cfg.openFirewall {
         "${cfg.serviceDomain}" = {
+          listenAddresses = resolveListenInterfaceAddresses appName cfg.listenInterfaces;
           logFormat = ''
             output file /var/log/caddy/public.log {
               mode 0644

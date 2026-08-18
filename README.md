@@ -1,20 +1,18 @@
 ---
-
 <div align="center">
-    <h1>
-        <img src="./docs/imgs/nix-homelab-logo.png"/>
-    </h1>
-    <h3 align="center"><strong>Centralize the configuration of your immutable NixOS machines</strong></h3>
-    <p>
-        My personal homelab infrastructure, fully managed with
-        <a href="https://nixos.org">NixOS</a> and <a href="./docs/clan.md"/>Clan</a>. This repository contains
-        all configurations for my servers, desktops, and network devices.
-    </p>
-    <p align="center">
-        <a target="_blank" href="https://github.com/badele/nix-homelab">Home</a> | <a target="_blank" href="https://labrique.ma-cabane.eu/">Public Server</a> | <a target="_blank" href="https://lampiotes.ma-cabane.eu/d/2cd7b23e-e05f-4c13-99aa-bbc1e323337c/attack?var-interval=1h&orgId=1&from=now-24h&to=now&timezone=browser&refresh=1m">Grafana Dashboard</a> | <a target="_blank" href="https://bonnes-adresses.ma-cabane.eu/bookmarks/shared">My bookmarks</a>
-    </p>
+<h1>
+<img src="./docs/imgs/nix-homelab-logo.png"/>
+</h1>
+<h3 align="center"><strong>Centralize the configuration of your immutable NixOS machines</strong></h3>
+<p>
+My personal homelab infrastructure, fully managed with
+<a href="https://nixos.org">NixOS</a> and <a href="./docs/clan.md"/>Clan</a>. This repository contains
+all configurations for my servers, desktops, and network devices.
+</p>
+<p align="center">
+<a target="_blank" href="https://github.com/badele/nix-homelab">Home</a> | <a target="_blank" href="docs/all-features.md">All homelab features</a> | <a target="_blank" href="https://labrique.ma-cabane.eu/">Public Server</a> | <a target="_blank" href="https://lampiotes.ma-cabane.eu/d/2cd7b23e-e05f-4c13-99aa-bbc1e323337c/attack?var-interval=1h&orgId=1&from=now-24h&to=now&timezone=browser&refresh=1m">Grafana Dashboard</a>
+</p>
 </div>
-
 ---
 
 ### What is this?
@@ -58,6 +56,18 @@ I follow a hybrid approach:
 
 This gives me the best of both worlds: NixOS reproducibility with container
 flexibility.
+
+### 🔐 Disk Encryption
+
+Disk encryption is enabled whenever possible across the homelab. It is
+especially important on laptops because they are mobile devices and therefore
+more exposed to loss or theft. The same principle also applies to servers,
+since a stolen machine may still contain sensitive data.
+
+`constellation` is the main exception to this rule. It is a critical private
+server and provides core services such as DNS ad blocking for the local
+network. After a power outage, it must be able to boot automatically without
+requiring a manual passphrase entry.
 
 ### 📦 Services & Applications
 
@@ -162,6 +172,12 @@ All Available homelab features :
       </a>
     </td>
     <td align="center" width="16%">
+      <a href="/docs/all-features.md#core-services" title="MikroTik RouterOS management helpers">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/mikrotik.png" width="48" height="48" alt="MikroTik"/>
+        <br/>MikroTik
+      </a>
+    </td>
+    <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Minimalist and opinionated feed reader">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/miniflux.png" width="48" height="48" alt="Miniflux"/>
         <br/>Miniflux
@@ -173,14 +189,20 @@ All Available homelab features :
         <br/>Nix homelab summary
       </a>
     </td>
+  </tr>
+  <tr>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#core-services" title="Implementation of the SSH protocol">
+        <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/openssh.webp" width="48" height="48" alt="OpenSSH"/>
+        <br/>OpenSSH
+      </a>
+    </td>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#deprecated-services" title="The Ultimate HTML5 Internet Radio Player">
         <img src="https://prahec.com/projects/pawtunes/demo/assets/img/apple-touch-icon.png" width="48" height="48" alt="Pawtunes"/>
         <br/>Pawtunes
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#core-services" title="Virtualization host with Proxmox VE on NixOS">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/proxmox.png" width="48" height="48" alt="Proxmox VE"/>
@@ -205,6 +227,8 @@ All Available homelab features :
         <br/>Shaarli
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#deprecated-services" title="Private certificate authority (X.509 & SSH) & ACME server for secure automated certificate management, so you can use TLS everywhere & SSO for SSH">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/step-ca.png" width="48" height="48" alt="Step CA"/>
@@ -217,8 +241,18 @@ All Available homelab features :
         <br/>Tailscale
       </a>
     </td>
-  </tr>
-  <tr>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#system-health" title="High-performance observability data pipeline">
+        <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/vector.webp" width="48" height="48" alt="Vector"/>
+        <br/>Vector
+      </a>
+    </td>
+    <td align="center" width="16%">
+      <a href="/docs/all-features.md#system-health" title="User friendly log database from VictoriaMetrics">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/victoriametrics.png" width="48" height="48" alt="VictoriaLogs"/>
+        <br/>VictoriaLogs
+      </a>
+    </td>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#system-health" title="Fast, cost-effective and scalable time series database, long-term remote storage for Prometheus">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/victoriametrics.png" width="48" height="48" alt="Victoriametrics"/>
@@ -231,12 +265,16 @@ All Available homelab features :
         <br/>Wastebin
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#core-services" title="Identity and access management platform">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/zitadel.png" width="48" height="48" alt="ZITADEL"/>
         <br/>ZITADEL
       </a>
     </td>
+    <td width="16%"></td>
+    <td width="16%"></td>
     <td width="16%"></td>
     <td width="16%"></td>
     <td width="16%"></td>
@@ -252,17 +290,17 @@ productivity tools.
 
 #### Desktop Applications
 
-| Logo                                                                                                                                                          | Application | Description                                                                 |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------- |
-| [<img width="32" src="https://www.borgbackup.org/favicon.ico">](./docs/borgbackup/README.md)                                                                  | borgbackup  | [Deduplication backup tool](./docs/borgbackup/README.md)                    |
-| <img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Firefox_logo%2C_2019.svg/32px-Firefox_logo%2C_2019.svg.png">                   | Firefox     | Web browser                                                                 |
-| <img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/The_GIMP_icon_-_gnome.svg/32px-The_GIMP_icon_-_gnome.svg.png">                 | Gimp        | Raster graphics editor                                                      |
-| <img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/I3_window_manager_logo.svg/32px-I3_window_manager_logo.svg.png">               | i3          | [Tiling window manager](./nix/home-manager/features/desktop/xorg/wm/i3.nix) |
-| <img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Inkscape_Logo.svg/32px-Inkscape_Logo.svg.png">                                 | Inkscape    | Vector graphics editor                                                      |
-| <img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/LibreOffice_icon_3.3.1_48_px.svg/32px-LibreOffice_icon_3.3.1_48_px.svg.png">   | LibreOffice | Office suite                                                                |
-| <img width="32" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Meld_Logo.svg/128px-Meld_Logo.svg.png">                                        | Meld        | Visual diff tool                                                            |
-| [<img width="32" src="https://raw.githubusercontent.com/denisidoro/navi/master/assets/icon.png">](./nix/home-manager/features/term/base.nix)                  | Navi        | [Interactive cheatsheet tool](https://github.com/badele/vide)               |
-| [<img width="32" src="https://user-images.githubusercontent.com/28633984/66519056-2e840c80-eaef-11e9-8670-c767213c26ba.png">](https://github.com/badele/vide) | Neovim      | [**VIDE** - My customized Neovim config](https://github.com/badele/vide)    |
+| Logo                                                                                                                                         | Application | Description                                                                 |
+| -------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------- |
+| [<img width="32" src="https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/borg.webp">](./docs/borgbackup/README.md)                          | borgbackup  | [Deduplication backup tool](./docs/borgbackup/README.md)                    |
+| <img width="32" src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/firefox.webp">                                                           | Firefox     | Web browser                                                                 |
+| <img width="32" src="https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/gimp.webp">                                                         | Gimp        | Raster graphics editor                                                      |
+| <img width="32" src="https://raw.githubusercontent.com/i3/i3/next/docs/logo-30.png">                                                         | i3          | [Tiling window manager](./nix/home-manager/features/desktop/xorg/wm/i3.nix) |
+| <img width="32" src="https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/inkscape.webp">                                                     | Inkscape    | Vector graphics editor                                                      |
+| <img width="32" src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/libreoffice-colibre-text.webp">                            | LibreOffice | Office suite                                                                |
+| <img width="32" src="https://meldmerge.org/images/meld.svg">                                                                                 | Meld        | Visual diff tool                                                            |
+| [<img width="32" src="https://raw.githubusercontent.com/denisidoro/navi/master/assets/icon.png">](./nix/home-manager/features/term/base.nix) | Navi        | [Interactive cheatsheet tool](https://github.com/badele/vide)               |
+| [<img width="32" src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/neovim.webp">](https://github.com/badele/vide)            | Neovim      | [**VIDE** - My customized Neovim config](https://github.com/badele/vide)    |
 
 #### Floating TUI Panels
 
@@ -324,42 +362,42 @@ Complete list of hosts in the homelab (auto-generated with `just doc-update`):
             <td>Sagem</td>
             <td>SFR internet box</td>
         </tr><tr>
-            <td><a href="./docs/hosts/router-living.md"><img width="32" src="https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32"></a></td>
+            <td><a href="./docs/hosts/router-living.md"><img width="32" src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/mikrotik.png"></a></td>
             <td><a href="./docs/hosts/router-living.md">router-living</a>&nbsp;(192.168.254.254)</td>
             <td>MikroTik</td>
             <td>Livingroom mikrotik router</td>
         </tr><tr>
-            <td><a href="./docs/hosts/router-ladbedroom.md"><img width="32" src="https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32"></a></td>
+            <td><a href="./docs/hosts/router-ladbedroom.md"><img width="32" src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/mikrotik.png"></a></td>
             <td><a href="./docs/hosts/router-ladbedroom.md">router-ladbedroom</a>&nbsp;(192.168.254.253)</td>
             <td>MikroTik</td>
             <td>Bedroom mikrotik router</td>
         </tr><tr>
-            <td><a href="./docs/hosts/router-homeoffice.md"><img width="32" src="https://cdn.shopify.com/s/files/1/0653/8759/3953/files/512.png?v=1657867177&width=32"></a></td>
+            <td><a href="./docs/hosts/router-homeoffice.md"><img width="32" src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/mikrotik.png"></a></td>
             <td><a href="./docs/hosts/router-homeoffice.md">router-homeoffice</a>&nbsp;(192.168.254.252)</td>
             <td>MikroTik</td>
             <td>Office mikrotik router</td>
         </tr><tr>
-            <td><a href="./docs/hosts/sadhome.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
+            <td><a href="./docs/hosts/sadhome.md"><img width="32" src="https://distrosea.com/distro-icons/nixos.svg"></a></td>
             <td><a href="./docs/hosts/sadhome.md">sadhome</a>&nbsp;(192.168.254.200)</td>
             <td>NixOS</td>
             <td>Stephanie's laptop</td>
         </tr><tr>
-            <td><a href="./docs/hosts/rpi40.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
+            <td><a href="./docs/hosts/rpi40.md"><img width="32" src="https://distrosea.com/distro-icons/nixos.svg"></a></td>
             <td><a href="./docs/hosts/rpi40.md">rpi40</a>&nbsp;(192.168.254.101)</td>
             <td>NixOS</td>
             <td>The RPI 4 server</td>
         </tr><tr>
-            <td><a href="./docs/hosts/bootstore.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
+            <td><a href="./docs/hosts/bootstore.md"><img width="32" src="https://distrosea.com/distro-icons/nixos.svg"></a></td>
             <td><a href="./docs/hosts/bootstore.md">bootstore</a>&nbsp;(192.168.254.100)</td>
             <td>NixOS</td>
             <td>HP Microserver N40L server</td>
         </tr><tr>
-            <td><a href="./docs/hosts/b4d14.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
+            <td><a href="./docs/hosts/b4d14.md"><img width="32" src="https://distrosea.com/distro-icons/nixos.svg"></a></td>
             <td><a href="./docs/hosts/b4d14.md">b4d14</a>&nbsp;(192.168.254.124)</td>
             <td>NixOS</td>
             <td>Dell XPS 9560 Latop</td>
         </tr><tr>
-            <td><a href="./docs/hosts/badxps.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
+            <td><a href="./docs/hosts/badxps.md"><img width="32" src="https://distrosea.com/distro-icons/nixos.svg"></a></td>
             <td><a href="./docs/hosts/badxps.md">badxps</a>&nbsp;(192.168.254.114)</td>
             <td>NixOS</td>
             <td>Dell XPS 9570 Latop</td>
@@ -369,19 +407,19 @@ Complete list of hosts in the homelab (auto-generated with `just doc-update`):
             <td>NixOS</td>
             <td>qemu VM (SSH on port 2222)</td>
         </tr><tr>
-            <td><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></td>
+            <td><img width="32" src="https://distrosea.com/distro-icons/nixos.svg"></td>
             <td>cab1e&nbsp;(84.234.31.97)</td>
             <td>NixOS</td>
             <td>Wireguard VPN anonymizer server</td>
         </tr>
         <tr>
-            <td><a href="./machines/houston/README.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
+            <td><a href="./machines/houston/README.md"><img width="32" src="https://distrosea.com/distro-icons/nixos.svg"></a></td>
             <td><a href="./machines/houston/README.md">houston</a>&nbsp;(91.99.130.127)</td>
             <td>NixOS</td>
             <td>Main public server</td>
         </tr>
         <tr>
-            <td><a href="./machines/gagarin//README.md"><img width="32" src="https://nixos.wiki/images/thumb/2/20/Home-nixos-logo.png/207px-Home-nixos-logo.png"></a></td>
+            <td><a href="./machines/gagarin//README.md"><img width="32" src="https://distrosea.com/distro-icons/nixos.svg"></a></td>
             <td><a href="./machines/gagarin/README.md">gagarin</a>&nbsp;(192.168.254.147)</td>
             <td>NixOS</td>
             <td>My main desktop workstation</td>
@@ -414,4 +452,5 @@ A big thank to the contributors of OpenSource projects in particular :
 - [wikipedia](https://www.wikipedia.org) for logos inventories
 
 ```
+
 ```

@@ -74,8 +74,10 @@ in
       acme.enable = true;
       acme.email = config.homelab.domainEmailAdmin;
       acme.dnsProvider = "hetzner";
+      acme.tokenScope = "public";
 
       caddy.enable = true;
+      caddy.tokenScope = "public";
 
       homepage-dashboard.enable = true;
       homepage-dashboard.openFirewall = true;

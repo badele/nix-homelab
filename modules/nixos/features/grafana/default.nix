@@ -4,6 +4,7 @@
   pkgs,
   mkFeatureOptions,
   mkServiceAliases,
+  resolveListenInterfaceAddresses,
   ...
 }:
 with lib;
@@ -25,6 +26,24 @@ let
 
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenHttpPort}";
+  integrationServicesWithGrafana = lib.filterAttrs (
+    _: service: service.grafana != null
+  ) config.homelab.integrations.services;
+  integrationGrafanaDashboards = lib.flatten (
+    lib.mapAttrsToList (_: service: service.grafana.dashboards or [ ]) integrationServicesWithGrafana
+  );
+  integrationGrafanaDatasources = lib.flatten (
+    lib.mapAttrsToList (_: service: service.grafana.datasources or [ ]) integrationServicesWithGrafana
+  );
+  defaultGrafanaPlugins = [
+    pkgs.grafanaPlugins.grafana-metricsdrilldown-app
+  ];
+  integrationGrafanaPlugins = lib.unique (
+    defaultGrafanaPlugins
+    ++ lib.flatten (
+      lib.mapAttrsToList (_: service: service.grafana.plugins or [ ]) integrationServicesWithGrafana
+    )
+  );
 
 in
 {
@@ -145,6 +164,11 @@ in
             protocol = "http";
           };
 
+          # PREVIEW FEATURES
+          feature_toggles = {
+            dashboardSectionVariables = true;
+          };
+
           users = {
             allow_signup = false;
           };
@@ -171,8 +195,19 @@ in
         };
       };
 
+      services.grafana.declarativePlugins = lib.mkIf (
+        integrationGrafanaPlugins != [ ]
+      ) integrationGrafanaPlugins;
+      services.grafana.provision.dashboards.settings.providers = lib.mkIf (
+        integrationGrafanaDashboards != [ ]
+      ) integrationGrafanaDashboards;
+      services.grafana.provision.datasources.settings.datasources = lib.mkIf (
+        integrationGrafanaDatasources != [ ]
+      ) integrationGrafanaDatasources;
+
       services.caddy.virtualHosts = lib.mkIf cfg.openFirewall {
         "${cfg.serviceDomain}" = {
+          listenAddresses = resolveListenInterfaceAddresses appName cfg.listenInterfaces;
           logFormat = ''
             output file /var/log/caddy/public.log {
               mode 0644
@@ -200,7 +235,7 @@ in
               Permissions-Policy "geolocation=(), microphone=(), camera=()"
 
               # Allow only specific sources to load content.
-              Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob: https:; connect-src 'self' https:;"
+              Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:; media-src 'self' blob: https:; connect-src 'self' https:;"
 
               # Modern cross-origin isolation headers.
               Cross-Origin-Opener-Policy "same-origin"

@@ -4,6 +4,7 @@
   pkgs,
   mkFeatureOptions,
   mkServiceAliases,
+  resolveListenInterfaceAddresses,
   ...
 }:
 with lib;
@@ -22,6 +23,19 @@ let
   featuresWithGatus = lib.filterAttrs (
     name: feature: feature.enable or false && feature.gatus != null
   ) config.homelab.features;
+
+  integrationServicesWithGatus = lib.filterAttrs (
+    _: service: service.gatus != null
+  ) config.homelab.integrations.services;
+
+  integrationEndpoints = lib.mapAttrsToList (
+    _: service:
+    {
+      name = service.displayName;
+      group = service.category;
+    }
+    // service.gatus
+  ) integrationServicesWithGatus;
 
 in
 {
@@ -87,6 +101,8 @@ in
 
         # Add service alias
         programs.bash.shellAliases = (mkServiceAliases appName) // {
+          "@service-${appName}-config" =
+            "cat $(systemctl cat ${appName} | grep GATUS_CONFIG_PATH | sed  -E 's/.*GATUS_CONFIG_PATH=(.*)\"/\\1/')";
         };
 
         # Enable Gatus service
@@ -99,7 +115,8 @@ in
               path = "/var/lib/gatus/gatus.db";
             };
 
-            endpoints = lib.mapAttrsToList (name: feature: feature.gatus) featuresWithGatus;
+            endpoints =
+              (lib.mapAttrsToList (_: feature: feature.gatus) featuresWithGatus) ++ integrationEndpoints;
           };
         };
 
@@ -107,6 +124,7 @@ in
 
         services.caddy.virtualHosts = mkIf cfg.openFirewall {
           "${cfg.serviceDomain}" = {
+            listenAddresses = resolveListenInterfaceAddresses appName cfg.listenInterfaces;
             logFormat = ''
               output file /var/log/caddy/public.log {
                 mode 0644

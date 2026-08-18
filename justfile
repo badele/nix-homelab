@@ -239,6 +239,17 @@ nixos-command action hostname="" options="":
 @nixos-build hostname="" options="":
     just nixos-command build {{ hostname }} {{ options }}
 
+# Build local host as a QEMU VM
+[group('nixos')]
+@nixos-build-vm hostname="" options="":
+    just nixos-command build-vm {{ hostname }} {{ options }}
+
+# Run the generated QEMU VM
+[group('nixos')]
+@nixos-run-vm hostname="" options="":
+    just nixos-build-vm {{ hostname }} {{ options }}
+    ./result/bin/run-*
+
 
 # Update on remote host
 [group('nixos')]

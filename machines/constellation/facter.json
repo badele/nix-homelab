@@ -23,7 +23,7 @@
     },
     "bluetooth": [
       {
-        "index": 60,
+        "index": 61,
         "attached_to": 59,
         "class_list": [
           "usb",
@@ -105,7 +105,7 @@
         "module_alias": "usb:v0BDApB85Bd0000dcE0dsc01dp01icE0isc01ip01in00"
       },
       {
-        "index": 65,
+        "index": 67,
         "attached_to": 59,
         "class_list": [
           "usb",
@@ -1411,7 +1411,7 @@
           "[13]",
           "[14]"
         ],
-        "bogo": 3593.25,
+        "bogo": 3593.51,
         "cache": 512,
         "units": 16,
         "physical_id": 0,
@@ -1815,7 +1815,7 @@
         "module_alias": "usb:v1D6Bp0002d0615dc09dsc00dp01ic09isc00ip00in00"
       },
       {
-        "index": 63,
+        "index": 64,
         "attached_to": 42,
         "class_list": [
           "usb",
@@ -1892,7 +1892,7 @@
         "module_alias": "usb:v1D6Bp0003d0615dc09dsc00dp03ic09isc00ip00in00"
       },
       {
-        "index": 64,
+        "index": 65,
         "attached_to": 29,
         "class_list": [
           "usb",
@@ -1979,7 +1979,93 @@
         "module_alias": "usb:v1D6Bp0002d0615dc09dsc00dp01ic09isc00ip00in00"
       },
       {
-        "index": 67,
+        "index": 66,
+        "attached_to": 65,
+        "class_list": [
+          "usb",
+          "hub"
+        ],
+        "bus_type": {
+          "hex": "0086",
+          "name": "USB",
+          "value": 134
+        },
+        "slot": {
+          "bus": 0,
+          "number": 0
+        },
+        "base_class": {
+          "hex": "010a",
+          "name": "Hub",
+          "value": 266
+        },
+        "vendor": {
+          "hex": "05e3",
+          "name": "GenesysLogic",
+          "value": 1507
+        },
+        "device": {
+          "hex": "0610",
+          "name": "USB2.0 Hub",
+          "value": 1552
+        },
+        "revision": {
+          "hex": "0000",
+          "name": "92.24",
+          "value": 0
+        },
+        "model": "GenesysLogic USB2.0 Hub",
+        "sysfs_id": "/devices/pci0000:00/0000:00:08.1/0000:04:00.3/usb1/1-4/1-4:1.0",
+        "sysfs_bus_id": "1-4:1.0",
+        "resources": [
+          {
+            "type": "baud",
+            "speed": 480000000,
+            "bits": 0,
+            "stop_bits": 0,
+            "parity": 0,
+            "handshake": 0
+          }
+        ],
+        "detail": {
+          "device_class": {
+            "hex": "0009",
+            "name": "hub",
+            "value": 9
+          },
+          "device_subclass": {
+            "hex": "0000",
+            "name": "per_interface",
+            "value": 0
+          },
+          "device_protocol": 2,
+          "interface_class": {
+            "hex": "0009",
+            "name": "hub",
+            "value": 9
+          },
+          "interface_subclass": {
+            "hex": "0000",
+            "name": "per_interface",
+            "value": 0
+          },
+          "interface_protocol": 2,
+          "interface_number": 0,
+          "interface_alternate_setting": 1
+        },
+        "hotplug": "usb",
+        "driver": "hub",
+        "driver_module": "usbcore",
+        "drivers": [
+          "hub"
+        ],
+        "driver_modules": [
+          "usbcore"
+        ],
+        "module_alias": "usb:v05E3p0610d9224dc09dsc00dp02ic09isc00ip02in00"
+      },
+      {
+        "index": 69,
         "attached_to": 29,
         "class_list": [
           "usb",
@@ -2056,6 +2142,117 @@
         "module_alias": "usb:v1D6Bp0003d0615dc09dsc00dp03ic09isc00ip00in00"
       }
     ],
+    "keyboard": [
+      {
+        "index": 60,
+        "attached_to": 66,
+        "class_list": [
+          "keyboard",
+          "usb"
+        ],
+        "bus_type": {
+          "hex": "0086",
+          "name": "USB",
+          "value": 134
+        },
+        "slot": {
+          "bus": 0,
+          "number": 0
+        },
+        "base_class": {
+          "hex": "0108",
+          "name": "Keyboard",
+          "value": 264
+        },
+        "sub_class": {
+          "hex": "0000",
+          "name": "Keyboard",
+          "value": 0
+        },
+        "vendor": {
+          "hex": "413c",
+          "name": "Dell",
+          "value": 16700
+        },
+        "device": {
+          "hex": "2106",
+          "name": "Dell QuietKey Keyboard",
+          "value": 8454
+        },
+        "revision": {
+          "hex": "0000",
+          "name": "1.30",
+          "value": 0
+        },
+        "model": "Dell QuietKey Keyboard",
+        "sysfs_id": "/devices/pci0000:00/0000:00:08.1/0000:04:00.3/usb1/1-4/1-4.1/1-4.1:1.0",
+        "sysfs_bus_id": "1-4.1:1.0",
+        "unix_device_name": "/dev/input/event0",
+        "unix_device_number": {
+          "type": 99,
+          "major": 13,
+          "minor": 64,
+          "range": 1
+        },
+        "unix_device_names": [
+          "/dev/input/by-id/usb-Dell_Dell_QuietKey_Keyboard-event-kbd",
+          "/dev/input/by-path/pci-0000:04:00.3-usb-0:4.1:1.0-event-kbd",
+          "/dev/input/by-path/pci-0000:04:00.3-usbv2-0:4.1:1.0-event-kbd",
+          "/dev/input/event0"
+        ],
+        "resources": [
+          {
+            "type": "baud",
+            "speed": 1500000,
+            "bits": 0,
+            "stop_bits": 0,
+            "parity": 0,
+            "handshake": 0
+          }
+        ],
+        "detail": {
+          "device_class": {
+            "hex": "0000",
+            "name": "per_interface",
+            "value": 0
+          },
+          "device_subclass": {
+            "hex": "0000",
+            "name": "per_interface",
+            "value": 0
+          },
+          "device_protocol": 0,
+          "interface_class": {
+            "hex": "0003",
+            "name": "hid",
+            "value": 3
+          },
+          "interface_subclass": {
+            "hex": "0001",
+            "name": "audio",
+            "value": 1
+          },
+          "interface_protocol": 1,
+          "interface_number": 0,
+          "interface_alternate_setting": 0
+        },
+        "hotplug": "usb",
+        "driver": "usbhid",
+        "driver_module": "usbhid",
+        "drivers": [
+          "usbhid"
+        ],
+        "driver_modules": [
+          "usbhid"
+        ],
+        "driver_info": {
+          "type": "keyboard",
+          "xkb_rules": "xfree86",
+          "xkb_model": "pc104"
+        },
+        "module_alias": "usb:v413Cp2106d0130dc00dsc00dp00ic03isc01ip01in00"
+      }
+    ],
     "memory": [
       {
         "index": 19,
@@ -2078,7 +2275,7 @@
           {
             "type": "mem",
             "base": 0,
-            "range": 33023270912,
+            "range": 33023275008,
             "enabled": true,
             "access": "read_write",
             "prefetch": "unknown"
@@ -2113,9 +2310,9 @@
           "value": 4268
         },
         "device": {
-          "hex": "a1d2",
+          "hex": "a1d1",
           "name": "DELL S2722DC",
-          "value": 41426
+          "value": 41425
         },
         "serial": "D4Q3HD3",
         "model": "DELL S2722DC",
@@ -2694,8 +2891,8 @@
     ],
     "network_interface": [
       {
-        "index": 68,
-        "attached_to": 27,
+        "index": 70,
+        "attached_to": 0,
         "class_list": [
           "network_interface"
         ],
@@ -2705,38 +2902,19 @@
           "value": 263
         },
         "sub_class": {
-          "hex": "000a",
-          "name": "WLAN",
-          "value": 10
+          "hex": "0000",
+          "name": "Loopback",
+          "value": 0
         },
-        "model": "WLAN network interface",
-        "sysfs_id": "/class/net/wlan0",
-        "sysfs_device_link": "/devices/pci0000:00/0000:00:02.1/0000:02:00.0",
-        "unix_device_name": "wlan0",
+        "model": "Loopback network interface",
+        "sysfs_id": "/class/net/lo",
+        "unix_device_name": "lo",
         "unix_device_names": [
-          "wlan0"
-        ],
-        "resources": [
-          {
-            "type": "hwaddr",
-            "address": 54
-          },
-          {
-            "type": "phwaddr",
-            "address": 54
-          }
-        ],
-        "driver": "rtw89_8852be",
-        "driver_module": "rtw89_8852be",
-        "drivers": [
-          "rtw89_8852be"
-        ],
-        "driver_modules": [
-          "rtw89_8852be"
+          "lo"
         ]
       },
       {
-        "index": 69,
+        "index": 71,
         "attached_to": 32,
         "class_list": [
           "network_interface"
@@ -2778,7 +2956,49 @@
         ]
       },
       {
-        "index": 70,
+        "index": 72,
+        "attached_to": 27,
+        "class_list": [
+          "network_interface"
+        ],
+        "base_class": {
+          "hex": "0107",
+          "name": "Network Interface",
+          "value": 263
+        },
+        "sub_class": {
+          "hex": "000a",
+          "name": "WLAN",
+          "value": 10
+        },
+        "model": "WLAN network interface",
+        "sysfs_id": "/class/net/wlan0",
+        "sysfs_device_link": "/devices/pci0000:00/0000:00:02.1/0000:02:00.0",
+        "unix_device_name": "wlan0",
+        "unix_device_names": [
+          "wlan0"
+        ],
+        "resources": [
+          {
+            "type": "hwaddr",
+            "address": 54
+          },
+          {
+            "type": "phwaddr",
+            "address": 54
+          }
+        ],
+        "driver": "rtw89_8852be",
+        "driver_module": "rtw89_8852be",
+        "drivers": [
+          "rtw89_8852be"
+        ],
+        "driver_modules": [
+          "rtw89_8852be"
+        ]
+      },
+      {
+        "index": 73,
         "attached_to": 20,
         "class_list": [
           "network_interface"
@@ -2817,29 +3037,6 @@
         ],
         "driver_modules": [
           "igc"
-        ]
-      },
-      {
-        "index": 71,
-        "attached_to": 0,
-        "class_list": [
-          "network_interface"
-        ],
-        "base_class": {
-          "hex": "0107",
-          "name": "Network Interface",
-          "value": 263
-        },
-        "sub_class": {
-          "hex": "0000",
-          "name": "Loopback",
-          "value": 0
-        },
-        "model": "Loopback network interface",
-        "sysfs_id": "/class/net/lo",
-        "unix_device_name": "lo",
-        "unix_device_names": [
-          "lo"
         ]
       }
     ],
@@ -3500,7 +3697,7 @@
         "module_alias": "usb:v0D8Cp0014d0100dc00dsc00dp00ic01isc01ip00in00"
       },
       {
-        "index": 62,
+        "index": 63,
         "attached_to": 59,
         "class_list": [
           "sound",
@@ -3591,7 +3788,7 @@
         "module_alias": "usb:v0D8Cp0014d0100dc00dsc00dp00ic01isc02ip00in01"
       },
       {
-        "index": 66,
+        "index": 68,
         "attached_to": 59,
         "class_list": [
           "sound",
@@ -3916,7 +4113,7 @@
     ],
     "usb": [
       {
-        "index": 61,
+        "index": 62,
         "attached_to": 59,
         "class_list": [
           "usb",
@@ -3959,18 +4156,18 @@
         "model": "C-Media Electronics USB Audio Device",
         "sysfs_id": "/devices/pci0000:00/0000:00:08.1/0000:04:00.4/usb3/3-3/3-3:1.3",
         "sysfs_bus_id": "3-3:1.3",
-        "unix_device_name": "/dev/input/event14",
+        "unix_device_name": "/dev/input/event4",
         "unix_device_number": {
           "type": 99,
           "major": 13,
-          "minor": 78,
+          "minor": 68,
           "range": 1
         },
         "unix_device_names": [
           "/dev/input/by-id/usb-C-Media_Electronics_Inc._USB_Audio_Device-event-if03",
           "/dev/input/by-path/pci-0000:04:00.4-usb-0:3:1.3-event",
           "/dev/input/by-path/pci-0000:04:00.4-usbv2-0:3:1.3-event",
-          "/dev/input/event14"
+          "/dev/input/event4"
         ],
         "resources": [
           {

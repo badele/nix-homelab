@@ -12,8 +12,9 @@
 # This host use I3
 
 let
-  internetMachine = self.clan.inventory.instances.internet.roles.default.machines.badxps;
   # Clan inventory may expose machine settings directly or through imported fragments.
+  internetMachine = self.clan.inventory.instances.internet.roles.default.machines.badxps;
+  lanMacAddress = "3c:18:a0:d4:e2:d8";
   targetIP =
     if internetMachine.settings ? host then
       internetMachine.settings.host
@@ -47,53 +48,109 @@ in
   };
 
   # rename network devices
-  # udevadm info -q property -p /sys/class/net/<INTERFACE-NAME> | grep '^ID_PATH='
-  # udevadm control --reload
-  # udevadm trigger --subsystem-match=net
-  systemd.network.links."10-usb-ethernet" = {
-    matchConfig = {
-      Path = "pci-0000:3a:00.0-usb-0:1.2:1.0";
-      Driver = "r8152";
+  # udevadm info -q property -p /sys/class/net/* | grep 'ID_NET_NAME_MAC'
+  # sudo udevadm control --reload
+  # sudo udevadm trigger --subsystem-match=net
+  systemd.network = {
+    links = {
+      "10-usb-ethernet" = {
+        matchConfig = {
+          MACAddress = lanMacAddress;
+          Driver = "r8152";
+        };
+
+        linkConfig = {
+          Name = config.homelab.host.interface;
+        };
+      };
+
+      "10-wifi" = {
+        matchConfig = {
+          Path = "pci-0000:3b:00.0";
+          Driver = "ath10k_pci";
+        };
+
+        linkConfig = {
+          Name = "wifi";
+        };
+      };
     };
 
-    linkConfig = {
-      Name = config.homelab.host.interface;
-    };
-  };
+    networks = {
+      "40-br-lan" = {
+        matchConfig.Name = "br-lan";
+        dhcpV4Config.UseDomains = "route";
+        # dns = [ "192.168.${toString config.homelab.vlans.lan.id}.${dnsServer}" ];
+        # domains = [ "~${config.homelab.domain}" ];
+        # networkConfig.DNSDefaultRoute = false;
+      };
 
-  systemd.network.links."10-wifi" = {
-    matchConfig = {
-      Path = "pci-0000:3b:00.0";
-      Driver = "ath10k_pci";
-    };
+      # "40-br-mgmt" = {
+      #   matchConfig.Name = "br-mgmt";
+      #   dhcpV4Config.UseDomains = "route";
+      #   # dns = [ "192.168.${toString config.homelab.vlans.mgmt.id}.${dnsServer}" ];
+      #   # domains = [ "~mgmt.${config.homelab.domain}" ];
+      #   # networkConfig.DNSDefaultRoute = false;
+      # };
 
-    linkConfig = {
-      Name = "wifi";
+      # "40-br-dmz" = {
+      #   matchConfig.Name = "br-dmz";
+      #   dhcpV4Config.UseDomains = "route";
+      #   # dns = [ "192.168.${toString config.homelab.vlans.dmz.id}.${dnsServer}" ];
+      #   # domains = [ "~dmz.${config.homelab.domain}" ];
+      #   # networkConfig.DNSDefaultRoute = false;
+      # };
+
+      # "40-br-infra" = {
+      #   matchConfig.Name = "br-infra";
+      #   dhcpV4Config.UseDomains = "route";
+      #   # dns = [ "192.168.${toString config.homelab.vlans.infra.id}.${dnsServer}" ];
+      #   # domains = [ "~infra.${config.homelab.domain}" ];
+      #   # networkConfig.DNSDefaultRoute = false;
+      # };
+
+      # "40-br-iot" = {
+      #   matchConfig.Name = "br-iot";
+      #   dhcpV4Config.UseDomains = "route";
+      #   # dns = [ "192.168.${toString config.homelab.vlans.iot.id}.${dnsServer}" ];
+      #   # domains = [ "~iot.${config.homelab.domain}" ];
+      #   # networkConfig.DNSDefaultRoute = false;
+      # };
     };
   };
 
   networking = {
     networkmanager.unmanaged = [
       "interface-name:${config.homelab.vlans.lan.name}"
-      "interface-name:vlan-${config.homelab.vlans.adm.name}"
+      "interface-name:vlan-${config.homelab.vlans.mgmt.name}"
       "interface-name:vlan-${config.homelab.vlans.dmz.name}"
+      "interface-name:vlan-${config.homelab.vlans.infra.name}"
       "interface-name:vlan-${config.homelab.vlans.iot.name}"
       "interface-name:br-lan"
-      "interface-name:br-adm"
+      "interface-name:br-mgmt"
       "interface-name:br-dmz"
+      "interface-name:br-infra"
       "interface-name:br-iot"
     ];
 
+    # hexa speak database
+    # https://github.com/badele/ipv6-hexaspeak
     vlans = {
       # IPv6 hexa speak => bootable == fdca:5a00:b007:ab1e/64
-      "vlan-${config.homelab.vlans.adm.name}" = {
-        id = config.homelab.vlans.adm.id;
+      "vlan-${config.homelab.vlans.mgmt.name}" = {
+        id = config.homelab.vlans.mgmt.id;
         interface = config.homelab.host.interface;
       };
 
       # IPv6 hexa speak => dead face == fdca:5a00:dead:face/64
       "vlan-${config.homelab.vlans.dmz.name}" = {
         id = config.homelab.vlans.dmz.id;
+        interface = config.homelab.host.interface;
+      };
+
+      # IPv6 hexa speak => code base == fdca:5a00:c0de:ba5e/64
+      "vlan-${config.homelab.vlans.infra.name}" = {
+        id = config.homelab.vlans.infra.id;
         interface = config.homelab.host.interface;
       };
 
@@ -111,44 +168,68 @@ in
 
     bridges = {
       br-lan.interfaces = [ config.homelab.vlans.lan.name ];
-      br-adm.interfaces = [ "vlan-${config.homelab.vlans.adm.name}" ];
+      br-mgmt.interfaces = [ "vlan-${config.homelab.vlans.mgmt.name}" ];
       br-dmz.interfaces = [ "vlan-${config.homelab.vlans.dmz.name}" ];
+      br-infra.interfaces = [ "vlan-${config.homelab.vlans.infra.name}" ];
       br-iot.interfaces = [ "vlan-${config.homelab.vlans.iot.name}" ];
     };
 
     interfaces = {
       "${config.homelab.vlans.lan.name}" = { };
-      "vlan-${config.homelab.vlans.adm.name}" = { };
+      "vlan-${config.homelab.vlans.mgmt.name}" = { };
       "vlan-${config.homelab.vlans.dmz.name}" = { };
+      "vlan-${config.homelab.vlans.infra.name}" = { };
       "vlan-${config.homelab.vlans.iot.name}" = { };
 
-      br-lan.ipv4.addresses = [
-        {
-          address = config.homelab.host.address;
-          prefixLength = 24;
-        }
-      ];
+      br-lan = {
+        useDHCP = true;
+        # ipv4.addresses = [
+        #   {
+        #     address = config.homelab.host.address;
+        #     prefixLength = 24;
+        #   }
+        # ];
+      };
 
-      br-adm.ipv4.addresses = [
-        {
-          address = "192.168.240.224";
-          prefixLength = 24;
-        }
-      ];
+      br-mgmt = {
+        useDHCP = true;
+        # ipv4.addresses = [
+        #   {
+        #     address = "192.168.240.224";
+        #     prefixLength = 24;
+        #   }
+        # ];
+      };
 
-      br-dmz.ipv4.addresses = [
-        {
-          address = "192.168.32.224";
-          prefixLength = 24;
-        }
-      ];
+      br-dmz = {
+        useDHCP = true;
+        # ipv4.addresses = [
+        #   {
+        #     address = "192.168.32.224";
+        #     prefixLength = 24;
+        #   }
+        # ];
+      };
 
-      br-iot.ipv4.addresses = [
-        {
-          address = "192.168.40.224";
-          prefixLength = 24;
-        }
-      ];
+      br-infra = {
+        useDHCP = true;
+        # ipv4.addresses = [
+        #   {
+        #     address = "192.168.244.224";
+        #     prefixLength = 24;
+        #   }
+        # ];
+      };
+
+      br-iot = {
+        useDHCP = true;
+        # ipv4.addresses = [
+        #   {
+        #     address = "192.168.40.224";
+        #     prefixLength = 24;
+        #   }
+        # ];
+      };
     };
   };
 
@@ -157,8 +238,9 @@ in
   # This is required for qemu to be able to use the bridge networking on user-defined bridges.
   environment.etc."qemu/bridge.conf".text = ''
     allow br-lan
-    allow br-adm
+    allow br-mgmt
     allow br-dmz
+    allow br-infra
     allow br-iot
   '';
 
