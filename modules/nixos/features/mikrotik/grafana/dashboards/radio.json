@@ -5,8 +5,8 @@
     "name": "adlbt2h",
     "namespace": "default",
     "uid": "ddf6c8b3-0f6e-49bc-8765-52a272b8b745",
-    "resourceVersion": "1787001570644988",
-    "generation": 35,
+    "resourceVersion": "1787051920836018",
+    "generation": 85,
     "creationTimestamp": "2026-08-17T17:43:49Z",
     "labels": {
       "grafana.app/deprecatedInternalID": "4241241310089216"
@@ -15,11 +15,11 @@
       "grafana.app/createdBy": "access-policy:service",
       "grafana.app/managedBy": "classic-file-provisioning",
       "grafana.app/managerId": "mikrotik",
-      "grafana.app/sourceChecksum": "89cbd7f6fe80d25f1a16f05658665ffc",
-      "grafana.app/sourcePath": "/nix/store/dgxxfqw77nbk23ll8nd5ybkkamr6bnvn-dashboards/radio.json",
+      "grafana.app/sourceChecksum": "936fe4bde423e1b84d2e98194a3fa5c8",
+      "grafana.app/sourcePath": "/nix/store/y1d0b748pmifsz9n78249rqxqjza2zc7-dashboards/radio.json",
       "grafana.app/sourceTimestamp": "1000",
       "grafana.app/updatedBy": "access-policy:service",
-      "grafana.app/updatedTimestamp": "2026-08-17T21:19:30Z",
+      "grafana.app/updatedTimestamp": "2026-08-18T11:18:40Z",
       "grafana.app/folder": ""
     }
   },
@@ -135,7 +135,6 @@
                       "mode": "off"
                     }
                   },
-                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -194,7 +193,7 @@
                       "kind": "DataQuery",
                       "spec": {
                         "editorMode": "code",
-                        "expr": "avg_over_time(mktxp_wlan_clients_tx_ccq{mac_address=~\"(?i)$wifi_know_mac\",routerboard_name=~\"$router\"}[4m])",
+                        "expr": "avg_over_time(mktxp_wlan_clients_tx_ccq{mac_address=~\"(?i)$mac_all_routers\",routerboard_name=~\"$router\"}[4m])",
                         "format": "time_series",
                         "legendFormat": "{{ mac_address }} - {{ dhcp_name }}",
                         "range": true
@@ -212,7 +211,7 @@
           "description": "",
           "id": 152,
           "links": [],
-          "title": "$wifi_know_mac wireless traffic",
+          "title": "$mac_all_routers wireless traffic for $router router",
           "vizConfig": {
             "group": "timeseries",
             "kind": "VizConfig",
@@ -256,7 +255,6 @@
                       "mode": "off"
                     }
                   },
-                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -321,7 +319,7 @@
                         "editorMode": "code",
                         "expr": "avg_over_time(mktxp_wlan_overall_tx_ccq{routerboard_name=~\"$router\",channel=~\"$channel\"}[4m])",
                         "format": "time_series",
-                        "legendFormat": "{{router }} - {{channel}}",
+                        "legendFormat": "{{channel}}",
                         "range": true
                       },
                       "version": "v0"
@@ -345,18 +343,30 @@
               "fieldConfig": {
                 "defaults": {
                   "color": {
-                    "mode": "continuous-RdYlGr"
+                    "mode": "thresholds"
                   },
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
                       {
-                        "color": "green",
+                        "color": "red",
                         "value": 0
                       },
                       {
-                        "color": "red",
-                        "value": 80
+                        "color": "orange",
+                        "value": 50
+                      },
+                      {
+                        "color": "yellow",
+                        "value": 70
+                      },
+                      {
+                        "color": "super-light-green",
+                        "value": 85
+                      },
+                      {
+                        "color": "green",
+                        "value": 90
                       }
                     ]
                   }
@@ -364,7 +374,7 @@
                 "overrides": []
               },
               "options": {
-                "colorMode": "background",
+                "colorMode": "background_solid",
                 "graphMode": "none",
                 "justifyMode": "auto",
                 "orientation": "auto",
@@ -420,7 +430,7 @@
           "description": "",
           "id": 154,
           "links": [],
-          "title": "$wifi_know_mac wireless client traffic",
+          "title": "$mac wireless client traffic",
           "vizConfig": {
             "group": "heatmap",
             "kind": "VizConfig",
@@ -487,6 +497,101 @@
             "version": "13.0.2"
           }
         }
+      },
+      "panel-157": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "P4169E866C3094E38"
+                      },
+                      "group": "victoriametrics-metrics-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "avg_over_time(mktxp_wlan_clients_tx_ccq{routerboard_name=~\"$router\"}[4m])",
+                        "format": "time_series",
+                        "legendFormat": "{{dhcp_name}} - {{router }}",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 157,
+          "links": [],
+          "title": "Clients radio quality",
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "red",
+                        "value": 0
+                      },
+                      {
+                        "color": "orange",
+                        "value": 50
+                      },
+                      {
+                        "color": "yellow",
+                        "value": 70
+                      },
+                      {
+                        "color": "super-light-green",
+                        "value": 85
+                      },
+                      {
+                        "color": "green",
+                        "value": 90
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background_solid",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": ["lastNotNull"],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "name",
+                "wideLayout": true
+              }
+            },
+            "version": "13.0.2"
+          }
+        }
       }
     },
     "layout": {
@@ -536,12 +641,25 @@
                       "spec": {
                         "element": {
                           "kind": "ElementReference",
+                          "name": "panel-157"
+                        },
+                        "height": 3,
+                        "width": 24,
+                        "x": 0,
+                        "y": 13
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
                           "name": "panel-154"
                         },
                         "height": 10,
                         "width": 24,
                         "x": 0,
-                        "y": 13
+                        "y": 16
                       }
                     }
                   ]
@@ -596,7 +714,7 @@
                       "text": "All",
                       "value": ["$__all"]
                     },
-                    "definition": "query_result(label_join(      mktxp_wlan_clients_tx_ccq{routerboard_name=\"$router\"},      \"display\",      \" | \",      \"mac_address\",      \"dhcp_name\"    ))",
+                    "definition": "label_values(mktxp_wlan_clients_tx_ccq{router=~\"$router\"},mac_address)",
                     "hide": "dontHide",
                     "includeAll": true,
                     "label": "MAC",
@@ -610,14 +728,14 @@
                       "group": "victoriametrics-metrics-datasource",
                       "kind": "DataQuery",
                       "spec": {
-                        "qryType": 3,
-                        "query": "query_result(label_join(      mktxp_wlan_clients_tx_ccq{routerboard_name=\"$router\"},      \"display\",      \" | \",      \"mac_address\",      \"dhcp_name\"    ))",
+                        "qryType": 1,
+                        "query": "label_values(mktxp_wlan_clients_tx_ccq{router=~\"$router\"},mac_address)",
                         "refId": "VariableQueryEditor-VariableQuery"
                       },
                       "version": "v0"
                     },
-                    "refresh": "onDashboardLoad",
-                    "regex": "/display=\"(?<text>(?<value>[0-9A-Fa-f]{2}(?::[0-9A-Fa-f]{2}){5})(?: \\| [^\"]*)?)\"/",
+                    "refresh": "onTimeRangeChanged",
+                    "regex": "",
                     "regexApplyTo": "value",
                     "skipUrlSync": false,
                     "sort": "disabled"
@@ -645,7 +763,7 @@
                         "repeat": {
                           "direction": "h",
                           "mode": "variable",
-                          "value": "wifi_know_mac"
+                          "value": "mac_all_routers"
                         },
                         "width": 24,
                         "x": 0,
@@ -677,7 +795,7 @@
     ],
     "liveNow": false,
     "preload": false,
-    "tags": ["Mikrotik"],
+    "tags": ["mikrotik", "radio"],
     "timeSettings": {
       "autoRefresh": "10s",
       "autoRefreshIntervals": [
@@ -693,7 +811,7 @@
         "1d"
       ],
       "fiscalYearStartMonth": 0,
-      "from": "now-3h",
+      "from": "now-12h",
       "hideTimepicker": false,
       "timezone": "browser",
       "to": "now"
@@ -743,12 +861,12 @@
             "text": "All",
             "value": ["$__all"]
           },
-          "definition": "query_result(label_join(      mktxp_dhcp_lease_info,      \"display\",      \" | \",      \"mac_address\",      \"host_name\"    ))",
+          "definition": "label_values(mktxp_wlan_clients_tx_ccq,mac_address)",
           "hide": "dontHide",
           "includeAll": true,
-          "label": "know mac address",
+          "label": "MAC for all routers",
           "multi": true,
-          "name": "wifi_know_mac",
+          "name": "mac_all_routers",
           "options": [],
           "query": {
             "datasource": {
@@ -757,14 +875,14 @@
             "group": "victoriametrics-metrics-datasource",
             "kind": "DataQuery",
             "spec": {
-              "qryType": 3,
-              "query": "query_result(label_join(      mktxp_dhcp_lease_info,      \"display\",      \" | \",      \"mac_address\",      \"host_name\"    ))",
+              "qryType": 1,
+              "query": "label_values(mktxp_wlan_clients_tx_ccq,mac_address)",
               "refId": "VariableQueryEditor-VariableQuery"
             },
             "version": "v0"
           },
-          "refresh": "onDashboardLoad",
-          "regex": "/display=\"(?<text>(?<value>[0-9A-Fa-f]{2}(?::[0-9A-Fa-f]{2}){5})(?: \\| [^\"]*)?)\"/",
+          "refresh": "onTimeRangeChanged",
+          "regex": "",
           "regexApplyTo": "value",
           "skipUrlSync": false,
           "sort": "disabled"

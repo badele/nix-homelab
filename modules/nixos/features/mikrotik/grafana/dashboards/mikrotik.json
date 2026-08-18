@@ -12060,7 +12060,7 @@
     ],
     "liveNow": false,
     "preload": false,
-    "tags": ["Mikrotik"],
+    "tags": ["mikrotik"],
     "timeSettings": {
       "timezone": "browser",
       "from": "now-12h",
