@@ -20,7 +20,7 @@
       "grafana.app/sourceTimestamp": "1000",
       "grafana.app/updatedBy": "access-policy:service",
       "grafana.app/updatedTimestamp": "2026-08-17T15:32:26Z",
-      "grafana.app/folder": ""
+      "grafana.app/folder": "mikrotik"
     }
   },
   "spec": {
@@ -76,7 +76,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -222,7 +222,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -263,7 +263,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -411,7 +411,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -559,7 +559,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -707,7 +707,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -748,7 +748,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -894,7 +894,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -1042,7 +1042,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -1083,7 +1083,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -1231,7 +1231,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -1272,7 +1272,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -1420,7 +1420,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -1515,7 +1515,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -1727,7 +1727,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -1808,7 +1808,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -1988,7 +1988,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -2119,7 +2119,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -2233,7 +2233,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -2274,7 +2274,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -2369,7 +2369,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -2586,7 +2586,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -2627,7 +2627,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -2806,7 +2806,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -2847,7 +2847,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -3007,7 +3007,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -3150,7 +3150,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -3258,7 +3258,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -3422,7 +3422,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -3530,7 +3530,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "builder",
@@ -3634,7 +3634,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -3675,7 +3675,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -3851,7 +3851,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -3892,7 +3892,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -3914,7 +3914,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -4491,7 +4491,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -4636,7 +4636,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -4677,7 +4677,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -4889,7 +4889,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -5007,7 +5007,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -5124,7 +5124,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -5327,7 +5327,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "expr": "mktxp_internet_bandwidth",
@@ -5450,7 +5450,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -5613,7 +5613,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -5766,7 +5766,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -5929,7 +5929,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -5970,7 +5970,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -6147,7 +6147,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -6334,7 +6334,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -6477,7 +6477,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -6518,7 +6518,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -6613,7 +6613,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -6737,7 +6737,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -6881,7 +6881,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -6989,7 +6989,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -7097,7 +7097,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -7138,7 +7138,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -7276,7 +7276,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -7379,7 +7379,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -7401,7 +7401,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -7507,7 +7507,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -7602,7 +7602,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -7745,7 +7745,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -7786,7 +7786,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -7996,7 +7996,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -8136,7 +8136,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -8276,7 +8276,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -8461,7 +8461,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -8569,7 +8569,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -8680,7 +8680,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -8788,7 +8788,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -8883,7 +8883,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -9047,7 +9047,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "expr": "mktxp_internet_latency",
@@ -9170,7 +9170,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -9211,7 +9211,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -9386,7 +9386,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -9529,7 +9529,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -9570,7 +9570,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -9694,7 +9694,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -9814,7 +9814,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -9957,7 +9957,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -10100,7 +10100,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -10305,7 +10305,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -10327,7 +10327,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -10422,7 +10422,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -10584,7 +10584,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "application": {
@@ -10700,7 +10700,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -12100,7 +12100,7 @@
             "group": "prometheus",
             "version": "v0",
             "datasource": {
-              "name": "PBFA97CFB590B2093"
+              "name": "homelab-prometheus"
             },
             "spec": {
               "query": "label_values(mktxp_system_identity_info, routerboard_name)",

@@ -4,23 +4,25 @@
   "metadata": {
     "name": "adxjnt9",
     "namespace": "default",
-    "uid": "f768b65a-a654-4503-8c26-3db38f49e657",
-    "resourceVersion": "1787052695723989",
-    "generation": 141,
-    "creationTimestamp": "2026-08-16T12:22:54Z",
+    "uid": "429e7297-92e4-40c7-a16c-2e966ff9147c",
+    "resourceVersion": "1787761304140006",
+    "generation": 7,
+    "creationTimestamp": "2026-08-26T14:57:49Z",
     "labels": {
-      "grafana.app/deprecatedInternalID": "3798090333106176"
+      "grafana.app/deprecatedInternalID": "2957355730067456"
     },
     "annotations": {
       "grafana.app/createdBy": "access-policy:service",
+      "grafana.app/folder": "mikrotik",
       "grafana.app/managedBy": "classic-file-provisioning",
       "grafana.app/managerId": "mikrotik",
-      "grafana.app/sourceChecksum": "5b9005eabe38bc8170a380ad654114fc",
-      "grafana.app/sourcePath": "/nix/store/vhz8kscliv7ixnyyps301ys7hij00bgh-dashboards/clients.json",
+      "grafana.app/sourceChecksum": "8eedbc37988b4720af3ebf326d7c4f3a",
+      "grafana.app/sourcePath": "/nix/store/lvls2ibkshyvd889vwrpi4msx7c7x8dx-dashboards/clients.json",
       "grafana.app/sourceTimestamp": "1000",
       "grafana.app/updatedBy": "access-policy:service",
-      "grafana.app/updatedTimestamp": "2026-08-18T11:31:35Z",
-      "grafana.app/folder": ""
+      "grafana.app/updatedTimestamp": "2026-08-26T16:21:44Z",
+      "grafana.app/folderTitle": "MikroTik",
+      "grafana.app/folderUrl": "/dashboards/f/mikrotik/mikrotik"
     }
   },
   "spec": {
@@ -237,7 +239,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "name": "homelab-prometheus"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -560,8 +562,14 @@
           },
           "description": "",
           "id": 153,
-          "links": [],
-          "title": "$wifi_know_mac wireless traffic",
+          "links": [
+            {
+              "targetBlank": false,
+              "title": "Wireless quality",
+              "url": "d/adlbt2h/mikrotik-wireless-quality"
+            }
+          ],
+          "title": "Wireless client",
           "vizConfig": {
             "group": "stat",
             "kind": "VizConfig",
@@ -641,7 +649,13 @@
           },
           "description": "",
           "id": 154,
-          "links": [],
+          "links": [
+            {
+              "targetBlank": false,
+              "title": "Wireless quality",
+              "url": "d/adlbt2h/mikrotik-wireless-quality"
+            }
+          ],
           "title": "Routers radio quality",
           "vizConfig": {
             "group": "stat",
@@ -736,7 +750,13 @@
           },
           "description": "",
           "id": 155,
-          "links": [],
+          "links": [
+            {
+              "targetBlank": false,
+              "title": "Wireless quality",
+              "url": "d/adlbt2h/mikrotik-wireless-quality"
+            }
+          ],
           "title": "Clients radio quality",
           "vizConfig": {
             "group": "stat",
@@ -794,6 +814,54 @@
             "version": "13.0.2"
           }
         }
+      },
+      "panel-156": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 156,
+          "links": [],
+          "title": "Alerts",
+          "vizConfig": {
+            "group": "alertlist",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              },
+              "options": {
+                "alertInstanceLabelFilter": "{service=\"mikrotik\"}",
+                "alertName": "mikrotik",
+                "dashboardAlerts": false,
+                "datasource": "Prometheus",
+                "groupBy": [],
+                "groupMode": "default",
+                "maxItems": 20,
+                "showInactiveAlerts": false,
+                "sortOrder": 1,
+                "stateFilter": {
+                  "error": true,
+                  "firing": true,
+                  "noData": true,
+                  "normal": false,
+                  "pending": true,
+                  "recovering": true
+                },
+                "viewMode": "list"
+              }
+            },
+            "version": "13.0.2"
+          }
+        }
       }
     },
     "layout": {
@@ -809,6 +877,15 @@
                 "spec": {
                   "columnWidthMode": "standard",
                   "items": [
+                    {
+                      "kind": "AutoGridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-156"
+                        }
+                      }
+                    },
                     {
                       "kind": "AutoGridLayoutItem",
                       "spec": {

@@ -36,7 +36,8 @@ Houston provides three main categories of services:
 - 📑 **[Reaction](../../docs/reaction.md)**: Alert reaction system
 - ⚙️ **[Telegraf](./modules/telegraf)**: Metrics collection agent
 - 📑 **[Vector](../../docs/vector.md)**: Observability data pipeline
-- 📑 **[VictoriaMetrics](../../docs/victoriametrics.md)**: Time series database
+- 📑 **[VictoriaMetrics](../../docs/features/victoriametrics.md)**: Time series
+  database
 
 ### Applications
 
@@ -89,9 +90,9 @@ brute force, exploits, etc.).
    iptables (3 attempts in 4h → 7 days ban). Supports IPv4/IPv6 with temporary
    bans and whitelisting.
 
-3. **[VictoriaMetrics](../../docs/victoriametrics.md)**: Stores attack metrics
-   for visualization in Grafana (attack trends, geographic distribution, ban
-   effectiveness).
+3. **[VictoriaMetrics](../../docs/features/victoriametrics.md)**: Stores attack
+   metrics for visualization in Grafana (attack trends, geographic distribution,
+   ban effectiveness).
 
 ![Network diagram](../../docs/hosts/houston/couch_diagram.svg)
 

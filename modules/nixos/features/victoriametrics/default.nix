@@ -31,9 +31,15 @@ let
 
   # Get port from central registry
   listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
+  vmagentHttpPort = listenHttpPort + 1;
+  vmalertHttpPort = listenHttpPort + 2;
+  alertmanagerHttpPort = listenHttpPort + 3;
 
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenHttpPort}";
+  localURL = "http://127.0.0.1:${toString listenHttpPort}";
+  vmalertLocalURL = "http://127.0.0.1:${toString vmalertHttpPort}";
+  alertmanagerLocalURL = "http://127.0.0.1:${toString alertmanagerHttpPort}";
 
   integrationServicesWithScrapes = lib.filterAttrs
     (
@@ -50,6 +56,18 @@ let
         // service.victoriametrics
     )
     integrationServicesWithScrapes;
+
+  integrationServicesWithVmalertRules = lib.filterAttrs
+    (
+      _: service: service.vmalert != null
+    )
+    config.homelab.integrations.services;
+
+  integrationVmalertRuleGroups = lib.flatten (
+    lib.mapAttrsToList (_: service: service.vmalert.ruleGroups or [ ]) integrationServicesWithVmalertRules
+  );
+
+  vmalertEnabled = integrationVmalertRuleGroups != [ ];
 
 in
 {
@@ -155,6 +173,16 @@ in
           plugins = [
             pkgs.grafanaPlugins.victoriametrics-metrics-datasource
           ];
+          deleteDatasources = [
+            {
+              name = "Prometheus";
+              orgId = 1;
+            }
+            {
+              name = "MikroTik Alerting";
+              orgId = 1;
+            }
+          ];
           datasources = [
             {
               name = "VictoriaMetrics";
@@ -172,11 +200,24 @@ in
             {
               name = "Prometheus";
               type = "prometheus";
+              uid = "homelab-prometheus";
               access = "proxy";
               url = "https://${config.homelab.features.victoriametrics.serviceDomain}";
               version = 1;
               editable = true;
               isDefault = false;
+            }
+            {
+              name = "Alertmanager";
+              type = "alertmanager";
+              uid = "homelab-alertmanager";
+              access = "proxy";
+              url = alertmanagerLocalURL;
+              version = 1;
+              editable = true;
+              jsonData = {
+                implementation = "prometheus";
+              };
             }
           ];
           dashboards = [
@@ -200,7 +241,7 @@ in
 
         extraOptions = [
           "-selfScrapeInterval=5s"
-        ];
+        ] ++ lib.optional vmalertEnabled "-vmalert.proxyURL=${vmalertLocalURL}";
 
       };
 
@@ -211,6 +252,49 @@ in
         remoteWrite.url = "${cfg.agentRewriteUrl}";
 
         prometheusConfig = prometheusConfig;
+
+        extraArgs = [
+          "-httpListenAddr=127.0.0.1:${toString vmagentHttpPort}"
+        ];
+      };
+
+      services.vmalert.instances.homelab = lib.mkIf vmalertEnabled {
+        enable = true;
+        rules = {
+          groups = integrationVmalertRuleGroups;
+        };
+        settings = {
+          "datasource.url" = localURL;
+          "remoteRead.url" = localURL;
+          "remoteWrite.url" = "${localURL}/api/v1/write";
+          "notifier.url" = [ alertmanagerLocalURL ];
+          httpListenAddr = "127.0.0.1:${toString vmalertHttpPort}";
+          evaluationInterval = "1m";
+        };
+      };
+
+      services.prometheus.alertmanager = lib.mkIf vmalertEnabled {
+        enable = true;
+        listenAddress = "127.0.0.1";
+        port = alertmanagerHttpPort;
+        configuration = {
+          route = {
+            receiver = "log";
+            group_by = [
+              "alertname"
+              "service"
+              "router"
+            ];
+            group_wait = "30s";
+            group_interval = "5m";
+            repeat_interval = "4h";
+          };
+          receivers = [
+            {
+              name = "log";
+            }
+          ];
+        };
       };
 
       homelab.alias = [ "${cfg.serviceDomain}" ];
@@ -223,6 +307,14 @@ in
         "@service-${appName}-agent-restart" = "systemctl restart vmagent";
         "@service-${appName}-agent-status" = "systemctl status vmagent";
         "@service-${appName}-agent-config" = "systemctl cat vmagent";
+        "@service-${appName}-alert-journal" = "journalctl -u vmalert-homelab";
+        "@service-${appName}-alert-start" = "systemctl start vmalert-homelab";
+        "@service-${appName}-alert-stop" = "systemctl stop vmalert-homelab";
+        "@service-${appName}-alert-restart" = "systemctl restart vmalert-homelab";
+        "@service-${appName}-alert-status" = "systemctl status vmalert-homelab";
+        "@service-${appName}-alert-config" = "systemctl cat vmalert-homelab";
+        "@service-${appName}-alertmanager-journal" = "journalctl -u alertmanager";
+        "@service-${appName}-alertmanager-status" = "systemctl status alertmanager";
       };
 
       services.caddy.virtualHosts = lib.mkIf cfg.openFirewall {

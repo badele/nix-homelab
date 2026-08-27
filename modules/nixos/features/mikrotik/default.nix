@@ -1,11 +1,12 @@
-{ config
-, lib
-, pkgs
-, mkFeatureOptions
-, mkGrafanaDashboardProvider
-, mkServiceAliases
-, resolveListenInterfaceAddresses
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  mkFeatureOptions,
+  mkGrafanaDashboardProvider,
+  mkServiceAliases,
+  resolveListenInterfaceAddresses,
+  ...
 }:
 with lib;
 with types;
@@ -75,6 +76,28 @@ let
     in
     if resolvedAddresses == [ ] then config.homelab.host.address else head resolvedAddresses;
 
+  remoteDhcpServerVlan = prometheusCfg.remoteDhcpServerVlan;
+  remoteDhcpVlanExists =
+    remoteDhcpServerVlan == null || hasAttr remoteDhcpServerVlan config.homelab.vlans;
+  remoteDhcpVlanCfg =
+    if remoteDhcpServerVlan != null && remoteDhcpVlanExists then
+      config.homelab.vlans.${remoteDhcpServerVlan}
+    else
+      null;
+  remoteDhcpServerIp = if remoteDhcpVlanCfg == null then null else remoteDhcpVlanCfg.dhcpServerIp;
+  remoteDhcpEntryName =
+    if remoteDhcpServerVlan == null then null else "remote-dhcp-${remoteDhcpServerVlan}";
+  remoteDhcpServerVlanMessage =
+    if remoteDhcpServerVlan == null then "<unset>" else remoteDhcpServerVlan;
+  remoteDhcpEnabled = remoteDhcpServerVlan != null && remoteDhcpServerIp != null;
+  mktxpRemoteDhcpEntry = optionalString remoteDhcpEnabled ''
+    [${remoteDhcpEntryName}]
+        enabled = False
+        hostname = ${remoteDhcpServerIp}
+        port = 8728
+        custom_labels = router:${remoteDhcpEntryName}
+  '';
+
   resolveInterfaceIPv4Addresses =
     interfaceName:
     map (address: address.address) (
@@ -88,16 +111,17 @@ let
         config.networking.interfaces
     );
 
-  mktxpRouterEntries = concatMapStringsSep "\n\n"
-    (router: ''
-      [${router.name}]
-          hostname = ${router.host}
-          port = ${toString router.apiPort}
-          custom_labels = router:${router.name}
-    '')
-    cfg.routers;
+  mktxpRouterEntries = concatMapStringsSep "\n\n" (router: ''
+    [${router.name}]
+        hostname = ${router.host}
+        port = ${toString router.apiPort}
+        custom_labels = router:${router.name}
+        ${optionalString remoteDhcpEnabled "remote_dhcp_entry = ${remoteDhcpEntryName}"}
+  '') cfg.routers;
 
   mktxpRoutersConfigFile = pkgs.writeText "mktxp.conf" ''
+    ${mktxpRemoteDhcpEntry}
+
     ${mktxpRouterEntries}
 
     [default]
@@ -194,6 +218,104 @@ let
         probe_connection_pool_max_size = 128
   '';
 
+  mkVmalertAlertRule =
+    {
+      alert,
+      expr,
+      for,
+      severity ? "warning",
+      annotations ? { },
+      labels ? { },
+    }:
+    {
+      inherit alert expr for;
+      annotations = {
+        summary = alert;
+      }
+      // annotations;
+      labels = {
+        service = appName;
+        inherit severity;
+      }
+      // labels;
+    };
+
+  mkRouterMissingAlert =
+    router:
+    mkVmalertAlertRule {
+      alert = "MikroTikRouterMissing";
+      expr = ''absent_over_time(mktxp_system_identity_info{router="${router.name}"}[5m])'';
+      for = "2m";
+      severity = "critical";
+      labels.router = router.name;
+      annotations.summary = "MikroTik router ${router.name} missing";
+      annotations.description = "MKTXP has not exported identity metrics for this router during the last five minutes.";
+    };
+
+  mikrotikVmalertRuleGroup = {
+    name = "mikrotik";
+    interval = "1m";
+    rules = (map mkRouterMissingAlert cfg.routers) ++ [
+      (mkVmalertAlertRule {
+        alert = "MikroTikHighCpu";
+        expr = ''mktxp_system_cpu_load{router=~".+"} > 85'';
+        for = "10m";
+        annotations.summary = "MikroTik high CPU";
+        annotations.description = "RouterOS CPU load has stayed above 85 percent for ten minutes.";
+      })
+      (mkVmalertAlertRule {
+        alert = "MikroTikHighMemory";
+        expr = ''(1 - mktxp_system_free_memory{router=~".+"} / mktxp_system_total_memory{router=~".+"}) * 100 > 90'';
+        for = "10m";
+        annotations.summary = "MikroTik high memory";
+        annotations.description = "RouterOS memory usage has stayed above 90 percent for ten minutes.";
+      })
+      (mkVmalertAlertRule {
+        alert = "MikroTikHighDisk";
+        expr = ''(1 - mktxp_system_free_hdd_space{router=~".+"} / mktxp_system_total_hdd_space{router=~".+"}) * 100 > 85'';
+        for = "15m";
+        annotations.summary = "MikroTik high disk";
+        annotations.description = "RouterOS storage usage has stayed above 85 percent for fifteen minutes.";
+      })
+      (mkVmalertAlertRule {
+        alert = "MikroTikRecentlyRebooted";
+        expr = ''mktxp_system_uptime{router=~".+"} < 600'';
+        for = "1m";
+        annotations.summary = "MikroTik recently rebooted";
+        annotations.description = "RouterOS uptime is below ten minutes.";
+      })
+    ];
+  };
+
+  mikrotikGrafanaDeletedAlertRules = [
+    {
+      orgId = 1;
+      uid = "mikrotik-router-missing-metrics";
+    }
+  ]
+  ++ (map (router: {
+    orgId = 1;
+    uid = "mikrotik-router-missing-${router.name}";
+  }) cfg.routers)
+  ++ [
+    {
+      orgId = 1;
+      uid = "mikrotik-high-cpu";
+    }
+    {
+      orgId = 1;
+      uid = "mikrotik-high-memory";
+    }
+    {
+      orgId = 1;
+      uid = "mikrotik-high-disk";
+    }
+    {
+      orgId = 1;
+      uid = "mikrotik-recently-rebooted";
+    }
+  ];
+
   backupScript = import ./backup-script.nix {
     inherit
       pkgs
@@ -261,6 +383,12 @@ in
               type = bool;
               default = false;
               description = "Enable verbose MKTXP exporter logs for troubleshooting RouterOS API collection.";
+            };
+
+            remoteDhcpServerVlan = mkOption {
+              type = nullOr str;
+              default = null;
+              description = "VLAN whose DHCP server RouterOS API is used by MKTXP remote DHCP resolution.";
             };
           };
         };
@@ -334,22 +462,30 @@ in
           message = "homelab.features.mikrotik.prometheus requires at least one router in homelab.features.mikrotik.routers.";
         }
         {
+          assertion = !prometheusCfg.enable || remoteDhcpServerVlan == null || remoteDhcpVlanExists;
+          message = "homelab.features.mikrotik.prometheus.remoteDhcpServerVlan references unknown VLAN '${remoteDhcpServerVlanMessage}'.";
+        }
+        {
+          assertion =
+            !prometheusCfg.enable
+            || remoteDhcpServerVlan == null
+            || !remoteDhcpVlanExists
+            || remoteDhcpServerIp != null;
+          message = "homelab.vlans.${remoteDhcpServerVlanMessage}.dhcpServerIp must be set when used by homelab.features.mikrotik.prometheus.remoteDhcpServerVlan.";
+        }
+        {
           assertion = !prometheusCfg.openFirewall || prometheusCfg.listenInterfaces != [ ];
           message = "homelab.features.mikrotik.prometheus.listenInterfaces must be set when prometheus.openFirewall is enabled.";
         }
       ]
-      ++ (map
-        (interfaceName: {
-          assertion = hasAttr interfaceName config.networking.interfaces;
-          message = "homelab.features.mikrotik.prometheus.listenInterfaces references unknown interface '${interfaceName}'.";
-        })
-        prometheusCfg.listenInterfaces)
-      ++ (map
-        (interfaceName: {
-          assertion = resolveInterfaceIPv4Addresses interfaceName != [ ];
-          message = "homelab.features.mikrotik.prometheus.listenInterfaces interface '${interfaceName}' has no IPv4 address configured.";
-        })
-        prometheusCfg.listenInterfaces);
+      ++ (map (interfaceName: {
+        assertion = hasAttr interfaceName config.networking.interfaces;
+        message = "homelab.features.mikrotik.prometheus.listenInterfaces references unknown interface '${interfaceName}'.";
+      }) prometheusCfg.listenInterfaces)
+      ++ (map (interfaceName: {
+        assertion = resolveInterfaceIPv4Addresses interfaceName != [ ];
+        message = "homelab.features.mikrotik.prometheus.listenInterfaces interface '${interfaceName}' has no IPv4 address configured.";
+      }) prometheusCfg.listenInterfaces);
 
       users.groups.${appName} = { };
 
@@ -515,9 +651,21 @@ in
           ];
         };
 
+        vmalert = {
+          ruleGroups = [
+            mikrotikVmalertRuleGroup
+          ];
+        };
+
         grafana = {
+          alerting.rules = {
+            deleteRules = mikrotikGrafanaDeletedAlertRules;
+          };
           dashboards = [
-            (mkGrafanaDashboardProvider appName ./grafana/dashboards)
+            ((mkGrafanaDashboardProvider appName ./grafana/dashboards) // {
+              folder = "MikroTik";
+              folderUid = "mikrotik";
+            })
           ];
         };
       };

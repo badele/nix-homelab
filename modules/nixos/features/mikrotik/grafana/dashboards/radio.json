@@ -4,23 +4,25 @@
   "metadata": {
     "name": "adlbt2h",
     "namespace": "default",
-    "uid": "ddf6c8b3-0f6e-49bc-8765-52a272b8b745",
-    "resourceVersion": "1787051920836018",
-    "generation": 85,
-    "creationTimestamp": "2026-08-17T17:43:49Z",
+    "uid": "946683d8-2113-4832-bf85-814077e9084c",
+    "resourceVersion": "1787764257757982",
+    "generation": 15,
+    "creationTimestamp": "2026-08-26T14:57:49Z",
     "labels": {
-      "grafana.app/deprecatedInternalID": "4241241310089216"
+      "grafana.app/deprecatedInternalID": "2957356254355456"
     },
     "annotations": {
       "grafana.app/createdBy": "access-policy:service",
+      "grafana.app/folder": "mikrotik",
       "grafana.app/managedBy": "classic-file-provisioning",
       "grafana.app/managerId": "mikrotik",
-      "grafana.app/sourceChecksum": "936fe4bde423e1b84d2e98194a3fa5c8",
-      "grafana.app/sourcePath": "/nix/store/y1d0b748pmifsz9n78249rqxqjza2zc7-dashboards/radio.json",
+      "grafana.app/sourceChecksum": "bdfa4da2128f899a50486abca5366d2f",
+      "grafana.app/sourcePath": "/nix/store/2yqi2850qz2ig64fjbanfj3s2cx4g23b-dashboards/radio.json",
       "grafana.app/sourceTimestamp": "1000",
       "grafana.app/updatedBy": "access-policy:service",
-      "grafana.app/updatedTimestamp": "2026-08-18T11:18:40Z",
-      "grafana.app/folder": ""
+      "grafana.app/updatedTimestamp": "2026-08-26T17:10:57Z",
+      "grafana.app/folderTitle": "MikroTik",
+      "grafana.app/folderUrl": "/dashboards/f/mikrotik/mikrotik"
     }
   },
   "spec": {
@@ -107,6 +109,7 @@
                     "axisColorMode": "text",
                     "axisLabel": "",
                     "axisPlacement": "auto",
+                    "axisSoftMin": 0,
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
@@ -195,7 +198,7 @@
                         "editorMode": "code",
                         "expr": "avg_over_time(mktxp_wlan_clients_tx_ccq{mac_address=~\"(?i)$mac_all_routers\",routerboard_name=~\"$router\"}[4m])",
                         "format": "time_series",
-                        "legendFormat": "{{ mac_address }} - {{ dhcp_name }}",
+                        "legendFormat": "{{ mac_address }} - {{ dhcp_name }} - {{ router }}",
                         "range": true
                       },
                       "version": "v0"
@@ -211,7 +214,7 @@
           "description": "",
           "id": 152,
           "links": [],
-          "title": "$mac_all_routers wireless traffic for $router router",
+          "title": "$mac_all_routers wireless traffic ",
           "vizConfig": {
             "group": "timeseries",
             "kind": "VizConfig",
@@ -227,6 +230,7 @@
                     "axisColorMode": "text",
                     "axisLabel": "",
                     "axisPlacement": "auto",
+                    "axisSoftMin": 0,
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
@@ -393,111 +397,6 @@
           }
         }
       },
-      "panel-154": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "P4169E866C3094E38"
-                      },
-                      "group": "victoriametrics-metrics-datasource",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "avg_over_time(mktxp_wlan_clients_tx_ccq{mac_address=~\"(?i)$mac\",routerboard_name=~\"$router\"}[4m])",
-                        "format": "time_series",
-                        "legendFormat": "{{ mac_address }} - {{ dhcp_name }}",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "B"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "",
-          "id": 154,
-          "links": [],
-          "title": "$mac wireless client traffic",
-          "vizConfig": {
-            "group": "heatmap",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "custom": {
-                    "hideFrom": {
-                      "legend": false,
-                      "tooltip": false,
-                      "viz": false
-                    },
-                    "scaleDistribution": {
-                      "type": "linear"
-                    }
-                  },
-                  "unit": "Bps"
-                },
-                "overrides": []
-              },
-              "options": {
-                "annotations": {
-                  "clustering": -1,
-                  "multiLane": false
-                },
-                "calculate": false,
-                "cellGap": 1,
-                "cellValues": {
-                  "unit": "percent"
-                },
-                "color": {
-                  "exponent": 0.5,
-                  "fill": "green",
-                  "mode": "scheme",
-                  "reverse": true,
-                  "scale": "linear",
-                  "scheme": "RdYlBu",
-                  "steps": 64
-                },
-                "exemplars": {
-                  "color": "rgba(255,0,255,0.7)"
-                },
-                "filterValues": {
-                  "le": 1e-9
-                },
-                "legend": {
-                  "show": true
-                },
-                "rowsFrame": {
-                  "layout": "auto"
-                },
-                "tooltip": {
-                  "mode": "single",
-                  "showColorScale": false,
-                  "yHistogram": false
-                },
-                "yAxis": {
-                  "axisPlacement": "left",
-                  "reverse": false,
-                  "unit": ""
-                }
-              }
-            },
-            "version": "13.0.2"
-          }
-        }
-      },
       "panel-157": {
         "kind": "Panel",
         "spec": {
@@ -592,12 +491,138 @@
             "version": "13.0.2"
           }
         }
+      },
+      "panel-160": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "P4169E866C3094E38"
+                      },
+                      "group": "victoriametrics-metrics-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "avg_over_time(mktxp_wlan_clients_tx_ccq{mac_address=~\"(?i)$mac_all_routers\",routerboard_name=~\"$router\"}[4m])",
+                        "format": "time_series",
+                        "legendFormat": "{{ mac_address }} - {{ dhcp_name }} - {{ router }}",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 160,
+          "links": [],
+          "title": "All wireless clients",
+          "vizConfig": {
+            "group": "heatmap",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "scaleDistribution": {
+                      "type": "linear"
+                    }
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "calculate": false,
+                "cellGap": 1,
+                "color": {
+                  "exponent": 0.5,
+                  "fill": "dark-orange",
+                  "mode": "scheme",
+                  "reverse": true,
+                  "scale": "exponential",
+                  "scheme": "RdYlBu",
+                  "steps": 64
+                },
+                "exemplars": {
+                  "color": "rgba(255,0,255,0.7)"
+                },
+                "filterValues": {
+                  "le": 1e-9
+                },
+                "legend": {
+                  "show": true
+                },
+                "rowsFrame": {
+                  "layout": "auto"
+                },
+                "tooltip": {
+                  "mode": "single",
+                  "showColorScale": false,
+                  "yHistogram": false
+                },
+                "yAxis": {
+                  "axisPlacement": "left",
+                  "reverse": false
+                }
+              }
+            },
+            "version": "13.0.2"
+          }
+        }
       }
     },
     "layout": {
       "kind": "RowsLayout",
       "spec": {
         "rows": [
+          {
+            "kind": "RowsLayoutRow",
+            "spec": {
+              "collapse": false,
+              "layout": {
+                "kind": "AutoGridLayout",
+                "spec": {
+                  "columnWidthMode": "standard",
+                  "items": [
+                    {
+                      "kind": "AutoGridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-160"
+                        }
+                      }
+                    }
+                  ],
+                  "maxColumnCount": 3,
+                  "rowHeightMode": "tall"
+                }
+              },
+              "title": "Presence & wireless client quality"
+            }
+          },
           {
             "kind": "RowsLayoutRow",
             "spec": {
@@ -611,12 +636,25 @@
                       "spec": {
                         "element": {
                           "kind": "ElementReference",
-                          "name": "panel-153"
+                          "name": "panel-157"
                         },
                         "height": 3,
                         "width": 24,
                         "x": 0,
                         "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-153"
+                        },
+                        "height": 3,
+                        "width": 24,
+                        "x": 0,
+                        "y": 3
                       }
                     },
                     {
@@ -633,33 +671,7 @@
                         },
                         "width": 24,
                         "x": 0,
-                        "y": 3
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-157"
-                        },
-                        "height": 3,
-                        "width": 24,
-                        "x": 0,
-                        "y": 13
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-154"
-                        },
-                        "height": 10,
-                        "width": 24,
-                        "x": 0,
-                        "y": 16
+                        "y": 6
                       }
                     }
                   ]
