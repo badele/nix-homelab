@@ -77,6 +77,7 @@ homelab.features.mikrotik = {
     enable = true;
     openFirewall = true;
     verbose = true;
+    remoteDhcpServerVlan = "mgmt";
     serviceDomain = "mikrotik-exporter.infra.${config.homelab.domain}";
     registerScope = [ "private" ];
     listenInterfaces = lib.mkForce [
@@ -256,6 +257,20 @@ routers = [
   }
 ];
 ```
+
+To resolve `dhcp_name` labels from a central DHCP server, set
+`prometheus.remoteDhcpServerVlan` to the VLAN used to reach that RouterOS DHCP
+server:
+
+```nix
+homelab.features.mikrotik.prometheus.remoteDhcpServerVlan = "infra";
+```
+
+The DHCP server address comes from
+`homelab.vlans.<vlan>.dhcpServerIp`, which defaults to
+`192.168.<vlan.id>.254`. MKTXP receives this as a generated
+`remote_dhcp_entry`; the selected VLAN chooses the API address, not a DHCP lease
+filter.
 
 The exporter always listens on localhost for local scraping:
 

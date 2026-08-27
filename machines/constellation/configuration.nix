@@ -155,6 +155,7 @@ in
           enable = true;
           openFirewall = true;
           verbose = true;
+          remoteDhcpServerVlan = "mgmt";
           serviceDomain = "mikrotik-exporter.infra.${config.homelab.domain}";
           registerScope = [ "private" ];
           listenInterfaces = lib.mkForce [
@@ -165,11 +166,11 @@ in
         routers = [
           {
             name = "mkt254";
-            host = "192.168.244.254";
+            host = "192.168.240.254";
           }
           {
             name = "mkt253";
-            host = "192.168.244.253";
+            host = "192.168.240.253";
           }
           # {
           #   name = "mkt252";

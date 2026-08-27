@@ -18,6 +18,7 @@ let
 
   vlanOptions =
     vlanName:
+    vlanConfig:
       with lib;
       with types;
       {
@@ -42,6 +43,14 @@ let
           description = ''
             DNS prefix attached to this VLAN.
             Ex: "mgmt"
+          '';
+        };
+
+        dhcpServerIp = mkOption {
+          type = nullOr str;
+          default = "192.168.${toString vlanConfig.id}.254";
+          description = ''
+            DHCP server IPv4 address for this VLAN.
           '';
         };
       };
@@ -138,6 +147,12 @@ let
         type = nullOr attrs;
         default = null;
         description = "VictoriaMetrics scrape configuration published by this service.";
+      };
+
+      vmalert = mkOption {
+        type = nullOr attrs;
+        default = null;
+        description = "VictoriaMetrics vmalert rule configuration published by this service.";
       };
 
       grafana = mkOption {
@@ -347,7 +362,7 @@ in
     };
 
     homelab.vlans = mkOption {
-      type = attrsOf (submodule [ ({ name, ... }: { options = vlanOptions name; }) ]);
+      type = attrsOf (submodule [ ({ name, config, ... }: { options = vlanOptions name config; }) ]);
       default = { };
       description = ''
         Global VLAN catalog shared across machines.

@@ -35,6 +35,15 @@ let
   integrationGrafanaDatasources = lib.flatten (
     lib.mapAttrsToList (_: service: service.grafana.datasources or [ ]) integrationServicesWithGrafana
   );
+  integrationGrafanaDeleteDatasources = lib.flatten (
+    lib.mapAttrsToList (_: service: service.grafana.deleteDatasources or [ ]) integrationServicesWithGrafana
+  );
+  integrationGrafanaAlertRuleGroups = lib.flatten (
+    lib.mapAttrsToList (_: service: service.grafana.alerting.rules.groups or [ ]) integrationServicesWithGrafana
+  );
+  integrationGrafanaDeleteAlertRules = lib.flatten (
+    lib.mapAttrsToList (_: service: service.grafana.alerting.rules.deleteRules or [ ]) integrationServicesWithGrafana
+  );
   defaultGrafanaPlugins = [
     pkgs.grafanaPlugins.grafana-metricsdrilldown-app
   ];
@@ -204,6 +213,16 @@ in
       services.grafana.provision.datasources.settings.datasources = lib.mkIf (
         integrationGrafanaDatasources != [ ]
       ) integrationGrafanaDatasources;
+      services.grafana.provision.datasources.settings.deleteDatasources = lib.mkIf (
+        integrationGrafanaDeleteDatasources != [ ]
+      ) integrationGrafanaDeleteDatasources;
+      services.grafana.provision.alerting.rules.settings = lib.mkIf (
+        integrationGrafanaAlertRuleGroups != [ ] || integrationGrafanaDeleteAlertRules != [ ]
+      ) {
+        apiVersion = 1;
+        groups = integrationGrafanaAlertRuleGroups;
+        deleteRules = integrationGrafanaDeleteAlertRules;
+      };
 
       services.caddy.virtualHosts = lib.mkIf cfg.openFirewall {
         "${cfg.serviceDomain}" = {

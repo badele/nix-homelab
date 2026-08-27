@@ -2037,7 +2037,7 @@
       {
         "current": {
           "text": "Prometheus",
-          "value": "PBFA97CFB590B2093"
+          "value": "homelab-prometheus"
         },
         "label": "datasource",
         "name": "DS_PROMETHEUS",
