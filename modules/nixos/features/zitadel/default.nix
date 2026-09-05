@@ -3,6 +3,7 @@
   lib,
   pkgs,
   mkFeatureOptions,
+  mkFirewallInterfaces,
   mkServiceAliases,
   resolveListenInterfaceAddresses,
   ...
@@ -29,6 +30,7 @@ let
 
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenZitadelPort}";
+  monitoringURL = internalURL;
 in
 {
   ############################################################################
@@ -104,12 +106,12 @@ in
             icon = appIcon;
             href = exposedURL;
             description = "${appDescription}  [${cfg.serviceDomain}]";
-            siteMonitor = "${internalURL}/debug/healthz";
+            siteMonitor = "${monitoringURL}/debug/healthz";
           };
 
           gatus = mkIf config.services.gatus.enable {
             name = appDisplayName;
-            url = "${internalURL}/debug/healthz";
+            url = "${monitoringURL}/debug/healthz";
             group = appCategory;
             type = "HTTP";
             interval = "5m";
@@ -188,7 +190,7 @@ in
         };
 
         # Open firewall ports if openFirewall is enabled
-        networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [
+        networking.firewall.interfaces = mkFirewallInterfaces cfg [
           443
         ];
 

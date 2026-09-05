@@ -3,8 +3,11 @@
   lib,
   pkgs,
   mkFeatureOptions,
+  mkFirewall,
   mkServiceAliases,
+  mkSharedIntegrationAssertions,
   resolveListenInterfaceAddresses,
+  selectSharedIntegrationServices,
   ...
 }:
 with lib;
@@ -26,6 +29,10 @@ let
 
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenHttpPort}";
+  monitoringURL = internalURL;
+  integrationServices =
+    config.homelab.integrations.services
+    // selectSharedIntegrationServices "homepage" cfg.collectIntegrations;
 
   categoryOrder = [
     "Essentials"
@@ -40,8 +47,8 @@ let
   ) config.homelab.features;
 
   integrationServicesWithHomepage = lib.filterAttrs (
-    _: service: service.homepage != null
-  ) config.homelab.integrations.services;
+    _: service: (service.homepage or null) != null
+  ) integrationServices;
 
   # Group services by category
   featureServicesByCategory = lib.foldl' (
@@ -62,15 +69,14 @@ let
   integrationServicesByCategory = lib.foldl' (
     acc: serviceName:
     let
-      service = config.homelab.integrations.services.${serviceName};
+      service = integrationServices.${serviceName};
       category = service.category;
       serviceEntry = {
-        ${service.displayName} =
-          {
-            icon = service.icon;
-            description = service.description;
-          }
-          // service.homepage;
+        ${service.displayName} = {
+          icon = service.icon;
+          description = service.description;
+        }
+        // service.homepage;
       };
     in
     acc
@@ -80,14 +86,15 @@ let
   ) { } (builtins.attrNames integrationServicesWithHomepage);
 
   allCategories = lib.unique (
-    (builtins.attrNames featureServicesByCategory)
-    ++ (builtins.attrNames integrationServicesByCategory)
+    (builtins.attrNames featureServicesByCategory) ++ (builtins.attrNames integrationServicesByCategory)
   );
 
   servicesByCategory = builtins.listToAttrs (
     map (category: {
       name = category;
-      value = (featureServicesByCategory.${category} or [ ]) ++ (integrationServicesByCategory.${category} or [ ]);
+      value =
+        (featureServicesByCategory.${category} or [ ])
+        ++ (integrationServicesByCategory.${category} or [ ]);
     }) allCategories
   );
 
@@ -146,10 +153,12 @@ in
 
       # Only apply when enabled
       (mkIf cfg.enable {
+        assertions = mkSharedIntegrationAssertions appName [ "homepage" ] cfg.collectIntegrations;
+
         homelab.features.${appName} = {
           gatus = mkIf config.services.gatus.enable {
             name = appDisplayName;
-            url = internalURL;
+            url = monitoringURL;
             group = appCategory;
             type = "HTTP";
             interval = "5m";
@@ -342,6 +351,17 @@ in
                     }
                   ];
                 }
+
+                {
+                  "Le metro" = [
+                    {
+                      icon = "sh-netbird";
+                      href = "https://metro.ma-cabane.eu";
+                      description = "netbird (sso)";
+                    }
+                  ];
+                }
+
               ];
             }
 
@@ -586,7 +606,7 @@ in
         };
 
         # Open firewall ports if openFirewall is enabled
-        networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [
+        networking.firewall = mkFirewall cfg [
           443
         ];
 

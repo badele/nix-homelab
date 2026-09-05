@@ -3,8 +3,10 @@
   lib,
   pkgs,
   mkFeatureOptions,
+  mkFirewall,
   mkGrafanaDashboardProvider,
   mkServiceAliases,
+  resolveIntegrationListenAddresses,
   resolveListenInterfaceAddresses,
   ...
 }:
@@ -25,6 +27,8 @@ let
   prometheusServiceName = "mikrotik-mktxp";
   cfg = config.homelab.features.${appName};
   prometheusCfg = cfg.prometheus;
+  publishCfg = cfg.publishIntegrations;
+  publishMetricsCfg = publishCfg.victoriametrics;
 
   routerOptions = {
     options = {
@@ -69,12 +73,19 @@ let
   sshKeyComment = "${serviceName}@${config.networking.hostName}";
   listenMetricsPort = 10000 + config.homelab.portRegistry.${appName}.appId;
   prometheusInternalURL = "http://127.0.0.1:${toString listenMetricsPort}";
+  prometheusMonitoringURL = prometheusInternalURL;
   prometheusExposedURL = "https://${prometheusCfg.serviceDomain}";
+  prometheusPublishedTargets = map (
+    address: "${address}:${toString listenMetricsPort}"
+  ) (resolveIntegrationListenAddresses appName publishMetricsCfg.listenInterfaces);
   prometheusDnsTargetAddress =
-    let
-      resolvedAddresses = resolveListenInterfaceAddresses appName prometheusCfg.listenInterfaces;
-    in
-    if resolvedAddresses == [ ] then config.homelab.host.address else head resolvedAddresses;
+    if prometheusCfg.dnsTargetAddress != null then
+      prometheusCfg.dnsTargetAddress
+    else
+      let
+        resolvedAddresses = resolveListenInterfaceAddresses appName prometheusCfg.listenInterfaces;
+      in
+      if resolvedAddresses == [ ] then config.homelab.host.address else head resolvedAddresses;
 
   remoteDhcpServerVlan = prometheusCfg.remoteDhcpServerVlan;
   remoteDhcpVlanExists =
@@ -379,6 +390,18 @@ in
               description = "Network interfaces that expose the MikroTik Prometheus exporter reverse proxy when openFirewall is enabled.";
             };
 
+            dnsTargetAddress = mkOption {
+              type = nullOr str;
+              default = null;
+              description = "Explicit IPv4 address published for the MikroTik Prometheus exporter domain.";
+            };
+
+            allow = mkOption {
+              type = attrsOf str;
+              default = { };
+              description = "Remote machines allowed to reach the MikroTik Prometheus exporter.";
+            };
+
             verbose = mkOption {
               type = bool;
               default = false;
@@ -474,8 +497,9 @@ in
           message = "homelab.vlans.${remoteDhcpServerVlanMessage}.dhcpServerIp must be set when used by homelab.features.mikrotik.prometheus.remoteDhcpServerVlan.";
         }
         {
-          assertion = !prometheusCfg.openFirewall || prometheusCfg.listenInterfaces != [ ];
-          message = "homelab.features.mikrotik.prometheus.listenInterfaces must be set when prometheus.openFirewall is enabled.";
+          assertion =
+            (!prometheusCfg.openFirewall && prometheusCfg.allow == { }) || prometheusCfg.listenInterfaces != [ ];
+          message = "homelab.features.mikrotik.prometheus.listenInterfaces must be set when prometheus.openFirewall or prometheus.allow is enabled.";
         }
       ]
       ++ (map (interfaceName: {
@@ -612,22 +636,28 @@ in
         targetAddress = prometheusDnsTargetAddress;
       };
 
-      homelab.integrations.services.${appName} = mkDefault {
+      homelab.integrations.services.${appName} = mkIf (
+        publishCfg.homepage
+        || publishCfg.gatus
+        || publishCfg.grafana
+        || publishCfg.vmalert
+        || publishMetricsCfg.enable
+      ) {
         displayName = appDisplayName;
         category = appCategory;
         icon = appIcon;
         description = appDescription;
 
-        homepage = mkIf config.services.homepage-dashboard.enable {
+        homepage = mkIf publishCfg.homepage {
           icon = "sh-${appIcon}";
           href = prometheusExposedURL;
           description = "${appDescription} metrics [${prometheusCfg.serviceDomain}]";
-          siteMonitor = prometheusInternalURL;
+          siteMonitor = prometheusMonitoringURL;
         };
 
-        gatus = mkIf config.services.gatus.enable {
+        gatus = mkIf publishCfg.gatus {
           name = "${appDisplayName} Exporter";
-          url = prometheusInternalURL;
+          url = prometheusMonitoringURL;
           group = appCategory;
           type = "HTTP";
           interval = "5m";
@@ -638,11 +668,11 @@ in
           ui.hide-hostname = true;
         };
 
-        victoriametrics = {
+        victoriametrics = mkIf publishMetricsCfg.enable {
           metrics_path = "/metrics";
           static_configs = [
             {
-              targets = [ "127.0.0.1:${toString listenMetricsPort}" ];
+              targets = prometheusPublishedTargets;
               labels = {
                 instance = config.networking.hostName;
                 service = appName;
@@ -651,13 +681,13 @@ in
           ];
         };
 
-        vmalert = {
+        vmalert = mkIf publishCfg.vmalert {
           ruleGroups = [
             mikrotikVmalertRuleGroup
           ];
         };
 
-        grafana = {
+        grafana = mkIf publishCfg.grafana {
           alerting.rules = {
             deleteRules = mikrotikGrafanaDeletedAlertRules;
           };
@@ -670,17 +700,17 @@ in
         };
       };
 
-      networking.firewall.interfaces = mkIf prometheusCfg.openFirewall (
-        genAttrs prometheusCfg.listenInterfaces (_: {
-          allowedTCPPorts = [ 443 ];
-        })
-      );
+      networking.firewall = mkFirewall prometheusCfg [ 443 ];
 
       security.acme.acceptTerms = mkIf prometheusCfg.openFirewall true;
 
       services.caddy.virtualHosts = mkIf prometheusCfg.openFirewall {
         "${prometheusCfg.serviceDomain}" = {
-          listenAddresses = resolveListenInterfaceAddresses appName prometheusCfg.listenInterfaces;
+          listenAddresses =
+            if prometheusCfg.dnsTargetAddress != null then
+              [ prometheusCfg.dnsTargetAddress ]
+            else
+              resolveListenInterfaceAddresses appName prometheusCfg.listenInterfaces;
           logFormat = ''
             output file /var/log/caddy/public.log {
               mode 0644

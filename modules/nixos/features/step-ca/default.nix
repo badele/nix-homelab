@@ -3,6 +3,7 @@
   lib,
   pkgs,
   mkFeatureOptions,
+  mkFirewallInterfaces,
   mkServiceAliases,
   ...
 }:
@@ -35,6 +36,7 @@ let
 
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenHttpPort}";
+  monitoringURL = internalURL;
 
   yaml = pkgs.formats.json { };
 in
@@ -98,12 +100,12 @@ in
           icon = appIcon;
           href = exposedURL;
           description = appDescription;
-          siteMonitor = "${internalURL}/health";
+          siteMonitor = "${monitoringURL}/health";
         };
 
         gatus = mkIf cfg.enable {
           name = appDisplayName;
-          url = "${internalURL}/health";
+          url = "${monitoringURL}/health";
           group = appCategory;
           type = "HTTP";
           interval = "5m";
@@ -189,7 +191,7 @@ in
         };
       };
 
-      networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [
+      networking.firewall.interfaces = mkFirewallInterfaces cfg [
         listenHttpPort
       ];
 

@@ -3,8 +3,11 @@
   lib,
   pkgs,
   mkFeatureOptions,
+  mkFirewall,
   mkServiceAliases,
+  mkSharedIntegrationAssertions,
   resolveListenInterfaceAddresses,
+  selectSharedIntegrationServices,
   ...
 }:
 with lib;
@@ -18,6 +21,9 @@ let
 
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenHttpPort}";
+  monitoringURL = internalURL;
+  integrationServices =
+    config.homelab.integrations.services // selectSharedIntegrationServices "gatus" cfg.collectIntegrations;
 
   # Collect all features with homepage configuration
   featuresWithGatus = lib.filterAttrs (
@@ -25,8 +31,8 @@ let
   ) config.homelab.features;
 
   integrationServicesWithGatus = lib.filterAttrs (
-    _: service: service.gatus != null
-  ) config.homelab.integrations.services;
+    _: service: (service.gatus or null) != null
+  ) integrationServices;
 
   integrationEndpoints = lib.mapAttrsToList (
     _: service:
@@ -81,18 +87,19 @@ in
 
       # Only apply when enabled
       (mkIf cfg.enable {
+        assertions = mkSharedIntegrationAssertions appName [ "gatus" ] cfg.collectIntegrations;
 
         homelab.features.${appName} = {
           homepage = mkIf config.services.homepage-dashboard.enable {
             icon = cfg.appInfos.icon;
             href = exposedURL;
             description = "${cfg.serviceDomain} // ${cfg.appInfos.description}";
-            siteMonitor = internalURL;
+            siteMonitor = monitoringURL;
           };
         };
 
         # Open firewall ports if openFirewall is enabled
-        networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [
+        networking.firewall = mkFirewall cfg [
           443
         ];
 

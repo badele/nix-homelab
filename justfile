@@ -52,6 +52,40 @@ SSHPASS := "nixosusb"
     clan vars get {{HOST}} {{VARNAME}}
 
 ###############################################################################
+# Hetzner
+###############################################################################
+
+# Get the public IPv4 address of a Hetzner Cloud machine
+[group('hetzner')]
+@hcloud-machine-ip MACHINE:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    export HCLOUD_TOKEN="$(clan secrets get hetzner-homelab-token)"
+    hcloud server describe "{{MACHINE}}" -o json | jq -r '.public_net.ipv4.ip'
+
+# Create a Hetzner Cloud machine and install NixOS with clan/nixos-anywhere
+[group('hetzner')]
+hcloud-create-machine MACHINE SERVER_TYPE="cpx12" LOCATION="nbg1" IMAGE="debian-12" SSH_KEY="badele":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    export HCLOUD_TOKEN="$(clan secrets get hetzner-homelab-token)"
+
+    if ! hcloud server describe "{{MACHINE}}" >/dev/null 2>&1; then
+        hcloud server create \
+            --name "{{MACHINE}}" \
+            --type "{{SERVER_TYPE}}" \
+            --image "{{IMAGE}}" \
+            --location "{{LOCATION}}" \
+            --ssh-key "{{SSH_KEY}}"
+    fi
+
+    ip="$(hcloud server describe "{{MACHINE}}" -o json | jq -r '.public_net.ipv4.ip')"
+    test -n "$ip" && test "$ip" != "null"
+
+    echo "Hetzner IPv4 for {{MACHINE}}: $ip"
+    clan machines install "{{MACHINE}}" --update-hardware-config nixos-facter --target-host "root@$ip" --yes
+
+###############################################################################
 # Pre-commit
 ###############################################################################
 
@@ -238,6 +272,15 @@ nixos-command action hostname="" options="":
 [group('nixos')]
 @nixos-build hostname="" options="":
     just nixos-command build {{ hostname }} {{ options }}
+
+# Test NixOS configuration on the target host without making it the boot default
+[group('nixos')]
+nixos-test hostname="" options="":
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    target_host="$(nix eval --raw --option accept-flake-config true .#nixosConfigurations.{{ hostname }}.config.clan.core.networking.targetHost)"
+    nixos-rebuild test {{ options }} --no-reexec --option accept-flake-config true --target-host "$target_host" --flake .#{{ hostname }}
 
 # Build local host as a QEMU VM
 [group('nixos')]

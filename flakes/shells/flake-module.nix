@@ -35,8 +35,10 @@
           borgbackup
           deno
           git
+          hcloud
           home-manager
           just
+          jq
           nix
           plantuml
           pre-commit
