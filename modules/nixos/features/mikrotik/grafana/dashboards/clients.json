@@ -5,8 +5,8 @@
     "name": "adxjnt9",
     "namespace": "default",
     "uid": "429e7297-92e4-40c7-a16c-2e966ff9147c",
-    "resourceVersion": "1787761304140006",
-    "generation": 7,
+    "resourceVersion": "1787895946212999",
+    "generation": 18,
     "creationTimestamp": "2026-08-26T14:57:49Z",
     "labels": {
       "grafana.app/deprecatedInternalID": "2957355730067456"
@@ -14,13 +14,8 @@
     "annotations": {
       "grafana.app/createdBy": "access-policy:service",
       "grafana.app/folder": "mikrotik",
-      "grafana.app/managedBy": "classic-file-provisioning",
-      "grafana.app/managerId": "mikrotik",
-      "grafana.app/sourceChecksum": "8eedbc37988b4720af3ebf326d7c4f3a",
-      "grafana.app/sourcePath": "/nix/store/lvls2ibkshyvd889vwrpi4msx7c7x8dx-dashboards/clients.json",
-      "grafana.app/sourceTimestamp": "1000",
       "grafana.app/updatedBy": "access-policy:service",
-      "grafana.app/updatedTimestamp": "2026-08-26T16:21:44Z",
+      "grafana.app/updatedTimestamp": "2026-08-28T05:45:46Z",
       "grafana.app/folderTitle": "MikroTik",
       "grafana.app/folderUrl": "/dashboards/f/mikrotik/mikrotik"
     }
@@ -52,7 +47,7 @@
         }
       }
     ],
-    "cursorSync": "Off",
+    "cursorSync": "Crosshair",
     "description": "Mikrotik Clients",
     "editable": true,
     "elements": {
@@ -862,6 +857,328 @@
             "version": "13.0.2"
           }
         }
+      },
+      "panel-157": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "homelab-prometheus"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "application": {
+                          "filter": "Network"
+                        },
+                        "editorMode": "code",
+                        "expr": "rate(mktxp_wlan_clients_rx_bytes_total{}[4m])",
+                        "format": "time_series",
+                        "functions": [],
+                        "group": {
+                          "filter": "Network"
+                        },
+                        "host": {
+                          "filter": "MikroTik Router"
+                        },
+                        "interval": "",
+                        "intervalFactor": 1,
+                        "item": {
+                          "filter": "Outgoing traffic on interface ether1-gateway"
+                        },
+                        "legendFormat": "Out - {{ dhcp_name }}",
+                        "mode": 0,
+                        "options": {
+                          "showDisabledItems": false
+                        },
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 157,
+          "links": [],
+          "title": "RX Clients Traffic",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 30,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": true,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "normal"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  },
+                  "unit": "bps"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byValue",
+                      "options": {
+                        "op": "gte",
+                        "reducer": "allIsZero",
+                        "value": 0
+                      }
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.hideFrom",
+                        "value": {
+                          "legend": true,
+                          "tooltip": true,
+                          "viz": false
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "table",
+                  "placement": "right",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "maxHeight": 600,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.0.2"
+          }
+        }
+      },
+      "panel-158": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "homelab-prometheus"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "application": {
+                          "filter": "Network"
+                        },
+                        "editorMode": "code",
+                        "expr": "rate(mktxp_wlan_clients_tx_bytes_total{}[4m])",
+                        "format": "time_series",
+                        "functions": [],
+                        "group": {
+                          "filter": "Network"
+                        },
+                        "host": {
+                          "filter": "MikroTik Router"
+                        },
+                        "instant": false,
+                        "interval": "",
+                        "intervalFactor": 1,
+                        "item": {
+                          "filter": "Incoming traffic on interface ether1-gateway"
+                        },
+                        "legendFormat": "In - {{ dhcp_name }}",
+                        "mode": 0,
+                        "options": {
+                          "showDisabledItems": false
+                        }
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 158,
+          "links": [],
+          "title": "TX Clients Traffic",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 30,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "never",
+                    "showValues": false,
+                    "spanNulls": true,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "normal"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  },
+                  "unit": "bps"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byValue",
+                      "options": {
+                        "op": "gte",
+                        "reducer": "allIsZero",
+                        "value": 0
+                      }
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.hideFrom",
+                        "value": {
+                          "legend": true,
+                          "tooltip": true,
+                          "viz": false
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "table",
+                  "placement": "right",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "maxHeight": 600,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.0.2"
+          }
+        }
       }
     },
     "layout": {
@@ -931,6 +1248,32 @@
                         "width": 24,
                         "x": 0,
                         "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-157"
+                        },
+                        "height": 8,
+                        "width": 12,
+                        "x": 0,
+                        "y": 10
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-158"
+                        },
+                        "height": 8,
+                        "width": 12,
+                        "x": 12,
+                        "y": 10
                       }
                     }
                   ]

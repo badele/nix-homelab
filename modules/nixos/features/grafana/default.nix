@@ -3,8 +3,11 @@
   lib,
   pkgs,
   mkFeatureOptions,
+  mkFirewall,
   mkServiceAliases,
+  mkSharedIntegrationAssertions,
   resolveListenInterfaceAddresses,
+  selectSharedIntegrationServices,
   ...
 }:
 with lib;
@@ -26,9 +29,13 @@ let
 
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenHttpPort}";
+  monitoringURL = internalURL;
+  integrationServices =
+    config.homelab.integrations.services
+    // selectSharedIntegrationServices "grafana" cfg.collectIntegrations;
   integrationServicesWithGrafana = lib.filterAttrs (
-    _: service: service.grafana != null
-  ) config.homelab.integrations.services;
+    _: service: (service.grafana or null) != null
+  ) integrationServices;
   integrationGrafanaDashboards = lib.flatten (
     lib.mapAttrsToList (_: service: service.grafana.dashboards or [ ]) integrationServicesWithGrafana
   );
@@ -94,17 +101,19 @@ in
 
     # Only apply when enabled
     (lib.mkIf cfg.enable {
+      assertions = mkSharedIntegrationAssertions appName [ "grafana" ] cfg.collectIntegrations;
+
       homelab.features.${appName} = {
         homepage = mkIf config.services.homepage-dashboard.enable {
           icon = appIcon;
           href = exposedURL;
           description = "${appDescription} [${cfg.serviceDomain}]";
-          siteMonitor = internalURL;
+          siteMonitor = monitoringURL;
         };
 
         gatus = mkIf config.services.gatus.enable {
           name = appDisplayName;
-          url = "${internalURL}/api/health";
+          url = "${monitoringURL}/api/health";
           group = appCategory;
           type = "HTTP";
           interval = "5m";
@@ -150,7 +159,7 @@ in
         '';
       };
 
-      networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [
+      networking.firewall = mkFirewall cfg [
         443
       ];
 

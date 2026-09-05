@@ -51,6 +51,9 @@ in
   # Fix nixos build limits
   systemd.settings.Manager.DefaultLimitNOFILE = "8192:524288";
 
+  # for podman going to host interface
+  networking.firewall.interfaces.podman0.allowedTCPPorts = [ 443 ];
+
   # Host information
   homelab = {
     domain = "ma-cabane.eu";
@@ -81,42 +84,52 @@ in
 
       homepage-dashboard.enable = true;
       homepage-dashboard.openFirewall = true;
+      homepage-dashboard.listenInterfaces = [ config.homelab.host.interface ];
       homepage-dashboard.serviceDomain = "labrique.${config.homelab.domain}";
 
       gatus.enable = true;
       gatus.openFirewall = true;
+      gatus.listenInterfaces = [ config.homelab.host.interface ];
       gatus.serviceDomain = "signalisations.${config.homelab.domain}";
 
       goaccess.enable = true;
       goaccess.openFirewall = true;
+      goaccess.listenInterfaces = [ config.homelab.host.interface ];
       goaccess.serviceDomain = "portique.${config.homelab.domain}";
 
       wastebin.enable = true;
       wastebin.openFirewall = true;
+      wastebin.listenInterfaces = [ config.homelab.host.interface ];
       wastebin.serviceDomain = "carte-perforee.${config.homelab.domain}";
 
       it-tools.enable = true;
       it-tools.openFirewall = true;
+      it-tools.listenInterfaces = [ config.homelab.host.interface ];
       it-tools.serviceDomain = "boite-a-outils.${config.homelab.domain}";
 
       linkding.enable = true;
       linkding.openFirewall = true;
+      linkding.listenInterfaces = [ config.homelab.host.interface ];
       linkding.serviceDomain = "bonnes-adresses.${config.homelab.domain}";
 
       miniflux.enable = true;
       miniflux.openFirewall = true;
+      miniflux.listenInterfaces = [ config.homelab.host.interface ];
       miniflux.serviceDomain = "journaliste.${config.homelab.domain}";
 
       dokuwiki.enable = true;
       dokuwiki.openFirewall = true;
+      dokuwiki.listenInterfaces = [ config.homelab.host.interface ];
       dokuwiki.serviceDomain = "encyclopedie.${config.homelab.domain}";
 
       zitadel.enable = true;
       zitadel.openFirewall = true;
+      zitadel.listenInterfaces = [ config.homelab.host.interface ];
       zitadel.serviceDomain = "douane.${config.homelab.domain}";
 
       radio.enable = true;
       radio.openFirewall = true;
+      radio.listenInterfaces = [ config.homelab.host.interface ];
       radio.stations = [
         {
           name = "Dance Wave! // Dance";

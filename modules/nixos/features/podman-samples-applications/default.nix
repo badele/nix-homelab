@@ -3,6 +3,7 @@
   lib,
   pkgs,
   mkFeatureOptions,
+  mkFirewallInterfaces,
   mkPodmanAliases,
   ...
 }:
@@ -71,7 +72,7 @@ in
 
     # Only apply when enabled
     (mkIf cfg.enable {
-      networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [
+      networking.firewall.interfaces = mkFirewallInterfaces cfg [
         3890
         17170
       ];

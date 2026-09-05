@@ -101,6 +101,35 @@ let
     };
   };
 
+  publishIntegrationsOptions = {
+    homepage = mkEnableOption "Publish the Homepage integration";
+
+    gatus = mkEnableOption "Publish the Gatus integration";
+
+    grafana = mkEnableOption "Publish the Grafana integration";
+
+    vmalert = mkEnableOption "Publish the VMAlert integration";
+
+    victoriametrics = mkOption {
+      type = submodule {
+        options = {
+          enable = mkEnableOption "Publish the VictoriaMetrics integration";
+
+          listenInterfaces = mkOption {
+            type = listOf str;
+            default = [ "lo" ];
+            description = ''
+              Network interfaces used to publish VictoriaMetrics scrape targets.
+              Use "lo" to publish localhost targets.
+            '';
+          };
+        };
+      };
+      default = { };
+      description = "VictoriaMetrics integration publication settings.";
+    };
+  };
+
   # Helper function to create common feature options
   # Usage in feature modules: mkFeatureOptions { extraOptions = { ... }; }
   mkFeatureOptions =
@@ -119,6 +148,22 @@ let
         default = { };
         description = ''
           Application informations
+        '';
+      };
+
+      publishIntegrations = mkOption {
+        type = submodule { options = publishIntegrationsOptions; };
+        default = { };
+        description = ''
+          Explicit service integrations published by this feature.
+        '';
+      };
+
+      collectIntegrations = mkOption {
+        type = attrsOf (listOf str);
+        default = { };
+        description = ''
+          Shared service integrations collected by this feature, keyed by machine.
         '';
       };
 
@@ -167,6 +212,16 @@ let
 
       remoteAccess = mkEnableOption "Allow remote access to this application (create new listening port 20000 + appId";
 
+      allow = mkOption {
+        type = attrsOf str;
+        default = { };
+        description = ''
+          Remote machines allowed to reach this feature, keyed by machine name.
+          Values are shared host address selectors such as management, infra,
+          public, or an interface name.
+        '';
+      };
+
     }
     // extraOptions;
 
@@ -199,6 +254,14 @@ let
     options.path = path;
   };
 
+  mkFirewallInterfaces =
+    cfg: ports:
+    mkIf cfg.openFirewall (
+      genAttrs cfg.listenInterfaces (_: {
+        allowedTCPPorts = ports;
+      })
+    );
+
 in
 {
   inherit
@@ -206,5 +269,6 @@ in
     mkPodmanAliases
     mkServiceAliases
     mkGrafanaDashboardProvider
+    mkFirewallInterfaces
     ;
 }

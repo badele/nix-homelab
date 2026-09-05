@@ -29,6 +29,38 @@ let
     }).config.homelab.domains.localEntries
   ) nixosMachineInventory;
 
+  sharedIntegrationsCatalog = lib.mapAttrs (
+    machineName: _:
+    (inputs.nixpkgs.lib.nixosSystem {
+      modules = [ config.flake.clan.outputs.moduleForMachine.${machineName} ];
+      specialArgs = {
+        inherit self inputs;
+        inherit (inputs) clan-core;
+        isSharedDomainsCatalogEval = true;
+        isSharedIntegrationsCatalogEval = true;
+        sharedDomainsCatalog = { };
+        sharedIntegrationsCatalog = { };
+      };
+    }).config.homelab.integrations.services
+  ) nixosMachineInventory;
+
+  sharedHostsCatalog = lib.mapAttrs (
+    machineName: _:
+    (inputs.nixpkgs.lib.nixosSystem {
+      modules = [ config.flake.clan.outputs.moduleForMachine.${machineName} ];
+      specialArgs = {
+        inherit self inputs;
+        inherit (inputs) clan-core;
+        isSharedDomainsCatalogEval = true;
+        isSharedIntegrationsCatalogEval = true;
+        isSharedHostsCatalogEval = true;
+        sharedDomainsCatalog = { };
+        sharedIntegrationsCatalog = { };
+        sharedHostsCatalog = { };
+      };
+    }).config.homelab.hosts.localHost
+  ) nixosMachineInventory;
+
 in
 {
   imports = [
@@ -38,7 +70,13 @@ in
   flake.clan = {
     # Make flake available in modules
     specialArgs = {
-      inherit self inputs sharedDomainsCatalog;
+      inherit
+        self
+        inputs
+        sharedDomainsCatalog
+        sharedHostsCatalog
+        sharedIntegrationsCatalog
+        ;
     };
     inherit self;
 
@@ -71,6 +109,9 @@ in
         ];
 
         hangar16-vm.tags = [
+        ];
+
+        cab1e.tags = [
         ];
 
       };
@@ -180,6 +221,9 @@ in
           };
           roles.default.machines.hangar16-vm = {
             settings.host = "192.168.240.116";
+          };
+          roles.default.machines.cab1e = {
+            settings.host = "46.224.53.176";
           };
         };
 
