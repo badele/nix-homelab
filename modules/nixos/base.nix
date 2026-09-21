@@ -26,12 +26,12 @@
   networking.firewall.logRefusedConnections = true;
 
   # Enable earlyoom to improve system responsiveness under low memory conditions
-  # services.earlyoom = {
-  #   enable = true;
-  #   enableNotifications = true;
-  #   freeMemThreshold = 10; # Déclenche quand <5% de RAM libre
-  #   freeSwapThreshold = 100; # Pas de swap, donc on met 100
-  # };
+  services.earlyoom = {
+    enable = true;
+    enableNotifications = true;
+    freeMemThreshold = 10; # kill when <10% RAM free
+    freeSwapThreshold = 10; # kill when <10% zram free
+  };
 
   # Nixpkgs configuration
   nixpkgs = {
