@@ -8,7 +8,8 @@ let
   lanMac = "52:54:00:10:00:01";
   mgmtMac = "52:54:00:10:00:02";
   dmzMac = "52:54:00:10:00:03";
-  iotMac = "52:54:00:10:00:04";
+  infraMac = "52:54:00:10:00:04";
+  iotMac = "52:54:00:10:00:05";
   bridgeHelper = "/run/wrappers/bin/qemu-bridge-helper";
 in
 {
@@ -38,6 +39,35 @@ in
     interface = lib.mkForce "lan";
     address = lib.mkForce "192.168.254.116";
     gateway = lib.mkForce "192.168.254.254";
+    addresses = lib.mkForce {
+      lan = {
+        interface = "lan";
+        address = "192.168.254.116";
+        prefixLength = 24;
+      };
+      mgmt = {
+        interface = "mgmt";
+        address = "192.168.240.116";
+        prefixLength = 24;
+      };
+      infra = {
+        interface = "infra";
+        address = "192.168.244.116";
+        prefixLength = 24;
+      };
+      dmz = {
+        interface = "dmz";
+        address = "192.168.32.116";
+        prefixLength = 24;
+      };
+      iot = {
+        interface = "iot";
+        address = "192.168.40.116";
+        prefixLength = 24;
+      };
+    };
+    defaultAddressRef = lib.mkForce "lan";
+    managementAddressRef = lib.mkForce "mgmt";
   };
 
   homelab.features = {
@@ -51,9 +81,13 @@ in
     blocky.dnsTargetAddress = lib.mkForce config.homelab.host.address;
 
     homepage-dashboard.serviceDomain = lib.mkForce "labrique-vm.${config.homelab.domain}";
+    homepage-dashboard.listenInterfaces = lib.mkOverride 40 [ "infra" ];
     gatus.serviceDomain = lib.mkForce "signalisations-vm.${config.homelab.domain}";
+    gatus.listenInterfaces = lib.mkOverride 40 [ "infra" ];
     grafana.serviceDomain = lib.mkForce "lampiotes-vm.${config.homelab.domain}";
+    grafana.listenInterfaces = lib.mkOverride 40 [ "infra" ];
     victoriametrics.serviceDomain = lib.mkForce "sondes-vm.${config.homelab.domain}";
+    victoriametrics.listenInterfaces = lib.mkOverride 40 [ "infra" ];
   };
 
   # Rename network devices
@@ -73,6 +107,11 @@ in
       linkConfig.Name = "dmz";
     };
 
+    "10-infra" = {
+      matchConfig.MACAddress = infraMac;
+      linkConfig.Name = "infra";
+    };
+
     "10-iot" = {
       matchConfig.MACAddress = iotMac;
       linkConfig.Name = "iot";
@@ -88,6 +127,7 @@ in
       "interface-name:lan"
       "interface-name:mgmt"
       "interface-name:dmz"
+      "interface-name:infra"
       "interface-name:iot"
     ];
     defaultGateway = lib.mkForce {
@@ -116,6 +156,13 @@ in
       dmz.ipv4.addresses = [
         {
           address = "192.168.32.116";
+          prefixLength = 24;
+        }
+      ];
+
+      infra.ipv4.addresses = [
+        {
+          address = "192.168.244.116";
           prefixLength = 24;
         }
       ];
@@ -154,6 +201,9 @@ in
 
         "-device virtio-net-pci,netdev=dmz,mac=${dmzMac}"
         "-netdev bridge,id=dmz,br=br-dmz,helper=${bridgeHelper}"
+
+        "-device virtio-net-pci,netdev=infra,mac=${infraMac}"
+        "-netdev bridge,id=infra,br=br-infra,helper=${bridgeHelper}"
 
         "-device virtio-net-pci,netdev=iot,mac=${iotMac}"
         "-netdev bridge,id=iot,br=br-iot,helper=${bridgeHelper}"

@@ -83,6 +83,17 @@ just doc-update
     </tr>
     <tr>
       <td align="center">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/netbird.png" width="48" height="48" alt="NetBird"/>
+      </td>
+      <td>
+        <a href="/docs/features/netbird.md">NetBird 📚</a>
+      </td>
+      <td>nixos</td>
+      <td>0.72.4</td>
+      <td>WireGuard-based private mesh network with access controls</td>
+    </tr>
+    <tr>
+      <td align="center">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homebox.png" width="48" height="48" alt="Nix homelab summary"/>
       </td>
       <td>

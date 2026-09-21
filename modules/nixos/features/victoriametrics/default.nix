@@ -1,12 +1,16 @@
-{ config
-, inputs
-, lib
-, pkgs
-, mkFeatureOptions
-, mkGrafanaDashboardProvider
-, mkServiceAliases
-, resolveListenInterfaceAddresses
-, ...
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  mkFeatureOptions,
+  mkFirewall,
+  mkGrafanaDashboardProvider,
+  mkServiceAliases,
+  mkSharedIntegrationAssertions,
+  resolveListenInterfaceAddresses,
+  selectSharedIntegrationServices,
+  ...
 }:
 with lib;
 with types;
@@ -37,34 +41,65 @@ let
 
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenHttpPort}";
+  monitoringURL = internalURL;
   localURL = "http://127.0.0.1:${toString listenHttpPort}";
   vmalertLocalURL = "http://127.0.0.1:${toString vmalertHttpPort}";
   alertmanagerLocalURL = "http://127.0.0.1:${toString alertmanagerHttpPort}";
+  integrationServicesForScrapes =
+    config.homelab.integrations.services
+    // selectSharedIntegrationServices "victoriametrics" cfg.collectIntegrations;
+  integrationServicesForVmalert =
+    config.homelab.integrations.services
+    // selectSharedIntegrationServices "vmalert" cfg.collectIntegrations;
 
-  integrationServicesWithScrapes = lib.filterAttrs
-    (
-      _: service: service.victoriametrics != null
-    )
-    config.homelab.integrations.services;
+  integrationServicesWithScrapes = lib.filterAttrs (
+    _: service: (service.victoriametrics or null) != null
+  ) integrationServicesForScrapes;
 
-  integrationScrapeConfigs = lib.mapAttrsToList
-    (
-      serviceName: service:
-        {
-          job_name = serviceName;
-        }
-        // service.victoriametrics
-    )
-    integrationServicesWithScrapes;
+  rewriteStaticConfigTargets =
+    serviceName: staticConfig:
+    let
+      serviceOverrides = cfg.integrationTargetOverrides.${serviceName} or { };
+      component = staticConfig.labels.component or null;
+      targets =
+        if component != null && hasAttr component serviceOverrides then
+          serviceOverrides.${component}
+        else
+          serviceOverrides.default or null;
+    in
+    if targets == null then
+      staticConfig
+    else
+      staticConfig // { inherit targets; };
 
-  integrationServicesWithVmalertRules = lib.filterAttrs
-    (
-      _: service: service.vmalert != null
+  rewriteScrapeConfigTargets =
+    serviceName: scrapeConfig:
+    if hasAttr serviceName cfg.integrationTargetOverrides then
+      scrapeConfig
+      // {
+        static_configs = map (rewriteStaticConfigTargets serviceName) (scrapeConfig.static_configs or [ ]);
+      }
+    else
+      scrapeConfig;
+
+  integrationScrapeConfigs = lib.mapAttrsToList (
+    serviceName: service:
+    rewriteScrapeConfigTargets serviceName (
+      {
+        job_name = serviceName;
+      }
+      // service.victoriametrics
     )
-    config.homelab.integrations.services;
+  ) integrationServicesWithScrapes;
+
+  integrationServicesWithVmalertRules = lib.filterAttrs (
+    _: service: (service.vmalert or null) != null
+  ) integrationServicesForVmalert;
 
   integrationVmalertRuleGroups = lib.flatten (
-    lib.mapAttrsToList (_: service: service.vmalert.ruleGroups or [ ]) integrationServicesWithVmalertRules
+    lib.mapAttrsToList (
+      _: service: service.vmalert.ruleGroups or [ ]
+    ) integrationServicesWithVmalertRules
   );
 
   vmalertEnabled = integrationVmalertRuleGroups != [ ];
@@ -105,6 +140,16 @@ in
         '';
       };
 
+      integrationTargetOverrides = mkOption {
+        type = attrsOf (attrsOf (listOf str));
+        default = { };
+        description = ''
+          Target overrides for collected VictoriaMetrics integrations, keyed by
+          collected service name and component label. Use "default" when the
+          static config has no component label.
+        '';
+      };
+
       serviceDomain = mkOption {
         type = str;
         default = "${appName}.${config.homelab.domain}";
@@ -141,18 +186,25 @@ in
 
     # Only apply when enabled
     (lib.mkIf cfg.enable {
+      assertions =
+        mkSharedIntegrationAssertions appName
+          [
+            "victoriametrics"
+            "vmalert"
+          ]
+          cfg.collectIntegrations;
 
       homelab.features.${appName} = {
         homepage = {
           icon = appIcon;
           href = exposedURL;
           description = "${appDescription}  [${cfg.serviceDomain}]";
-          siteMonitor = internalURL;
+          siteMonitor = monitoringURL;
         };
 
         gatus = mkIf config.services.gatus.enable {
           name = appDisplayName;
-          url = internalURL;
+          url = monitoringURL;
           group = appCategory;
           type = "HTTP";
           interval = "5m";
@@ -226,7 +278,7 @@ in
         };
       };
 
-      networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [
+      networking.firewall = mkFirewall cfg [
         443
       ];
 
@@ -241,7 +293,8 @@ in
 
         extraOptions = [
           "-selfScrapeInterval=5s"
-        ] ++ lib.optional vmalertEnabled "-vmalert.proxyURL=${vmalertLocalURL}";
+        ]
+        ++ lib.optional vmalertEnabled "-vmalert.proxyURL=${vmalertLocalURL}";
 
       };
 
@@ -306,7 +359,8 @@ in
         "@service-${appName}-agent-stop" = "systemctl stop vmagent";
         "@service-${appName}-agent-restart" = "systemctl restart vmagent";
         "@service-${appName}-agent-status" = "systemctl status vmagent";
-        "@service-${appName}-agent-config" = "systemctl cat vmagent";
+        "@service-${appName}-agent-config" =
+          "cat $(systemctl cat vmagent | grep -oP \"promscrape.config=\\K[^']+\")";
         "@service-${appName}-alert-journal" = "journalctl -u vmalert-homelab";
         "@service-${appName}-alert-start" = "systemctl start vmalert-homelab";
         "@service-${appName}-alert-stop" = "systemctl stop vmalert-homelab";

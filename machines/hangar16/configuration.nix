@@ -13,6 +13,11 @@
 let
   # first time ssh
   serverSuffixIPv4 = "16";
+  lanAddress = "192.168.254.${serverSuffixIPv4}";
+  managementAddress = "192.168.240.${serverSuffixIPv4}";
+  infraAddress = "192.168.244.${serverSuffixIPv4}";
+  dmzAddress = "192.168.32.${serverSuffixIPv4}";
+  iotAddress = "192.168.40.${serverSuffixIPv4}";
   internetMachine = self.clan.inventory.instances.internet.roles.default.machines.hangar16;
   # Clan inventory may expose machine settings directly or through imported fragments.
   targetHost =
@@ -35,8 +40,37 @@ in
       hostname = "hangar16";
       description = "Virtualization server for the homelab";
       interface = config.homelab.vlans.lan.name;
-      address = "192.168.254.${serverSuffixIPv4}";
+      address = lanAddress;
       gateway = "192.168.254.254";
+      addresses = {
+        lan = {
+          interface = "br-lan";
+          address = lanAddress;
+          prefixLength = 24;
+        };
+        mgmt = {
+          interface = "br-mgmt";
+          address = managementAddress;
+          prefixLength = 24;
+        };
+        infra = {
+          interface = "br-infra";
+          address = infraAddress;
+          prefixLength = 24;
+        };
+        dmz = {
+          interface = "br-dmz";
+          address = dmzAddress;
+          prefixLength = 24;
+        };
+        iot = {
+          interface = "br-iot";
+          address = iotAddress;
+          prefixLength = 24;
+        };
+      };
+      defaultAddressRef = "lan";
+      managementAddressRef = "mgmt";
 
       nproc = 20;
     };
@@ -65,21 +99,25 @@ in
 
       homepage-dashboard.enable = true;
       homepage-dashboard.openFirewall = true;
+      homepage-dashboard.listenInterfaces = lib.mkForce [ "br-infra" ];
       homepage-dashboard.serviceDomain = "labrique-v2.${config.homelab.domain}";
       homepage-dashboard.registerScope = [ "private" ];
 
       gatus.enable = true;
       gatus.openFirewall = true;
+      gatus.listenInterfaces = lib.mkForce [ "br-infra" ];
       gatus.serviceDomain = "signalisations-v2.${config.homelab.domain}";
       gatus.registerScope = [ "private" ];
 
       grafana.enable = true;
       grafana.openFirewall = true;
+      grafana.listenInterfaces = lib.mkForce [ "br-infra" ];
       grafana.serviceDomain = "lampiotes-v2.${config.homelab.domain}";
       grafana.registerScope = [ "private" ];
 
       victoriametrics.enable = true;
       victoriametrics.openFirewall = true;
+      victoriametrics.listenInterfaces = lib.mkForce [ "br-infra" ];
       victoriametrics.serviceDomain = "sondes-v2.${config.homelab.domain}";
       victoriametrics.registerScope = [ "private" ];
 
@@ -149,10 +187,12 @@ in
       "interface-name:${config.homelab.vlans.lan.name}"
       "interface-name:vlan-${config.homelab.vlans.mgmt.name}"
       "interface-name:vlan-${config.homelab.vlans.dmz.name}"
+      "interface-name:vlan-${config.homelab.vlans.infra.name}"
       "interface-name:vlan-${config.homelab.vlans.iot.name}"
       "interface-name:br-lan"
       "interface-name:br-mgmt"
       "interface-name:br-dmz"
+      "interface-name:br-infra"
       "interface-name:br-iot"
     ];
 
@@ -174,6 +214,11 @@ in
         interface = config.homelab.host.interface;
       };
 
+      "vlan-${config.homelab.vlans.infra.name}" = {
+        id = config.homelab.vlans.infra.id;
+        interface = config.homelab.host.interface;
+      };
+
       # IPv6 hexa speak => data feed == fdca:5a00:da7a:feed/64
       "vlan-${config.homelab.vlans.iot.name}" = {
         id = config.homelab.vlans.iot.id;
@@ -185,6 +230,7 @@ in
       br-lan.interfaces = [ config.homelab.vlans.lan.name ];
       br-mgmt.interfaces = [ "vlan-${config.homelab.vlans.mgmt.name}" ];
       br-dmz.interfaces = [ "vlan-${config.homelab.vlans.dmz.name}" ];
+      br-infra.interfaces = [ "vlan-${config.homelab.vlans.infra.name}" ];
       br-iot.interfaces = [ "vlan-${config.homelab.vlans.iot.name}" ];
     };
 
@@ -192,28 +238,35 @@ in
       "${config.homelab.vlans.lan.name}" = { };
       "vlan-${config.homelab.vlans.mgmt.name}" = { };
       "vlan-${config.homelab.vlans.dmz.name}" = { };
+      "vlan-${config.homelab.vlans.infra.name}" = { };
       "vlan-${config.homelab.vlans.iot.name}" = { };
       br-lan.ipv4.addresses = [
         {
-          address = config.homelab.host.address;
+          address = lanAddress;
           prefixLength = 24;
         }
       ];
       br-mgmt.ipv4.addresses = [
         {
-          address = "192.168.240.${serverSuffixIPv4}";
+          address = managementAddress;
           prefixLength = 24;
         }
       ];
       br-dmz.ipv4.addresses = [
         {
-          address = "192.168.32.${serverSuffixIPv4}";
+          address = dmzAddress;
+          prefixLength = 24;
+        }
+      ];
+      br-infra.ipv4.addresses = [
+        {
+          address = infraAddress;
           prefixLength = 24;
         }
       ];
       br-iot.ipv4.addresses = [
         {
-          address = "192.168.40.${serverSuffixIPv4}";
+          address = iotAddress;
           prefixLength = 24;
         }
       ];

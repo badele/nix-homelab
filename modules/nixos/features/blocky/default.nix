@@ -48,6 +48,7 @@ let
   listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenHttpPort}";
+  monitoringURL = internalURL;
 in
 {
   ############################################################################
@@ -213,11 +214,11 @@ in
         homepage = {
           href = exposedURL;
           description = "${appDescription} [${cfg.serviceDomain}]";
-          siteMonitor = internalURL;
+          siteMonitor = monitoringURL;
         };
 
         gatus = {
-          url = internalURL;
+          url = monitoringURL;
           type = "HTTP";
           interval = "5m";
           conditions = [

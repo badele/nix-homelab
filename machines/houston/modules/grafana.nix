@@ -173,6 +173,7 @@ in
   # Reverse Proxy
   ############################################################################
   services.caddy.virtualHosts."${appDomain}" = {
+    listenAddresses = [ config.homelab.host.address ];
     logFormat = ''
       output file /var/log/caddy/public.log {
         mode 0644
@@ -185,8 +186,6 @@ in
     '';
   };
 
-  networking.firewall.allowedTCPPorts = [
-    443
-  ];
+  networking.firewall.interfaces.${config.homelab.host.interface}.allowedTCPPorts = [ 443 ];
 
 }

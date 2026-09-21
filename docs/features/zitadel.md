@@ -100,7 +100,7 @@ Create application password => https://myaccount.google.com/apppasswords
 - email address: `config.homelab.stmpAccountUsername`
 - sender name: `ma-cabane account notification`
 
-**Don't forget activate SMTP privider**
+**Do not forget to activate the SMTP provider**
 
 ### Configuration organization
 
@@ -111,7 +111,9 @@ Create application password => https://myaccount.google.com/apppasswords
 
 ### Create project
 
-Afin de pouvoir donner des droits finement à une application (authoriser l'authentification par zitadel), il faut créer un projet par application. Afin de povoir affecter les roles à l'application.
+To assign fine-grained permissions to an application and authorize
+authentication through ZITADEL, create one project per application. This allows
+roles to be attached to each application independently.
 
 Create `APPLICATIONNAME`
 
@@ -119,21 +121,33 @@ Create `APPLICATIONNAME`
 - enable `Check authorization on Authentication`
 - disable `Check for Project on Authentication`
 
-Pour chaque projet, ajouter les roles
+For each project, add the roles:
 
 - admin
 - user
 
-### Add authorisation
+### Add authorization
 
 On the project
 
 - select users
-- Selects roles
+- select roles
+
+### Supported applications
+
+The following feature applications are compatible with ZITADEL through
+OAuth2/OIDC. When a feature document exists, the application name links to it.
+
+| Application | Protocol | Documentation | Status |
+| ----------- | -------- | ------------- | ------ |
+| [Miniflux](./miniflux.md) | OIDC | ZITADEL example below and [Miniflux feature](./miniflux.md) | Configured with ZITADEL |
+| [Linkding](./linkding.md) | OIDC | ZITADEL example below and [Linkding feature](./linkding.md) | Configured with ZITADEL |
+| [NetBird](./netbird.md) | OIDC | [NetBird feature](./netbird.md) | Native ZITADEL setup documented |
+| [DokuWiki](./dokuwiki.md) | OAuth2/OIDC generic plugin | [DokuWiki feature](./dokuwiki.md) | Compatible through generic OAuth |
 
 ### Example with Miniflux
 
-**website informations**
+**Website information**
 
 - appDomain: `journaliste.ma-cabane.eu`
 
@@ -141,7 +155,7 @@ On the project
 
 1. Create application:
    - Type `WEB`
-   - Authentification `PKCE`
+   - Authentication `PKCE`
    - Redirect URIs:
      - `https://journaliste.ma-cabane.eu/oauth2/oidc/callback`
      - `https://journaliste.ma-cabane.eu/oauth2/oidc/redirect`
@@ -162,7 +176,7 @@ OAUTH2_USER_CREATION=1
 
 ### Example with linkding
 
-**website informations**
+**Website information**
 
 - appDomain: `bonnes-addresses.ma-cabane.eu`
 
@@ -170,7 +184,7 @@ OAUTH2_USER_CREATION=1
 
 1. Create application:
    - Type `WEB`
-   - Authentification `PKCE`
+   - Authentication `PKCE`
    - Redirect URIs:
      - `https://bonnes-adresses.ma-cabane.eu/oidc/callback`
    - Post Logout URIs:
@@ -196,7 +210,7 @@ OIDC_RP_SCOPES=openid email profile
 
 ### Example with grafana
 
-**website informations**
+**Website information**
 
 - appDomain: `lampiotes.ma-cabane.eu`
 
@@ -206,14 +220,14 @@ OIDC_RP_SCOPES=openid email profile
 
 1. Create application:
    - Type `WEB`
-   - Authentification `PKCE`
+   - Authentication `PKCE`
    - Redirect URIs:
      - `https://lampiotes.ma-cabane.eu/login/generic_oauth`
    - Post Logout URIs:
      - `https://lampiotes.ma-cabane.eu/login`
 2. Copy:
    - Client ID
-3. Creation action scripts `groupsClaim`
+3. Create the `groupsClaim` action script
 
    ```javascript
    function groupsClaim(ctx, api) {

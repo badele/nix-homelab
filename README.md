@@ -184,13 +184,19 @@ All Available homelab features :
       </a>
     </td>
     <td align="center" width="16%">
+      <a href="/docs/all-features.md#core-services" title="WireGuard-based private mesh network with access controls">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/netbird.png" width="48" height="48" alt="NetBird"/>
+        <br/>NetBird
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="16%">
       <a href="/docs/all-features.md#core-services" title="Generate a static HTML summary of your Nix homelab instance">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homebox.png" width="48" height="48" alt="Nix homelab summary"/>
         <br/>Nix homelab summary
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#core-services" title="Implementation of the SSH protocol">
         <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/openssh.webp" width="48" height="48" alt="OpenSSH"/>
@@ -221,14 +227,14 @@ All Available homelab features :
         <br/>Sample Podman application
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Personal, minimalist, super-fast, database free, bookmarking service - community repo">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/shaarli.png" width="48" height="48" alt="Shaarli"/>
         <br/>Shaarli
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#deprecated-services" title="Private certificate authority (X.509 & SSH) & ACME server for secure automated certificate management, so you can use TLS everywhere & SSO for SSH">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/step-ca.png" width="48" height="48" alt="Step CA"/>
@@ -259,21 +265,20 @@ All Available homelab features :
         <br/>Victoriametrics
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Pastebin service">
         <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/wastebin.webp" width="48" height="48" alt="Wastebin"/>
         <br/>Wastebin
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#core-services" title="Identity and access management platform">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/zitadel.png" width="48" height="48" alt="ZITADEL"/>
         <br/>ZITADEL
       </a>
     </td>
-    <td width="16%"></td>
     <td width="16%"></td>
     <td width="16%"></td>
     <td width="16%"></td>
