@@ -148,5 +148,9 @@ in
 
     up # UI interactively pipe
     wget # HTTP client
+
+    # AI
+    claude-code
+    codex
   ];
 }
