@@ -234,6 +234,61 @@ in
   };
 
   boot.kernelModules = [ "tun" ];
+  boot.blacklistedKernelModules = [
+    "nouveau"
+    "bbswitch"
+  ];
+  boot.kernelParams = [
+    "i915.force_probe=3e9b"
+    "mem_sleep_default=deep"
+    "acpi_osi=!"
+    ''acpi_osi="Windows 2015"''
+    "acpi_backlight=vendor"
+  ];
+
+  # X11 driver
+  services.xserver.videoDrivers = [ "nvidia" ];
+
+  # NVIDIA Container Toolkit — allows Docker containers to access the GPU
+  hardware.nvidia-container-toolkit.enable = true;
+
+  # ---------------------------------------------------------------------------
+  # VERIFICATION — run these commands on badxps after nixos-rebuild switch
+  #
+  # Host system :
+  #   lsmod | grep -E 'nvidia|nouveau'                  # nvidia loaded, nouveau absent
+  #   nvidia-smi                                         # should show GTX 1050 Ti
+  #   glxinfo | grep "OpenGL renderer"                   # should show Intel (default renderer)
+  #   nvidia-offload glxinfo | grep "OpenGL renderer"    # should show NVIDIA
+  #   nvidia-offload glxgears                            # should run on NVIDIA GPU
+  #
+  # Docker containers :
+  #   docker run --rm --gpus all nvidia/cuda:12.2.0-base-ubuntu22.04 nvidia-smi
+  #   docker run --rm --gpus all --device /dev/dri nvidia/cuda:12.2.0-base-ubuntu22.04 nvidia-smi
+  # ---------------------------------------------------------------------------
+
+  # NVIDIA Prime Offload (Intel drives screen, NVIDIA on-demand via `nvidia-offload <cmd>`)
+  hardware.nvidia = {
+    open = false; # Proprietary driver required (open modules need Turing+)
+    modesetting.enable = true;
+    powerManagement.enable = false;
+    powerManagement.finegrained = false;
+    nvidiaSettings = true;
+    package = config.boot.kernelPackages.nvidiaPackages.legacy_580; # GTX 1050 Ti (Pascal) dropped from stable (595+)
+    prime = {
+      offload = {
+        enable = true;
+        enableOffloadCmd = true;
+      };
+      intelBusId = "PCI:0:2:0";
+      nvidiaBusId = "PCI:1:0:0";
+    };
+  };
+
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [ vpl-gpu-rt ];
+  };
 
   # This is required for qemu to be able to use the bridge networking on user-defined bridges.
   environment.etc."qemu/bridge.conf".text = ''
