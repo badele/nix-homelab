@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   self,
   ...
@@ -304,6 +305,12 @@ in
     owner = "root";
     group = "root";
     source = "${pkgs.qemu}/libexec/qemu-bridge-helper";
+  };
+
+  homelab.features.netdata = {
+    enable = true;
+    registerScope = [ "private" ]; # Register this service in the private DNS zone of the homelab
+    serviceDomain = "netdata.badxps.${config.homelab.domain}";
   };
 
   # Backup existing files with a timestamp to avoid backup name collisions.

@@ -833,7 +833,8 @@ in
       victorialogs.appId = 230;
       vector.appId = 240;
       netbird.appId = 250; # Use port range
-      #      next_free_.appId = 400;
+      netdata.appId = 400;
+      #      next_free_.appId = 410;
     };
 
     # Compute the serviceAddressRegistry based on the portRegistry and VLAN IDs

@@ -192,6 +192,12 @@ All Available homelab features :
   </tr>
   <tr>
     <td align="center" width="16%">
+      <a href="/docs/all-features.md#system-health" title="Real-time performance and health monitoring">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/netdata.png" width="48" height="48" alt="Netdata"/>
+        <br/>Netdata
+      </a>
+    </td>
+    <td align="center" width="16%">
       <a href="/docs/all-features.md#core-services" title="Generate a static HTML summary of your Nix homelab instance">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homebox.png" width="48" height="48" alt="Nix homelab summary"/>
         <br/>Nix homelab summary
@@ -221,14 +227,14 @@ All Available homelab features :
         <br/>Radio
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Sample podman application with hardening options.">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/podman.png" width="48" height="48" alt="Sample Podman application"/>
         <br/>Sample Podman application
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Personal, minimalist, super-fast, database free, bookmarking service - community repo">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/shaarli.png" width="48" height="48" alt="Shaarli"/>
@@ -259,14 +265,14 @@ All Available homelab features :
         <br/>VictoriaLogs
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#system-health" title="Fast, cost-effective and scalable time series database, long-term remote storage for Prometheus">
         <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/victoriametrics.png" width="48" height="48" alt="Victoriametrics"/>
         <br/>Victoriametrics
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="16%">
       <a href="/docs/all-features.md#essentials" title="Pastebin service">
         <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/wastebin.webp" width="48" height="48" alt="Wastebin"/>
@@ -279,7 +285,6 @@ All Available homelab features :
         <br/>ZITADEL
       </a>
     </td>
-    <td width="16%"></td>
     <td width="16%"></td>
     <td width="16%"></td>
     <td width="16%"></td>

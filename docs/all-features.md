@@ -311,6 +311,17 @@ just doc-update
     </tr>
     <tr>
       <td align="center">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/netdata.png" width="48" height="48" alt="Netdata"/>
+      </td>
+      <td>
+        <a href="https://www.netdata.cloud">Netdata</a>
+      </td>
+      <td>nixos</td>
+      <td>2.10.3</td>
+      <td>Real-time performance and health monitoring</td>
+    </tr>
+    <tr>
+      <td align="center">
         <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/vector.webp" width="48" height="48" alt="Vector"/>
       </td>
       <td>
