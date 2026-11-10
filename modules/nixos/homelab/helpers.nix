@@ -323,6 +323,7 @@ let
         environment = {
           HOME = homeDir;
           XDG_RUNTIME_DIR = runtimeDir;
+          PATH = lib.mkForce "/run/wrappers/bin:/run/current-system/sw/bin";
         } // environment;
         serviceConfig = {
           User = username;

@@ -4,7 +4,7 @@
   pkgs,
   mkFeatureOptions,
   mkFirewallInterfaces,
-  mkServiceAliases,
+  mkRootlessPodmanAliases,
   resolveListenInterfaceAddresses,
   ...
 }:
@@ -12,6 +12,8 @@ with lib;
 with types;
 
 let
+  mkRootlessPodmanService = (import ../../homelab/helpers.nix { inherit lib; }).mkRootlessPodmanService;
+
   appName = "it-tools";
   appCategory = "Essentials";
   appDisplayName = "it-tools";
@@ -52,136 +54,121 @@ in
   ############################################################################
   # Configuration
   ############################################################################
-  config =
-    with lib;
-    mkMerge [
-      {
-        homelab.features.${appName} = {
-          appInfos = {
-            category = appCategory;
-            displayName = appDisplayName;
-            icon = appIcon;
-            platform = appPlatform;
-            description = appDescription;
-            url = appUrl;
-            pinnedVersion = appPinnedVersion;
-            serviceURL = exposedURL;
-          };
-
+  config = mkMerge [
+    {
+      homelab.features.${appName} = {
+        appInfos = {
+          category = appCategory;
+          displayName = appDisplayName;
+          icon = appIcon;
+          platform = appPlatform;
+          description = appDescription;
+          url = appUrl;
+          pinnedVersion = appPinnedVersion;
+          serviceURL = exposedURL;
         };
-      }
+      };
+    }
 
-      # Only apply when enabled
-      (mkIf cfg.enable {
+    (mkIf cfg.enable {
 
-        #######################################################################
-        # Monitoring
-        #######################################################################
-        homelab.features.${appName} = {
-          homepage = mkIf config.services.homepage-dashboard.enable {
-            icon = "sh-${appIcon}";
-            href = exposedURL;
-            description = "${appDescription} [${cfg.serviceDomain}]";
-            siteMonitor = monitoringURL;
-          };
-
-          gatus = mkIf config.services.gatus.enable {
-            name = appDisplayName;
-            url = monitoringURL;
-            group = appCategory;
-            type = "HTTP";
-            interval = "5m";
-            conditions = [
-              "[STATUS] == 200"
-              # ''[BODY] == pat(*"version": "${appPinnedVersion}"*)''
-            ];
-            ui.hide-hostname = true;
-          };
-
+      #######################################################################
+      # Monitoring
+      #######################################################################
+      homelab.features.${appName} = {
+        homepage = mkIf config.services.homepage-dashboard.enable {
+          icon = "sh-${appIcon}";
+          href = exposedURL;
+          description = "${appDescription} [${cfg.serviceDomain}]";
+          siteMonitor = monitoringURL;
         };
 
-        #######################################################################
-        # Service
-        #######################################################################
-
-        # Open firewall ports if openFirewall is enabled
-        networking.firewall.interfaces = mkFirewallInterfaces cfg [
-          443
-        ];
-
-        # Add domain alias
-        homelab.alias = [ "${cfg.serviceDomain}" ];
-
-        # Add service alias
-        programs.bash.shellAliases = (mkServiceAliases appName) // {
-        };
-
-        virtualisation.oci-containers.containers.${appName} = {
-          image = "${appImage}:${appPinnedVersion}";
-          autoStart = true;
-          ports = [ "127.0.0.1:${toString listenHttpPort}:8080" ];
-
-          environment = {
-            TZ = config.time.timeZone;
-          };
-
-          extraOptions = [
-            "--cap-drop=ALL"
-
-            # for nginx
-            "--cap-add=CHOWN"
-            "--cap-add=SETUID"
-            "--cap-add=SETGID"
-            "--cap-add=NET_BIND_SERVICE"
-            "--subgidname=root"
-            "--subuidname=root"
+        gatus = mkIf config.services.gatus.enable {
+          name = appDisplayName;
+          url = monitoringURL;
+          group = appCategory;
+          type = "HTTP";
+          interval = "5m";
+          conditions = [
+            "[STATUS] == 200"
           ];
+          ui.hide-hostname = true;
         };
+      };
 
-        services.caddy.virtualHosts = mkIf cfg.openFirewall {
-          "${cfg.serviceDomain}" = {
-            listenAddresses = resolveListenInterfaceAddresses appName cfg.listenInterfaces;
-            logFormat = ''
-              output file /var/log/caddy/public.log {
-                mode 0644
-              }
-              format json
-            '';
+      #######################################################################
+      # Service
+      #######################################################################
+      networking.firewall.interfaces = mkFirewallInterfaces cfg [
+        443
+      ];
 
-            extraConfig = ''
-              reverse_proxy 127.0.0.1:${toString listenHttpPort}
+      homelab.alias = [ "${cfg.serviceDomain}" ];
 
-              header {
-                # Force HTTPS for one year.
-                Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+      programs.bash.shellAliases = mkRootlessPodmanAliases appName;
 
-                # XSS and clickjacking protection.
-                X-Frame-Options "SAMEORIGIN"
+      services.caddy.virtualHosts = mkIf cfg.openFirewall {
+        "${cfg.serviceDomain}" = {
+          listenAddresses = resolveListenInterfaceAddresses appName cfg.listenInterfaces;
+          logFormat = ''
+            output file /var/log/caddy/public.log {
+              mode 0644
+            }
+            format json
+          '';
 
-                # Prevent execution of untrusted MIME types.
-                X-Content-Type-Options "nosniff"
+          extraConfig = ''
+            reverse_proxy 127.0.0.1:${toString listenHttpPort}
 
-                # Send only the origin as referrer for cross-origin requests.
-                Referrer-Policy "strict-origin-when-cross-origin"
+            header {
+              # Force HTTPS for one year.
+              Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 
-                # Disable unused browser features for better privacy.
-                Permissions-Policy "geolocation=(), microphone=(), camera=()"
+              # XSS and clickjacking protection.
+              X-Frame-Options "SAMEORIGIN"
 
-                # Allow only specific sources to load content.
-                Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:; media-src 'self' blob:  https:; connect-src 'self' https:;"
+              # Prevent execution of untrusted MIME types.
+              X-Content-Type-Options "nosniff"
 
-                # Modern cross-origin isolation headers.
-                Cross-Origin-Opener-Policy "same-origin"
-                Cross-Origin-Resource-Policy "same-origin"
-                Cross-Origin-Embedder-Policy "require-corp"
+              # Send only the origin as referrer for cross-origin requests.
+              Referrer-Policy "strict-origin-when-cross-origin"
 
-                # Cross-domain policy.
-                X-Permitted-Cross-Domain-Policies "none"
-              }
-            '';
-          };
+              # Disable unused browser features for better privacy.
+              Permissions-Policy "geolocation=(), microphone=(), camera=()"
+
+              # Allow only specific sources to load content.
+              Content-Security-Policy "default-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:; media-src 'self' blob:  https:; connect-src 'self' https:;";
+
+              # Modern cross-origin isolation headers.
+              Cross-Origin-Opener-Policy "same-origin"
+              Cross-Origin-Resource-Policy "same-origin"
+              Cross-Origin-Embedder-Policy "require-corp"
+
+              # Cross-domain policy.
+              X-Permitted-Cross-Domain-Policies "none"
+            }
+          '';
         };
+      };
 
-      })
-    ];
+    })
+
+    (mkIf cfg.enable (mkRootlessPodmanService {
+      inherit pkgs;
+      name = appName;
+      image = "${appImage}:${appPinnedVersion}";
+      subUidStart = 100000 + config.homelab.portRegistry.${appName}.appId * 65536;
+      ports = [ "127.0.0.1:${toString listenHttpPort}:8080" ];
+      environment = {
+        TZ = config.time.timeZone;
+      };
+      extraOptions = [
+        "--cap-drop=ALL"
+        "--cap-add=CHOWN"
+        "--cap-add=SETUID"
+        "--cap-add=SETGID"
+        "--cap-add=NET_BIND_SERVICE"
+      ];
+    }))
+  ];
 }
