@@ -19,6 +19,8 @@ let
     mkPodmanAliases
     mkServiceAliases
     mkGrafanaDashboardProvider
+    mkRootlessPodmanService
+    mkRootlessPodmanAliases
     ;
   mkFirewallInterfaces = helpers.mkFirewallInterfaces;
 
@@ -876,6 +878,8 @@ in
     _module.args.mkGrafanaDashboardProvider = mkGrafanaDashboardProvider;
     _module.args.mkFirewall = mkFirewall;
     _module.args.mkFirewallInterfaces = mkFirewallInterfaces;
+    _module.args.mkRootlessPodmanService = mkRootlessPodmanService;
+    _module.args.mkRootlessPodmanAliases = mkRootlessPodmanAliases;
     _module.args.resolveListenInterfaceAddresses = resolveFeatureListenAddresses;
     _module.args.resolveIntegrationListenAddresses = resolveIntegrationListenAddresses;
     _module.args.resolveSharedHostAddress = resolveSharedHostAddress;
