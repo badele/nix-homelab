@@ -35,6 +35,13 @@ in
 
   security.sudo.execWheelOnly = lib.mkForce false;
 
+  # Hide processes from other users — members of "proc" group retain full visibility
+  boot.specialFileSystems."/proc" = {
+    fsType = "proc";
+    options = [ "nosuid" "noexec" "nodev" "hidepid=invisible" "gid=proc" ];
+  };
+  users.groups.proc = { };
+
   # For user namespace remapping for docker/podman rootfull containers
   users = {
     users.root = {

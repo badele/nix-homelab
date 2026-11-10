@@ -262,6 +262,95 @@ let
       })
     );
 
+  # Create a rootless podman service running under a dedicated system user "pod-<name>".
+  # The user is invisible in GDM (isSystemUser), has its own UID namespace, and is
+  # fully isolated from other services. Root can still manage it via machinectl.
+  # pkgs must be passed explicitly by the calling module.
+  mkRootlessPodmanService =
+    {
+      pkgs,
+      name,
+      image,
+      subUidStart,
+      volumes ? [ ],
+      ports ? [ ],
+      environment ? { },
+      environmentFiles ? [ ],
+      credentials ? [ ],
+      preStartChown ? [ ],
+      extraOptions ? [ ],
+      extraServiceConfig ? { },
+    }:
+    let
+      username = "pod-${name}";
+      homeDir = "/var/lib/containers/${username}";
+      runtimeDir = "/run/${username}";
+
+      startScript = pkgs.writeShellScript "pod-${name}-start" ''
+        exec ${pkgs.podman}/bin/podman run --rm \
+          --name=${name} \
+          ${lib.concatStringsSep " \\\n          " (
+            map (v: "--volume=${lib.escapeShellArg v}") volumes
+            ++ map (p: "--publish=${lib.escapeShellArg p}") ports
+            ++ map (e: "--env-file=${lib.escapeShellArg e}") environmentFiles
+            ++ map (c: "--env-file=\"$CREDENTIALS_DIRECTORY/${c.id}\"") credentials
+            ++ [ "--cgroup-manager=cgroupfs" ]
+            ++ extraOptions
+            ++ [ image ]
+          )}
+      '';
+    in
+    {
+      users.users.${username} = {
+        isSystemUser = true;
+        group = username;
+        home = homeDir;
+        createHome = false;
+        shell = "${pkgs.bash}/bin/bash";
+        subUidRanges = [ { startUid = subUidStart; count = 65536; } ];
+        subGidRanges = [ { startGid = subUidStart; count = 65536; } ];
+      };
+      users.groups.${username} = { };
+
+      systemd.tmpfiles.rules = [
+        "d ${homeDir} 0750 ${username} ${username} -"
+        "d ${runtimeDir} 0700 ${username} ${username} -"
+      ];
+
+      systemd.services."pod-${name}" = {
+        wantedBy = [ "multi-user.target" ];
+        after = [ "network-online.target" ];
+        environment = {
+          HOME = homeDir;
+          XDG_RUNTIME_DIR = runtimeDir;
+          PATH = lib.mkForce "/run/wrappers/bin:/run/current-system/sw/bin";
+        } // environment;
+        serviceConfig = {
+          User = username;
+          Group = username;
+          ProcSubset = "pid";
+          LoadCredential = map (c: "${c.id}:${c.path}") credentials;
+          ExecStartPre = map (p: "+${pkgs.coreutils}/bin/chown -R ${username}:${username} ${p}") preStartChown;
+          ExecStart = "${startScript}";
+          ExecStop = "${pkgs.podman}/bin/podman stop ${name}";
+          ExecStopPost = "${pkgs.podman}/bin/podman rm -f ${name}";
+          Restart = "always";
+          RestartSec = "5s";
+        } // extraServiceConfig;
+      };
+    };
+
+  mkRootlessPodmanAliases = appName: {
+    "@service-${appName}-journal" = "journalctl -u pod-${appName}";
+    "@service-${appName}-start" = "systemctl start pod-${appName}";
+    "@service-${appName}-stop" = "systemctl stop pod-${appName}";
+    "@service-${appName}-restart" = "systemctl restart pod-${appName}";
+    "@service-${appName}-status" = "systemctl status pod-${appName}";
+    "@service-${appName}-shell" = "sudo -H -u pod-${appName} bash -c 'export XDG_RUNTIME_DIR=/run/pod-${appName}; cd /var/lib/containers/pod-${appName}; exec bash'";
+    "@service-${appName}-pod-shell" = "sudo -H -u pod-${appName} bash -c 'cd /var/lib/containers/pod-${appName} && XDG_RUNTIME_DIR=/run/pod-${appName} podman --cgroup-manager=cgroupfs exec -it ${appName} bash'";
+    "@service-${appName}-ps" = "sudo -H -u pod-${appName} bash -c 'cd /var/lib/containers/pod-${appName} && XDG_RUNTIME_DIR=/run/pod-${appName} podman --cgroup-manager=cgroupfs ps'";
+  };
+
 in
 {
   inherit
@@ -270,5 +359,7 @@ in
     mkServiceAliases
     mkGrafanaDashboardProvider
     mkFirewallInterfaces
+    mkRootlessPodmanService
+    mkRootlessPodmanAliases
     ;
 }

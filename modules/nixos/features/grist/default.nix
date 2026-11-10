@@ -4,7 +4,7 @@
   pkgs,
   mkFeatureOptions,
   mkFirewallInterfaces,
-  mkPodmanAliases,
+  mkRootlessPodmanAliases,
   resolveListenInterfaceAddresses,
   ...
 }:
@@ -12,6 +12,7 @@ with lib;
 with types;
 
 let
+  mkRootlessPodmanService = (import ../../homelab/helpers.nix { inherit lib; }).mkRootlessPodmanService;
   authdomain = "douane.${config.homelab.domain}";
 
   appName = "grist";
@@ -29,12 +30,6 @@ let
 
   # Get port from central registry
   listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
-
-  containerUID = 1001; # www-data
-  containerGID = 1001; # www-data
-
-  hostUid = (builtins.elemAt config.users.users.root.subUidRanges 0).startUid + containerUID;
-  hostGid = (builtins.elemAt config.users.users.root.subGidRanges 0).startGid + containerGID;
 
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenHttpPort}";
@@ -81,11 +76,9 @@ in
           pinnedVersion = appPinnedVersion;
           serviceURL = exposedURL;
         };
-
       };
     }
 
-    # Only apply when enabled
     (mkIf cfg.enable {
 
       #######################################################################
@@ -107,11 +100,9 @@ in
           interval = "5m";
           conditions = [
             "[STATUS] == 200"
-            # ''[BODY] == pat(*"version": "${appPinnedVersion}"*)''
           ];
           ui.hide-hostname = true;
         };
-
       };
 
       #######################################################################
@@ -134,57 +125,18 @@ in
       };
 
       systemd.tmpfiles.rules = [
-        # Application data
-        "d ${appPath} 0750 root root -"
-        "d ${appPath}/persist 0750 ${toString hostUid} ${toString hostGid} -"
-
-        # Backup directory
+        "d ${appPath} 0751 root root -"
+        "d ${appPath}/persist 0750 pod-${appName} pod-${appName} -"
         "d /var/backup/${appName} 0750 root root -"
       ];
 
-      # Open firewall ports if openFirewall is enabled
       networking.firewall.interfaces = mkFirewallInterfaces cfg [
         443
       ];
 
-      # Add domain alias
       homelab.alias = [ "${cfg.serviceDomain}" ];
 
-      # Add service alias
-      programs.bash.shellAliases = (mkPodmanAliases appName) // {
-      };
-
-      virtualisation.oci-containers.containers.${appName} = {
-        image = "${appImage}:${appPinnedVersion}";
-        autoStart = true;
-        ports = [ "127.0.0.1:${toString listenHttpPort}:8484" ];
-
-        volumes = [
-          "${appPath}/persist:/persist"
-        ];
-
-        environmentFiles = [
-          config.clan.core.vars.generators.${appName}.files."envfile".path
-        ];
-
-        environment = {
-          GRIST_DEFAULT_EMAIL = config.homelab.features.${appName}.defaultEmailDomain;
-          APP_HOME_URL = exposedURL;
-        };
-
-        extraOptions = [
-          "--cap-drop=ALL"
-
-          # for nginx
-          "--cap-add=CHOWN"
-          "--cap-add=SETUID"
-          "--cap-add=SETGID"
-          "--cap-add=DAC_OVERRIDE"
-          "--cap-add=NET_BIND_SERVICE"
-          "--subgidname=root"
-          "--subuidname=root"
-        ];
-      };
+      programs.bash.shellAliases = mkRootlessPodmanAliases appName;
 
       services.caddy.virtualHosts = mkIf cfg.openFirewall {
         "${cfg.serviceDomain}" = {
@@ -244,11 +196,11 @@ in
             ]
           }
 
-          service_status=$(systemctl is-active ${appName})
+          service_status=$(systemctl is-active pod-${appName})
           if [ "$service_status" = "active" ]; then
-            systemctl stop ${appName}
+            systemctl stop pod-${appName}
             rsync -avH --delete --numeric-ids "${appPath}/" /var/backup/${appName}/
-            systemctl start ${appName}
+            systemctl start pod-${appName}
           fi
         '';
         postRestoreScript = ''
@@ -260,10 +212,10 @@ in
             ]
           }
 
-          service_status="$(systemctl is-active ${appName})"
+          service_status="$(systemctl is-active pod-${appName})"
 
           if [ "$service_status" = "active" ]; then
-            systemctl stop ${appName}
+            systemctl stop pod-${appName}
 
             # Backup current grist data locally
             DATE=$(date +%Y%m%d-%H%M%S)
@@ -272,11 +224,37 @@ in
             # Restore from borgbackup
             rsync -avH --delete --numeric-ids /var/backup/${appName}/ "${appPath}/"
 
-            systemctl start ${appName}
+            systemctl start pod-${appName}
           fi
         '';
       };
 
     })
+
+    # Rootless podman service under pod-grist system user
+    (mkIf cfg.enable (mkRootlessPodmanService {
+      inherit pkgs;
+      name = appName;
+      image = "${appImage}:${appPinnedVersion}";
+      subUidStart = 100000 + config.homelab.portRegistry.${appName}.appId * 65536;
+      ports = [ "127.0.0.1:${toString listenHttpPort}:8484" ];
+      volumes = [ "${appPath}/persist:/persist" ];
+      credentials = [
+        { id = "envfile"; path = config.clan.core.vars.generators.${appName}.files."envfile".path; }
+      ];
+      preStartChown = [ "${appPath}/persist" ];
+      environment = {
+        GRIST_DEFAULT_EMAIL = config.homelab.features.${appName}.defaultEmailDomain;
+        APP_HOME_URL = exposedURL;
+      };
+      extraOptions = [
+        "--cap-drop=ALL"
+        "--cap-add=CHOWN"
+        "--cap-add=SETUID"
+        "--cap-add=SETGID"
+        "--cap-add=DAC_OVERRIDE"
+        "--cap-add=NET_BIND_SERVICE"
+      ];
+    }))
   ];
 }
