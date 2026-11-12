@@ -1,5 +1,6 @@
 {
   pkgs,
+  pkgs-master ? pkgs,
   ...
 }:
 {
@@ -48,6 +49,8 @@
   xdg.configFile."gtk-4.0/settings.ini".force = true;
 
   home.packages = with pkgs; [
-    hl-log-viewer # JSON and logfmt viewer
+    blender
+
+    pkgs-master.anki
   ];
 }

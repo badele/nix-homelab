@@ -316,12 +316,11 @@ in
               class = "SDR++.*";
             }
             # Graphics/Video
-            {
-              class = "geeqie";
-            }
+            { class = "geeqie"; }
             # { class = "openshoot"; }
             { class = "openshoot-qt"; }
             { class = "gimp-2.10"; }
+            { class = "Anki"; }
           ];
         };
 

@@ -124,7 +124,14 @@ in
         users-root = {
           module.name = "users";
 
-          roles.default.tags = [ "nixos" ];
+          roles.default.machines = {
+            "badxps" = { };
+            "airlock" = { };
+            "hangar16" = { };
+            "hangar16-vm" = { };
+            "cab1e" = { };
+            "constellation" = { };
+          };
           roles.default.settings = {
             user = "root";
             prompt = false; # Set to true if you want to be prompted
@@ -135,11 +142,14 @@ in
         user-badele = {
           module.name = "users";
 
-          roles.default.tags = {
-            "desktop" = { };
+          roles.default.machines = {
+            "badxps" = { };
+            "airlock" = { };
+            "hangar16" = { };
+            "hangar16-vm" = { };
+            "cab1e" = { };
+            "constellation" = { };
           };
-
-          roles.default.tags."all" = { };
           roles.default.settings = {
             user = "badele";
             share = true;
@@ -229,14 +239,27 @@ in
 
         # Fallback: Secure connections via Tor
         tor = {
-          roles.server.tags.nixos = {
+          roles.server.machines = {
+            "badxps" = { };
+            "airlock" = { };
+            "hangar16" = { };
+            "hangar16-vm" = { };
+            "cab1e" = { };
+            "constellation" = { };
           };
         };
 
         sshd-basic = {
           module.name = "sshd";
 
-          roles.server.tags.all = { };
+          roles.server.machines = {
+            "badxps" = { };
+            "airlock" = { };
+            "hangar16" = { };
+            "hangar16-vm" = { };
+            "cab1e" = { };
+            "constellation" = { };
+          };
           roles.server.settings = {
             authorizedKeys = {
               "admin-key" = adminKey;
@@ -246,7 +269,14 @@ in
 
         base = {
           module.name = "importer";
-          roles.default.tags = [ "all" ];
+          roles.default.machines = {
+            "badxps" = { };
+            "airlock" = { };
+            "hangar16" = { };
+            "hangar16-vm" = { };
+            "cab1e" = { };
+            "constellation" = { };
+          };
           roles.default.extraModules = [
             inputs.home-manager.nixosModules.home-manager
             ../modules/nixos/base.nix
@@ -255,7 +285,10 @@ in
 
         desktop = {
           module.name = "importer";
-          roles.default.tags = [ "desktop" ];
+          roles.default.machines = {
+            "badxps" = { };
+            "airlock" = { };
+          };
           roles.default.extraModules = [
             ../modules/nixos/desktop/apps/base.nix
           ];
@@ -288,8 +321,8 @@ in
         printer-home = {
           module.name = "importer";
 
-          roles.default.tags = {
-            "printer" = { };
+          roles.default.machines = {
+            "airlock" = { };
           };
 
           roles.default.extraModules = [
@@ -300,8 +333,8 @@ in
         audio = {
           module.name = "importer";
 
-          roles.default.tags = {
-            "audio" = { };
+          roles.default.machines = {
+            "airlock" = { };
           };
 
           roles.default.extraModules = [
@@ -314,7 +347,10 @@ in
           module.name = "wifi";
 
           roles.default = {
-            tags = [ "wifi-home" ];
+            machines = {
+              "badxps" = { };
+              "airlock" = { };
+            };
             settings.networks = {
               home22 = { };
               home55 = { };
@@ -346,7 +382,14 @@ in
         # Docs: https://docs.clan.lol/reference/clanServices/emergency-access/
         # Set recovery password for emergency access to machine
         emergency-access = {
-          roles.default.tags."all" = { };
+          roles.default.machines = {
+            "badxps" = { };
+            "airlock" = { };
+            "hangar16" = { };
+            "hangar16-vm" = { };
+            "cab1e" = { };
+            "constellation" = { };
+          };
         };
 
         # TODO: add postbackup to write to /var/logs/telegraf/borgbackup metric
