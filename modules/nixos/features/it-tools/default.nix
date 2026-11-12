@@ -159,7 +159,7 @@ in
       image = "${appImage}:${appPinnedVersion}";
       subUidStart = 100000 + config.homelab.portRegistry.${appName}.appId * 65536;
       ports = [ "127.0.0.1:${toString listenHttpPort}:8080" ];
-      environment = {
+      environment = lib.optionalAttrs (config.time.timeZone != null) {
         TZ = config.time.timeZone;
       };
       extraOptions = [

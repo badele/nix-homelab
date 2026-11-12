@@ -283,7 +283,7 @@ let
     }:
     let
       username = "pod-${name}";
-      homeDir = "/var/lib/containers/${username}";
+      homeDir = "/var/lib/pod-containers/${username}";
       runtimeDir = "/run/${username}";
 
       startScript = pkgs.writeShellScript "pod-${name}-start" ''
@@ -313,6 +313,7 @@ let
       users.groups.${username} = { };
 
       systemd.tmpfiles.rules = [
+        "d /var/lib/pod-containers 0755 root root -"
         "d ${homeDir} 0750 ${username} ${username} -"
         "d ${runtimeDir} 0700 ${username} ${username} -"
       ];
@@ -328,7 +329,6 @@ let
         serviceConfig = {
           User = username;
           Group = username;
-          ProcSubset = "pid";
           LoadCredential = map (c: "${c.id}:${c.path}") credentials;
           ExecStartPre = map (p: "+${pkgs.coreutils}/bin/chown -R ${username}:${username} ${p}") preStartChown;
           ExecStart = "${startScript}";
@@ -346,9 +346,9 @@ let
     "@service-${appName}-stop" = "systemctl stop pod-${appName}";
     "@service-${appName}-restart" = "systemctl restart pod-${appName}";
     "@service-${appName}-status" = "systemctl status pod-${appName}";
-    "@service-${appName}-shell" = "sudo -H -u pod-${appName} bash -c 'export XDG_RUNTIME_DIR=/run/pod-${appName}; cd /var/lib/containers/pod-${appName}; exec bash'";
-    "@service-${appName}-pod-shell" = "sudo -H -u pod-${appName} bash -c 'cd /var/lib/containers/pod-${appName} && XDG_RUNTIME_DIR=/run/pod-${appName} podman --cgroup-manager=cgroupfs exec -it ${appName} bash'";
-    "@service-${appName}-ps" = "sudo -H -u pod-${appName} bash -c 'cd /var/lib/containers/pod-${appName} && XDG_RUNTIME_DIR=/run/pod-${appName} podman --cgroup-manager=cgroupfs ps'";
+    "@service-${appName}-shell" = "sudo -H -u pod-${appName} bash -c 'export XDG_RUNTIME_DIR=/run/pod-${appName}; cd /var/lib/pod-containers/pod-${appName}; exec bash'";
+    "@service-${appName}-pod-shell" = "sudo -H -u pod-${appName} bash -c 'cd /var/lib/pod-containers/pod-${appName} && XDG_RUNTIME_DIR=/run/pod-${appName} podman --cgroup-manager=cgroupfs exec -it ${appName} bash'";
+    "@service-${appName}-ps" = "sudo -H -u pod-${appName} bash -c 'cd /var/lib/pod-containers/pod-${appName} && XDG_RUNTIME_DIR=/run/pod-${appName} podman --cgroup-manager=cgroupfs ps'";
   };
 
 in

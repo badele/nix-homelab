@@ -4,7 +4,7 @@
   pkgs,
   mkFeatureOptions,
   mkFirewallInterfaces,
-  mkPodmanAliases,
+  mkRootlessPodmanAliases,
   resolveListenInterfaceAddresses,
   ...
 }:
@@ -12,6 +12,8 @@ with lib;
 with types;
 
 let
+  mkRootlessPodmanService = (import ../../homelab/helpers.nix { inherit lib; }).mkRootlessPodmanService;
+
   appName = "dokuwiki";
   appCategory = "Essentials";
   appDisplayName = "DokuWiki";
@@ -20,19 +22,13 @@ let
   appDescription = "Simple to use and highly versatile wiki software";
   appUrl = "https://www.dokuwiki.org/";
   appPinnedVersion = "version-2025-05-14b";
-  appImage = "linuxserver/dokuwiki";
+  appImage = "docker.io/linuxserver/dokuwiki";
   appPath = "${config.homelab.podmanBaseStorage}/${appName}";
 
   cfg = config.homelab.features.${appName};
 
   # Get port from central registry
   listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
-
-  containerUID = 1000;
-  containerGID = 1000;
-
-  hostUid = (builtins.elemAt config.users.users.root.subUidRanges 0).startUid + containerUID;
-  hostGid = (builtins.elemAt config.users.users.root.subGidRanges 0).startGid + containerGID;
 
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenHttpPort}";
@@ -132,8 +128,8 @@ in
       # Create application directories
       systemd.tmpfiles.rules = [
         # Application data
-        "d ${appPath} 0750 root root -"
-        "d ${appPath}/config 0750 ${toString hostUid} ${toString hostGid} -"
+        "d ${appPath} 0751 root root -"
+        "d ${appPath}/config 0750 pod-${appName} pod-${appName} -"
 
         # Backup directory
         "d /var/backup/${appName} 0750 root root -"
@@ -146,29 +142,7 @@ in
       homelab.alias = [ "${cfg.serviceDomain}" ];
 
       # Add service alias
-      programs.bash.shellAliases = (mkPodmanAliases appName) // { };
-
-      # DokuWiki container
-      virtualisation.oci-containers.containers.${appName} = {
-        image = "${appImage}:${appPinnedVersion}";
-        autoStart = true;
-        ports = [ "127.0.0.1:${toString listenHttpPort}:80" ];
-
-        volumes = [
-          "${appPath}/config:/config"
-        ];
-
-        environment = {
-          PUID = toString containerUID;
-          PGID = toString containerGID;
-        };
-
-        extraOptions = [
-          "--add-host=${cfg.authDomain}:host-gateway"
-          "--subgidname=root"
-          "--subuidname=root"
-        ];
-      };
+      programs.bash.shellAliases = mkRootlessPodmanAliases appName;
 
       # Caddy configuration
       services.caddy.virtualHosts = mkIf cfg.openFirewall {
@@ -247,11 +221,11 @@ in
             ]
           }
 
-          service_status=$(systemctl is-active ${appName})
+          service_status=$(systemctl is-active pod-${appName})
           if [ "$service_status" = "active" ]; then
-            systemctl stop ${appName}
+            systemctl stop pod-${appName}
             rsync -avH --delete --numeric-ids "${appPath}/" /var/backup/${appName}/
-            systemctl start ${appName}
+            systemctl start pod-${appName}
           fi
         '';
 
@@ -265,10 +239,10 @@ in
             ]
           }
 
-          service_status="$(systemctl is-active ${appName})"
+          service_status="$(systemctl is-active pod-${appName})"
 
           if [ "$service_status" = "active" ]; then
-            systemctl stop ${appName}
+            systemctl stop pod-${appName}
 
             # Backup current dokuwiki data locally
             DATE=$(date +%Y%m%d-%H%M%S)
@@ -277,11 +251,39 @@ in
             # Restore from borgbackup
             rsync -avH --delete --numeric-ids /var/backup/${appName}/ "${appPath}/"
 
-            systemctl start ${appName}
+            systemctl start pod-${appName}
           fi
         '';
       };
 
     })
+
+    # Rootless podman service under pod-dokuwiki system user
+    (mkIf cfg.enable (mkRootlessPodmanService {
+      inherit pkgs;
+      name = appName;
+      image = "${appImage}:${appPinnedVersion}";
+      subUidStart = 100000 + config.homelab.portRegistry.${appName}.appId * 65536;
+      ports = [ "127.0.0.1:${toString listenHttpPort}:80" ];
+      volumes = [ "${appPath}/config:/config" ];
+      preStartChown = [ "${appPath}/config" ];
+      environment = {
+        # In rootless mode, UID 0 inside container = pod-dokuwiki on host
+        PUID = "0";
+        PGID = "0";
+      } // lib.optionalAttrs (config.time.timeZone != null) {
+        TZ = config.time.timeZone;
+      };
+      extraOptions = [
+        "--add-host=${cfg.authDomain}:host-gateway"
+        "--cap-drop=ALL"
+        "--cap-add=CHOWN"
+        "--cap-add=SETUID"
+        "--cap-add=SETGID"
+        "--cap-add=DAC_OVERRIDE"
+        "--cap-add=NET_BIND_SERVICE"
+        "--cap-add=FOWNER"
+      ];
+    }))
   ];
 }

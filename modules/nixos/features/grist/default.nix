@@ -22,7 +22,7 @@ let
   appPlatform = "podman";
   appDescription = "Next generation of spreadsheets";
   appUrl = "https://github.com/sissbruecker/grist";
-  appImage = "gristlabs/grist";
+  appImage = "docker.io/gristlabs/grist";
   appPinnedVersion = "1.7.7";
   appPath = "${config.homelab.podmanBaseStorage}/${appName}";
 
