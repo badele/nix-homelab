@@ -126,6 +126,11 @@ in
       dokuwiki.listenInterfaces = [ config.homelab.host.interface ];
       dokuwiki.serviceDomain = "encyclopedie.${config.homelab.domain}";
 
+      shaarli.enable = true;
+      shaarli.openFirewall = true;
+      shaarli.listenInterfaces = [ config.homelab.host.interface ];
+      shaarli.serviceDomain = "megaphone.${config.homelab.domain}";
+
       zitadel.enable = true;
       zitadel.openFirewall = true;
       zitadel.listenInterfaces = [ config.homelab.host.interface ];

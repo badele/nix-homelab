@@ -266,7 +266,7 @@ in
       subUidStart = 100000 + config.homelab.portRegistry.${appName}.appId * 65536;
       ports = [ "127.0.0.1:${toString listenHttpPort}:80" ];
       volumes = [ "${appPath}/config:/config" ];
-      preStartChown = [ "${appPath}/config" ];
+
       environment = {
         # In rootless mode, UID 0 inside container = pod-dokuwiki on host
         PUID = "0";

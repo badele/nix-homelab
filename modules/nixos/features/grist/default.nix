@@ -242,7 +242,7 @@ in
       credentials = [
         { id = "envfile"; path = config.clan.core.vars.generators.${appName}.files."envfile".path; }
       ];
-      preStartChown = [ "${appPath}/persist" ];
+
       environment = {
         GRIST_DEFAULT_EMAIL = config.homelab.features.${appName}.defaultEmailDomain;
         APP_HOME_URL = exposedURL;

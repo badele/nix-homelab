@@ -292,6 +292,7 @@ let
           ${lib.concatStringsSep " \\\n          " (
             map (v: "--volume=${lib.escapeShellArg v}") volumes
             ++ map (p: "--publish=${lib.escapeShellArg p}") ports
+            ++ map (kv: "--env=${lib.escapeShellArg "${kv.name}=${kv.value}"}") (lib.attrsToList environment)
             ++ map (e: "--env-file=${lib.escapeShellArg e}") environmentFiles
             ++ map (c: "--env-file=\"$CREDENTIALS_DIRECTORY/${c.id}\"") credentials
             ++ [ "--cgroup-manager=cgroupfs" ]
@@ -325,7 +326,7 @@ let
           HOME = homeDir;
           XDG_RUNTIME_DIR = runtimeDir;
           PATH = lib.mkForce "/run/wrappers/bin:/run/current-system/sw/bin";
-        } // environment;
+        };
         serviceConfig = {
           User = username;
           Group = username;
