@@ -92,6 +92,10 @@ in
 
       programs.bash.shellAliases = mkServiceAliases appName;
 
+      systemd.tmpfiles.rules = [
+        "d /etc/netdata/conf.d/scripts.d 0755 netdata netdata -"
+      ];
+
       services.netdata = {
         enable = true;
 

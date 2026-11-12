@@ -2,6 +2,7 @@
 
   config,
   pkgs,
+  pkgs-master ? pkgs,
   ...
 }:
 let
@@ -97,7 +98,7 @@ in
       enable = true;
       enableZshIntegration = false; # # OMZ
       defaultCommand = "fd --type file --follow --hidden --exclude .git";
-      historyWidgetOptions = [
+      historyWidget.options = [
         "--sort"
         "--exact"
       ];
@@ -151,6 +152,6 @@ in
 
     # AI
     claude-code
-    codex
+    pkgs-master.codex
   ];
 }

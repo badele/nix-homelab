@@ -7,6 +7,11 @@
   inputs = {
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixpkgs-master is used to temporarily pull packages that are broken in
+    # nixos-unstable but already fixed in master (fix merged, not yet propagated).
+    # Once the fix reaches nixos-unstable, revert the affected packages to pkgs.*
+    # and remove the nixpkgs-master input.
+    nixpkgs-master.url = "github:nixos/nixpkgs/master";
     # nixpkgs.url = "github:nixos/nixpkgs/23.05";
     # nixpkgs.url = "path:/home/badele/ghq/github.com/badele/fork-nixpkgs";
     # nixpkgs.url = "github:badele/fork-nixpkgs/unstable-fix-smokeping-symbolic-links";
@@ -32,10 +37,14 @@
 
     # hardware.url = "git+file:///home/badele/ghq/github.com/badele/fork-nixos-hardware";
     # hardware.url = "github:badele/fork-nixos-hardware/xps-15-9530";
-    hardware.url = "github:NixOS/nixos-hardware/master";
+    hardware = {
+      url = "github:NixOS/nixos-hardware/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     impermanence = {
       url = "github:nix-community/impermanence";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nur = {
@@ -87,7 +96,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    gosect.url = "github:badele/gosect";
+    gosect = {
+      url = "github:badele/gosect";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     radio = {
       url = "github:pinpox/radio";

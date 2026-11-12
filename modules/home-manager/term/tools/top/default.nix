@@ -9,5 +9,5 @@
     procps
   ];
 
-  xdg.configFile."procps/toprc".text = (builtins.readFile ./toprc);
+  xdg.configFile."procps/toprc".source = ./toprc;
 }

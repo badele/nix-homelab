@@ -30,6 +30,14 @@ in
     ../../modules/home-manager/modules/userconf.nix
   ];
 
+  # TODO: remove once anki fix (PR #584713) reaches nixos-unstable
+  home-manager.extraSpecialArgs = {
+    pkgs-master = import self.inputs.nixpkgs-master {
+      inherit (pkgs) system;
+      config.allowUnfree = true;
+    };
+  };
+
   homelab = {
     nameServer = targetIP;
     host = {

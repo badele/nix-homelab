@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  pkgs-master ? pkgs,
   ...
 }:
 {
@@ -30,7 +31,7 @@
     wireshark # Network protocol analyzer
 
     # Proxy
-    mitmproxy # Intercept HTTP traffic
+    pkgs-master.mitmproxy
     charles # Web debugging proxy application
     requestly # mockup and API tool
 

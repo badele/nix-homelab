@@ -8,11 +8,11 @@
   programs.rofi = {
     enable = true;
     # theme = "solarized";
-    extraConfig = {
+    settings = {
       modi = "drun";
       font = "Source Code Pro 18";
-      show-icon = true;
-      icon-theme = "Papirus";
+      "show-icons" = true;
+      "icon-theme" = "Papirus";
     };
 
   };

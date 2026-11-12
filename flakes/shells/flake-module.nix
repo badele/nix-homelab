@@ -42,7 +42,7 @@
           nix
           plantuml
           pre-commit
-          termshot
+          inputs'.nixpkgs-master.legacyPackages.termshot
 
           # Testing nix-homelab
           qemu
@@ -67,7 +67,7 @@
 
           # Wireguard
           wireguard-tools
-          openssl_3.bin
+          openssl.bin
 
           # Openstack
           openstackclient

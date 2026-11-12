@@ -20,7 +20,6 @@
       ]
     ))
     biber
-    pplatex
     pstree
     texlab
     xdotool

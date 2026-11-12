@@ -16,7 +16,5 @@
     lurk # strace alternative with better UI and more features
     ltrace # Trace library calls
     strace # Trace system calls and signals
-
-    hl-log-viewer # JSON and logfmt viewer
   ];
 }
