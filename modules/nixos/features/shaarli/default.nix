@@ -4,7 +4,7 @@
   pkgs,
   mkFeatureOptions,
   mkFirewallInterfaces,
-  mkPodmanAliases,
+  mkRootlessPodmanAliases,
   resolveListenInterfaceAddresses,
   ...
 }:
@@ -12,6 +12,9 @@ with lib;
 with types;
 
 let
+  mkRootlessPodmanService =
+    (import ../../homelab/helpers.nix { inherit lib; }).mkRootlessPodmanService;
+
   appName = "shaarli";
   appCategory = "Essentials";
   appDisplayName = "Shaarli";
@@ -19,20 +22,31 @@ let
   appPlatform = "podman";
   appDescription = "Personal, minimalist, super-fast, database free, bookmarking service - community repo";
   appUrl = "https://github.com/shaarli/Shaarli";
-  appImage = "shaarli/shaarli";
+  appImage = "docker.io/shaarli/shaarli";
   appPinnedVersion = "v0.12.2";
   appPath = "${config.homelab.podmanBaseStorage}/${appName}";
 
   cfg = config.homelab.features.${appName};
 
-  # Get port from central registry
   listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
 
-  containerUID = 100; # nginx user (on container)
-  containerGID = 101; # nginx group (on container)
-
-  hostUid = (builtins.elemAt config.users.users.root.subUidRanges 0).startUid + containerUID;
-  hostGid = (builtins.elemAt config.users.users.root.subGidRanges 0).startGid + containerGID;
+  # shaarli runs as nginx (uid 100, gid 101) inside the container.
+  # Remap uid 100 and gid 101 → 0 (pod-shaarli on host).
+  containerUID = 100;
+  containerGID = 101;
+  uidmapOptions =
+    let
+      aboveUid = 65536 - containerUID - 1;
+      aboveGid = 65536 - containerGID - 1;
+    in
+    [
+      "--uidmap=0:1:${toString containerUID}"
+      "--uidmap=${toString containerUID}:0:1"
+      "--uidmap=${toString (containerUID + 1)}:${toString (containerUID + 1)}:${toString aboveUid}"
+      "--gidmap=0:1:${toString containerGID}"
+      "--gidmap=${toString containerGID}:0:1"
+      "--gidmap=${toString (containerGID + 1)}:${toString (containerGID + 1)}:${toString aboveGid}"
+    ];
 
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenHttpPort}";
@@ -54,6 +68,8 @@ in
 
       openFirewall = mkEnableOption "Open firewall ports (incoming)";
       openTailscale = mkEnableOption "Open firewall ports for tailscale (incoming)";
+      podTraceSyscalls = mkEnableOption "Wrap podman run with strace (startup+runtime, no --uidmap; output: /tmp/shaarli-strace.log on service stop)";
+      systemdTraceSyscalls = mkEnableOption "Attach strace to running podman via systemd ExecStartPost as root (runtime only, all images; output: /tmp/shaarli-strace.log on service stop)";
     };
   };
 
@@ -73,11 +89,9 @@ in
           pinnedVersion = appPinnedVersion;
           serviceURL = exposedURL;
         };
-
       };
     }
 
-    # Only apply when enabled
     (mkIf cfg.enable {
 
       #######################################################################
@@ -99,61 +113,26 @@ in
           interval = "5m";
           conditions = [
             "[STATUS] == 200"
-            # ''[BODY] == pat(*"version": "${appPinnedVersion}"*)''
           ];
           ui.hide-hostname = true;
         };
-
       };
 
       #######################################################################
       # Service
       #######################################################################
-
       systemd.tmpfiles.rules = [
-        # Application data
-        "d ${appPath}/data 0750 ${toString hostUid} ${toString hostGid} -"
-        "d ${appPath}/cache 0750 ${toString hostUid} ${toString hostGid} -"
-
-        # Backup directory
+        "d ${appPath} 0751 root root -"
+        "d ${appPath}/data 0750 pod-${appName} pod-${appName} -"
+        "d ${appPath}/cache 0750 pod-${appName} pod-${appName} -"
         "d /var/backup/${appName} 0750 root root -"
       ];
 
-      # Open firewall ports if openFirewall is enabled
-      networking.firewall.interfaces = mkFirewallInterfaces cfg [
-        443
-      ];
+      networking.firewall.interfaces = mkFirewallInterfaces cfg [ 443 ];
 
-      # Add domain alias
       homelab.alias = [ "${cfg.serviceDomain}" ];
 
-      # Add service alias
-      programs.bash.shellAliases = (mkPodmanAliases appName) // {
-      };
-
-      virtualisation.oci-containers.containers.${appName} = {
-        image = "${appImage}:${appPinnedVersion}";
-        autoStart = true;
-        ports = [ "127.0.0.1:${toString listenHttpPort}:80" ];
-
-        volumes = [
-          "${appPath}/data:/var/www/shaarli/data"
-          "${appPath}/cache:/var/www/shaarli/cache"
-        ];
-
-        extraOptions = [
-          "--cap-drop=ALL"
-
-          # for nginx
-          "--cap-add=CHOWN"
-          "--cap-add=SETUID"
-          "--cap-add=SETGID"
-          "--cap-add=DAC_OVERRIDE"
-          "--cap-add=NET_BIND_SERVICE"
-          "--subgidname=root"
-          "--subuidname=root"
-        ];
-      };
+      programs.bash.shellAliases = mkRootlessPodmanAliases appName;
 
       services.caddy.virtualHosts = mkIf cfg.openFirewall {
         "${cfg.serviceDomain}" = {
@@ -214,11 +193,11 @@ in
             ]
           }
 
-          service_status=$(systemctl is-active shaarli)
+          service_status=$(systemctl is-active pod-${appName})
           if [ "$service_status" = "active" ]; then
-            systemctl stop shaarli
+            systemctl stop pod-${appName}
             rsync -avH --delete --numeric-ids "${appPath}/" /var/backup/shaarli/
-            systemctl start shaarli
+            systemctl start pod-${appName}
           fi
         '';
         postRestoreScript = ''
@@ -230,23 +209,69 @@ in
             ]
           }
 
-          service_status="$(systemctl is-active shaarli)"
+          service_status="$(systemctl is-active pod-${appName})"
 
           if [ "$service_status" = "active" ]; then
-            systemctl stop shaarli
+            systemctl stop pod-${appName}
 
-            # Backup current shaarli data locally
             DATE=$(date +%Y%m%d-%H%M%S)
             cp -rp "${appPath}" "${appPath}.$DATE.bak"
 
-            # Restore from borgbackup
             rsync -avH --delete --numeric-ids /var/backup/shaarli/ "${appPath}/"
 
-            systemctl start shaarli
+            systemctl start pod-${appName}
           fi
         '';
       };
 
     })
+
+    (mkIf cfg.enable (mkRootlessPodmanService {
+      inherit pkgs;
+      name = appName;
+      podTraceSyscalls = cfg.podTraceSyscalls;
+      systemdTraceSyscalls = cfg.systemdTraceSyscalls;
+      image = "${appImage}:${appPinnedVersion}";
+      subUidStart = 100000 + config.homelab.portRegistry.${appName}.appId * 65536;
+      ports = [ "127.0.0.1:${toString listenHttpPort}:80" ];
+      volumes = [
+        "${appPath}/data:/var/www/shaarli/data"
+        "${appPath}/cache:/var/www/shaarli/cache"
+      ];
+
+      environment = lib.optionalAttrs (config.time.timeZone != null) {
+        TZ = config.time.timeZone;
+      };
+      extraOptions = uidmapOptions ++ [
+        "--cap-drop=ALL"
+        "--cap-add=CHOWN"
+        "--cap-add=SETUID"
+        "--cap-add=SETGID"
+        "--cap-add=DAC_OVERRIDE"
+        "--cap-add=NET_BIND_SERVICE"
+      ];
+      extraServiceConfig = {
+        RemoveIPC = true;
+        LockPersonality = true;
+        RestrictRealtime = true;
+        ProtectClock = true;
+        RestrictSUIDSGID = true;
+        SystemCallArchitectures = "native";
+        UMask = "0077";
+        RestrictAddressFamilies = "AF_UNIX AF_INET AF_INET6 AF_NETLINK";
+        CapabilityBoundingSet = "~CAP_SYS_MODULE CAP_SYS_PACCT CAP_SYS_BOOT CAP_SYS_TTY_CONFIG CAP_SYS_RAWIO CAP_SYS_PTRACE CAP_SYS_NICE CAP_SYS_RESOURCE CAP_SYS_CHROOT CAP_BLOCK_SUSPEND CAP_LEASE CAP_LINUX_IMMUTABLE CAP_IPC_LOCK CAP_BPF CAP_MAC_ADMIN CAP_MAC_OVERRIDE CAP_AUDIT_WRITE CAP_AUDIT_CONTROL CAP_AUDIT_READ CAP_SYSLOG CAP_NET_ADMIN CAP_NET_BROADCAST CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_KILL CAP_MKNOD CAP_CHOWN CAP_FSETID CAP_SETFCAP CAP_DAC_READ_SEARCH CAP_DAC_OVERRIDE CAP_FOWNER CAP_IPC_OWNER";
+        SystemCallFilter = "~@reboot @swap @obsolete @cpu-emulation @debug @raw-io @module @clock";
+        MemoryDenyWriteExecute = true;
+        ProtectSystem = "strict";
+        ReadWritePaths = [
+          "/run/pod-shaarli"
+          "/var/lib/pod-containers/pod-shaarli"
+          appPath
+        ];
+        ProtectHome = true;
+        PrivateTmp = true;
+        ProtectProc = "invisible";
+      };
+    }))
   ];
 }

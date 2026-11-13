@@ -245,7 +245,6 @@ in
       it-tools.listenInterfaces = lib.mkForce [
         "br-infra"
       ];
-
       victoriametrics.enable = true;
       victoriametrics.openFirewall = true;
       victoriametrics.serviceDomain = "sondes.${config.homelab.domain}";

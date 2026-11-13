@@ -4,7 +4,7 @@
   pkgs,
   mkFeatureOptions,
   mkFirewallInterfaces,
-  mkPodmanAliases,
+  mkRootlessPodmanAliases,
   resolveListenInterfaceAddresses,
   ...
 }:
@@ -12,6 +12,9 @@ with lib;
 with types;
 
 let
+  mkRootlessPodmanService =
+    (import ../../homelab/helpers.nix { inherit lib; }).mkRootlessPodmanService;
+
   appName = "dokuwiki";
   appCategory = "Essentials";
   appDisplayName = "DokuWiki";
@@ -20,19 +23,13 @@ let
   appDescription = "Simple to use and highly versatile wiki software";
   appUrl = "https://www.dokuwiki.org/";
   appPinnedVersion = "version-2025-05-14b";
-  appImage = "linuxserver/dokuwiki";
+  appImage = "docker.io/linuxserver/dokuwiki";
   appPath = "${config.homelab.podmanBaseStorage}/${appName}";
 
   cfg = config.homelab.features.${appName};
 
   # Get port from central registry
   listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
-
-  containerUID = 1000;
-  containerGID = 1000;
-
-  hostUid = (builtins.elemAt config.users.users.root.subUidRanges 0).startUid + containerUID;
-  hostGid = (builtins.elemAt config.users.users.root.subGidRanges 0).startGid + containerGID;
 
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenHttpPort}";
@@ -60,6 +57,8 @@ in
 
       openFirewall = mkEnableOption "Open firewall ports (incoming)";
       openTailscale = mkEnableOption "Open firewall ports for tailscale (incoming)";
+      podTraceSyscalls = mkEnableOption "Wrap podman run with strace (startup+runtime, no --uidmap; output: /tmp/dokuwiki-strace.log on service stop)";
+      systemdTraceSyscalls = mkEnableOption "Attach strace to running podman via systemd ExecStartPost as root (runtime only, all images; output: /tmp/dokuwiki-strace.log on service stop)";
     };
   };
 
@@ -132,8 +131,8 @@ in
       # Create application directories
       systemd.tmpfiles.rules = [
         # Application data
-        "d ${appPath} 0750 root root -"
-        "d ${appPath}/config 0750 ${toString hostUid} ${toString hostGid} -"
+        "d ${appPath} 0751 root root -"
+        "d ${appPath}/config 0750 pod-${appName} pod-${appName} -"
 
         # Backup directory
         "d /var/backup/${appName} 0750 root root -"
@@ -146,29 +145,7 @@ in
       homelab.alias = [ "${cfg.serviceDomain}" ];
 
       # Add service alias
-      programs.bash.shellAliases = (mkPodmanAliases appName) // { };
-
-      # DokuWiki container
-      virtualisation.oci-containers.containers.${appName} = {
-        image = "${appImage}:${appPinnedVersion}";
-        autoStart = true;
-        ports = [ "127.0.0.1:${toString listenHttpPort}:80" ];
-
-        volumes = [
-          "${appPath}/config:/config"
-        ];
-
-        environment = {
-          PUID = toString containerUID;
-          PGID = toString containerGID;
-        };
-
-        extraOptions = [
-          "--add-host=${cfg.authDomain}:host-gateway"
-          "--subgidname=root"
-          "--subuidname=root"
-        ];
-      };
+      programs.bash.shellAliases = mkRootlessPodmanAliases appName;
 
       # Caddy configuration
       services.caddy.virtualHosts = mkIf cfg.openFirewall {
@@ -247,11 +224,11 @@ in
             ]
           }
 
-          service_status=$(systemctl is-active ${appName})
+          service_status=$(systemctl is-active pod-${appName})
           if [ "$service_status" = "active" ]; then
-            systemctl stop ${appName}
+            systemctl stop pod-${appName}
             rsync -avH --delete --numeric-ids "${appPath}/" /var/backup/${appName}/
-            systemctl start ${appName}
+            systemctl start pod-${appName}
           fi
         '';
 
@@ -265,10 +242,10 @@ in
             ]
           }
 
-          service_status="$(systemctl is-active ${appName})"
+          service_status="$(systemctl is-active pod-${appName})"
 
           if [ "$service_status" = "active" ]; then
-            systemctl stop ${appName}
+            systemctl stop pod-${appName}
 
             # Backup current dokuwiki data locally
             DATE=$(date +%Y%m%d-%H%M%S)
@@ -277,11 +254,81 @@ in
             # Restore from borgbackup
             rsync -avH --delete --numeric-ids /var/backup/${appName}/ "${appPath}/"
 
-            systemctl start ${appName}
+            systemctl start pod-${appName}
           fi
         '';
       };
 
     })
+
+    # Rootless podman service under pod-dokuwiki system user
+    (mkIf cfg.enable (
+      let
+        # linuxserver.io runs as abc (uid 1000, gid 1000).
+        # PHP-FPM refuses uid 0, so we can't use PUID=0.
+        # Remap uid/gid 1000 → 0 (pod-dokuwiki on host).
+        containerUID = 1000;
+        containerGID = 1000;
+        uidmapOptions =
+          let
+            above = 65536 - containerUID - 1;
+          in
+          [
+            "--uidmap=0:1:${toString containerUID}"
+            "--uidmap=${toString containerUID}:0:1"
+            "--uidmap=${toString (containerUID + 1)}:${toString (containerUID + 1)}:${toString above}"
+            "--gidmap=0:1:${toString containerGID}"
+            "--gidmap=${toString containerGID}:0:1"
+            "--gidmap=${toString (containerGID + 1)}:${toString (containerGID + 1)}:${toString above}"
+          ];
+      in
+      mkRootlessPodmanService {
+        inherit pkgs;
+        name = appName;
+        podTraceSyscalls = cfg.podTraceSyscalls;
+        systemdTraceSyscalls = cfg.systemdTraceSyscalls;
+        image = "${appImage}:${appPinnedVersion}";
+        subUidStart = 100000 + config.homelab.portRegistry.${appName}.appId * 65536;
+        ports = [ "127.0.0.1:${toString listenHttpPort}:80" ];
+        volumes = [ "${appPath}/config:/config" ];
+
+        environment = {
+          PUID = "1000";
+          PGID = "1000";
+        }
+        // lib.optionalAttrs (config.time.timeZone != null) {
+          TZ = config.time.timeZone;
+        };
+        extraOptions = uidmapOptions ++ [
+          "--add-host=${cfg.authDomain}:host-gateway"
+          "--cap-drop=ALL"
+          "--cap-add=CHOWN"
+          "--cap-add=SETUID"
+          "--cap-add=SETGID"
+          "--cap-add=DAC_OVERRIDE"
+          "--cap-add=NET_BIND_SERVICE"
+          "--cap-add=FOWNER"
+        ];
+        extraServiceConfig = {
+          RemoveIPC = true;
+          LockPersonality = true;
+          RestrictRealtime = true;
+          ProtectClock = true;
+          UMask = "0077";
+          RestrictAddressFamilies = "AF_UNIX AF_INET AF_INET6 AF_NETLINK";
+          CapabilityBoundingSet = "~CAP_SYS_MODULE CAP_SYS_PACCT CAP_SYS_BOOT CAP_SYS_TTY_CONFIG CAP_SYS_RAWIO CAP_SYS_PTRACE CAP_SYS_NICE CAP_SYS_RESOURCE CAP_SYS_CHROOT CAP_BLOCK_SUSPEND CAP_LEASE CAP_LINUX_IMMUTABLE CAP_IPC_LOCK CAP_BPF CAP_MAC_ADMIN CAP_MAC_OVERRIDE CAP_AUDIT_WRITE CAP_AUDIT_CONTROL CAP_AUDIT_READ CAP_SYSLOG CAP_NET_ADMIN CAP_NET_BROADCAST CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_KILL CAP_MKNOD CAP_CHOWN CAP_FSETID CAP_SETFCAP CAP_DAC_READ_SEARCH CAP_DAC_OVERRIDE CAP_FOWNER CAP_IPC_OWNER";
+          SystemCallFilter = "~@reboot @swap @obsolete @cpu-emulation @debug @raw-io @module @clock";
+          ProtectSystem = "strict";
+          ReadWritePaths = [
+            "/run/pod-dokuwiki"
+            "/var/lib/pod-containers/pod-dokuwiki"
+            appPath
+          ];
+          ProtectHome = true;
+          PrivateTmp = true;
+          ProtectProc = "invisible";
+        };
+      }
+    ))
   ];
 }

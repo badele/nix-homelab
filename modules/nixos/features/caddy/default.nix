@@ -136,7 +136,7 @@ in
           environmentFile = config.clan.core.vars.generators.${envGeneratorName}.files.envfile.path;
           package = pkgs.caddy.withPlugins {
             plugins = [ "github.com/caddy-dns/hetzner/v2@v2.0.0" ];
-            hash = "sha256-awdrDYpwyAW+OR+U4bOlulHZ0gc12zNRYUg2UtxOPGc=";
+            hash = "sha256-9GL/usK5BXTlWXr+BMJpHqC1iota/A4lW2HILoqU8Hw=";
           };
           globalConfig = ''
             cert_issuer acme {

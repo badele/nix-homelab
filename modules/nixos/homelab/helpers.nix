@@ -280,18 +280,41 @@ let
       preStartChown ? [ ],
       extraOptions ? [ ],
       extraServiceConfig ? { },
+      # Wrap podman run with strace (startup + runtime). Drops all hardening.
+      # Incompatible with --uidmap: strace strips setuid from newuidmap → use systemdTraceSyscalls instead.
+      # Usage: systemctl stop pod-<name> → cat /tmp/<name>-strace.log
+      podTraceSyscalls ? false,
+      # Attach strace to the running podman process via systemd ExecStartPost as root (runtime only).
+      # Works with --uidmap: newuidmap runs before strace attaches.
+      # Usage: start service, wait ~1 min, systemctl stop pod-<name> → cat /tmp/<name>-strace.log
+      systemdTraceSyscalls ? false,
     }:
     let
       username = "pod-${name}";
-      homeDir = "/var/lib/containers/${username}";
+      homeDir = "/var/lib/pod-containers/${username}";
       runtimeDir = "/run/${username}";
 
+      runner = if podTraceSyscalls
+        then "${pkgs.strace}/bin/strace -f -c -o /tmp/${name}-strace.log ${pkgs.podman}/bin/podman"
+        else "${pkgs.podman}/bin/podman";
+
+      # Drop all hardening when tracing so the syscall log reflects only what
+      # podman/crun/the container actually need.
+      # Also required for podTraceSyscalls: strace needs ptrace() blocked by @debug.
+      effectiveServiceConfig = if (podTraceSyscalls || systemdTraceSyscalls) then {} else extraServiceConfig;
+
+      straceAttachScript = pkgs.writeShellScript "strace-attach-${name}" ''
+        ${pkgs.strace}/bin/strace -f -c -o /tmp/${name}-strace.log -p $MAINPID &
+        echo $! > /tmp/${name}-strace.pid
+      '';
+
       startScript = pkgs.writeShellScript "pod-${name}-start" ''
-        exec ${pkgs.podman}/bin/podman run --rm \
+        exec ${runner} run --rm \
           --name=${name} \
           ${lib.concatStringsSep " \\\n          " (
             map (v: "--volume=${lib.escapeShellArg v}") volumes
             ++ map (p: "--publish=${lib.escapeShellArg p}") ports
+            ++ map (kv: "--env=${lib.escapeShellArg "${kv.name}=${kv.value}"}") (lib.attrsToList environment)
             ++ map (e: "--env-file=${lib.escapeShellArg e}") environmentFiles
             ++ map (c: "--env-file=\"$CREDENTIALS_DIRECTORY/${c.id}\"") credentials
             ++ [ "--cgroup-manager=cgroupfs" ]
@@ -313,6 +336,7 @@ let
       users.groups.${username} = { };
 
       systemd.tmpfiles.rules = [
+        "d /var/lib/pod-containers 0755 root root -"
         "d ${homeDir} 0750 ${username} ${username} -"
         "d ${runtimeDir} 0700 ${username} ${username} -"
       ];
@@ -324,11 +348,10 @@ let
           HOME = homeDir;
           XDG_RUNTIME_DIR = runtimeDir;
           PATH = lib.mkForce "/run/wrappers/bin:/run/current-system/sw/bin";
-        } // environment;
+        };
         serviceConfig = {
           User = username;
           Group = username;
-          ProcSubset = "pid";
           LoadCredential = map (c: "${c.id}:${c.path}") credentials;
           ExecStartPre = map (p: "+${pkgs.coreutils}/bin/chown -R ${username}:${username} ${p}") preStartChown;
           ExecStart = "${startScript}";
@@ -336,7 +359,11 @@ let
           ExecStopPost = "${pkgs.podman}/bin/podman rm -f ${name}";
           Restart = "always";
           RestartSec = "5s";
-        } // extraServiceConfig;
+        } // effectiveServiceConfig
+        // lib.optionalAttrs systemdTraceSyscalls {
+          # Run as root (+) so strace can attach to podman without setuid issues.
+          ExecStartPost = "+${straceAttachScript}";
+        };
       };
     };
 
@@ -346,9 +373,9 @@ let
     "@service-${appName}-stop" = "systemctl stop pod-${appName}";
     "@service-${appName}-restart" = "systemctl restart pod-${appName}";
     "@service-${appName}-status" = "systemctl status pod-${appName}";
-    "@service-${appName}-shell" = "sudo -H -u pod-${appName} bash -c 'export XDG_RUNTIME_DIR=/run/pod-${appName}; cd /var/lib/containers/pod-${appName}; exec bash'";
-    "@service-${appName}-pod-shell" = "sudo -H -u pod-${appName} bash -c 'cd /var/lib/containers/pod-${appName} && XDG_RUNTIME_DIR=/run/pod-${appName} podman --cgroup-manager=cgroupfs exec -it ${appName} bash'";
-    "@service-${appName}-ps" = "sudo -H -u pod-${appName} bash -c 'cd /var/lib/containers/pod-${appName} && XDG_RUNTIME_DIR=/run/pod-${appName} podman --cgroup-manager=cgroupfs ps'";
+    "@service-${appName}-shell" = "sudo -H -u pod-${appName} bash -c 'export XDG_RUNTIME_DIR=/run/pod-${appName}; cd /var/lib/pod-containers/pod-${appName}; exec bash'";
+    "@service-${appName}-pod-shell" = "sudo -H -u pod-${appName} bash -c 'cd /var/lib/pod-containers/pod-${appName} && XDG_RUNTIME_DIR=/run/pod-${appName} podman --cgroup-manager=cgroupfs exec -it ${appName} bash'";
+    "@service-${appName}-ps" = "sudo -H -u pod-${appName} bash -c 'cd /var/lib/pod-containers/pod-${appName} && XDG_RUNTIME_DIR=/run/pod-${appName} podman --cgroup-manager=cgroupfs ps'";
   };
 
 in

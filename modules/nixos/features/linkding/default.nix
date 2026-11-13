@@ -4,7 +4,7 @@
   pkgs,
   mkFeatureOptions,
   mkFirewallInterfaces,
-  mkPodmanAliases,
+  mkRootlessPodmanAliases,
   resolveListenInterfaceAddresses,
   ...
 }:
@@ -12,6 +12,9 @@ with lib;
 with types;
 
 let
+  mkRootlessPodmanService =
+    (import ../../homelab/helpers.nix { inherit lib; }).mkRootlessPodmanService;
+
   authdomain = "douane.${config.homelab.domain}";
 
   appName = "linkding";
@@ -31,11 +34,22 @@ let
   # Get port from central registry
   listenHttpPort = 10000 + config.homelab.portRegistry.${appName}.appId;
 
-  containerUID = 33; # www-data
-  containerGID = 33; # www-data
-
-  hostUid = (builtins.elemAt config.users.users.root.subUidRanges 0).startUid + containerUID;
-  hostGid = (builtins.elemAt config.users.users.root.subGidRanges 0).startGid + containerGID;
+  # linkding runs as www-data (uid/gid 33) inside the container.
+  # Remap uid/gid 33 → 0 (pod-linkding on host) so volume files are owned by pod-linkding.
+  containerUID = 33;
+  containerGID = 33;
+  uidmapOptions =
+    let
+      above = 65536 - containerUID - 1;
+    in
+    [
+      "--uidmap=0:1:${toString containerUID}"
+      "--uidmap=${toString containerUID}:0:1"
+      "--uidmap=${toString (containerUID + 1)}:${toString (containerUID + 1)}:${toString above}"
+      "--gidmap=0:1:${toString containerGID}"
+      "--gidmap=${toString containerGID}:0:1"
+      "--gidmap=${toString (containerGID + 1)}:${toString (containerGID + 1)}:${toString above}"
+    ];
 
   exposedURL = "https://${cfg.serviceDomain}";
   internalURL = "http://127.0.0.1:${toString listenHttpPort}";
@@ -57,6 +71,8 @@ in
 
       openFirewall = mkEnableOption "Open firewall ports (incoming)";
       openTailscale = mkEnableOption "Open firewall ports for tailscale (incoming)";
+      podTraceSyscalls = mkEnableOption "Wrap podman run with strace (startup+runtime, no --uidmap; output: /tmp/linkding-strace.log on service stop)";
+      systemdTraceSyscalls = mkEnableOption "Attach strace to running podman via systemd ExecStartPost as root (runtime only, all images; output: /tmp/linkding-strace.log on service stop)";
     };
   };
 
@@ -102,7 +118,6 @@ in
           interval = "5m";
           conditions = [
             "[STATUS] == 200"
-            # ''[BODY] == pat(*"version": "${appPinnedVersion}"*)''
           ];
           ui.hide-hostname = true;
         };
@@ -136,8 +151,8 @@ in
 
       systemd.tmpfiles.rules = [
         # Application data
-        "d ${appPath} 0750 root root -"
-        "d ${appPath}/data 0750 ${toString hostUid} ${toString hostGid} -"
+        "d ${appPath} 0751 root root -"
+        "d ${appPath}/data 0750 pod-${appName} pod-${appName} -"
 
         # Backup directory
         "d /var/backup/${appName} 0750 root root -"
@@ -152,46 +167,7 @@ in
       homelab.alias = [ "${cfg.serviceDomain}" ];
 
       # Add service alias
-      programs.bash.shellAliases = (mkPodmanAliases appName) // {
-      };
-
-      virtualisation.oci-containers.containers.${appName} = {
-        image = "${appImage}:${appPinnedVersion}";
-        autoStart = true;
-        ports = [ "127.0.0.1:${toString listenHttpPort}:9090" ];
-
-        volumes = [
-          "${appPath}/data:/etc/linkding/data"
-        ];
-
-        environmentFiles = [
-          config.clan.core.vars.generators."linkding".files."envfile".path
-        ];
-
-        environment = {
-          LD_ENABLE_OIDC = "true";
-          OIDC_USE_PKCE = "true";
-          OIDC_RP_CLIENT_ID = "371338396787867649";
-
-          OIDC_OP_AUTHORIZATION_ENDPOINT = "https://${authdomain}/oauth/v2/authorize";
-          OIDC_OP_TOKEN_ENDPOINT = "https://${authdomain}/oauth/v2/token";
-          OIDC_OP_USER_ENDPOINT = "https://${authdomain}/oidc/v1/userinfo";
-          OIDC_OP_JWKS_ENDPOINT = "https://${authdomain}/oauth/v2/keys";
-        };
-
-        extraOptions = [
-          "--cap-drop=ALL"
-
-          # For caddy
-          "--cap-add=CHOWN"
-          "--cap-add=SETUID"
-          "--cap-add=SETGID"
-          "--cap-add=DAC_OVERRIDE"
-          "--cap-add=NET_BIND_SERVICE"
-          "--subgidname=root"
-          "--subuidname=root"
-        ];
-      };
+      programs.bash.shellAliases = mkRootlessPodmanAliases appName;
 
       services.caddy.virtualHosts = mkIf cfg.openFirewall {
         "${cfg.serviceDomain}" = {
@@ -251,11 +227,11 @@ in
             ]
           }
 
-          service_status=$(systemctl is-active linkding)
+          service_status=$(systemctl is-active pod-${appName})
           if [ "$service_status" = "active" ]; then
-            systemctl stop linkding
+            systemctl stop pod-${appName}
             rsync -avH --delete --numeric-ids "${appPath}/" /var/backup/linkding/
-            systemctl start linkding
+            systemctl start pod-${appName}
           fi
         '';
         postRestoreScript = ''
@@ -267,10 +243,10 @@ in
             ]
           }
 
-          service_status="$(systemctl is-active linkding)"
+          service_status="$(systemctl is-active pod-${appName})"
 
           if [ "$service_status" = "active" ]; then
-            systemctl stop linkding
+            systemctl stop pod-${appName}
 
             # Backup current linkding data locally
             DATE=$(date +%Y%m%d-%H%M%S)
@@ -279,11 +255,73 @@ in
             # Restore from borgbackup
             rsync -avH --delete --numeric-ids /var/backup/linkding/ "${appPath}/"
 
-            systemctl start linkding
+            systemctl start pod-${appName}
           fi
         '';
       };
 
     })
+
+    # Rootless podman service under pod-linkding system user
+    (mkIf cfg.enable (mkRootlessPodmanService {
+      inherit pkgs;
+      name = appName;
+      podTraceSyscalls = cfg.podTraceSyscalls;
+      systemdTraceSyscalls = cfg.systemdTraceSyscalls;
+      image = "${appImage}:${appPinnedVersion}";
+      subUidStart = 100000 + config.homelab.portRegistry.${appName}.appId * 65536;
+      ports = [ "127.0.0.1:${toString listenHttpPort}:9090" ];
+      volumes = [ "${appPath}/data:/etc/linkding/data" ];
+
+      credentials = [
+        {
+          id = "envfile";
+          path = config.clan.core.vars.generators."linkding".files."envfile".path;
+        }
+      ];
+      environment = {
+        LD_ENABLE_OIDC = "true";
+        OIDC_USE_PKCE = "true";
+        OIDC_RP_CLIENT_ID = "371338396787867649";
+        OIDC_OP_AUTHORIZATION_ENDPOINT = "https://${authdomain}/oauth/v2/authorize";
+        OIDC_OP_TOKEN_ENDPOINT = "https://${authdomain}/oauth/v2/token";
+        OIDC_OP_USER_ENDPOINT = "https://${authdomain}/oidc/v1/userinfo";
+        OIDC_OP_JWKS_ENDPOINT = "https://${authdomain}/oauth/v2/keys";
+      }
+      // lib.optionalAttrs (config.time.timeZone != null) {
+        TZ = config.time.timeZone;
+      };
+      extraOptions = uidmapOptions ++ [
+        "--add-host=${authdomain}:host-gateway"
+        "--cap-drop=ALL"
+        "--cap-add=CHOWN"
+        "--cap-add=SETUID"
+        "--cap-add=SETGID"
+        "--cap-add=DAC_OVERRIDE"
+        "--cap-add=NET_BIND_SERVICE"
+      ];
+      extraServiceConfig = {
+        RemoveIPC = true;
+        LockPersonality = true;
+        RestrictRealtime = true;
+        ProtectClock = true;
+        RestrictSUIDSGID = true;
+        SystemCallArchitectures = "native";
+        UMask = "0077";
+        RestrictAddressFamilies = "AF_UNIX AF_INET AF_INET6 AF_NETLINK";
+        CapabilityBoundingSet = "~CAP_SYS_MODULE CAP_SYS_PACCT CAP_SYS_BOOT CAP_SYS_TTY_CONFIG CAP_SYS_RAWIO CAP_SYS_PTRACE CAP_SYS_NICE CAP_SYS_RESOURCE CAP_SYS_CHROOT CAP_BLOCK_SUSPEND CAP_LEASE CAP_LINUX_IMMUTABLE CAP_IPC_LOCK CAP_BPF CAP_MAC_ADMIN CAP_MAC_OVERRIDE CAP_AUDIT_WRITE CAP_AUDIT_CONTROL CAP_AUDIT_READ CAP_SYSLOG CAP_NET_ADMIN CAP_NET_BROADCAST CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_KILL CAP_MKNOD CAP_CHOWN CAP_FSETID CAP_SETFCAP CAP_DAC_READ_SEARCH CAP_DAC_OVERRIDE CAP_FOWNER CAP_IPC_OWNER";
+        SystemCallFilter = "~@reboot @swap @obsolete @cpu-emulation @debug @raw-io @module @clock";
+        MemoryDenyWriteExecute = true;
+        ProtectSystem = "strict";
+        ReadWritePaths = [
+          "/run/pod-linkding"
+          "/var/lib/pod-containers/pod-linkding"
+          appPath
+        ];
+        ProtectHome = true;
+        PrivateTmp = true;
+        ProtectProc = "invisible";
+      };
+    }))
   ];
 }
