@@ -280,14 +280,36 @@ let
       preStartChown ? [ ],
       extraOptions ? [ ],
       extraServiceConfig ? { },
+      # Wrap podman run with strace (startup + runtime). Drops all hardening.
+      # Incompatible with --uidmap: strace strips setuid from newuidmap → use systemdTraceSyscalls instead.
+      # Usage: systemctl stop pod-<name> → cat /tmp/<name>-strace.log
+      podTraceSyscalls ? false,
+      # Attach strace to the running podman process via systemd ExecStartPost as root (runtime only).
+      # Works with --uidmap: newuidmap runs before strace attaches.
+      # Usage: start service, wait ~1 min, systemctl stop pod-<name> → cat /tmp/<name>-strace.log
+      systemdTraceSyscalls ? false,
     }:
     let
       username = "pod-${name}";
       homeDir = "/var/lib/pod-containers/${username}";
       runtimeDir = "/run/${username}";
 
+      runner = if podTraceSyscalls
+        then "${pkgs.strace}/bin/strace -f -c -o /tmp/${name}-strace.log ${pkgs.podman}/bin/podman"
+        else "${pkgs.podman}/bin/podman";
+
+      # Drop all hardening when tracing so the syscall log reflects only what
+      # podman/crun/the container actually need.
+      # Also required for podTraceSyscalls: strace needs ptrace() blocked by @debug.
+      effectiveServiceConfig = if (podTraceSyscalls || systemdTraceSyscalls) then {} else extraServiceConfig;
+
+      straceAttachScript = pkgs.writeShellScript "strace-attach-${name}" ''
+        ${pkgs.strace}/bin/strace -f -c -o /tmp/${name}-strace.log -p $MAINPID &
+        echo $! > /tmp/${name}-strace.pid
+      '';
+
       startScript = pkgs.writeShellScript "pod-${name}-start" ''
-        exec ${pkgs.podman}/bin/podman run --rm \
+        exec ${runner} run --rm \
           --name=${name} \
           ${lib.concatStringsSep " \\\n          " (
             map (v: "--volume=${lib.escapeShellArg v}") volumes
@@ -337,7 +359,11 @@ let
           ExecStopPost = "${pkgs.podman}/bin/podman rm -f ${name}";
           Restart = "always";
           RestartSec = "5s";
-        } // extraServiceConfig;
+        } // effectiveServiceConfig
+        // lib.optionalAttrs systemdTraceSyscalls {
+          # Run as root (+) so strace can attach to podman without setuid issues.
+          ExecStartPost = "+${straceAttachScript}";
+        };
       };
     };
 

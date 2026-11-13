@@ -12,7 +12,8 @@ with lib;
 with types;
 
 let
-  mkRootlessPodmanService = (import ../../homelab/helpers.nix { inherit lib; }).mkRootlessPodmanService;
+  mkRootlessPodmanService =
+    (import ../../homelab/helpers.nix { inherit lib; }).mkRootlessPodmanService;
 
   appName = "dokuwiki";
   appCategory = "Essentials";
@@ -56,6 +57,8 @@ in
 
       openFirewall = mkEnableOption "Open firewall ports (incoming)";
       openTailscale = mkEnableOption "Open firewall ports for tailscale (incoming)";
+      podTraceSyscalls = mkEnableOption "Wrap podman run with strace (startup+runtime, no --uidmap; output: /tmp/dokuwiki-strace.log on service stop)";
+      systemdTraceSyscalls = mkEnableOption "Attach strace to running podman via systemd ExecStartPost as root (runtime only, all images; output: /tmp/dokuwiki-strace.log on service stop)";
     };
   };
 
@@ -259,31 +262,73 @@ in
     })
 
     # Rootless podman service under pod-dokuwiki system user
-    (mkIf cfg.enable (mkRootlessPodmanService {
-      inherit pkgs;
-      name = appName;
-      image = "${appImage}:${appPinnedVersion}";
-      subUidStart = 100000 + config.homelab.portRegistry.${appName}.appId * 65536;
-      ports = [ "127.0.0.1:${toString listenHttpPort}:80" ];
-      volumes = [ "${appPath}/config:/config" ];
+    (mkIf cfg.enable (
+      let
+        # linuxserver.io runs as abc (uid 1000, gid 1000).
+        # PHP-FPM refuses uid 0, so we can't use PUID=0.
+        # Remap uid/gid 1000 → 0 (pod-dokuwiki on host).
+        containerUID = 1000;
+        containerGID = 1000;
+        uidmapOptions =
+          let
+            above = 65536 - containerUID - 1;
+          in
+          [
+            "--uidmap=0:1:${toString containerUID}"
+            "--uidmap=${toString containerUID}:0:1"
+            "--uidmap=${toString (containerUID + 1)}:${toString (containerUID + 1)}:${toString above}"
+            "--gidmap=0:1:${toString containerGID}"
+            "--gidmap=${toString containerGID}:0:1"
+            "--gidmap=${toString (containerGID + 1)}:${toString (containerGID + 1)}:${toString above}"
+          ];
+      in
+      mkRootlessPodmanService {
+        inherit pkgs;
+        name = appName;
+        podTraceSyscalls = cfg.podTraceSyscalls;
+        systemdTraceSyscalls = cfg.systemdTraceSyscalls;
+        image = "${appImage}:${appPinnedVersion}";
+        subUidStart = 100000 + config.homelab.portRegistry.${appName}.appId * 65536;
+        ports = [ "127.0.0.1:${toString listenHttpPort}:80" ];
+        volumes = [ "${appPath}/config:/config" ];
 
-      environment = {
-        # In rootless mode, UID 0 inside container = pod-dokuwiki on host
-        PUID = "0";
-        PGID = "0";
-      } // lib.optionalAttrs (config.time.timeZone != null) {
-        TZ = config.time.timeZone;
-      };
-      extraOptions = [
-        "--add-host=${cfg.authDomain}:host-gateway"
-        "--cap-drop=ALL"
-        "--cap-add=CHOWN"
-        "--cap-add=SETUID"
-        "--cap-add=SETGID"
-        "--cap-add=DAC_OVERRIDE"
-        "--cap-add=NET_BIND_SERVICE"
-        "--cap-add=FOWNER"
-      ];
-    }))
+        environment = {
+          PUID = "1000";
+          PGID = "1000";
+        }
+        // lib.optionalAttrs (config.time.timeZone != null) {
+          TZ = config.time.timeZone;
+        };
+        extraOptions = uidmapOptions ++ [
+          "--add-host=${cfg.authDomain}:host-gateway"
+          "--cap-drop=ALL"
+          "--cap-add=CHOWN"
+          "--cap-add=SETUID"
+          "--cap-add=SETGID"
+          "--cap-add=DAC_OVERRIDE"
+          "--cap-add=NET_BIND_SERVICE"
+          "--cap-add=FOWNER"
+        ];
+        extraServiceConfig = {
+          RemoveIPC = true;
+          LockPersonality = true;
+          RestrictRealtime = true;
+          ProtectClock = true;
+          UMask = "0077";
+          RestrictAddressFamilies = "AF_UNIX AF_INET AF_INET6 AF_NETLINK";
+          CapabilityBoundingSet = "~CAP_SYS_MODULE CAP_SYS_PACCT CAP_SYS_BOOT CAP_SYS_TTY_CONFIG CAP_SYS_RAWIO CAP_SYS_PTRACE CAP_SYS_NICE CAP_SYS_RESOURCE CAP_SYS_CHROOT CAP_BLOCK_SUSPEND CAP_LEASE CAP_LINUX_IMMUTABLE CAP_IPC_LOCK CAP_BPF CAP_MAC_ADMIN CAP_MAC_OVERRIDE CAP_AUDIT_WRITE CAP_AUDIT_CONTROL CAP_AUDIT_READ CAP_SYSLOG CAP_NET_ADMIN CAP_NET_BROADCAST CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_KILL CAP_MKNOD CAP_CHOWN CAP_FSETID CAP_SETFCAP CAP_DAC_READ_SEARCH CAP_DAC_OVERRIDE CAP_FOWNER CAP_IPC_OWNER";
+          SystemCallFilter = "~@reboot @swap @obsolete @cpu-emulation @debug @raw-io @module @clock";
+          ProtectSystem = "strict";
+          ReadWritePaths = [
+            "/run/pod-dokuwiki"
+            "/var/lib/pod-containers/pod-dokuwiki"
+            appPath
+          ];
+          ProtectHome = true;
+          PrivateTmp = true;
+          ProtectProc = "invisible";
+        };
+      }
+    ))
   ];
 }
