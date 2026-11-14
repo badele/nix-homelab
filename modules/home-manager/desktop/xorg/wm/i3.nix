@@ -29,6 +29,13 @@ let
   playerctl = "${pkgs.playerctl}/bin/playerctl";
   ksnip = "${pkgs.ksnip}/bin/ksnip";
   peek = "${pkgs.peek}/bin/peek";
+
+  screenshotScript = pkgs.writeShellScript "ksnip-screenshot" ''
+    dir="$HOME/Téléchargements/FireShot"
+    mkdir -p "$dir"
+    f="$dir/ksnip_$(date +%Y-%m-%d_%H-%M-%S).png"
+    ${pkgs.maim}/bin/maim -s "$f" && ${pkgs.ksnip}/bin/ksnip -e "$f"
+  '';
   gpick = "${pkgs.gpick}/bin/gpick";
   # py3status = "${pkgs.python3Packages.py3status}/bin/py3status";
   i3status-rust = "${pkgs.i3status-rust}/bin/i3status-rs";
@@ -122,10 +129,10 @@ in
           "${mod}+space" = "exec --no-startup-id rofi -show-icons -show drun";
 
           # # Screenshot
-          # # || Print || Take a desktop screenshot | i3
+          # # || Print || Take a region screenshot | i3
           # # || Shift+Print || Take a selection screenshot | i3
           # # || Super+c || Color picker | i3
-          "Print" = "exec --no-startup-id ${ksnip} -r";
+          "Print" = "exec --no-startup-id ${screenshotScript}";
           "Shift+Print" = "--release exec --no-startup-id ${peek}";
           "${mod}+c" = "--release exec ${gpick}";
 
@@ -321,6 +328,7 @@ in
             { class = "openshoot-qt"; }
             { class = "gimp-2.10"; }
             { class = "Anki"; }
+            { class = "ksnip"; }
           ];
         };
 
