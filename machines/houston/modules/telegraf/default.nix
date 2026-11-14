@@ -85,7 +85,6 @@
     };
 
     path = [
-      pkgs.reaction
       pkgs.jq
     ];
   };
