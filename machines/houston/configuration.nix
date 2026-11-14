@@ -23,6 +23,7 @@ in
     ./disko.nix
 
     # houston apps
+    ./modules/reaction.nix
     ./modules/grafana.nix
     ./modules/influxdb.nix
     ./modules/telegraf

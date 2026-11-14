@@ -7,21 +7,18 @@ let
   ignore_ip = [
     "127.0.0.1"
     "::1"
-    "90.113.129.48"
+    "92.161.243.106"
   ];
 
   ban_scan = 24 * 7;
 
-  sudo = "/run/wrappers/bin/sudo";
   ip4tables = "${config.networking.firewall.package}/bin/iptables";
   ip6tables = "${config.networking.firewall.package}/bin/ip6tables";
 in
 {
-  # Source: https://framagit.org/ppom/nixos/-/blob/main/modules/common/reaction-custom.nix
   config =
     let
       iptablesBan = cmd: [
-        sudo
         cmd
         "-w"
         "-A"
@@ -32,7 +29,6 @@ in
         "DROP"
       ];
       iptablesUnban = cmd: [
-        sudo
         cmd
         "-w"
         "-D"
@@ -73,8 +69,7 @@ in
         ];
       };
 
-      # Allow reaction to manage iptables rules
-      security.sudo.execWheelOnly = lib.mkForce false;
+      # Allow reaction user to run iptables for reaction-metrics.sh called from telegraf
       security.sudo.extraRules = [
         {
           users = [ "reaction" ];
@@ -101,6 +96,9 @@ in
         enable = true;
         runAsRoot = false;
         settings = {
+          # Disable ipset plugin — we use plain iptables rules
+          plugins.ipset.enable = false;
+
           patterns = {
             ip = {
               type = "ip";
@@ -169,8 +167,7 @@ in
       systemd.services.reaction = {
         serviceConfig =
           let
-
-            mkIptablesCmd = table: args: "+${sudo} ${table} ${args}";
+            mkIptablesCmd = table: args: "+${table} ${args}";
 
             ip46tables = args: [
               (mkIptablesCmd ip4tables args)
@@ -190,14 +187,17 @@ in
               "-w -X reaction"
             ];
             TimeoutStopSec = "3min";
-            UMask = "0002";
+            # CAP_NET_ADMIN allows direct iptables manipulation without sudo
+            # (NoNewPrivileges=true is set by the nixpkgs module, sudo would not work)
+            AmbientCapabilities = [ "CAP_NET_ADMIN" ];
+            CapabilityBoundingSet = [ "CAP_NET_ADMIN" ];
           };
+        unitConfig.ConditionCapability = "CAP_NET_ADMIN";
       };
 
       # Verify that the reaction chain exists in iptables every 10 minutes
       systemd.services.reaction-chain =
         let
-
           message = chain: "reaction chain has been removed from ${chain} :o";
         in
         {
@@ -205,15 +205,15 @@ in
           startAt = "*:0/10";
           unitConfig.Requisite = [ "reaction.service" ];
           script = ''
-            if ! ${sudo} ${ip4tables} -L INPUT | grep -q reaction
+            if ! ${ip4tables} -L INPUT | grep -q reaction
             then
-              ${sudo} ${ip4tables} -w -I INPUT -p all -j reaction
+              ${ip4tables} -w -I INPUT -p all -j reaction
               echo ${message "INPUT"}
             fi
 
-            if ! ${sudo} ${ip4tables} -L FORWARD | grep -q reaction
+            if ! ${ip4tables} -L FORWARD | grep -q reaction
             then
-              ${sudo} ${ip4tables} -w -I FORWARD -p all -j reaction
+              ${ip4tables} -w -I FORWARD -p all -j reaction
               echo ${message "FORWARD"}
             fi
           '';

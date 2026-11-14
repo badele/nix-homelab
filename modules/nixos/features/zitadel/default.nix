@@ -265,6 +265,10 @@ in
               };
             };
             Telemetry.Enabled = false;
+            Machine.Identification = {
+              PrivateIp.Enabled = false;
+              Hostname.Enabled = true;
+            };
           }
           // cfg.settings;
           steps = {
