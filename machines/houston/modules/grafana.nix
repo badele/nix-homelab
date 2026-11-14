@@ -188,4 +188,14 @@ in
 
   networking.firewall.interfaces.${config.homelab.host.interface}.allowedTCPPorts = [ 443 ];
 
+  homelab.integrations.services.grafana = {
+    displayName = "Grafana";
+    category = "System Health";
+    icon = "sh-grafana";
+    description = "Observability dashboards";
+    homepage = {
+      href = "https://${appDomain}";
+    };
+  };
+
 }
